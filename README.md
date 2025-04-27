@@ -1,5 +1,8 @@
 # Bienestar-Plus
 
+![4708c92418780c10d30cd5d020eb7eb5](https://github.com/user-attachments/assets/7b5b1117-dcc6-40c6-9d5f-ee4b37154a64)
+
+
 # 🌿 Bienestar+ | App de Bienestar Integral
 
 Bienestar+ es una aplicación web orientada al bienestar físico, mental y emocional. Permite a los usuarios gestionar hábitos saludables, acceder a recursos de salud mental y recibir recomendaciones personalizadas para mejorar su calidad de vida.
