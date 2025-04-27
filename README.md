@@ -1,6 +1,10 @@
-# Bienestar-Plus
-
-![4708c92418780c10d30cd5d020eb7eb5](https://github.com/user-attachments/assets/7b5b1117-dcc6-40c6-9d5f-ee4b37154a64)
+<h1 align=center> 
+  Bienestar-Plus
+</h1>
+<div align="center">
+<img src="https://github.com/user-attachments/assets/7b5b1117-dcc6-40c6-9d5f-ee4b37154a64" alt="mujer-trotando" width="400" height="300">
+</div>
+<br>
 
 
 # 🌿 Bienestar+ | App de Bienestar Integral
