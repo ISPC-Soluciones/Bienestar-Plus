@@ -21,11 +21,31 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
 
 ## 🛠️ Tecnologías utilizadas
 
-- **Frontend**: 
-- **Backend**: 
-- **Base de datos**: 
+- **Frontend**:
+- **Backend**:
+- **Base de datos**:
 - **Control de versiones**: Git + GitHub
-- **Diseño**: 
+- **Diseño**:
+
+---
+
+## 🗂️ Estructura del proyecto
+
+```
+└── 📁Bienestar-Plus
+    └── 📁backend
+        └── 📁src
+            └── script.js
+    └── 📁frontend
+        └── index.html
+        └── 📁src
+            └── 📁styles
+                └── estilo.css
+    └── 📁layout (maquetado)
+        └── 📁assets
+            └── maquetados.jpg
+    └── README.md
+```
 
 ---
 
@@ -43,5 +63,3 @@ Este proyecto fue creado por un grupo de 6 estudiantes con pasión por la tecnol
 > 🎓 Todos cursamos la Tecnicatura en Desarrollo de Software en el Instituto Superior Politécnico de Córdoba.
 
 ---
-
-
