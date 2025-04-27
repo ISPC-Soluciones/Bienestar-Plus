@@ -2,10 +2,9 @@
   Bienestar-Plus
 </h1>
 <div align="center">
-<img src="https://github.com/user-attachments/assets/7b5b1117-dcc6-40c6-9d5f-ee4b37154a64" alt="mujer-trotando" width="400" height="300">
+<img src="https://github.com/user-attachments/assets/80ab726e-f37b-4cae-924b-ed6462634ff8" alt="mujer-trotando" width="800" height="400">
 </div>
 <br>
-
 
 # 🌿 Bienestar+ | App de Bienestar Integral
 
