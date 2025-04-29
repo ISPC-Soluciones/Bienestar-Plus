@@ -58,9 +58,14 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
         └── 📁src
             └── 📁styles
                 └── estilo.css
-    └── 📁layout (maquetado)
+    └── 📁layout
         └── 📁assets
             └── maquetados.jpg
+        └── index.html
+        └── nosotros.html
+        └── perfil.html
+        └── 📁styles
+            └── estilo.css
     └── README.md
 ```
 
