@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Paleta de Colores */
+  --primario: #7fffd4;
+  --secundario: #dff5e1;
+  --ternario: #6ec1e4;
+  --cuaternario: #ff8a65;
+  --bg-fondo: #f5f7f8;
+  --bg-y-fuentes: #333b3e;
+
+  /* Tipografías */
+  --fuente-base: "Montserrat", sans-serif;
+  --fuente-titulo: "Nunito Sans", sans-serif;
+}
