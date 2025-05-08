@@ -17,3 +17,89 @@
   --fuente-base: "Montserrat", sans-serif;
   --fuente-titulo: "Nunito Sans", sans-serif;
 }
+
+/* ########## PAGINA DE REGISTRO ################ */
+
+.registro-body {
+  font-family: var(--fuente-titulo);
+  background-color:var(--secundario);
+  background-image: url(../assets/persona-fondo.png);
+  background-repeat: no-repeat;
+  background-repeat: repeat-x;
+  background-position: center ; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.registro-contenedor-main {
+  background-color:var(--bg-fondo);
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+.registro-h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+}
+.registro-h2{
+  margin-bottom: 1.rem;
+  font-size: 1.9rem;
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+}
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fuente-base);
+}
+
+.registro-label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--bg-y-fuentes);
+}
+
+.registro-input {
+  padding: 0.75rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid var(--secundario);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  font-family: var(--fuente-base);
+}
+
+.registro-input:focus {
+  border-color: var(--cuaternario);
+  outline: none;
+  box-shadow: 0 0 3px var(--cuaternario);
+}
+
+.registro-button {
+  background-color: var(--cuaternario);
+  color: var(--bg-fondo);
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-family: var(--fuente-base);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.registro-button:hover {
+  background-color: #e06a46; 
+}
