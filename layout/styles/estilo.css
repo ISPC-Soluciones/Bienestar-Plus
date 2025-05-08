@@ -17,3 +17,48 @@
   --fuente-base: "Montserrat", sans-serif;
   --fuente-titulo: "Nunito Sans", sans-serif;
 }
+
+
+/* Estilo QUIENES SOMOS */
+
+.qs-section {
+  background-color: var(--bg-fondo);
+  font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+  padding: 3rem 2rem;
+}
+
+.qs-title {
+  font-family: var(--fuente-titulo);
+  color: var(--cuaternario);
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.qs-content {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.qs-card {
+  background-color: var(--secundario);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-width: 300px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.qs-card h3 {
+  font-family: var(--fuente-titulo);
+  color: var(--ternario);
+  margin-bottom: 0.5rem;
+}
+
+.qs-card p {
+  font-size: 1rem;
+  color: var(--bg-y-fuentes);
+}
