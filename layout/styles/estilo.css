@@ -69,6 +69,10 @@
   margin-bottom: 2rem;
 }
 
+.texto__bienvenida__perfil span {
+  color: var(--cuaternario);
+}
+
 .container__img__usuario img {
   width: 100px;
   height: 100px;
@@ -170,6 +174,8 @@
   display: inline-block;
   margin: 0 1rem;
   font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+  font-weight: 600;
 }
 
 /* Accesibilidad */
