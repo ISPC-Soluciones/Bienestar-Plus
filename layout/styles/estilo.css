@@ -103,3 +103,56 @@
 .registro-button:hover {
   background-color: #e06a46; 
 }
+
+/* DISEÑO RESPONSIVE(MEDIA QUERIES) PAG REGISTRO */
+
+/* tamaño Mobile  */
+@media (max-width: 480px) {
+  .registro-contenedor-main {
+    padding: 1.2rem;
+  }
+
+  .registro-h1,
+  .registro-h2 {
+    font-size: 1.5rem;
+  }
+
+  .registro-input {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+
+  .registro-button {
+    font-size: 0.95rem;
+    padding: 0.65rem;
+  }
+}
+
+/* tamaño  tablets  */
+@media (max-width: 768px) {
+  .registro-contenedor-main {
+    padding: 2rem;
+  }
+
+  .registro-h1,
+  .registro-h2 {
+    font-size: 1.7rem;
+  }
+
+  .registro-input {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+
+  .registro-button {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+}
+
+/* tamaño Desktop/Nootebook */
+@media (max-width: 1024px) {
+  .registro-contenedor-main {
+    max-width: 380px;
+  }
+}
