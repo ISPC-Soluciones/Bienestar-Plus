@@ -42,11 +42,14 @@
 }
 
 .container__perfil h1 {
+  max-width: 900px;
   font-family: var(--fuente-titulo);
   font-size: 4rem;
   font-weight: 700;
   color: var(--cuaternario);
   text-align: center;
+  letter-spacing: 1px;
+  line-height: 1.2;
 }
 
 .container__usuario,
@@ -70,21 +73,38 @@
 }
 
 .texto__bienvenida__perfil span {
+  font-weight: 700;
+  font-size: 2.4rem;
   color: var(--cuaternario);
 }
 
 .container__img__usuario img {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   margin-right: 1rem;
+  margin-bottom: 1.2rem;
   border: 2px solid var(--fav-cristian);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 8px var(--primario);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .container__img__usuario img:hover {
   transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.usuario__info {
+  padding: 2rem;
+  background: var(--bg-fondo);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 2px solid var(--ternario);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.usuario__info span {
+  color: var(--cuaternario);
 }
 
 .container__btn__editar__perfil,
@@ -113,6 +133,7 @@
 .btn__editar__perfil:hover,
 .btn__ir__mis__habitos:hover {
   background-color: var(--secundario);
+  box-shadow: 0 0 10px var(--ternario);
 }
 
 .container__tu__progreso {
@@ -136,8 +157,8 @@
   width: 45%;
   height: auto;
   border-radius: 5%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   border: 2px solid var(--ternario);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .header__container,
