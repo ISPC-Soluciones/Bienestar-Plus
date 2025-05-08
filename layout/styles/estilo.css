@@ -52,10 +52,21 @@
   line-height: 1.2;
 }
 
-.container__usuario,
+.container__usuario {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
 .container__bienvenida {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
@@ -72,18 +83,49 @@
   margin-bottom: 2rem;
 }
 
+.texto__bienvenida__perfil i {
+  color: var(--cuaternario);
+  font-size: 2.4rem;
+  margin-right: 0.5rem;
+}
+
 .texto__bienvenida__perfil span {
   font-weight: 700;
   font-size: 2.4rem;
   color: var(--cuaternario);
 }
 
+.container__usuario__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: var(--bg-fondo);
+  border-radius: 12px;
+  border: 2px solid var(--ternario);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.container__usuario__info span {
+  color: var(--cuaternario);
+}
+
+.container__img__usuario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
 .container__img__usuario img {
-  width: 120px;
+  width: 70%;
   height: 120px;
   border-radius: 50%;
-  margin-right: 1rem;
-  margin-bottom: 1.2rem;
   border: 2px solid var(--fav-cristian);
   box-shadow: 0 0 8px var(--primario);
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -92,19 +134,6 @@
 .container__img__usuario img:hover {
   transform: scale(1.05);
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-}
-
-.usuario__info {
-  padding: 2rem;
-  background: var(--bg-fondo);
-  border-radius: 12px;
-  padding: 2rem;
-  border: 2px solid var(--ternario);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-}
-
-.usuario__info span {
-  color: var(--cuaternario);
 }
 
 .container__btn__editar__perfil,
@@ -116,7 +145,19 @@
   margin-top: 2rem;
 }
 
-.btn__editar__perfil,
+.btn__editar__perfil {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
+  font-family: var(--fuente-base);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--fav-cristian);
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
 .btn__ir__mis__habitos {
   background-color: var(--primario);
   color: var(--bg-y-fuentes);
@@ -137,7 +178,14 @@
 }
 
 .container__tu__progreso {
-  padding: 3rem;
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+  /* border-radius: 12px;
+  border: 2px solid var(--ternario); */
+  padding: 0.2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -150,11 +198,11 @@
   font-weight: 700;
   color: var(--cuaternario);
   text-align: center;
-  padding-top: 2rem;
+  padding-top: 0.2rem;
 }
 
 .container__tu__progreso img {
-  width: 45%;
+  width: 100%;
   height: auto;
   border-radius: 5%;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);

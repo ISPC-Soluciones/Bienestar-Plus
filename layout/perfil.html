@@ -50,13 +50,16 @@
     <main class="perfil">
       <div class="container__perfil">
         <h1>Mi Perfil</h1>
+        <div class="container__bienvenida">
+          <h2 class="texto__bienvenida__perfil">
+            Bienvenido
+            <span>Cosme</span>
+            <i class="fa-solid fa-heart-pulse"></i>
+          </h2>
+        </div>
         <div class="container__usuario">
-          <div class="container__bienvenida">
-            <h2 class="texto__bienvenida__perfil">
-              Bienvenido
-              <span>Cosme</span>
-              !
-            </h2>
+          <div class="container__usuario__info">
+            <h2 class="texto__info__perfil">Información Personal</h2>
             <div class="container__img__usuario">
               <img
                 src="/layout/assets/usuario.jpg"
@@ -64,31 +67,28 @@
                 class="img__perfil"
               />
             </div>
+            <span>
+              <p><strong>Nombre:</strong> Cosme Fulanito</p>
+              <p><strong>Email:</strong> cosmefulanito@ispc.com.ar</p>
+            </span>
+            <div class="container__btn__editar__perfil">
+              <a href="#" class="btn__editar__perfil"
+                >Editar <i class="fa-solid fa-pen-to-square"></i
+              ></a>
+            </div>
           </div>
-        </div>
-        <div class="usuario__info">
-          <h2 class="texto__info__perfil">Información Personal</h2>
-          <span>
-            <p><strong>Nombre:</strong> Cosme Fulanito</p>
-            <p><strong>Email:</strong> cosmefulanito@ispc.com.ar</p>
-          </span>
-          <div class="container__btn__editar__perfil">
-            <a href="#" class="btn__editar__perfil"
-              >Editar <i class="fa-solid fa-pen-to-square"></i
-            ></a>
-          </div>
-        </div>
-        <div class="container__tu__progreso">
-          <h2 class="texto__progreso__usuario">Mi Progreso</h2>
-          <img
-            src="/layout/assets/grafico_usuario_metricas.jpg"
-            alt="Progreso del Usuario"
-            class="img__tu__progreso"
-          />
-          <div class="container__btn__ir__mis__habitos">
-            <a href="#" class="btn__ir__mis__habitos"
-              >ir a Mis Habitos <i class="fa-solid fa-dumbbell"></i
-            ></a>
+          <div class="container__tu__progreso">
+            <h2 class="texto__progreso__usuario">Mi Progreso</h2>
+            <img
+              src="/layout/assets/grafico_usuario_metricas.jpg"
+              alt="Progreso del Usuario"
+              class="img__tu__progreso"
+            />
+            <div class="container__btn__ir__mis__habitos">
+              <a href="#" class="btn__ir__mis__habitos"
+                >ir a Mis Habitos <i class="fa-solid fa-dumbbell"></i
+              ></a>
+            </div>
           </div>
         </div>
       </div>
