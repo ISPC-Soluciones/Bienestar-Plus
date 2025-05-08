@@ -41,15 +41,46 @@
   margin-inline: auto;
 }
 
-.container__perfil h1 {
+.container__bienvenida {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.container__bienvenida h1 {
   max-width: 900px;
   font-family: var(--fuente-titulo);
   font-size: 4rem;
   font-weight: 700;
-  color: var(--cuaternario);
+  color: var(--primario);
   text-align: center;
   letter-spacing: 1px;
   line-height: 1.2;
+}
+
+.container__bienvenida {
+  padding: 1rem;
+}
+
+/* .texto__bienvenida__perfil {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2rem;
+} */
+
+.texto__bienvenida__perfil i {
+  color: var(--cuaternario);
+  font-size: 4rem;
+  margin-right: 0.5rem;
+}
+
+.container__bienvenida span {
+  font-weight: 700;
+  font-size: 4rem;
+  color: var(--cuaternario);
 }
 
 .container__usuario {
@@ -63,36 +94,25 @@
   margin-bottom: 2rem;
 }
 
-.container__bienvenida {
+.conatiner__parrafo__saludo {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+  height: auto;
 }
 
-.container__bienvenida {
-  padding: 1rem;
-}
-
-.texto__bienvenida__perfil {
-  font-size: 2rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.texto__bienvenida__perfil i {
-  color: var(--cuaternario);
-  font-size: 2.4rem;
-  margin-right: 0.5rem;
-}
-
-.texto__bienvenida__perfil span {
+.parrafo__saludo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.5rem;
   font-weight: 700;
-  font-size: 2.4rem;
-  color: var(--cuaternario);
+  color: var(--bg-y-fuentes);
+  text-align: center;
+  padding-top: 0.2rem;
 }
 
 .container__usuario__info {
