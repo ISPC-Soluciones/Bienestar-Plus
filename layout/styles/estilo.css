@@ -32,7 +32,7 @@
 }
 
 .container__perfil {
-  background: linear-gradient(90deg, var(--ternario), var(--primario));
+  background-color: var(--bg-fondo);
   color: var(--bg-y-fuentes);
   display: flex;
   flex-direction: column;
@@ -94,21 +94,21 @@
 
 .btn__editar__perfil,
 .btn__ir__mis__habitos {
-  background-color: var(--ternario);
-  color: var(--secundario);
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
   font-family: var(--fuente-base);
   font-size: 1rem;
   font-weight: 700;
   padding: 0.5rem 1rem;
   border-radius: 12px;
-  border: 1.5px solid var(--primario);
+  border: 1.5px solid var(--fav-cristian);
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 }
 
 .btn__editar__perfil:hover,
 .btn__ir__mis__habitos:hover {
-  background-color: var(--cuaternario);
+  background-color: var(--secundario);
 }
 
 .container__tu__progreso {
@@ -145,7 +145,7 @@
 }
 
 .header__container {
-  background-color: var(--secundario);
+  background: linear-gradient(90deg, var(--ternario), var(--primario));
 }
 
 .footer__container {
@@ -153,9 +153,11 @@
 }
 
 .header__container img {
+  background-color: white;
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  border: 2px solid var(--fav-cristian);
 }
 
 .header__nav {
@@ -165,6 +167,9 @@
 
 .header__nav li {
   list-style: none;
+  display: inline-block;
+  margin: 0 1rem;
+  font-family: var(--fuente-base);
 }
 
 /* Accesibilidad */
