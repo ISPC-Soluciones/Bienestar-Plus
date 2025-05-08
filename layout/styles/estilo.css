@@ -28,6 +28,14 @@
   padding: 3rem 2rem;
 }
 
+.qs-section-center {
+  background-color: var(--bg-fondo);
+  font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
 .qs-title {
   font-family: var(--fuente-titulo);
   color: var(--cuaternario);
@@ -93,3 +101,4 @@
   transform: scale(1.2);
   color: var(--bg-y-fuentes);
 }
+
