@@ -1,4 +1,3 @@
-/* Nuevo Reset CSS */
 :where(*, *::before, *::after) {
   margin: 0;
   box-sizing: border-box;
@@ -17,58 +16,156 @@
   min-height: 100dvh;
 }
 
-/* Sistema de Color */
 :root {
-  /* Color de formato Moderno (oklch) para mayor consistencia */
-  --primario: oklch(0.8 0.17 160); /* #7fffd4 equivalente */
-  --secundario: oklch(0.93 0.05 140);
-  --ternario: oklch(0.72 0.14 220);
-  --cuaternario: oklch(0.7 0.2 40);
-  --bg-fondo: oklch(0.97 0.01 250);
-  --bg-y-fuentes: oklch(0.25 0.02 250);
+  /* Paleta de Colores */
+  --primario: #7fffd4;
+  --secundario: #dff5e1;
+  --ternario: #6ec1e4;
+  --cuaternario: #ff8a65;
+  --bg-fondo: #f5f7f8;
+  --bg-y-fuentes: #333b3e;
+  --fav-cristian: #ff8a65;
 
-  /* Sistema Tipográfico */
-  --fuente-base: "Montserrat", system-ui;
-  --fuente-titulo: "Nunito Sans", system-ui;
-
-  /* Sistema de Espaciado */
-  --space-3xs: 0.25rem;
-  --space-2xs: 0.5rem;
-  --space-xs: 0.75rem;
-  --space-s: 1rem;
-  --space-m: 1.5rem;
-  --space-l: 2rem;
-
-  /* Radio Borde */
-  --radius-s: 0.25rem;
-  --radius-m: 0.5rem;
+  /* Tipografías */
+  --fuente-base: "Montserrat", sans-serif;
+  --fuente-titulo: "Nunito Sans", sans-serif;
 }
 
-/* Sistema Tipografía */
-:where(h1, h2, h3, h4, h5, h6) {
-  font-family: var(--fuente-titulo);
-  line-height: 1.1;
-  max-inline-size: 60ch;
-}
-
-:where(p) {
-  max-inline-size: 75ch;
-}
-
-/* Tipografía Responsiva */
-:where(h1) {
-  font-size: clamp(2rem, 5vw + 1rem, 3rem);
-  color: var(--cuaternario);
-}
-
-:where(h2) {
-  font-size: clamp(1.75rem, 4vw + 1rem, 2.5rem);
-}
-
-/* Layout Conteiner Base */
-.container {
-  width: min(100% - 2rem, 1200px);
+.container__perfil {
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%);
   margin-inline: auto;
+  padding: 2rem;
+}
+
+.container__perfil h1 {
+  font-family: var(--fuente-titulo);
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+}
+
+.texto__bienvenida__perfil {
+  font-family: var(--fuente-base);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--ternario);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.container__usuario {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.container__usuario {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.container__bienvenida {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+}
+
+.container__img__usuario img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  border: 2px solid var(--ternario);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.container__img__usuario img:hover {
+  transform: scale(1.05);
+}
+
+.container__tu__progreso {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.container__tu__progreso h2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  padding-top: 2rem;
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+}
+
+.container__tu__progreso img {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 45%;
+  height: 45%;
+  border-radius: 5%;
+  margin-right: 1rem;
+  border: 2px solid var(--ternario);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--secundario);
+}
+
+.header__container img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.header__nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.header__nav li {
+  list-style: none;
+  display: inline;
+}
+
+.footer__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--cuaternario);
 }
 
 /* Características de Accesibilidad  */
@@ -81,24 +178,4 @@
 :where(:focus-visible) {
   outline: 2px solid var(--primario);
   outline-offset: 2px;
-}
-
-/* Elementos interactivos básicos */
-:where(a, button) {
-  transition: color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
-}
-
-/* Ejemplo de estilo de un Componente */
-.button {
-  display: inline-flex;
-  padding: var(--space-2xs) var(--space-s);
-  border-radius: var(--radius-s);
-  background-color: var(--primario);
-  color: var(--bg-y-fuentes);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.button:hover {
-  background-color: color-mix(in oklch, var(--primario), black 10%);
 }
