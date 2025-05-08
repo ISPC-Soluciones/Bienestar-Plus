@@ -150,7 +150,7 @@
   }
 }
 
-/* tamaño Desktop/Nootebook */
+/* tamaño Desktop */
 @media (max-width: 1024px) {
   .registro-contenedor-main {
     max-width: 380px;
