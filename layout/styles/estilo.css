@@ -31,6 +31,8 @@
   min-height: 100dvh;
 }
 
+/* SECCIÓN PERFIL */
+
 .container__perfil {
   background-color: var(--bg-fondo);
   color: var(--bg-y-fuentes);
@@ -63,13 +65,6 @@
 .container__bienvenida {
   padding: 1rem;
 }
-
-/* .texto__bienvenida__perfil {
-  font-size: 2rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 2rem;
-} */
 
 .texto__bienvenida__perfil i {
   color: var(--cuaternario);
@@ -203,8 +198,6 @@
   width: 100%;
   height: auto;
   max-width: 500px;
-  /* border-radius: 12px;
-  border: 2px solid var(--ternario); */
   padding: 0.2rem;
   display: flex;
   flex-direction: column;
@@ -228,6 +221,8 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   border: 2px solid var(--ternario);
 }
+
+/* SECCIONES DEMOSTRATIVAS PARA BORRAR ANTES DEL PUSH A DEVELOP */
 
 .header__container,
 .footer__container {
@@ -266,6 +261,8 @@
   color: var(--bg-y-fuentes);
   font-weight: 600;
 }
+
+/* SECCIÓN MIS HÁBITOS */
 
 /* Accesibilidad */
 @media (prefers-reduced-motion: reduce) {
