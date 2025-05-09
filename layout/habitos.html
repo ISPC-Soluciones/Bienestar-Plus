@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mis Hábitos</title>
+    <title>Hábitos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -49,16 +49,186 @@
 
     <main class="mis-habitos">
       <div class="container__habitos">
-        <h1>Mis Hábitos</h1>
-      </div>
-      <div class="container__habitos__usuario">
-        <h3>Mis Hábitos</h3>
-        <ul class="lista__habitos">
-          <li>Hábito 1: Ejercicio</li>
-          <li>Hábito 2: Hidratación</li>
-          <li>Hábito 3: Alimentación</li>
-          <li>Hábito 4: Sueño</li>
-        </ul>
+        <div class="container__titulo__habitos">
+          <h1>Hábitos de <span>Cosme</span></h1>
+        </div>
+        <div class="container__parrafo__habitos">
+          <p class="texto__parrafo__habitos">
+            Aquí puedes ver y gestionar tus hábitos, evaluar tu progreso y
+            modificar tus rutinas, para lograr los mejores resultados. Recuerda
+            que cada pequeño paso cuenta en tu camino hacia una vida más
+            saludable. ¡Sigue adelante!
+          </p>
+        </div>
+        <div class="container__habitos__usuario">
+          <div class="container__listado__habitos">
+            <h2>Rutinas</h2>
+            <p class="parrafo__rutinas">
+              Ver los hábitos que has seleccionado para mejorar tu bienestar.
+            </p>
+          </div>
+          <div class="container__rutinas">
+            <div class="container__tabs__rutinas">
+              <div class="tabs">
+                <div class="tab-buttons">
+                  <button class="tab-button active" data-tab="ejercicio">
+                    Ejercicio
+                  </button>
+                  <button class="tab-button" data-tab="hidratacion">
+                    Hidratación
+                  </button>
+                  <button class="tab-button" data-tab="alimentacion">
+                    Alimentación
+                  </button>
+                  <button class="tab-button" data-tab="sueno">Sueño</button>
+                </div>
+                <div class="tab-content active" id="ejercicio">
+                  <h3>Ejercicio</h3>
+                  <p>
+                    Tu rutina de ejercicio actual. Puedes modificarla para que
+                    se ajuste a tus necesidades.
+                  </p>
+                  <div class="logo__ejercico">
+                    <i class="fa-solid fa-person-running"></i>
+                  </div>
+                  <div class="contenido__ejercicios">
+                    <div class="contenido__ejercicios__flexiones">
+                      <h4>Flexiones</h4>
+                      <p>Realiza 100 flexiones diarias.</p>
+                      <din class="container__flexiones__demo">
+                        <img src="/layout/assets/flexiones.jpg" alt="" />
+                      </din>
+                      <div class="container__btn__flexiones">
+                        <button class="btn__agregar__flexiones">
+                          Agregar a Mi Rutina <i class="fa-solid fa-check"></i>
+                        </button>
+                        <button class="btn__quitar__flexiones">
+                          Quitar de Mi Rutina <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="contenido__ejercicios__abdominales">
+                      <h4>Abdominales</h4>
+                      <p>Haz 100 abdominales diarias.</p>
+                      <din class="container__abdominales__demo">
+                        <img src="/layout/assets/abdominales.jpg" alt="" />
+                      </din>
+                      <div class="container__btn__abdominales">
+                        <button class="btn__agregar__abdominales">
+                          Agregar a Mi Rutina <i class="fa-solid fa-check"></i>
+                        </button>
+                        <button class="btn__quitar__abdominales">
+                          Quitar de Mi Rutina <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="contenido__ejercicios__sentadillas">
+                      <h4>Sentadillas</h4>
+                      <p>Realiza 100 sentadillas diarias.</p>
+                      <din class="container__sentadillas__demo">
+                        <img src="/layout/assets/sentadillas.jpg" alt="" />
+                      </din>
+                      <div class="container__btn__sentadillas">
+                        <button class="btn__agregar__sentadillas">
+                          Agregar a Mi Rutina <i class="fa-solid fa-check"></i>
+                        </button>
+                        <button class="btn__quitar__sentadillas">
+                          Quitar de Mi Rutina <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="contenido__ejercicios__correr">
+                      <h4>Correr</h4>
+                      <p>Corre 10 kilómetros diarios.</p>
+                      <din class="container__correr__demo">
+                        <img src="/layout/assets/correr.jpg" alt="" />
+                      </din>
+                      <div class="container__btn__correr">
+                        <button class="btn__agregar__correr">
+                          Agregar a Mi Rutina <i class="fa-solid fa-check"></i>
+                        </button>
+                        <button class="btn__quitar__correr">
+                          Quitar de Mi Rutina <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-content" id="hidratacion">
+                  <h3>Hidratación</h3>
+                  <p>
+                    Se recomienda que los adultos sanos consuman entre 1.5 y 2
+                    litros de agua al día. Un vaso de agua estándar suele
+                    equivaler a 250 ml (mililitros).
+                  </p>
+                  <div class="logo__agua">
+                    <i class="fa-solid fa-glass-water"></i>
+                  </div>
+                  <div class="contenido__agua">
+                    <h4>Mi Ingesta Diaria</h4>
+                    <din class="container__agua__demo">
+                      <img src="/layout/assets/agua.jpg" alt="" />
+                    </din>
+                    <div class="container__btn__agua">
+                      <button class="btn__agregar__agua">
+                        Agregar un vaso de agua bebido
+                        <i class="fa-solid fa-plus"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-content" id="alimentacion">
+                  <h3>Alimentación</h3>
+                  <p>
+                    Una dieta sana se define por la combinación equilibrada de
+                    alimentos que aportan los nutrientes esenciales y la energía
+                    que necesita el cuerpo para funcionar óptimamente. Se
+                    recomienda realizar al menos 3 comidas principales al día
+                    (desayuno, almuerzo y cena) y, en algunos casos, incluir
+                    colaciones intermedias.
+                  </p>
+                  <div class="logo__comida">
+                    <i class="fa-solid fa-utensils"></i>
+                  </div>
+                  <div class="contenido__comida">
+                    <h4>Mi Plan Nutricional</h4>
+                    <din class="container__comida__demo">
+                      <img src="/layout/assets/comida.jpg" alt="" />
+                    </din>
+                    <div class="container__btn__comida">
+                      <button class="btn__agregar__comida">
+                        ir a editar mi plan nutricional
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-content" id="sueno">
+                  <h3>Sueño</h3>
+                  <p>
+                    En general, se recomienda que los adultos duerman entre 7 y
+                    9 horas por noche para una buena salud y bienestar.
+                  </p>
+                  <div class="logo__sueno">
+                    <i class="fa-solid fa-bed"></i>
+                  </div>
+                  <div class="contenido__sueno">
+                    <h4>Mis Horas de Sueño</h4>
+                    <din class="container__sueno__demo">
+                      <img src="/layout/assets/sueno.jpg" alt="" />
+                    </din>
+                    <div class="container__btn__sueno">
+                      <button class="btn__agregar__sueno">
+                        Agregar horas de sueño
+                        <i class="fa-solid fa-moon"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 
@@ -68,6 +238,6 @@
       </div>
     </footer>
 
-    <script src="/layout/scripts/script.js"></script>
+    <script src="/layout/toggle_rutinas.js"></script>
   </body>
 </html>
