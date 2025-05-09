@@ -424,23 +424,7 @@
   margin-bottom: 1rem;
 }
 
-.logo__ejercico i,
-.logo__agua i,
-.logo__comida i,
-.logo__sueno i {
-  font-size: 6rem;
-  color: var(--ternario);
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.contenido__ejercicios__flexiones,
-.contenido__ejercicios__abdominales,
-.contenido__ejercicios__sentadillas,
-.contenido__ejercicios__correr,
-.contenido__agua,
-.contenido__comida,
-.contenido__sueno {
+.contenido__ejercicios {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -450,157 +434,115 @@
   margin-bottom: 2rem;
 }
 
-.container__flexiones__demo,
-.container__abdominales__demo,
-.container__sentadillas__demo,
-.container__correr__demo,
-.container__agua__demo,
-.container__comida__demo,
-.container__sueno__demo {
+.card__habito {
+  background-color: var(--bg-y-fuentes);
+  color: var(--bg-fondo);
+  border: 2px solid var(--ternario);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  max-width: 400px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  max-width: 1200px;
-  margin-bottom: 1rem;
-  padding: 2rem;
+  margin-top: 2rem;
+  gap: 1.2rem;
+  transition: transform 0.3s ease-in-out;
 }
 
-.container__flexiones__demo img,
-.container__abdominales__demo img,
-.container__sentadillas__demo img,
-.container__correr__demo img,
-.container__agua__demo img,
-.container__comida__demo img,
-.container__sueno__demo img {
+.card__habito:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card__habito__titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+}
+
+.card__habito__descripcion {
+  font-size: 1rem;
+  font-family: var(--fuente-base);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--bg-y-fuentes);
+}
+
+.card__presentacion__logo i {
+  font-size: 6rem;
+  color: var(--ternario);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card__habito__imagen img {
   width: 100%;
-  height: 250px;
-  border-radius: 5%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card__habito__imagen__main img {
+  width: 70%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
-.container__btn__flexiones,
-.container__btn__abdominales,
-.container__btn__sentadillas,
-.container__btn__correr,
-.container__btn__agua,
-.container__btn__comida,
-.container__btn__sueno {
+.card__habito__acciones {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   gap: 1rem;
-  margin-top: 2rem;
 }
 
-.btn__quitar__flexiones,
-.btn__quitar__abdominales,
-.btn__quitar__sentadillas,
-.btn__quitar__correr {
-  background-color: var(--cuaternario);
-  color: var(--bg-y-fuentes);
+.btn__habito {
   font-family: var(--fuente-base);
+  font-weight: 600;
   font-size: 1rem;
-  margin-top: 0.5rem;
-  font-weight: 700;
   padding: 0.5rem 1rem;
-  border-radius: 12px;
-  border: 1.5px solid var(--fav-cristian);
+  margin-top: 2rem;
+  border-radius: 8px;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
-.btn__quitar__flexiones:hover,
-.btn__quitar__abdominales:hover,
-.btn__quitar__sentadillas:hover,
-.btn__quitar__correr:hover {
-  background-color: #e06a46;
-  box-shadow: 0 0 10px var(--ternario);
+.btn--agregar {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
 }
 
-.btn__agregar__flexiones,
-.btn__agregar__abdominales,
-.btn__agregar__sentadillas,
-.btn__agregar__correr,
-.btn__agregar__agua,
-.btn__agregar__comida,
-.btn__agregar__sueno {
+.btn--agregar:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 8px var(--primario);
+}
+
+.btn--quitar {
+  background-color: var(--cuaternario);
+  color: white;
+}
+
+.btn--quitar:hover {
+  background-color: #e07a55;
+  box-shadow: 0 0 8px var(--cuaternario);
+}
+
+.btn--ir {
   background-color: var(--ternario);
   color: var(--bg-y-fuentes);
-  font-family: var(--fuente-base);
-  font-size: 1rem;
-  margin-left: 2rem;
-  margin-top: 0.5rem;
-  font-weight: 700;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  border: 1.5px solid var(--fav-cristian);
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
 }
 
-.btn__agregar__flexiones:hover,
-.btn__agregar__abdominales:hover,
-.btn__agregar__sentadillas:hover,
-.btn__agregar__correr:hover,
-.btn__agregar__agua:hover,
-.btn__agregar__comida:hover,
-.btn__agregar__sueno:hover {
-  background-color: var(--primario);
-  box-shadow: 0 0 10px var(--ternario);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* SECCIONES DEMOSTRATIVAS PARA BORRAR ANTES DEL PUSH A DEVELOP */
-
-.header__container,
-.footer__container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-}
-
-.header__container {
-  background: linear-gradient(90deg, var(--ternario), var(--primario));
-}
-
-.footer__container {
-  background-color: var(--cuaternario);
-}
-
-.header__container img {
-  background-color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid var(--fav-cristian);
-}
-
-.header__nav {
-  display: flex;
-  gap: 1rem;
-}
-
-.header__nav li {
-  list-style: none;
-  display: inline-block;
-  margin: 0 1rem;
-  font-family: var(--fuente-base);
-  color: var(--bg-y-fuentes);
-  font-weight: 600;
+.btn--ir:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 8px var(--ternario);
 }
 
 /* Accesibilidad */
@@ -660,6 +602,38 @@
   .btn__ir__mis__habitos {
     font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container__habitos__usuario {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .container__tabs__rutinas {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .tab-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tab-button {
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .card__habito {
+    padding: 1.2rem;
+    max-width: 90%;
+  }
+
+  .card__habito__acciones {
+    flex-direction: column;
   }
 }
 
