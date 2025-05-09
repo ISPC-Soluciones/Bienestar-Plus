@@ -74,6 +74,15 @@
   object-fit: cover;
 }
 
+.qs-photo-team img {
+  width: 30%;
+  height: 30%;
+  border-radius: 1rem;
+  object-fit: cover;
+  ;
+}
+
+
 .qs-info {
   flex: 1;
 }
@@ -102,3 +111,37 @@
   color: var(--bg-y-fuentes);
 }
 
+.ispc-soluciones {
+  background-color: var(--secundario);
+  padding: 4rem 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  margin: 3rem 0;
+}
+
+.ispc-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ispc-logo {
+  max-width: 150px;
+  margin-bottom: 2rem;
+  animation: zoomIn 0.8s ease;
+}
+
+.ispc-text h2 {
+  font-size: 2.5rem;
+  color: var(--ternario);
+  margin-bottom: 1.5rem;
+  font-family: var(--fuente-titulo);
+}
+
+.ispc-text p {
+  font-size: 1.1rem;
+  color: var(--bg-y-fuentes);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-family: "Nunito Sans", sans-serif;
+}
