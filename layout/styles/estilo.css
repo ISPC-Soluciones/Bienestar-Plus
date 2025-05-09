@@ -18,6 +18,98 @@
   --fuente-titulo: "Nunito Sans", sans-serif;
 }
 
+/* ########## NAVBAR ################ */
+
+.navbar {
+    background-color:var(--bg-fondo);
+    color: white;
+    padding: 0.9375rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color:var(--bg-y-fuentes);
+}
+
+.logo img {
+    max-height: 2.5rem;
+    margin-right: 0.9375rem;
+}
+
+.logo span {
+    font-size: 1.2em;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-links li a {
+    display: block;
+    color:var(--bg-y-fuentes);
+    text-decoration: none;
+    padding: 0.625rem 0.9375rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.nav-links li a:hover {
+    background-color:var(--cuaternario);
+}
+
+/* Estilos para el menú hamburguesa y el checkbox */
+.hamburger {
+    display: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: var(--bg-y-fuentes);
+}
+
+#menu-toggle {
+    display: none; /* Mantenemos el checkbox oculto */
+}
+
+/* Estilos para la versión móvil (controlados por el checkbox) */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 3.75rem;
+        left: 0;
+        background-color:var(--bg-fondo);
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links li a {
+        padding: 0.9375rem 1.25rem;
+    }
+
+    .hamburger {
+        display: flex; /* Mostrar el label del hamburguesa en pantallas pequeñas */
+    }
+
+    /* Mostrar el menú cuando el checkbox está marcado */
+    #menu-toggle:checked ~ .nav-links {
+        display: flex;
+    }
+}
+
+
+
 /* ########## PAGINA DE REGISTRO ################ */
 
 .registro-body {
