@@ -39,7 +39,7 @@
 .logo span {
     font-size: 1.2em;
     font-weight: bold;
-    color: var(--secundario);
+    color: var(--bg-fondo);
 }
 
 .nav-links {
@@ -60,6 +60,10 @@
 
 .nav-links li a:hover {
     background-color:var(--cuaternario);
+}
+
+.nav-registrarse {
+  font-weight: bolder;
 }
 
 /* Estilos para el menú hamburguesa y el checkbox */
