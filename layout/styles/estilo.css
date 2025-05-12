@@ -83,7 +83,7 @@
 }
 
 /* Estilos para la versión móvil (controlados por el checkbox) */
-@media (max-width: 768px) {
+@media (max-width: 55.9375em) {
 
     .navbar {
         padding: 0.9375rem 3rem;
@@ -269,7 +269,7 @@ footer {
 }
 
 /* Estilos responsivos (opcional) */
-@media (max-width: 48em) { /* 768px = 48em */
+@media (max-width: 55.9375em) { /* 768px = 48em */
     .footer-container {
         flex-direction: column;
         text-align: center;
