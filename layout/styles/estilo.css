@@ -903,3 +903,75 @@
   margin-bottom: 1rem;
   font-family: "Nunito Sans", sans-serif;
 }
+
+/* medias queries*/
+/* tablets */
+
+@media (max-width: 768px) {
+  .ispc-text h2 {
+    font-size: 2rem;
+  }
+
+  .ispc-text p {
+    font-size: 1rem;
+  }
+
+  .ispc-logo {
+    max-width: 120px;
+  }
+}
+
+/* smartphones */
+
+@media (max-width: 480px) {
+  .ispc-soluciones {
+    padding: 2rem 1rem;
+  }
+
+  .ispc-text h2 {
+    font-size: 1.6rem;
+  }
+
+  .ispc-text p {
+    font-size: 0.95rem;
+  }
+
+  .ispc-logo {
+    max-width: 100px;
+    margin-bottom: 1rem;
+  }
+}
+
+/* desktop*/
+
+@media (min-width: 1024px) {
+  .ispc-soluciones {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .ispc-logo {
+    max-width: 180px;
+  }
+
+  .ispc-text {
+    flex: 1;
+    text-align: left;
+  }
+
+  .ispc-text h2 {
+    font-size: 2.8rem;
+    text-align: left;
+  }
+
+  .ispc-text p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    text-align: justify;
+  }
+}
