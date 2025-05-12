@@ -228,29 +228,25 @@ footer {
 
 .footer-social h3 {
     color: var(--bg-y-fuentes);
-    margin-bottom: 0.625rem; /* 10px = 0.625em */
-    font-size: 1.1em;
+    margin-bottom: 0.625rem; /* 10px = 0.625rem */
+    font-size: 1.1rem; /* 17.6px = 1.1rem */
     text-align: left; /* Asegura la alineación a la izquierda */
 }
 
-.footer-social .social-icons {
+.footer-social .social-icons a {
     display: flex; /* Alinea los iconos horizontalmente */
     align-items: center; /* Centra verticalmente los iconos */
-}
-
-.footer-social .social-icons a {
     display: inline-block;
     margin-right: 0.625rem; /* 10px = 0.625em */
-}
-
-.footer-social .social-icons img {
-    max-height: 1.875rem; /* 30px = 1.875em */
+    font-size: 1.3rem;
     opacity: 0.8;
     transition: opacity 0.3s ease;
+    color: var(--bg-y-fuentes);
 }
 
-.footer-social .social-icons img:hover {
-    opacity: 1;
+
+.footer-social .social-icons a:hover {
+    color: var(--cuaternario);
 }
 
 .footer-copyright {
