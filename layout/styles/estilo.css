@@ -1271,16 +1271,23 @@ footer {
       color: var(--cuaternario);
     }
 
-    .hero-text button {
-      margin-top: 2rem;
-      background-color: var(--primario);
-      border: none;
+    .btn{
+      text-decoration: none;
+      cursor: pointer;
       padding: 1rem 2rem;
+      border: none;
       font-size: 1rem;
       border-radius: 25px;
-      cursor: pointer;
       font-weight: 600;
     }
+
+    .hero-text .btn {
+      color: var(--bg-y-fuentes);
+      background-color: var(--primario);
+      margin-top: 2rem;
+    }
+
+
 
     .hero img {
       max-width: 400px;
@@ -1348,13 +1355,7 @@ footer {
       margin-bottom: 1rem;
     }
 
-    .cta button{
+    .cta .btn{
       background-color: var(--cuaternario);
-      border: none;
-      padding: 1rem 2rem;
-      font-size: 1rem;
-      border-radius: 25px;
-      cursor: pointer;
-      font-weight: 600;
       color: var(--bg-fondo);
     }
