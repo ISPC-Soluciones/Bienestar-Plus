@@ -917,7 +917,6 @@ footer {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  margin: 1rem;
 }
 
 .registro-contenedor-main {
@@ -927,6 +926,14 @@ footer {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 420px;
+}
+
+.logo-vertical-registro {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  height: 7rem;
+  margin-bottom: 2rem;
 }
 
 .registro-h1 {
