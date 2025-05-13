@@ -990,6 +990,8 @@ footer {
   background-color: #e06a46;
 }
 
+
+
 /* DISEÑO RESPONSIVE(MEDIA QUERIES) PAG REGISTRO */
 
 /* tamaño Mobile  */
@@ -1013,6 +1015,7 @@ footer {
     padding: 0.65rem;
   }
 }
+
 
 /* tamaño  tablets  */
 @media (max-width: 768px) {
@@ -1043,6 +1046,78 @@ footer {
   }
 }
 
+
+
+/* ########## PAGINA DE INICIO ################ */
+
+.login-body {
+  background-image: url('../assets/healthy-llifestyle-elements-frame-background-free-vector.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: rgba(245, 247, 248, 0.9); 
+}
+
+
+.login-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 2px solid var(--ternario);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-form h2 {
+  text-align: center;
+  font-family: var(--fuente-titulo);
+  margin-bottom: 1.5rem;
+  color: var(--bg-y-fuentes);
+}
+
+.login-form input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid var(--primario);
+  border-radius: 6px;
+  font-family: var(--fuente-base);
+}
+
+.login-form button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primario);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--fuente-base);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: var(--ternario);
+}
+
+.register-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--cuaternario);
+  font-weight: bold;
+  text-decoration: none;
+}
 
 /* Estilo QUIENES SOMOS */
 
