@@ -1286,6 +1286,11 @@ footer {
       background-color: var(--primario);
       margin-top: 2rem;
     }
+    .hero-text .btn:hover {
+      background-color: var(--cuaternario);
+      color: white;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
 
 
@@ -1359,3 +1364,62 @@ footer {
       background-color: var(--cuaternario);
       color: var(--bg-fondo);
     }
+    .cta .btn:hover{
+      color: var(--primario);
+      background-color: var(--bg-y-fuentes);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* HOME PANTALAS MEDIANAS (TABLETS) */
+  @media (max-width: 992px) {
+  .features .feature-list {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .feature {
+    width: 45%;
+  }
+}
+
+
+/* HOME PANTALLES PEQUEÑAS (MOBILE) */
+  @media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero img {
+    max-width: 100%;
+    margin-top: 2rem;
+  }
+
+  .features .feature-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .hero-text h2 {
+    font-size: 2rem;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+  }
+
+  .features h3,
+  .cta h3 {
+    font-size: 1.5rem;
+  }
+
+  .testimonios h3 {
+    font-size: 1.2rem;
+  }
+}
