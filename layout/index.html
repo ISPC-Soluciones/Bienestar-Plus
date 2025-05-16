@@ -26,22 +26,101 @@
     />
   </head>
   <body>
-    <nav class="navbar">
-      <a href="index.html" class="logo">
-        <img src="./assets/isotipo-colo.png" alt="Logo BienestarPlus" />
-        <span>BienestarPlus</span>
-      </a>
-      <input type="checkbox" id="menu-toggle" />
-      <label for="menu-toggle" class="hamburger">&#9776;</label>
-      <ul class="nav-links">
-        <li><a href="./index.html">Inicio</a></li>
-        <li><a href="./nosotros.html">Nosotros</a></li>
-        <li><a href="#">Iniciar Sesión</a></li>
-        <li>
-          <a href="./registro.html" class="nav-registrarse">Registrarse</a>
-        </li>
-      </ul>
-    </nav>
+    <header>
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="./assets/isotipo-colo.png" alt="Logo BienestarPlus" />
+          <span>BienestarPlus</span>
+        </a>
+        <input type="checkbox" id="menu-toggle" />
+        <label for="menu-toggle" class="hamburger">&#9776;</label>
+        <ul class="nav-links">
+          <li><a href="./index.html" class="nav-registrarse">Inicio</a></li>
+          <li>
+            <a href="./registro.html" class="nav-registrarse">Registrarse</a>
+          </li>
+          <li>
+            <a href="./login.html" class="nav-registrarse">Iniciar Sesión</a>
+          </li>
+          <li>
+            <a href="./perfil.html" class="nav-registrarse">Perfil</a>
+          </li>
+          <li>
+            <a href="./habitos.html" class="nav-registrarse">Habitos</a>
+          </li>
+          <li>
+            <a href="./nosotros.html" class="nav-registrarse">Nosotros</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="hero-text">
+          <h2>
+            El camino hacia una vida más <span>saludable</span> comienza aquí
+          </h2>
+          <p>¿Querés mejorar tus hábitos?</p>
+          <br />
+          <a href="./registro.html" class="btn">Regístrate</a>
+        </div>
+        <img
+          src="./assets/Home-MujerBebiendoAgua.jpg"
+          alt="Mujer Saludable bebiendo agua"
+        />
+      </section>
+
+      <section class="features">
+        <div class="features-title">
+          <h3>¿Qué ofrece <span>BienestarPlus</span> ?</h3>
+        </div>
+        <div class="feature-list">
+          <div class="feature">
+            <img
+              src="./assets/comprobacion-de-lista-verde.png"
+              alt="icono planificación"
+            />
+            <h4>Planificación de hábitos</h4>
+            <p>
+              Crea rutinas diarias para mejorar tu bienestar físico y mental.
+            </p>
+          </div>
+          <div class="feature">
+            <img
+              src="./assets/chat-flecha-crecer-verde.png"
+              alt="icono estádisticas"
+            />
+            <h4>Seguimiento personalizado</h4>
+            <p>Monitorea tu progreso con estadísticas fáciles de leer.</p>
+          </div>
+          <div class="feature">
+            <img
+              src="./assets/notificacion-de-campana-en-redes-sociales-verde.png"
+              alt="icono planificacion"
+            />
+            <h4>Recordatorios</h4>
+            <p>Recibí notificaciones para mantenerte enfocado.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="testimonios">
+        <h3>Testimonios</h3>
+        <p class="testimonio">
+          “Gracias a BienestarPlus, comencé a caminar todos los días y me siento
+          con más energía.” - Carla M.
+        </p>
+        <p class="testimonio">
+          “La app me ayudó a dejar el azúcar y organizar mejor mis comidas.” -
+          Marcos R.
+        </p>
+      </section>
+
+      <section class="cta">
+        <h3>¿Listo para tranformar tu vida?</h3>
+        <a href="./registro.html" class="btn">Comenzá ahora</a>
+      </section>
+    </main>
 
     <footer>
       <div class="footer-container">
@@ -72,21 +151,22 @@
           <h3>Seguinos en:</h3>
           <div class="social-icons">
             <a
-              href="https://www.instagram.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              ><i class="fab fa-instagram"></i
-            ></a>
-            <a href="https://x.com/" target="_blank" rel="noopener noreferrer"
-              ><i class="fab fa-instagram"></i>
-            </a>
-            <a
               href="https://www.tiktok.com/"
               target="_blank"
               rel="noopener noreferrer"
-            >
-              <i class="fab fa-tiktok"></i
-            ></a>
+              ><i class="fa-brands fa-tiktok"></i>
+            </a>
+
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><i class="fab fa-instagram"></i>
+            </a>
+
+            <a href="https://x.com/" target="_blank" rel="noopener noreferrer"
+              ><i class="fa-brands fa-x-twitter"></i>
+            </a>
           </div>
         </div>
       </div>
