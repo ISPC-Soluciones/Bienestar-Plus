@@ -28,10 +28,14 @@
   <body>
     <div class="registro-body">
       <main class="registro-contenedor-main">
-
-        <a href="./index.html">
-          <img src="./assets/vertical-color.png" class="logo-vertical-registro" alt="logo-bienestarPlus-vertical">
-        </a>
+        <h1 class="registro-h1">BienestarPlus</h1>
+        <div class="container__logo">
+          <img
+            src="../layout/assets/isotipo-colo.png"
+            alt="Logo BienestarPlus"
+            class="logo__img"
+          />
+        </div>
         <h2 class="registro-h2">Registro</h2>
 
         <form class="registro-form" action="/ruta-de-registro" method="POST">
@@ -84,11 +88,12 @@
 
           <button class="registro-button" type="submit">Registrarse</button>
         </form>
+        <div class="container__volver__inicio">
+          <a href="./index.html" class="btn__volver__inicio"
+            >Volver al Inicio <i class="fa-solid fa-rotate-left"></i
+          ></a>
+        </div>
       </main>
     </div>
-    <footer class="footer-copyright">
-          <p>&copy; 2025 SolucionesISPC - Todos los derechos reservados.</p>
-    </footer>
-
   </body>
 </html>

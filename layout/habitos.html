@@ -26,9 +26,42 @@
     />
   </head>
   <body>
+    <header>
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="./assets/isotipo-colo.png" alt="Logo BienestarPlus" />
+          <span>BienestarPlus</span>
+        </a>
+        <input type="checkbox" id="menu-toggle" />
+        <label for="menu-toggle" class="hamburger">&#9776;</label>
+        <ul class="nav-links">
+          <li><a href="./index.html" class="nav-registrarse">Inicio</a></li>
+          <li>
+            <a href="./registro.html" class="nav-registrarse">Registrarse</a>
+          </li>
+          <li>
+            <a href="./login.html" class="nav-registrarse">Iniciar Sesión</a>
+          </li>
+          <li>
+            <a href="./perfil.html" class="nav-registrarse">Perfil</a>
+          </li>
+          <li>
+            <a href="./habitos.html" class="nav-registrarse">Habitos</a>
+          </li>
+          <li>
+            <a href="./nosotros.html" class="nav-registrarse">Nosotros</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
     <main class="mis-habitos">
       <section class="rutinas">
         <div class="container__habitos">
+          <div class="container__btn__cerrar__sesion">
+            <a href="./index.html" class="btn__cerrar__sesion"
+              >Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i
+            ></a>
+          </div>
           <div class="container__titulo__habitos">
             <h1>Hábitos de <span>Cosme</span></h1>
           </div>
@@ -241,7 +274,58 @@
         </div>
       </section>
     </main>
+    <footer>
+      <div class="footer-container">
+        <div class="footer-logo">
+          <a
+            href="https://github.com/ISPC-Soluciones/Bienestar-Plus"
+            class="logo-footer"
+          >
+            <img src="./assets/isotipo-colo.png" alt="Logo BienestarPlus" />
+            <span>BienestarPlus</span>
+          </a>
+        </div>
+        <div class="footer-navigation-left">
+          <ul>
+            <li><a href="./index.html">Inicio</a></li>
+            <li><a href="./nosotros.html">Nosotros</a></li>
+            <li><a href="#">Centro de Ayuda</a></li>
+          </ul>
+        </div>
+        <div class="footer-navigation-center">
+          <ul>
+            <li><a href="#">Preguntas Frecuentes</a></li>
+            <li><a href="#">Términos de Uso</a></li>
+            <li><a href="#">Privacidad</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>Seguinos en:</h3>
+          <div class="social-icons">
+            <a
+              href="https://www.tiktok.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><i class="fa-brands fa-tiktok"></i>
+            </a>
 
-    <script src="/layout/toggle_rutinas.js"></script>
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><i class="fab fa-instagram"></i>
+            </a>
+
+            <a href="https://x.com/" target="_blank" rel="noopener noreferrer"
+              ><i class="fa-brands fa-x-twitter"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <p>&copy; 2025 SolucionesISPC - Todos los derechos reservados.</p>
+      </div>
+    </footer>
+    <script src="./scripts/toggle_rutinas.js"></script>
   </body>
 </html>

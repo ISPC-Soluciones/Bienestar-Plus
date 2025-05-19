@@ -60,13 +60,20 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
             └── 📁styles
                 └── estilo.css
     └── 📁layout
+        └── .gitignore
         └── 📁assets
-            └── maquetados.jpg
+            └── imagenes.jpg
+        └── habitos.html
         └── index.html
+        └── login.html
         └── nosotros.html
         └── perfil.html
+        └── registro.html
+        └── 📁scripts
+            └── toggle_rutinas.js
         └── 📁styles
             └── estilo.css
+            └── normalize.css
     └── README.md
 ```
 
