@@ -401,7 +401,7 @@ footer {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
-.container__usuario__info span {
+.container__datos__usuario {
   color: var(--cuaternario);
 }
 
