@@ -109,7 +109,7 @@ El coral cálido (#FF8A65) introduce un punto de energía que motiva e inspira a
 El celeste brillante (#6EC1E4) proyecta modernidad y frescura digital, mientras que el gris oscuro (#333B3E) mantiene el equilibrio, anclando la interfaz con una base sólida y profesional.
 <br>
 📖 Legibilidad & Accesibilidad<br>
-La combinación de tipografías sin serifas, como Montserrat y Nunito Sans, junto a una paleta clara y bien jerarquizada, garantiza que la experiencia visual sea agradable y accesible en cualquier dispositi
+La combinación de tipografías sin serifas, como Montserrat y Nunito Sans, junto a una paleta clara y bien jerarquizada, garantiza que la experiencia visual sea agradable y accesible en cualquier dispositivo.
 <br>
 <br>
 <br>
