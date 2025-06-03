@@ -427,6 +427,7 @@ footer {
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
 }
 
+.container_bt_login,
 .container__btn__editar__perfil,
 .container__btn__ir__mis__habitos {
   display: flex;
@@ -436,7 +437,9 @@ footer {
   margin-top: 2rem;
 }
 
-.btn__editar__perfil {
+.login-form button,
+.btn__editar__perfil,
+.btn__ir__mis__habitos {
   background-color: var(--primario);
   color: var(--bg-y-fuentes);
   font-family: var(--fuente-base);
@@ -445,10 +448,18 @@ footer {
   font-weight: 700;
   padding: 0.5rem 1rem;
   border-radius: 12px;
-  border: 1.5px solid var(--fav-cristian);
+  border: 1.5px solid var(--ternario);
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 }
+
+.btn__editar__perfil:hover,
+.btn__ir__mis__habitos:hover,
+.login-form button:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 10px var(--ternario);
+}
+
 .container__btn__cerrar__sesion {
   display: flex;
   justify-content: flex-end;
@@ -473,26 +484,6 @@ footer {
 
 .btn__cerrar__sesion:hover {
   background-color: #ffb499;
-  box-shadow: 0 0 10px var(--ternario);
-}
-
-.btn__ir__mis__habitos {
-  background-color: var(--primario);
-  color: var(--bg-y-fuentes);
-  font-family: var(--fuente-base);
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  border: 1.5px solid var(--fav-cristian);
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.btn__editar__perfil:hover,
-.btn__ir__mis__habitos:hover {
-  background-color: var(--secundario);
   box-shadow: 0 0 10px var(--ternario);
 }
 
@@ -1129,10 +1120,10 @@ footer {
 }
 
 .login-form h2 {
+  color: var(--cuaternario);
   text-align: center;
   font-family: var(--fuente-titulo);
   margin-bottom: 1.5rem;
-  color: var(--bg-y-fuentes);
 }
 
 .login-form input {
@@ -1142,23 +1133,6 @@ footer {
   border: 1.5px solid var(--primario);
   border-radius: 6px;
   font-family: var(--fuente-base);
-}
-
-.login-form button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: var(--primario);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-family: var(--fuente-base);
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.login-form button:hover {
-  background-color: var(--ternario);
 }
 
 .register-link {
@@ -1368,7 +1342,7 @@ footer {
 }
 
 /* ########## HOME ################ */
-.img-carousel{
+.img-carousel {
   max-height: 20%;
 }
 
@@ -1404,14 +1378,12 @@ footer {
   text-align: center;
 }
 
-
 .carousel-item img.img-carousel {
   height: 75vh;
   object-fit: cover;
   filter: brightness(0.6);
   width: 100%;
 }
-
 
 .carousel-caption {
   position: absolute;
@@ -1434,9 +1406,8 @@ footer {
 }
 
 .carousel-caption span {
-  color: var(--primario)
+  color: var(--primario);
 }
-
 
 .btn-primary {
   background-color: var(--primario);
@@ -1453,7 +1424,6 @@ footer {
   background-color: var(--cuaternario);
   border-color: #1e7e34;
 }
-
 
 .hero-mobile-content {
   background-color: #f8f9fa;
@@ -1473,7 +1443,8 @@ footer {
 /* Media queries*/
 /* Para pantallas de tamaño mediano (tablets y laptops pequeñas) */
 @media (max-width: 992px) {
-  .hero-section, .carousel-item img.img-carousel {
+  .hero-section,
+  .carousel-item img.img-carousel {
     height: 65vh;
     max-height: 65vh;
   }
@@ -1490,7 +1461,8 @@ footer {
 
 /* Para pantallas más pequeñas (tablets en vertical y móviles grandes) */
 @media (max-width: 768px) {
-  .hero-section, .carousel-item img.img-carousel {
+  .hero-section,
+  .carousel-item img.img-carousel {
     height: 55vh;
     max-height: 55vh;
   }
@@ -1504,7 +1476,8 @@ footer {
 
 /* Para móviles */
 @media (max-width: 576px) {
-  .hero-section, .carousel-item img.img-carousel {
+  .hero-section,
+  .carousel-item img.img-carousel {
     height: 45vh;
     max-height: 45vh;
   }
