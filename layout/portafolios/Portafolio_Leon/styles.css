@@ -1,0 +1,309 @@
+/* Variables  */
+:root {
+  --color-acento: rgb(255, 0, 157);
+  --color-secundario: rgb(58, 255, 183);
+  --color-fondo-oscuro: #171717;
+  --color-claro: rgb(231, 231, 231);
+  --color-texto-secundario: #c7c7c7;
+}
+
+/* Estilos Globales */
+body {
+  scroll-behavior: smooth;
+  font-family: 'Montserrat', sans-serif;
+}
+
+section {
+  padding-top: 80px;
+}
+
+a, nav a, .navbar a {
+  color: white;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+a:hover, nav a:hover, .navbar a:hover {
+  color: var(--color-secundario);
+  transform: scale(1.05);
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 0;
+}
+
+.nav-item {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.logo {
+  width: 180px;
+}
+
+.lead {
+  font-size: medium;
+  color: var(--color-texto-secundario);
+}
+
+.spanOne {
+  color: var(--color-secundario);
+}
+
+.spanTwo {
+  font-size: large;
+  color: var(--color-acento);
+}
+
+.logo-footer{
+  width: 35%;
+}
+footer a {
+  transition: color 0.3s ease;
+}
+
+footer a img {
+  transition: transform 0.2s ease;
+}
+
+footer a:hover img {
+  transform: scale(1.1);
+}
+
+/* Inicio */
+#inicio {
+  background-image: url('./assets/images/practicas-desarollo-software.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  color: white;
+  position: relative;
+}
+
+#inicio .overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#inicio h1,
+#inicio p {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.boton-home:hover {
+  background-color: rgba(255, 0, 157, 0.861);
+}
+
+/* Tecnologías */
+#carousel-tecnologias {
+  transition: transform 0.5s ease-in-out;
+  width: max-content;
+}
+
+.carousel-wrapper {
+  position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.carousel-viewport {
+  width: 640px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  gap: 20px;
+}
+
+.carousel-track img {
+  padding: 30px;
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.carousel-arrow.left {
+  left: -40px;
+}
+
+.carousel-arrow.right {
+  right: -40px;
+}
+
+/* Tarjetas */
+.card {
+  background-color: var(--color-fondo-oscuro);
+  color: aliceblue;
+  transition: transform 0.3s ease, border 0.3s ease;
+}
+
+.card-title {
+  color: var(--color-acento);
+}
+
+.card:hover {
+  transform: scale(1.05) translateY(-5px);
+  border: 2px solid rgba(58, 255, 183, 0.699);
+  animation: pulseGlow 1.5s infinite;
+}
+
+.certificado-card {
+  transition: transform 0.4s ease, border 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.card-img-top {
+  object-fit: cover;
+  height: 200px;
+  width: 100%;
+}
+
+/* Contacto */
+#contacto {
+  background-image: url(./assets/images/contacto.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+#contacto h2 {
+  color: var(--color-acento);
+}
+
+.boton {
+  color: #000000;
+  background-color: var(--color-secundario);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.boton:hover {
+  color: #ffffff;
+  background-color: var(--color-acento);
+}
+
+.contact-form-wrapper {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.contact-form-wrapper .form-label,
+.contact-form-wrapper input,
+.contact-form-wrapper textarea {
+  color: white;
+}
+
+.contact-form-wrapper input,
+.contact-form-wrapper textarea {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #ccc;
+}
+
+.contact-form-wrapper input::placeholder,
+.contact-form-wrapper textarea::placeholder {
+  color: #ddd;
+}
+
+/* claras */
+.section-light {
+  background-color: var(--color-claro);
+}
+
+.section-light h2 {
+  color: var(--color-acento);
+}
+
+/* Utilidades */
+.green-title {
+  color: var(--color-secundario);
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 123, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+
+/* Responsive */
+
+.carousel-viewport {
+  width: 100%;
+  max-width: 1000px;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.carousel-track {
+  gap: 20px;
+}
+
+.carousel-track img {
+  width: 25%;
+  max-width: 140px;
+}
+
+/* Tablets: 3 logos por fila */
+@media (max-width: 991px) {
+  .carousel-track img {
+    width: 33.33%;
+  }
+
+  .logo-footer{
+    width: 50%;
+  }
+}
+
+/* Móviles: 2 logos por fila */
+@media (max-width: 767px) {
+  .carousel-track img {
+    width: 50%;
+  }
+
+  .carousel-arrow {
+    font-size: 1.5rem;
+  }
+
+  .carousel-arrow.left {
+    left: 10px;
+  }
+
+  .carousel-arrow.right {
+    right: 10px;
+  }
+
+  .logo-footer{
+    width: 75%;
+  }
+
+}
