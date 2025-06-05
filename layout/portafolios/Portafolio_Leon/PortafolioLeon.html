@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="PortfolioStyles.css" />
   </head>
   <body>
     <!-- Navbar -->
@@ -35,9 +35,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="#inicio">Inicio</a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a class="nav-link" href="#sobre-mi">Sobre mí</a>
             </li>
@@ -46,6 +46,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#tecnologias">Tecnologías</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#educacion">Educación</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#certificaciones">Certificaciones</a>
@@ -74,157 +77,124 @@
     </section>
 
     <!-- Sobre mí -->
-    <section id="sobre-mi" class="py-5 section-light">
-      <div class="container">
-        <h2 class="text-center mb-4">SOBRE MI</h2>
-        <div class="row">
-          <div class="col-md-6">
-            <p>
-              Soy un estudiante avanzado de la Tecnicatura en Desarrollo de Software del ISPC, apasionado por la tecnología y profundamente interesado en el avance científico y tecnológico. <br> <br>  A lo largo de mi formación he complementado mis estudios con diversos cursos.
-<br>
-Me destaco por ser una persona organizada, con una gran curiosidad y un fuerte compromiso con el aprendizaje continuo.  <br><br> Disfruto del trabajo en equipo y tengo facilidad para integrarme y colaborar en entornos dinámicos, donde el intercambio de ideas y conocimientos enriquece cada proyecto.
-<br><br>
-Mi objetivo es seguir aprendiendo y perfeccionando mis habilidades día a día, para poner mis conocimientos a disposición en un entorno laboral donde pueda aportar valor , contribuir al desarrollo de soluciones innovadoras y seguir creciendo como profesional en el mundo del desarrollo de software.
-            </p>
-          </div>
-          <div class="col-md-6">
-            <img
-              src="./assets/images/Foto_Perfil.jpeg"
-              alt="Foto personal"
-              class="img-fluid rounded"
-            />
-          </div>
-        </div>
+
+
+<section id="sobre-mi" class="py-5 section-light">
+  <div class="container">
+    <h2 class="text-center mb-5">SOBRE MI</h2>
+      <!-- <p class="text-center mb-5">Desarrollo profesional, <strong>DESARROLLO PERSONAL</strong></p> -->
+    <div class="row align-items-center">
+      <!-- Texto -->
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <h6 class="text-center mb-4"><strong> &lt;/ Desarrollo profesional, Desarrollo personal &gt; </strong></h6>
+        <!-- <strong class="text-center mb-5">DESARROLO PROFESIONAL, DESARROLO PERSONAL</strong> -->
+        <p>
+          Soy un estudiante avanzado de la Tecnicatura en Desarrollo de Software del Instituto Superior Politécnico Córdoba (ISPC) , apasionado por la tecnología y profundamente interesado en el avance científico y tecnológico. <br><br>
+          A lo largo de mi formación he complementado mis estudios con diversos cursos.<br><br>
+          Me destaco por ser una persona organizada, con una gran curiosidad y un fuerte compromiso con el aprendizaje continuo. <br><br>
+          Disfruto del trabajo en equipo y tengo facilidad para integrarme y colaborar en entornos dinámicos, donde el intercambio de ideas y conocimientos enriquece cada proyecto.<br><br>
+          Mi objetivo es seguir aprendiendo y perfeccionando mis habilidades día a día, para poner mis conocimientos a disposición en un entorno laboral donde pueda aportar valor, contribuir al desarrollo de soluciones innovadoras y seguir creciendo como profesional en el mundo del desarrollo de software.
+        </p>
       </div>
-    </section>
+
+      <!-- Imagen -->
+      <div class="col-lg-6 text-center">
+        <img src="./assets/images/Foto_Perfil.jpeg" alt="Foto personal" class="perfil-img img-fluid" />
+      </div>
+    </div>
+  </div>
+</section>
+
+
 
       <!-- Proyectos -->
 
-    <section id="proyectos" class="bg-dark py-5">
-      <div class="container">
-        <h2 class="green-title text-center mb-4">PROYECTOS</h2>
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-          <!-- Proyecto 1 -->
-          <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
-              <a
-                href="https://github.com/ISPC-Soluciones/Bienestar-Plus"
-                target="_blank"
-              >
-                <img
-                src="./assets/images/Proyectos/BienestarPlus.jpg"
-                class="card-img-top img-fluid"
-                alt="Proyecto 1"
-              />
-              </a>
-              <div class="card-body text-center">
-                <h5 class="card-title">Bienestar-Plus</h5>
-                <p class="card-text"> Bienestar+ es una aplicación web orientada al bienestar
-                  físico, mental y emocional. Permite a los usuarios gestionar
-                  hábitos saludables, acceder a recursos de salud mental y
-                  recibir recomendaciones personalizadas para mejorar su calidad
-                  de vida. Desarrollada por estudiantes de la Tecnicatura en
-                  Desarrollo de Software, esta app es parte de un proyecto
-                  académico colaborativo.</p>
-              </div>
-            </div>
-          </div>
+<section id="proyectos" class="proyectos p-4">
+  <h2 class="green-title text-center mb-1 pb-4 pt-5">PROYECTOS</h2>
 
-          <!-- Proyecto 2 -->
-          <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
-              <a
-                href="https://generalpaz.netlify.app/"
-                target="_blank"
-              >
-                <img
-                  src="assets/images/Proyectos/GeneralPaz.jpeg"
-                  class="card-img-top"
-                  alt="Certificado POO"
-                />
-              </a>
-              <div class="card-body text-center">
-                <h5 class="card-title">General Paz</h5>
-                <p > General Paz es una tienda online moderna, construida con el stack MERN. Ofrece una experiencia de compra fluida, con gestión de productos, usuarios y pedidos. Cuenta con autenticación segura, diseño intuitivo y panel administrativo, pensado para facilitar la operación del negocio y mejorar la experiencia del cliente en todo momento.
-                </p>
-                <!-- <p class="card-text">Educación IT · 2024</p> -->
-              </div>
-            </div>
-          </div>
+  <div class="proyecto-card">
+    <div class="proyecto-imagen">
+      <img src="./assets/images/Proyectos/BienestarPlus.jpg" alt="Proyecto Bienestar Plus">
+    </div>
+    <div class="proyecto-contenido">
+      <h3>Bienestar Plus</h3>
+      <p>Bienestar+ es una aplicación web orientada al bienestar físico, mental y emocional. Permite a los usuarios gestionar hábitos saludables, acceder a recursos de salud mental y recibir recomendaciones personalizadas para mejorar su calidad de vida. Desarrollada por estudiantes de la Tecnicatura en Desarrollo de Software, esta app es parte de un proyecto académico colaborativo.</p>
+      <ul class="tecnologias-proyectos">
+        <li class="HTML">HTML</li>
+        <li class="CSS">CSS</li>
+        <li class="JavaScript">JavaScript</li>
+        <li class="Bootstrap">Bootstrap</li>
+      </ul>
+      <a href="https://github.com/ISPC-Soluciones/Bienestar-Plus" class="boton btn" target="_blank">Ver en GitHub</a>
+    </div>
+  </div>
 
-          <!-- proyecto 3 -->
-          <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
-              <a
-                href="https://leonmatias22.github.io/CODERHOUSE-proyecto-final/"
-                target="_blank"
-              >
-                <img
-                  src="assets/images/Proyectos/codehouse.png"
-                  class="card-img-top"
-                  alt="Certificado Desarrollo Web"
-                />
-              </a>
-              <div class="card-body text-center">
-                <h5 class="card-title">Montaña <br> Cerveza Artesanal</h5>
-                <p>Maquetado web responsivo para "Montaña - cerveza artesanal", creado con HTML, CSS, Sass y Bootstrap. El diseño implementa una estructura clara y moderna, adaptable a distintos dispositivos. La maqueta incluye secciones de inicio, nosotros, productos, servicios y contacto, priorizando la organización semántica, reutilización de estilos y una experiencia de usuario optimizada.
-                </p>
+  <div class="proyecto-card">
+    <div class="proyecto-imagen">
+      <img src="./assets/images/Proyectos/toolkit.jpg" alt="ToolKit Linux Bash">
+    </div>
+    <div class="proyecto-contenido">
+      <h3>ToolKit Linux Bash</h3>
+      <p>Toolkit de Administración Jr. es una herramienta funcional basada en Bash, desarrollada para simplificar tareas básicas de administración en sistemas Linux (Ubuntu/Debian). Diseñada para ser utilizada por estudiantes, usuarios principiantes o administradores de sistemas en pequeñas startups o entornos educativos, este toolkit ofrece un menú interactivo y accesible desde la terminal que permite realizar tareas clave como monitoreo de procesos, análisis de recursos del sistema, gestión de usuarios, entre otras. El proyecto se construyó bajo una estructura modular, utilizando scripts individuales para cada funcionalidad, lo que facilita la lectura, mantenimiento y extensión futura del sistema.</p>
+      <ul class="tecnologias-proyectos">
+        <li class="Bash">Bash</li>
+        <li class="Linux">Linux</li>
+      </ul>
+      <a href="https://github.com/ISPC-Soluciones/toolkit-linux" class="boton btn" target="_blank">Ver en GitHub</a>
+    </div>
+  </div>
 
-              </div>
-            </div>
-          </div>
+  <div class="proyecto-card">
+    <div class="proyecto-imagen">
+      <img src="./assets/images/Proyectos/GeneralPaz.jpeg" alt="Proyecto General Paz">
+    </div>
+    <div class="proyecto-contenido">
+      <h3>General Paz</h3>
+      <p>General Paz es una tienda online moderna, construida con el stack MERN. Ofrece una experiencia de compra fluida, con gestión de productos, usuarios y pedidos. Cuenta con autenticación segura, diseño intuitivo y panel administrativo, pensado para facilitar la operación del negocio y mejorar la experiencia del cliente en todo momento.</p>
+      <ul class="tecnologias-proyectos">
+        <li class="React">React</li>
+        <li class="Nodejs">Node.js</li>
+        <li class="Express">Express</li>
+        <li class="MongoDB">MongoDB</li>
+      </ul>
+      <a href="https://generalpaz.netlify.app/" class="boton btn" target="_blank">Ver proyecto</a>
+    </div>
+  </div>
 
-          <!-- Proyecto 4 -->
-          <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
-              <a
-                href="https://github.com/ISPC-Soluciones/toolkit-linux"
-                target="_blank"
-              >
-                <img
-                  src="assets/images/Proyectos/toolkit.jpg"
-                  class="card-img-top"
-                  alt="Certificado SéProgramar"
-                />
-              </a>
-              <div class="card-body text-center">
-                <h5 class="card-title">ToolKit Linux Bash</h5>
-                <p class="card-text">
-                  Toolkit de Administración Jr. es una herramienta funcional basada en Bash, desarrollada para simplificar tareas básicas de administración en sistemas Linux (Ubuntu/Debian). Diseñada para ser utilizada por estudiantes, usuarios principiantes o administradores de sistemas en pequeñas startups o entornos educativos, este toolkit ofrece un menú interactivo y accesible desde la terminal que permite realizar tareas clave como monitoreo de procesos, análisis de recursos del sistema, gestión de usuarios, entre otras.
-El proyecto se construyó bajo una estructura modular, utilizando scripts individuales para cada funcionalidad, lo que facilita la lectura, mantenimiento y extensión futura del sistema.
+  <div class="proyecto-card">
+    <div class="proyecto-imagen">
+      <img src="./assets/images/Proyectos/BTC3.png" alt="ARG Broker">
+    </div>
+    <div class="proyecto-contenido">
+      <h3>ARG Broker</h3>
+      <p>ARGBroker es una plataforma de inversión en el mercado de valores argentino, desarrollada en Python con MySQL. Diseñada específicamente para inversores locales, permite gestionar portafolios de inversión, realizar operaciones de compra y venta de acciones, y hacer un seguimiento detallado de los rendimientos.</p>
+      <ul class="tecnologias-proyectos">
+        <li class="Python">Python</li>
+        <li class="MySQL">MySQL</li>
+      </ul>
+      <a href="https://github.com/BrokerTeamCoders-BTC/ARGBroker-Demo" class="boton btn" target="_blank">Ver en GitHub</a>
+    </div>
+  </div>
 
-                </p>
-              </div>
-            </div>
-          </div>
+  <div class="proyecto-card">
+    <div class="proyecto-imagen">
+      <img src="./assets/images/Proyectos/codehouse.png" alt="Montaña Cerveza Artesanal">
+    </div>
+    <div class="proyecto-contenido">
+      <h3>Montaña <br> Cerveza Artesanal</h3>
+      <p>Maquetado web responsivo para "Montaña - cerveza artesanal", creado con HTML, CSS, Sass y Bootstrap. El diseño implementa una estructura clara y moderna, adaptable a distintos dispositivos. La maqueta incluye secciones de inicio, nosotros, productos, servicios y contacto, priorizando la organización semántica, reutilización de estilos y una experiencia de usuario optimizada. </p>
+      <ul class="tecnologias-proyectos">
+        <li class="HTML">HTML</li>
+        <li class="CSS">CSS</li>
+        <li class="Sass">Sass</li>
+        <li class="Bootstrap">Bootstrap</li>
+      </ul>
+      <a href="https://leonmatias22.github.io/CODERHOUSE-proyecto-final/" class="boton btn" target="_blank">Ver proyecto</a>
+      <a href="https://github.com/LeonMatias22/CODERHOUSE-proyecto-final" class="boton btn" target="_blank">Ver en GitHub</a>
+    </div>
+  </div>
+</section>
 
-          <!-- Proyecto 5 -->
-          <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
-              <a
-                href="https://github.com/BrokerTeamCoders-BTC/ARGBroker-Demo"
-                target="_blank"
-              >
-                <img
-                  src="assets/images/Proyectos/BTC3.png"
-                  class="card-img-top"
-                  alt="Certificado Wordpress"
-                />
-              </a>
-              <div class="card-body text-center">
-                <h5 class="card-title">ARG Broker</h5>
-                <p class="card-text">ARGBroker es una plataforma de inversión en el mercado de
-                  valores argentino, desarrollada en Python con MySQL. Diseñada
-                  específicamente para inversores locales, permite gestionar
-                  portafolios de inversión, realizar operaciones de compra y
-                  venta de acciones, y hacer un seguimiento detallado de los
-                  rendimientos.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
 
     <!-- Sección Tecnologías -->
@@ -304,6 +274,73 @@ El proyecto se construyó bajo una estructura modular, utilizando scripts indivi
       </div>
     </section>
 
+
+
+    <!-- EDUCACIÓN -->
+
+    <!-- Educación Formal -->
+<section id="educacion" class="section slide-in-right">
+
+  <h2 class="blue-title text-center mb-1">EDUCACIÓN FORMAL</h2>
+  <p class="text-center">Formación que <strong>TRANSFORMA EL FUTURO</strong></p>
+  <div class="timeline">
+    <div class="timeline__item">
+      <div class="timeline__period">2024 - Presente</div>
+      <div class="timeline__content">
+        <h3 class="timeline__title">Tecnicatura Superior en Desarrollo de Software</h3>
+        <p class="timeline__company">ISPC – Instituto Superior Politécnico Córdoba</p>
+        <p class="section__description">
+          Esta tecnicatura superior busca profesionales con una fuerte cultura digital activa y capacidad de trabajo en equipo, que le permitan detectar soluciones de base tecnológica a problemáticas de índole cotidiano en los diversos procesos empresariales. Se ocupan de relevar, diagnosticar, diseñar, programar, testear, implementar y dar soporte a problemáticas organizacionales a través de soluciones tecnológicas, mediante artefactos de software de diferentes plataformas, interfaces y dispositivos.  Será fundamental su capacidad de adaptación a distintos modelos de negocio, interpretando la dinámica de cada sector y llevando a cabo soluciones en cada proceso que amerite un cambio radical o de mejora contínua.
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Cursos en progreso -->
+    <section id="cursos" class="section slide-in-left">
+      <h2 class="blue-title text-center mb-1">CURSOS EN PROGRESO</h2>
+      <p class="text-center">Porque creo en la <strong>EDUCACIÓN CONTINUA</strong></p>
+      <div class="timeline">
+        <div class="timeline__item">
+          <div class="timeline__period">2025 - En curso</div>
+          <div class="timeline__content">
+            <h3 class="timeline__title">Curso de Bases de Datos [Nivel Universidad]</h3>
+            <p class="timeline__company">Maxi programa</p>
+            <p class="section__description">
+              En este curso, exploramos desde cero las bases de datos relacionales en SQL, cubriendo su uso, gestión, optimización y diseño, con una visión práctica para proyectos de software y un panorama general de diferentes tipos de bases de datos.
+            </p>
+            <a href="https://maxiprograma.com/" target="_blank" class="timeline__link">Ver curso</a>
+          </div>
+        </div>
+
+        <div class="timeline__item">
+          <div class="timeline__period">2025 - En curso</div>
+          <div class="timeline__content">
+            <h3 class="timeline__title">Introducción al testing de software</h3>
+            <p class="timeline__company">Nadia Cavalleri</p>
+            <p class="section__description">
+              Aprende los conceptos esenciales, roles y responsabilidades del testing, y cómo integrarlo en el ciclo de desarrollo. Crearás planes, casos de prueba y reportarás defectos, aplicando diversas técnicas para diseñar pruebas efectivas.
+            </p>
+            <a href="https://www.udemy.com/course/introduccion-al-testing-de-software/?couponCode=ST21MT30625G2" target="_blank" class="timeline__link">Ver curso</a>
+          </div>
+        </div>
+
+        <div class="timeline__item">
+          <div class="timeline__period">2025 - En curso</div>
+          <div class="timeline__content">
+            <h3 class="timeline__title">Fullstack Developer</h3>
+            <p class="timeline__company">APX school</p>
+            <p class="section__description">
+              Este curso te sumerge en el perfil Fullstack Web, uno de los más demandados. Practicarás intensamente para entender la computación y la programación, preparándote con una base sólida para el mundo tech y tus primeras entrevistas.
+            </p>
+            <a href="https://apx.school" target="_blank" class="timeline__link">Ver curso</a>
+          </div>
+        </div>
+      </div>
+    </section>
+</section>
+
     <!-- Certificaciones -->
 
     <section id="certificaciones" class="bg-dark py-5">
@@ -312,19 +349,19 @@ El proyecto se construyó bajo una estructura modular, utilizando scripts indivi
         <div class="row row-cols-1 row-cols-md-3 g-4">
           <!-- Certificado 1 -->
           <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
+            <div class="card h-100 shadow-sm">
               <a
                 href="assets/images/certification/FullStack-RollingCode.png"
                 target="_blank"
               >
                 <img
                   src="assets/images/certification/FullStack-RollingCode.png"
-                  class="card-img-top"
+                  class="card-img-top certificacion-imagen"
                   alt="Certificado Full Stack"
                 />
               </a>
               <div class="card-body text-center">
-                <h5 class="card-title">Full Stack</h5>
+                <h5 class="card-title ">Full Stack</h5>
                 <p class="card-text">Rolling Code · 2025</p>
               </div>
             </div>
@@ -332,7 +369,7 @@ El proyecto se construyó bajo una estructura modular, utilizando scripts indivi
 
           <!-- Certificado 2 -->
           <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
+            <div class="card h-100 shadow-sm">
               <a
                 href="assets/images/certification/Introducción-al-Paradigma-de-Objetos-EducaciónIT.jpg"
                 target="_blank"
@@ -353,7 +390,7 @@ El proyecto se construyó bajo una estructura modular, utilizando scripts indivi
 
           <!-- Certificado 3 -->
           <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
+            <div class="card h-100 shadow-sm">
               <a
                 href="assets/images/certification/DesarrolloWeb.jpg"
                 target="_blank"
@@ -374,7 +411,7 @@ El proyecto se construyó bajo una estructura modular, utilizando scripts indivi
 
           <!-- Certificado 4 -->
           <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
+            <div class="card h-100 shadow-sm">
               <a
                 href="assets/images/certification/ArgentinaPrograma.jpg"
                 target="_blank"
@@ -395,7 +432,7 @@ El proyecto se construyó bajo una estructura modular, utilizando scripts indivi
 
           <!-- Certificado 5 -->
           <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
+            <div class="card h-100 shadow-sm">
               <a
                 href="assets/images/certification/Wordpress.jpg"
                 target="_blank"
@@ -415,7 +452,7 @@ El proyecto se construyó bajo una estructura modular, utilizando scripts indivi
 
           <!-- Certificado 6 -->
           <div class="col">
-            <div class="card h-100 certificado-card shadow-sm">
+            <div class="card h-100 shadow-sm">
               <a href="assets/images/certification/ReparecionPC.jpeg" target="_blank">
                 <img
                   src="assets/images/certification/ReparecionPC.jpeg"
