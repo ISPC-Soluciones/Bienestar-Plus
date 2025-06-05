@@ -18,12 +18,12 @@ section {
   padding-top: 80px;
 }
 
-a, nav a, .navbar a {
+nav a, .navbar a {
   color: white;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
-a:hover, nav a:hover, .navbar a:hover {
+nav a:hover, .navbar a:hover {
   color: var(--color-secundario);
   transform: scale(1.05);
 }
@@ -423,24 +423,6 @@ footer a:hover img {
   white-space: nowrap;
 }
 
-/* Estilo de los botones */
-/* .boton-proyecto {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 1em;
-  text-decoration: none;
-  background-color: var(--color-secundario);
-  color: black;
-  border-radius: 5px;
-  border: rgb(210, 204, 204) solid 1px;
-  transition: background-color 0.3s ease;
-}
-
-.boton-proyecto:hover {
-  color: rgb(255, 255, 255);
-  background-color: var(--color-acento);
-} */
-
 /* Media Queries para adaptabilidad en pantallas más pequeñas */
 @media (max-width: 768px) {
   .proyecto-card {
@@ -540,6 +522,7 @@ footer a:hover img {
 }
 
 .timeline__content:hover {
+  border: var(--color-terciario) 1px solid;
   transform: translateY(-4px);
 }
 
@@ -567,6 +550,12 @@ footer a:hover img {
   color: var(--color-terciario);
   text-decoration: none;
   font-weight: 600;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+
+.timeline__link:hover {
+  transform: scale(1.05);
 }
 
 /* Responsive */
