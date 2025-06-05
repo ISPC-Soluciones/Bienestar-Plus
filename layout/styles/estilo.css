@@ -440,6 +440,8 @@ footer {
 }
 
 .container_bt_login,
+.container a,
+.carousel-caption a,
 .container__btn__editar__perfil,
 .container__btn__ir__mis__habitos {
   display: flex;
@@ -466,10 +468,28 @@ footer {
 }
 
 .btn__editar__perfil:hover,
+.container a:hover,
+.carousel-caption a:hover,
 .btn__ir__mis__habitos:hover,
 .login-form button:hover {
   background-color: var(--secundario);
   box-shadow: 0 0 10px var(--ternario);
+}
+
+.container a,
+.carousel-caption a,
+.container a:hover,
+.carousel-caption a:hover {
+  font-family: var(--fuente-base);
+  text-decoration: none;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+  overflow: hidden;
+  display: inline-block;
+  min-width: 150px;
+  max-width: 300px;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
 }
 
 .container__btn__cerrar__sesion {
