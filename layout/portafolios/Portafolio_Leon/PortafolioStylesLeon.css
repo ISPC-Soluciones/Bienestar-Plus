@@ -120,13 +120,30 @@ footer a:hover img {
 
 /* sobre mi */
 
+/* .perfil-img {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+} */
+
+
 .perfil-img {
   max-width: 280px;
   width: 100%;
   height: auto;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s ease;
+  display: inline-block;
+  box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+}
+
+.perfil-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px 12px rgb(255, 255, 255),
+             0 0 40px 12px rgb(255, 255, 255);
 }
 
 @media (min-width: 768px) {
@@ -171,6 +188,11 @@ footer a:hover img {
   height: auto;
   object-fit: contain;
   flex-shrink: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.carousel-track img:hover {
+  transform: scale(1.12);
 }
 
 .carousel-arrow {
