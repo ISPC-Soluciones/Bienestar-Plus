@@ -1,0 +1,574 @@
+/* Variables  */
+:root {
+  --color-acento: rgb(255, 0, 157);
+  --color-secundario: rgb(58, 255, 183);
+  --color-terciario: #00ccff;
+  --color-fondo-oscuro: #171717;
+  --color-claro: rgb(231, 231, 231);
+  --color-texto-secundario: #c7c7c7;
+}
+
+/* Estilos Globales */
+body {
+  scroll-behavior: smooth;
+  font-family: 'Montserrat', sans-serif;
+}
+
+section {
+  padding-top: 80px;
+}
+
+nav a, .navbar a {
+  color: white;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+nav a:hover, .navbar a:hover {
+  color: var(--color-secundario);
+  transform: scale(1.05);
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 0;
+}
+
+.nav-item {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.logo {
+  width: 180px;
+}
+
+.lead {
+  font-size: medium;
+  color: var(--color-texto-secundario);
+}
+
+.spanOne {
+  color: var(--color-secundario);
+}
+
+.spanTwo {
+  font-size: large;
+  color: var(--color-acento);
+}
+
+.logo-footer{
+  width: 35%;
+}
+footer a {
+  transition: color 0.3s ease;
+}
+
+footer a img {
+  transition: transform 0.2s ease;
+}
+
+footer a:hover img {
+  transform: scale(1.1);
+}
+
+/* Utilidades */
+.pink-title{
+  color: var(--color-acento);
+}
+.green-title {
+  color: var(--color-secundario);
+}
+.blue-title {
+  color: var(--color-terciario);
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 123, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+
+/* Inicio */
+#inicio {
+  background-image: url('./assets/images/practicas-desarollo-software.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  color: white;
+  position: relative;
+}
+
+#inicio .overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#inicio h1,
+#inicio p {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.boton-home:hover {
+  background-color: rgba(255, 0, 157, 0.861);
+}
+
+/* sobre mi */
+
+.perfil-img {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 768px) {
+  #sobre-mi .col-md-6:first-child {
+    margin-right: 10px;
+  }
+
+  #sobre-mi .col-md-6:last-child {
+    margin-left: 10px;
+  }
+}
+
+
+
+/* Tecnologías */
+#carousel-tecnologias {
+  transition: transform 0.5s ease-in-out;
+  width: max-content;
+}
+
+.carousel-wrapper {
+  position: relative;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.carousel-viewport {
+  width: 640px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  gap: 20px;
+}
+
+.carousel-track img {
+  padding: 30px;
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.carousel-arrow.left {
+  left: -40px;
+}
+
+.carousel-arrow.right {
+  right: -40px;
+}
+
+/* Tarjetas */
+.card {
+  background-color: var(--color-fondo-oscuro);
+  color: aliceblue;
+  transition: transform 0.3s ease, border 0.3s ease;
+}
+
+.card-title {
+  color: var(--color-secundario);
+}
+
+.card:hover {
+  transform: scale(1.05) translateY(-5px);
+  border: 2px solid rgba(58, 255, 183, 0.699);
+  animation: pulseGlow 1.5s infinite;
+}
+
+.card-img-top {
+  object-fit: cover;
+  height: 200px;
+  width: 100%;
+}
+
+
+
+/* Contacto */
+#contacto {
+  background-image: url(./assets/images/contacto.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+#contacto h2 {
+  color: var(--color-acento);
+}
+
+.boton {
+  color: #000000;
+  background-color: var(--color-secundario);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.boton:hover {
+  color: #ffffff;
+  background-color: var(--color-acento);
+}
+
+.contact-form-wrapper {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+.contact-form-wrapper .form-label,
+.contact-form-wrapper input,
+.contact-form-wrapper textarea {
+  color: white;
+}
+
+.contact-form-wrapper input,
+.contact-form-wrapper textarea {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #ccc;
+}
+
+.contact-form-wrapper input::placeholder,
+.contact-form-wrapper textarea::placeholder {
+  color: #ddd;
+}
+
+/* claras */
+.section-light {
+  background-color: var(--color-claro);
+}
+
+.section-light h2 {
+  color: var(--color-acento);
+}
+
+
+
+/* Responsive */
+
+.carousel-viewport {
+  width: 100%;
+  max-width: 1000px;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+.carousel-track {
+  gap: 20px;
+}
+
+.carousel-track img {
+  width: 25%;
+  max-width: 140px;
+}
+
+/* Tablets: 3 logos por fila */
+@media (max-width: 991px) {
+  .carousel-track img {
+    width: 33.33%;
+  }
+
+  .logo-footer{
+    width: 50%;
+  }
+}
+
+/* Móviles: 2 logos por fila */
+@media (max-width: 767px) {
+  .carousel-track img {
+    width: 50%;
+  }
+
+  .carousel-arrow {
+    font-size: 1.5rem;
+  }
+
+  .carousel-arrow.left {
+    left: 10px;
+  }
+
+  .carousel-arrow.right {
+    right: 10px;
+  }
+
+  .logo-footer{
+    width: 75%;
+  }
+
+}
+
+/* PROYECTOS */
+
+/* Estilos generales para la sección de proyectos */
+.proyectos {
+  padding: 20px;
+}
+
+/* Estilos para el título de la sección */
+.green-title {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  padding-top: 20px;
+  font-size: 2em;
+}
+
+/* Contenedor de cada tarjeta de proyecto */
+.proyecto-card {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 25px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+/* Contenedor de la imagen del proyecto */
+.proyecto-imagen {
+  flex-shrink: 0;
+  /* Aumentamos el tamaño del contenedor de la imagen */
+  width: 300px; /* Ancho un poco más grande */
+  height: 250px; /* Alto un poco más grande, puedes ajustar para mantener la proporción */
+  display: flex; /* Usamos flexbox para centrar la imagen dentro del contenedor */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  overflow: hidden;
+  /* border-right: 1px solid #e0e0e0; */
+  padding: 1%;
+}
+
+.proyecto-imagen img {
+  max-width: 100%; /* Asegura que la imagen no exceda el ancho del contenedor */
+  max-height: 100%; /* Asegura que la imagen no exceda el alto del contenedor */
+  object-fit:cover;
+  display: block; /* Elimina el espacio blanco debajo de la imagen */
+}
+
+/* Contenido de texto del proyecto */
+.proyecto-contenido {
+  flex-grow: 1;
+  padding: 15px 20px;
+}
+
+.proyecto-contenido h3 {
+  font-size: 1.4em;
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.proyecto-contenido p {
+  font-size: 0.95em;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+/* Lista de tecnologías */
+.tecnologias-proyectos {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tecnologias-proyectos li {
+  background-color: #f0f0f0;
+  color: #666;
+  font-size: 0.8em;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+/* Media Queries para adaptabilidad en pantallas más pequeñas */
+@media (max-width: 768px) {
+  .proyecto-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .proyecto-imagen {
+    width: 100%;
+    height: 200px;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .proyecto-contenido {
+    text-align: center;
+    padding: 15px;
+  }
+
+  .tecnologias-proyectos {
+    justify-content: center;
+  }
+}
+
+/* === Tecnologías === */
+.tecnologias-proyectos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.tecnologias-proyectos li {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #fff;
+  transition: transform 0.2s ease;
+  background-color: #777; /* Fallback */
+}
+
+.tecnologias-proyectos li:hover {
+  transform: scale(1.05);
+}
+
+/* Colores personalizados */
+.tecnologias-proyectos li.HTML        { background-color: #e44d26; }
+.tecnologias-proyectos li.CSS         { background-color: #264de4; }
+.tecnologias-proyectos li.Sass        { background-color: #cf649a; }
+.tecnologias-proyectos li.Bootstrap   { background-color: #563d7c; }
+.tecnologias-proyectos li.JavaScript  { background-color: #f7df1e; color: #000; }
+.tecnologias-proyectos li.React       { background-color: #61dafb; color: #000; }
+.tecnologias-proyectos li.Nodejs      { background-color: #3c873a; }
+.tecnologias-proyectos li.Express     { background-color: #444; }
+.tecnologias-proyectos li.MongoDB     { background-color: #4db33d; }
+.tecnologias-proyectos li.MySQL       { background-color: #00758f; }
+.tecnologias-proyectos li.Python      { background-color: #3776ab; }
+.tecnologias-proyectos li.Bash        { background-color: #4eaa25; }
+.tecnologias-proyectos li.Linux       { background-color: #000000; }
+
+
+/* ===== SECCIÓN EDUCACIÓN Y CURSOS ===== */
+.section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  padding-left: 20px;
+}
+
+.timeline__item {
+  position: relative;
+}
+
+.timeline__period {
+  font-size: 0.9rem;
+  color: var(--color-terciario);
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.timeline__content {
+  background-color: #f8f9fa;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease;
+}
+
+.timeline__content:hover {
+  border: var(--color-terciario) 1px solid;
+  transform: translateY(-4px);
+}
+
+.timeline__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #222;
+}
+
+.timeline__company {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.section__description {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.timeline__link {
+  font-size: 0.9rem;
+  color: var(--color-terciario);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+
+.timeline__link:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .timeline__content {
+    padding: 1.5rem 2rem;
+  }
+
+  .timeline__title {
+    font-size: 1.4rem;
+  }
+
+  .section__description {
+    font-size: 1rem;
+  }
+}
