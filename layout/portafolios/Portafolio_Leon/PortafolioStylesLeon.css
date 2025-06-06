@@ -120,15 +120,6 @@ footer a:hover img {
 
 /* sobre mi */
 
-/* .perfil-img {
-  max-width: 280px;
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
-  object-fit: cover;
-} */
-
-
 .perfil-img {
   max-width: 280px;
   width: 100%;
@@ -360,12 +351,10 @@ footer a:hover img {
 
 /* PROYECTOS */
 
-/* Estilos generales para la sección de proyectos */
 .proyectos {
   padding: 20px;
 }
 
-/* Estilos para el título de la sección */
 .green-title {
   margin-bottom: 20px;
   padding-bottom: 10px;
@@ -373,7 +362,6 @@ footer a:hover img {
   font-size: 2em;
 }
 
-/* Contenedor de cada tarjeta de proyecto */
 .proyecto-card {
   display: flex;
   align-items: flex-start;
@@ -385,28 +373,24 @@ footer a:hover img {
   background-color: #fff;
 }
 
-/* Contenedor de la imagen del proyecto */
 .proyecto-imagen {
   flex-shrink: 0;
-  /* Aumentamos el tamaño del contenedor de la imagen */
-  width: 300px; /* Ancho un poco más grande */
-  height: 250px; /* Alto un poco más grande, puedes ajustar para mantener la proporción */
-  display: flex; /* Usamos flexbox para centrar la imagen dentro del contenedor */
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
+  width: 300px;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
-  /* border-right: 1px solid #e0e0e0; */
   padding: 1%;
 }
 
 .proyecto-imagen img {
-  max-width: 100%; /* Asegura que la imagen no exceda el ancho del contenedor */
-  max-height: 100%; /* Asegura que la imagen no exceda el alto del contenedor */
+  max-width: 100%;
+  max-height: 100%;
   object-fit:cover;
-  display: block; /* Elimina el espacio blanco debajo de la imagen */
+  display: block;
 }
 
-/* Contenido de texto del proyecto */
 .proyecto-contenido {
   flex-grow: 1;
   padding: 15px 20px;
