@@ -1,0 +1,283 @@
+/* Paleta de Colores
+   - Azul Celeste Logo: #1691D6
+   - Gris Logo: #848484
+   - Blanco Principal: #FFFFFF
+   - Gris Muy Claro (para fondos sutiles): #F8F9FA
+   - Gris Oscuro (para textos y fondos secundarios): #343A40
+   - Negro (para fondos principales): #212529 (o un negro más puro si se desea)
+*/
+
+/* --- Globales y Reinicios --- */
+body {
+  font-family: "Montserrat", sans-serif;
+  scroll-behavior: smooth;
+  background-color: #FFFFFF; /* Fondo global blanco */
+  color: #343A40; /* Color de texto por defecto, un gris oscuro */
+}
+
+section {
+  padding: 80px 0;
+  background-color: #FFFFFF; /* Por defecto, todas las secciones son blancas */
+}
+
+/* --- Navbar --- */
+.navbar {
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+  background-color: #FFFFFF !important; /* Navbar de fondo blanco */
+  border-bottom: 1px solid rgba(132, 132, 132, 0.2); /* Borde sutil gris */
+}
+
+
+.navbar-toggler {
+  display: block;
+  border: none;
+  padding: 0;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.navbar-toggler i {
+  color: #848484; /* Color gris del logo para el icono de la hamburguesa */
+}
+
+.navbar-collapse {
+  padding: 15px;
+  padding-right: 15px;
+  padding-left: 15px;
+  background-color: #FFFFFF; /* Fondo blanco para el menú desplegado en móvil */
+  
+}
+
+.navbar-nav .nav-item {
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+/* Estilos para los elementos de navegación en pantallas de escritorio (lg y superiores) */
+@media (min-width: 992px) {
+  .navbar-nav {
+    flex-direction: row;
+    gap: 50px;
+  }
+
+  .navbar-nav .nav-item .nav-link {
+    margin-top: 1.2rem;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+
+    color: #848484; /* Color gris del logo para los enlaces del menú en escritorio */
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
+
+  .navbar-nav .nav-item .nav-link:hover {
+    color: #1691D6; /* Azul celeste del logo al pasar el ratón */
+  }
+}
+
+/* --- ESTILOS AGREGADOS/MODIFICADOS PARA EL COMPORTAMIENTO DEL MENÚ --- */
+@media (min-width: 0px) {
+  .navbar-nav .nav-item {
+    display: inline-block;
+    margin-right: 15px;
+    margin-left: 15px;
+  }
+
+  .navbar-nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+  }
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#navbarNav:not(.show) {
+    display: none;
+}
+
+#navbarNav.show {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* --- INICIO / PRESENTACIÓN --- */
+#inicio {
+  background-color: #FFFFFF !important; /* Fondo de la sección de inicio blanco */
+  color: #343A40; /* Texto de la sección de inicio gris oscuro */
+  padding-top: 100px; /* Ajuste para el fixed-top navbar */
+}
+
+/* Estilos para la imagen de perfil */
+.profile-image-container {
+  width: 500%; /* Ocupa todo el ancho disponible en la columna */
+  max-width: 500px; /* Tamaño considerable, ajusta a tu gusto */
+  height: auto; /* Mantiene la proporción de la imagen */
+  margin: 0 auto; /* Centra la imagen horizontalmente en la columna */
+  overflow: hidden;
+  position: relative;
+  /* border-radius: 10px; /* Bordes ligeramente redondeados, opcional */
+  
+}
+
+.profile-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  /* Eliminamos el filtro grayscale y el overlay del CSS anterior */
+  /* Si quieres el filtro, puedes volver a agregarlo aquí */
+}
+
+/* --- SECCIONES GENERALES --- */
+/* Alternar entre blanco y gris muy claro para las secciones */
+#sobre-mi {
+    background-color: #F8F9FA; /* Gris muy claro */
+    color: #343A40;
+}
+
+#proyectos {
+    background-color: #FFFFFF; /* Blanco */
+    color: #343A40;
+}
+
+#habilidades {
+    background-color: #F8F9FA; /* Gris muy claro */
+    color: #343A40;
+}
+
+#formacion {
+    background-color: #FFFFFF; /* Blanco */
+    color: #343A40;
+}
+
+#formacion .border {
+    background-color: #F8F9FA !important; /* Tarjetas de formación en gris muy claro */
+    border-color: rgba(132, 132, 132, 0.1) !important; /* Borde sutil gris */
+    color: #343A40 !important; /* Texto gris oscuro para las tarjetas */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Sombra más suave */
+}
+#formacion .border p {
+    color: #6c757d !important; /* Un gris intermedio para los párrafos dentro de las tarjetas */
+}
+
+
+/* --- SECCIÓN CONTACTO --- */
+#contacto {
+    background-color: #F8F9FA; /* Gris muy claro */
+    color: #343A40;
+}
+
+#contacto .btn-dark {
+    background-color: #1691D6 !important; /* Botón de CV azul celeste del logo */
+    border-color: #1691D6 !important;
+    color: #FFFFFF !important; /* Texto blanco en el botón */
+}
+
+#contacto .btn-dark:hover {
+    background-color: #127ab8 !important; /* Azul celeste un poco más oscuro al pasar el ratón */
+    border-color: #127ab8 !important;
+}
+
+
+/* --- Proyectos --- */
+.project-card {
+  cursor: pointer;
+}
+
+.project-card img {
+  display: block;
+  transition: filter 0.4s ease;
+  height: 400px; /* Mantener tamaño fijo para portadas */
+  object-fit: cover;
+}
+
+.project-card .overlay {
+  background-color: rgba(22, 145, 214, 0.8); /* Overlay azul celeste del logo */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.project-card:hover img {
+  filter: brightness(60%); /* Menos oscuro que antes para un look más suave */
+}
+
+.project-card:hover .overlay {
+  opacity: 1;
+}
+
+/* --- Habilidades --- */
+.tech-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  /* Quitamos filtros y opacidades para que se vean los colores originales del logo en un diseño minimalista */
+  /* Si quieres el filtro gris original, puedes volver a agregarlo: filter: grayscale(100%); opacity: 0.7; */
+}
+
+.tech-logo:hover {
+  transform: scale(1.1);
+  /* filter: grayscale(0%); */ /* Si tenías el filtro, esto lo quita al hover */
+  /* opacity: 1; */ /* Si tenías opacidad, esto la restaura al hover */
+}
+
+/* --- Formación --- */
+#formacion .border {
+  transition: box-shadow 0.3s ease;
+}
+
+#formacion .border:hover {
+  box-shadow: 0 0 10px rgba(22, 145, 214, 0.3); /* Sombra azul celeste del logo al pasar el ratón */
+}
+
+/* --- Footer --- */
+footer {
+  background-color: #212529 !important; /* Fondo negro para el footer */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F8F9FA !important; /* Texto del footer en gris muy claro */
+  transition: background 0.3s ease;
+}
+
+footer:hover {
+  background: #1a1a1a !important; /* Un negro ligeramente más claro al pasar el ratón */
+}
+
+/* --- Iconos de Contacto y Acción --- */
+a.fs-2 {
+    color: #848484; /* Color gris del logo para los íconos de inicio/contacto por defecto */
+}
+
+a.fs-2:hover {
+  color: #1691D6 !important; /* Azul celeste del logo para los íconos al pasar el ratón */
+  transform: scale(1.2);
+  transition: all 0.2s ease;
+}
+
+.contacto-icono a.text-dark i:hover { /* Asegura que los de la sección contacto también cambien */
+    color: #1691D6 !important;
+}
+
+/* Ajustes tipográficos para un look minimalista/profesional */
+h1, h2, h5 {
+    color: #212529; /* Títulos en negro */
+}
+
+p, strong, .text-muted {
+    color: #343A40; /* Párrafos y texto general en gris oscuro */
+}
