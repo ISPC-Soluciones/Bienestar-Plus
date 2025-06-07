@@ -197,28 +197,65 @@ section {
 
 /* --- Proyectos --- */
 .project-card {
-  cursor: pointer;
+  cursor: pointer; /* Indica que la tarjeta es interactiva */
 }
 
 .project-card img {
   display: block;
-  transition: filter 0.4s ease;
-  height: 400px; /* Mantener tamaño fijo para portadas */
-  object-fit: cover;
+  transition: filter 0.4s ease; /* Transición suave para el filtro de la imagen */
+  height: 400px; /* Altura fija para las imágenes de portada de proyectos */
+  object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
 }
 
 .project-card .overlay {
-  background-color: rgba(22, 145, 214, 0.8); /* Overlay azul celeste del logo */
-  opacity: 0;
-  transition: opacity 0.4s ease;
+  background-color: rgba(18, 102, 151, 0.8); /* Overlay azul semi-transparente */
+  opacity: 0; /* Inicialmente oculto */
+  transition: opacity 0.4s ease; /* Transición suave para la aparición del overlay */
+  /* Propiedades de posicionamiento y tamaño ya definidas en el HTML */
+  /* position: absolute; top: 0; start: 0; w-100; h-100; */
+  /* Propiedades de flexbox para centrado ya definidas en el HTML */
+  /* d-flex; flex-column; justify-content-center; align-items-center; text-center; text-white; */
 }
 
 .project-card:hover img {
-  filter: brightness(60%); /* Menos oscuro que antes para un look más suave */
+  filter: brightness(60%); /* Oscurece la imagen al pasar el puntero */
 }
 
 .project-card:hover .overlay {
-  opacity: 1;
+  opacity: 1; /* Hace visible el overlay al pasar el puntero */
+}
+
+/* Estilos específicos para el contenido dentro del overlay */
+.project-card .overlay h2 {
+  margin-bottom: 5px; /* Margen inferior para separar el título de la descripción */
+  color: var(--blanco-principal); /* Asegura que el título sea blanco */
+}
+
+.project-card .overlay .project-description {
+  font-size: 1rem; /* Tamaño de fuente para la descripción */
+  color: var(--blanco-principal); /* Color blanco para la descripción */
+  margin-top: 0.5rem;
+  margin-bottom: 1rem; /* Margen inferior para separar de los botones */
+  padding: 0 15px; /* Padding horizontal para evitar que el texto toque los bordes */
+}
+
+/* Estilos para el botón dentro del overlay */
+.project-card .overlay .btn {
+  /*
+    Usamos btn-outline-light en el HTML para el estilo inicial (transparente con borde blanco).
+    Aquí solo definimos transiciones y el comportamiento al hover.
+  */
+  border-color: var(--blanco-principal) !important; /* Asegura el borde blanco */
+  font-weight: bold; /* Texto en negrita para el botón */
+  transition: all 0.3s ease; /* Transición suave para todos los cambios al hacer hover */
+}
+
+.project-card .overlay .btn:hover {
+  background-color: var(--blanco-principal) !important; /* El botón se rellena de blanco */
+  color: var(--azul-celeste-logo) !important; /* El texto se vuelve azul celeste */
+  border-color: var(--blanco-principal) !important; /* Mantiene el borde blanco */
+  transform: translateY(-2px); /* Eleva sutilmente el botón */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Agrega una pequeña sombra para destacarlo */
 }
 
 /* --- Habilidades --- */
@@ -249,13 +286,12 @@ section {
 /* --- Footer --- */
 footer {
   background-color: #212529 !important; /* Fondo negro para el footer */
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: #F8F9FA !important; /* Texto del footer en gris muy claro */
+  /* Eliminamos el 'color: #FFFFFF !important;' de aquí porque es menos específico que apuntar al 'p' */
   transition: background 0.3s ease;
 }
 
-footer:hover {
-  background: #1a1a1a !important; /* Un negro ligeramente más claro al pasar el ratón */
+footer p {
+  color: #FFFFFF !important; /* Forzamos el color blanco para el texto del párrafo */
 }
 
 /* --- Iconos de Contacto y Acción --- */
