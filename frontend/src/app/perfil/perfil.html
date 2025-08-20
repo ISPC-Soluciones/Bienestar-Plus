@@ -1,0 +1,59 @@
+<section class="perfil">
+  <div class="container__perfil">
+    <div class="container__btn__cerrar__sesion">
+      <a routerLink="/" class="btn__cerrar__sesion">
+        Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
+      </a>
+    </div>
+    <div class="container__bienvenida">
+      <h1 class="texto__bienvenida__perfil">
+        Bienvenido
+        <span>{{ usuario.nombre.split(" ")[0] }}</span>
+        <i class="fa-solid fa-heart-pulse"></i>
+      </h1>
+    </div>
+    <div class="container__parrafo__saludo">
+      <p class="parrafo__saludo">
+        ¡Hola {{ usuario.nombre }}! Nos alegra verte aquí. Recuerda que cada
+        paso cuenta en tu camino hacia el bienestar. ¡Vamos juntos por más!
+      </p>
+    </div>
+    <div class="container__usuario">
+      <div class="container__usuario__info">
+        <h2 class="texto__info__perfil">Información Personal</h2>
+        <div class="container__img__usuario">
+          <img
+            [src]="usuario.foto"
+            alt="Usuario {{ usuario.nombre }}"
+            class="img__perfil"
+          />
+        </div>
+        <div class="container__datos__usuario">
+          <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+          <p><strong>Email:</strong> {{ usuario.email }}</p>
+        </div>
+        <div class="container__btn__editar__perfil">
+          <a href="#" class="btn__editar__perfil">
+            Editar <i class="fa-solid fa-pen-to-square"></i>
+          </a>
+        </div>
+      </div>
+      <div class="container__tu__progreso">
+        <h2 class="texto__progreso__usuario">Mi Progreso</h2>
+        <p class="parrafo__progreso">
+          {{ usuario.progreso }}
+          <img
+            [src]="usuario.grafico"
+            alt="Progreso del Usuario"
+            class="img__tu__progreso"
+          />
+        </p>
+        <div class="container__btn__ir__mis__habitos">
+          <a routerLink="/habitos" class="btn__ir__mis__habitos">
+            Ir a Mis Hábitos <i class="fa-solid fa-dumbbell"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,1 +1,49 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  /* Paleta de Colores */
+  --primario: #7fffd4;
+  --secundario: #dff5e1;
+  --ternario: #6ec1e4;
+  --cuaternario: #ff8a65;
+  --bg-fondo: #f5f7f8;
+  --bg-y-fuentes: #333b3e;
+  --fav-cristian: #c7bcf2;
+
+  /* Tipografías */
+  --fuente-base: "Montserrat", sans-serif;
+  --fuente-titulo: "Nunito Sans", sans-serif;
+}
+
+:where(*, *::before, *::after) {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:where(html) {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+:where(body) {
+  font-family: var(--fuente-base);
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  line-height: 1.6;
+  min-height: 100dvh;
+}
+
+/* BTN VOLVER AL INICIO */
+
+.container__volver__inicio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  text-decoration: none;
+}
+
+.container__volver__inicio a {
+  text-decoration: none;
+  font-family: var(--fuente-base);
+  font-weight: 500;
+}
