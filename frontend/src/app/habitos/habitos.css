@@ -1,0 +1,404 @@
+/* SECCIÓN MIS HÁBITOS */
+
+.container__habitos {
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  margin-inline: auto;
+}
+
+.container__titulo__habitos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  padding: 1rem;
+}
+
+.container__titulo__habitos h1 {
+  max-width: 900px;
+  font-family: var(--fuente-titulo);
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--primario);
+  text-align: center;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.container__titulo__habitos span {
+  font-weight: 700;
+  font-size: 4rem;
+  color: var(--cuaternario);
+}
+
+.container__parrafo__habitos {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+}
+
+.texto__parrafo__habitos {
+  font-family: var(--fuente-titulo);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.container__habitos__usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+}
+
+.container__listado__habitos {
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+  padding: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.container__listado__habitos h2 {
+  font-family: var(--fuente-titulo);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+  padding-top: 0.2rem;
+}
+
+.container__listado__habitos p {
+  font-family: var(--fuente-base);
+  font-size: 1.2rem;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.container__rutinas {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+}
+
+.container__tabs__rutinas {
+  width: 100%;
+  max-width: 900px;
+  background-color: var(--bg-y-fuentes);
+  border: 2px solid var(--ternario);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-top: 2rem;
+  font-family: var(--fuente-base);
+}
+
+.tab-buttons {
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--secundario);
+  border-bottom: 2px solid var(--ternario);
+  padding: 0.5rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 0.8rem 1rem;
+  border: none;
+  background-color: transparent;
+  color: var(--bg-y-fuentes);
+  font-weight: 600;
+  border-radius: 12px 12px 0 0;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.tab-button:hover {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
+}
+
+.tab-button.active {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content {
+  display: none;
+  width: 100%;
+  padding: 2rem;
+  background-color: var(--bg-y-fuentes);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content h3 {
+  font-family: var(--fuente-titulo);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ternario);
+  margin-bottom: 1rem;
+}
+
+.tab-content.active {
+  display: block;
+  text-align: center;
+}
+
+.tab-content.active p {
+  font-family: var(--fuente-base);
+  font-size: 1.2rem;
+  color: var(--bg-fondo);
+  margin-bottom: 1rem;
+}
+
+.tab-content.active h4 {
+  font-family: var(--fuente-base);
+  font-size: 2rem;
+  color: var(--ternario);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.contenido__ejercicios {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+}
+
+.card__habito {
+  background-color: var(--bg-y-fuentes);
+  color: var(--bg-fondo);
+  border: 2px solid var(--ternario);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1.2rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.card__habito:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card__habito__titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+}
+
+.card__habito__descripcion {
+  font-size: 1rem;
+  font-family: var(--fuente-base);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--bg-y-fuentes);
+}
+
+.card__presentacion__logo i {
+  font-size: 6rem;
+  color: var(--ternario);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card__habito__imagen img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card__habito__imagen__main img {
+  width: 70%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.card__habito__acciones {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn__habito {
+  font-family: var(--fuente-base);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn--agregar {
+  background-color: var(--primario);
+  font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+}
+
+.btn--agregar:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 8px var(--primario);
+}
+
+.btn--quitar {
+  font-family: var(--fuente-base);
+  background-color: var(--cuaternario);
+  color: var(--bg-y-fuentes);
+}
+
+.btn--quitar:hover {
+  background-color: #e07a55;
+  box-shadow: 0 0 8px var(--cuaternario);
+}
+
+.btn--ir {
+  background-color: var(--ternario);
+  color: var(--bg-y-fuentes);
+}
+
+.btn--ir:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 8px var(--ternario);
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  :where(html) {
+    scroll-behavior: auto;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--primario);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .container__usuario {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .container__usuario__info,
+  .container__tu__progreso {
+    width: 100%;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .container__bienvenida h1 {
+    font-size: 2.5rem;
+  }
+
+  .texto__bienvenida__perfil i {
+    font-size: 2rem;
+  }
+
+  .container__bienvenida span {
+    font-size: 2.5rem;
+  }
+
+  .conatiner__parrafo__saludo {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .parrafo__saludo {
+    font-size: 1.2rem;
+    padding: 0 1rem;
+  }
+
+  .container__img__usuario img {
+    width: 50%;
+    height: auto;
+  }
+
+  .btn__editar__perfil,
+  .btn__ir__mis__habitos {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container__habitos__usuario {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .container__tabs__rutinas {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .tab-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tab-button {
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .card__habito {
+    padding: 1.2rem;
+    max-width: 90%;
+  }
+
+  .card__habito__acciones {
+    flex-direction: column;
+  }
+}
