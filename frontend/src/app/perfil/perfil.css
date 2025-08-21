@@ -1,0 +1,161 @@
+/* SECCIÓN PERFIL */
+
+.container__perfil {
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  margin-inline: auto;
+}
+
+.container__bienvenida {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  padding: 1rem;
+}
+
+.container__bienvenida h1 {
+  max-width: 900px;
+  font-family: var(--fuente-titulo);
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--primario);
+  text-align: center;
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+
+.texto__bienvenida__perfil i {
+  color: var(--cuaternario);
+  font-size: 4rem;
+  margin-right: 0.5rem;
+}
+
+.container__bienvenida span {
+  font-weight: 700;
+  font-size: 4rem;
+  color: var(--cuaternario);
+}
+
+.container__usuario {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+}
+
+.container__parrafo__saludo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 900px;
+  padding: 2rem;
+  height: auto;
+  padding-bottom: 2rem;
+}
+
+.parrafo__saludo {
+  font-family: var(--fuente-titulo);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.container__usuario__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background: var(--bg-fondo);
+  border-radius: 12px;
+  border: 2px solid var(--ternario);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.container__datos__usuario {
+  color: var(--cuaternario);
+}
+
+.container__img__usuario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.container__img__usuario img {
+  width: 70%;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--fav-cristian);
+  box-shadow: 0 0 8px var(--primario);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.container__img__usuario img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.container__tu__progreso {
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+  padding: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.container__tu__progreso h2 {
+  font-family: var(--fuente-titulo);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+  padding-top: 0.2rem;
+}
+
+.container__tu__progreso p {
+  font-family: var(--fuente-titulo);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.container__tu__progreso p span {
+  color: var(--cuaternario);
+  font-weight: 700;
+}
+
+.container__tu__progreso img {
+  width: 100%;
+  height: auto;
+  border-radius: 5%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border: 2px solid var(--ternario);
+}

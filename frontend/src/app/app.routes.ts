@@ -1,3 +1,12 @@
 import { Routes } from '@angular/router';
+import { Perfil } from './perfil/perfil';
+import { Habitos } from './habitos/habitos';
+// import { Home } from './';
+// import { NotFound } from './';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: 'perfil', component: Perfil },
+  { path: 'habitos', component: Habitos },
+  // { path: '', component: Home  },
+  // { path: '**', component: NotFound },
+];

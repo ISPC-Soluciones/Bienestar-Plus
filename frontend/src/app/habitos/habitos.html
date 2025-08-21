@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<main class="mis-habitos">
+  <section class="rutinas">
+    <div class="container__habitos">
+      <div class="container__btn__cerrar__sesion">
+        <a routerLink="/" class="btn__cerrar__sesion">
+          Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+      </div>
+      <div class="container__titulo__habitos">
+        <h1>Hábitos de <span>Cosme</span></h1>
+      </div>
+      <div class="container__parrafo__habitos">
+        <p class="texto__parrafo__habitos">
+          Aquí puedes ver y gestionar tus hábitos, evaluar tu progreso y
+          modificar tus rutinas, para lograr los mejores resultados. Recuerda
+          que cada pequeño paso cuenta en tu camino hacia una vida más
+          saludable. ¡Sigue adelante!
+        </p>
+      </div>
+      <div class="container__habitos__usuario">
+        <div class="container__listado__habitos">
+          <h2>Rutinas</h2>
+          <p class="parrafo__rutinas">
+            Ver los hábitos que has seleccionado para mejorar tu bienestar.
+          </p>
+        </div>
+        <div class="container__rutinas">
+          <div class="container__tabs__rutinas">
+            <div class="tabs">
+              <div class="tab-buttons">
+                <button
+                  class="tab-button"
+                  [class.active]="activeTab === 'ejercicio'"
+                  (click)="setActiveTab('ejercicio')"
+                >
+                  Ejercicio
+                </button>
+                <button
+                  class="tab-button"
+                  [class.active]="activeTab === 'hidratacion'"
+                  (click)="setActiveTab('hidratacion')"
+                >
+                  Hidratación
+                </button>
+                <button
+                  class="tab-button"
+                  [class.active]="activeTab === 'alimentacion'"
+                  (click)="setActiveTab('alimentacion')"
+                >
+                  Alimentación
+                </button>
+                <button
+                  class="tab-button"
+                  [class.active]="activeTab === 'sueno'"
+                  (click)="setActiveTab('sueno')"
+                >
+                  Sueño
+                </button>
+              </div>
+
+              <div
+                class="tab-content"
+                [class.active]="activeTab === 'ejercicio'"
+                id="ejercicio"
+              >
+                <article class="card__presentacion__habito">
+                  <h3 class="card__presentacion__titulo">Ejercicio</h3>
+                  <p class="card__presentacion__descripcion">
+                    Tu rutina de ejercicio actual. Puedes modificarla para que
+                    se ajuste a tus necesidades.
+                  </p>
+                  <div class="card__presentacion__logo">
+                    <i class="fa-solid fa-person-running"></i>
+                  </div>
+                  <button class="btn__habito btn--ir">
+                    ir a mi rutina <i class="fa-solid fa-dumbbell"></i>
+                  </button>
+                </article>
+                <div class="contenido__ejercicios">
+                  <article class="card__habito">
+                    <h4 class="card__habito__titulo">Flexiones</h4>
+                    <p class="card__habito__descripcion">
+                      Realiza 100 flexiones diarias para mejorar tu fuerza y
+                      resistencia.
+                    </p>
+                    <div class="card__habito__imagen">
+                      <img
+                        src="assets/flexiones.jpg"
+                        alt="Demostración de flexiones"
+                      />
+                    </div>
+                    <div class="card__habito__acciones">
+                      <button class="btn__habito btn--agregar">
+                        Agregar <i class="fa-solid fa-check"></i>
+                      </button>
+                      <button class="btn__habito btn--quitar">
+                        Quitar <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </div>
+                  </article>
+                  <article class="card__habito">
+                    <h4 class="card__habito__titulo">Abdominales</h4>
+                    <p class="card__habito__descripcion">
+                      Realiza 100 abdominales diarias para fortalecer tu core.
+                    </p>
+                    <div class="card__habito__imagen">
+                      <img
+                        src="assets/abdominales.jpg"
+                        alt="Demostración de abdominales"
+                      />
+                    </div>
+                    <div class="card__habito__acciones">
+                      <button class="btn__habito btn--agregar">
+                        Agregar <i class="fa-solid fa-check"></i>
+                      </button>
+                      <button class="btn__habito btn--quitar">
+                        Quitar <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </div>
+                  </article>
+                  <article class="card__habito">
+                    <h4 class="card__habito__titulo">Sentadillas</h4>
+                    <p class="card__habito__descripcion">
+                      Realiza 100 sentadillas diarias para tonificar tus piernas
+                      y glúteos.
+                    </p>
+                    <div class="card__habito__imagen">
+                      <img
+                        src="assets/sentadillas.jpg"
+                        alt="Demostración de sentadillas"
+                      />
+                    </div>
+                    <div class="card__habito__acciones">
+                      <button class="btn__habito btn--agregar">
+                        Agregar <i class="fa-solid fa-check"></i>
+                      </button>
+                      <button class="btn__habito btn--quitar">
+                        Quitar <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </div>
+                  </article>
+                  <article class="card__habito">
+                    <h4 class="card__habito__titulo">Correr</h4>
+                    <p class="card__habito__descripcion">
+                      Correr 10 km diarios para mejorar tu resistencia
+                      cardiovascular.
+                    </p>
+                    <div class="card__habito__imagen">
+                      <img
+                        src="assets/correr.jpg"
+                        alt="Demostración de personas corriendo"
+                      />
+                    </div>
+                    <div class="card__habito__acciones">
+                      <button class="btn__habito btn--agregar">
+                        Agregar <i class="fa-solid fa-check"></i>
+                      </button>
+                      <button class="btn__habito btn--quitar">
+                        Quitar <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <div
+                class="tab-content"
+                [class.active]="activeTab === 'hidratacion'"
+                id="hidratacion"
+              >
+                <article class="card__presentacion__habito">
+                  <h3 class="card__presentacion__titulo">Hidratación</h3>
+                  <p class="card__presentacion__descripcion">
+                    Se recomienda que los adultos sanos consuman entre 1.5 y 2
+                    litros de agua al día. Un vaso de agua estándar suele
+                    equivaler a 250 ml (mililitros).
+                  </p>
+                  <div class="card__presentacion__logo">
+                    <i class="fa-solid fa-glass-water"></i>
+                  </div>
+                  <h4 class="card__habito__titulo">Mi Ingesta Diaria</h4>
+                  <div class="card__habito__imagen__main">
+                    <img src="assets/agua.jpg" alt="vaso con agua" />
+                  </div>
+                  <div class="card__habito__acciones">
+                    <button class="btn__habito btn--agregar">
+                      Agregar un vaso de agua bebido
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
+                  </div>
+                </article>
+              </div>
+
+              <div
+                class="tab-content"
+                [class.active]="activeTab === 'alimentacion'"
+                id="alimentacion"
+              >
+                <article class="card__presentacion__habito">
+                  <h3 class="card__presentacion__titulo">Alimentación</h3>
+                  <p class="card__presentacion__descripcion">
+                    Una dieta sana se define por la combinación equilibrada de
+                    alimentos que aportan los nutrientes esenciales y la energía
+                    que necesita el cuerpo para funcionar óptimamente. Se
+                    recomienda realizar al menos 3 comidas principales al día
+                    (desayuno, almuerzo y cena) y, en algunos casos, incluir
+                    colaciones intermedias.
+                  </p>
+                  <div class="card__presentacion__logo">
+                    <i class="fa-solid fa-utensils"></i>
+                  </div>
+                  <h4 class="card__habito__titulo">Mi Plan Nutricional</h4>
+                  <div class="card__habito__imagen__main">
+                    <img src="assets/comida.jpg" alt="mesa con comida" />
+                  </div>
+                  <div class="card__habito__acciones">
+                    <button class="btn__habito btn--agregar">
+                      Editar Mi Plan Nutricional
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                  </div>
+                </article>
+              </div>
+
+              <div
+                class="tab-content"
+                [class.active]="activeTab === 'sueno'"
+                id="sueno"
+              >
+                <article class="card__presentacion__habito">
+                  <h3 class="card__presentacion__titulo">Sueño</h3>
+                  <p class="card__presentacion__descripcion">
+                    En general, se recomienda que los adultos duerman entre 7 y
+                    9 horas por noche para una buena salud y bienestar.
+                  </p>
+                  <div class="card__presentacion__logo">
+                    <i class="fa-solid fa-bed"></i>
+                  </div>
+                  <h4 class="card__habito__titulo">Mis Horas de Sueño</h4>
+                  <div class="card__habito__imagen__main">
+                    <img src="assets/sueno.jpg" alt="hombre durmiendo" />
+                  </div>
+                  <div class="card__habito__acciones">
+                    <button class="btn__habito btn--agregar">
+                      Agregar horas de sueño
+                      <i class="fa-solid fa-moon"></i>
+                    </button>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

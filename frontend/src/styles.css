@@ -1,1 +1,129 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  /* Paleta de Colores */
+  --primario: #7fffd4;
+  --secundario: #dff5e1;
+  --ternario: #6ec1e4;
+  --cuaternario: #ff8a65;
+  --bg-fondo: #f5f7f8;
+  --bg-y-fuentes: #333b3e;
+  --fav-cristian: #c7bcf2;
+
+  /* Tipografías */
+  --fuente-base: "Montserrat", sans-serif;
+  --fuente-titulo: "Nunito Sans", sans-serif;
+}
+
+:where(*, *::before, *::after) {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:where(html) {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+:where(body) {
+  font-family: var(--fuente-base);
+  background-color: var(--bg-fondo);
+  color: var(--bg-y-fuentes);
+  line-height: 1.6;
+  min-height: 100dvh;
+}
+
+/* BTN VOLVER AL INICIO */
+
+.container__volver__inicio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  text-decoration: none;
+}
+
+.container__volver__inicio a {
+  text-decoration: none;
+  font-family: var(--fuente-base);
+  font-weight: 500;
+}
+
+.container_bt_login,
+.container a,
+.carousel-caption a,
+.container__btn__editar__perfil,
+.container__btn__ir__mis__habitos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.login-form button,
+.btn__editar__perfil,
+.btn__ir__mis__habitos {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
+  font-family: var(--fuente-base);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--ternario);
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btn__editar__perfil:hover,
+.container a:hover,
+.carousel-caption a:hover,
+.btn__ir__mis__habitos:hover,
+.login-form button:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 10px var(--ternario);
+}
+
+.container a,
+.carousel-caption a,
+.container a:hover,
+.carousel-caption a:hover {
+  font-family: var(--fuente-base);
+  text-decoration: none;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+  overflow: hidden;
+  display: inline-block;
+  min-width: 150px;
+  max-width: 300px;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+}
+
+.container__btn__cerrar__sesion {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+}
+
+.btn__cerrar__sesion {
+  background-color: var(--cuaternario);
+  color: var(--bg-y-fuentes);
+  font-family: var(--fuente-base);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--fav-cristian);
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btn__cerrar__sesion:hover {
+  background-color: #ffb499;
+  box-shadow: 0 0 10px var(--ternario);
+}
