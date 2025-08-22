@@ -6,8 +6,7 @@ import { QuienesSomosComponent } from "./quienes-somos/quienes-somos.component";
   selector: 'app-root',
   imports: [QuienesSomosComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
+  standalone: true,
 })
-export class App {
-  protected readonly title = signal('mi-proyecto');
-}
+export class AppComponent {}
