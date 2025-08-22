@@ -1,0 +1,24 @@
+.cta {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.cta {
+  background-color: rgb(233, 254, 245);
+}
+
+
+.cta h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.cta .btn {
+  background-color: var(--cuaternario);
+  color: var(--bg-y-fuentes);
+  font-family: var(--fuente-base);
+}
+.cta .btn:hover {
+  background-color: #ffb499;
+  box-shadow: 0 0 10px var(--ternario);
+}
