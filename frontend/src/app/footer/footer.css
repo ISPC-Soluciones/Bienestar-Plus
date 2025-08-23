@@ -1,0 +1,168 @@
+/* ########## FOOTER ########## */
+
+/* Estilos del Footer */
+footer {
+  background-image: linear-gradient(
+    to right,
+    #333b33,
+    #6ec1e4,
+    #7fffd4
+  ); /* Fondo cohesivo */
+  font-family: var(--fuente-base);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--bg-fondo); /* Texto blanco */
+  padding: 2.5rem 1.25rem; /* 40px = 2.5em (si font-size base es 16px), 20px = 1.25em */
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between; /* Distribuye los bloques horizontalmente */
+  justify-content: space-around;
+  align-items: center; /* Hace que los bloques tengan la misma altura */
+  margin: 0 auto;
+}
+
+.footer-logo {
+  text-align: center; /* Centra el logo horizontalmente */
+  display: flex;
+  align-items: center; /* Centra el logo verticalmente dentro de su bloque */
+  justify-content: center; /* Centra el logo horizontalmente */
+}
+
+.footer-logo .logo-footer {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.footer-logo .logo-footer img {
+  max-height: 2.5rem;
+  margin-right: 0.9375rem;
+}
+
+.logo-footer span {
+  font-size: 1.2em;
+  font-weight: bold;
+  font-family: var(--fuente-titulo);
+  color: var(--bg-fondo);
+}
+
+.footer-navigation-left {
+  text-align: left; /* Alinea los enlaces a la izquierda */
+  display: flex;
+  flex-direction: column; /* Apila los enlaces verticalmente */
+  justify-content: center; /* Centra los enlaces verticalmente en su bloque */
+}
+
+.footer-navigation-left ul,
+.footer-navigation-center ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-navigation-left li,
+.footer-navigation-center li {
+  margin-bottom: 0.625rem; /* 10px = 0.625em */
+}
+
+.footer-navigation-left a,
+.footer-navigation-center a {
+  color: var(--bg-y-fuentes);
+  text-decoration: none;
+}
+
+.footer-navigation-left a:hover,
+.footer-navigation-center a:hover {
+  color: var(--cuaternario);
+}
+
+.footer-navigation-center {
+  text-align: left; /* Alinea los enlaces a la izquierda */
+  display: flex;
+  flex-direction: column; /* Apila los enlaces verticalmente */
+  justify-content: center; /* Centra los enlaces verticalmente en su bloque */
+}
+
+.footer-social {
+  text-align: left; /* Alinea el texto e iconos a la izquierda */
+  display: flex;
+  flex-direction: column; /* Apila el texto y los iconos verticalmente */
+  justify-content: center; /* Centra el contenido verticalmente en su bloque */
+}
+
+.footer-social h3 {
+  color: var(--bg-y-fuentes);
+  font-family: var(--fuente-base);
+  font-weight: 700;
+  margin-bottom: 0.625rem; /* 10px = 0.625rem */
+  font-size: 1.1rem; /* 17.6px = 1.1rem */
+  text-align: left; /* Asegura la alineación a la izquierda */
+}
+
+.footer-social .social-icons a {
+  display: flex; /* Alinea los iconos horizontalmente */
+  align-items: center; /* Centra verticalmente los iconos */
+  display: inline-block;
+  margin-right: 0.625rem; /* 10px = 0.625em */
+  font-size: 1.3rem;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+  color: var(--bg-y-fuentes);
+}
+
+.footer-social .social-icons a:hover {
+  color: var(--cuaternario);
+}
+
+.footer-copyright {
+  text-align: center;
+  margin-top: 1.875rem; /* 30px = 1.875em */
+  padding-top: 0.625rem; /* 10px = 0.625em */
+  padding-bottom: 0.625rem; /* 10px = 0.625em */
+  font-size: 0.9em;
+  color: var(--bg-y-fuentes);
+  font-family: var(--fuente-base);
+  font-weight: 700;
+  clear: both;
+  max-width: 75rem; /* 1200px = 75em */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem; /* 20px = 1.25em */
+  padding-right: 1.25rem; /* 20px = 1.25em */
+}
+
+/* Estilos responsivos (opcional) */
+@media (max-width: 55.9375em) {
+  /* 768px = 48em */
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-brand {
+    text-align: center;
+    margin-bottom: 1.25rem; /* 20px = 1.25em */
+  }
+
+  .footer-navigation-left,
+  .footer-navigation-center,
+  .footer-social {
+    text-align: center;
+    margin-top: 1.25rem; /* 20px = 1.25em */
+  }
+
+  .footer-social .social-icons {
+    justify-content: center; /* Centra los iconos en pantallas pequeñas */
+  }
+
+  .footer-social .social-icons a {
+    margin: 0 0.625rem; /* 10px = 0.625em */
+  }
+
+  .footer-copyright {
+    padding-left: 1.25rem; /* Mantenemos el padding lateral */
+    padding-right: 1.25rem;
+  }
+}
