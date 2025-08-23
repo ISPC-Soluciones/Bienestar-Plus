@@ -1,0 +1,14 @@
+.testimonios{
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.testimonios h3 {
+  font-size: 1.3rem;
+}
+
+.testimonio {
+  margin-bottom: 2rem;
+  font-style: italic;
+  color: var(--bg-y-fuentes);
+}
