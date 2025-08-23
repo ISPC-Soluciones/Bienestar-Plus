@@ -73,7 +73,7 @@
 }
 
 /* Estilos para la versión móvil (controlados por el checkbox) */
-@media (max-width: 55.9375em) {
+@media (max-width: 70.3125em) {
   .navbar {
     padding: 0.9375rem 3rem;
     transition: 0.5s;
