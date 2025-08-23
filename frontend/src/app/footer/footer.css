@@ -71,6 +71,7 @@ footer {
 .footer-navigation-center a {
   color: var(--bg-y-fuentes);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .footer-navigation-left a:hover,
