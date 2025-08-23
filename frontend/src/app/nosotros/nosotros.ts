@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'nosotros', // Selector actualizado a 'nosotros'
+  selector: 'nosotros', 
   standalone: true,
   imports: [CommonModule],
   templateUrl: './nosotros.html',
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 export class NosotrosComponent {
   title = 'BienestarPlus';
 
-  // Datos del equipo para iterar en el template
+
   equipo = [
     {
       nombre: 'Cristian Vellio',

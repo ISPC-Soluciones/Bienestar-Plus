@@ -1,12 +1,12 @@
-<!-- Cargar los iconos de Font Awesome -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-<!-- Contenedor principal sin navegación ni pie de página -->
+
 <main>
-  <!-- Sección ISPC Soluciones -->
+
   <section class="qs-section ispc-soluciones">
     <div class="ispc-container">
-      <!-- Se usa un placeholder para la imagen, reemplazar con la ruta correcta si es necesario -->
+
       <img src="./assets/logoTeam.png" alt="ISPC Soluciones Logo" class="ispc-logo" />
       <div class="ispc-text">
         <h2>ISPC Soluciones</h2>
@@ -33,14 +33,14 @@
     </div>
   </section>
 
-  <!-- Sección Nuestro Equipo -->
+
   <section class="qs-section">
     <h2 class="qs-title">Nuestro Equipo</h2>
 
-    <!-- Usamos ngFor para iterar sobre la lista de miembros del equipo -->
+
     <div *ngFor="let miembro of equipo; let i = index" class="qs-profile" [ngClass]="{ 'alt': i % 2 !== 0 }">
       <div class="qs-photo">
-        <!-- Usamos la propiedad 'imagen' del objeto miembro -->
+
         <img [src]="miembro.imagen" [alt]="miembro.nombre" />
       </div>
       <div class="qs-info">
