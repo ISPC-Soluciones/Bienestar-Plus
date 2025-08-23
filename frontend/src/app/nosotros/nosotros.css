@@ -1,0 +1,198 @@
+/* Se definen las variables CSS. Los colores son ejemplos, puedes ajustarlos. */
+:root {
+  --bg-fondo: #f9fafb;
+  --bg-y-fuentes: #333333;
+  --cuaternario: #2563eb;
+  --secundario: #ffffff;
+  --ternario: #1d4ed8;
+  --fuente-base: "Nunito Sans", sans-serif;
+  --fuente-titulo: "Montserrat", sans-serif;
+}
+
+/* Estilo QUIENES SOMOS */
+.qs-section {
+  background-color: var(--bg-fondo);
+  font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+  padding: 3rem 2rem;
+}
+
+.qs-section-center {
+  background-color: var(--bg-fondo);
+  font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.qs-title {
+  font-family: var(--fuente-titulo);
+  color: var(--cuaternario);
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.qs-content {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.qs-profile {
+  display: flex;
+  align-items: center;
+  background-color: var(--secundario);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 2rem;
+  flex-wrap: wrap;
+  transition: transform 0.2s ease-in-out;
+}
+
+.qs-profile:hover {
+  transform: scale(1.02);
+}
+
+.qs-profile.alt {
+  flex-direction: row-reverse;
+}
+
+.qs-photo img {
+  width: 150px;
+  height: 150px;
+  border-radius: 1rem;
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.qs-photo-team img {
+  width: 30%;
+  height: 30%;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.qs-info {
+  flex: 1;
+}
+
+.qs-info h3 {
+  font-family: var(--fuente-titulo);
+  color: var(--ternario);
+  margin-bottom: 0.5rem;
+}
+
+.qs-info p {
+  font-size: 1rem;
+  color: var(--bg-y-fuentes);
+  margin-bottom: 1rem;
+}
+
+.qs-links a {
+  margin-right: 1rem;
+  color: var(--cuaternario);
+  font-size: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.qs-links a:hover {
+  transform: scale(1.2);
+  color: var(--bg-y-fuentes);
+}
+
+.ispc-soluciones {
+  background-color: var(--secundario);
+  padding: 4rem 2rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  margin: 3rem 0;
+}
+
+.ispc-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ispc-logo {
+  max-width: 150px;
+  margin-bottom: 2rem;
+  animation: zoomIn 0.8s ease;
+}
+
+.ispc-text h2 {
+  font-size: 2.5rem;
+  color: var(--ternario);
+  margin-bottom: 1.5rem;
+  font-family: var(--fuente-titulo);
+}
+
+.ispc-text p {
+  font-size: 1.1rem;
+  color: var(--bg-y-fuentes);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-family: var(--fuente-base);
+}
+
+/* Media queries */
+/* tablets */
+@media (max-width: 768px) {
+.ispc-text h2 {
+  font-size: 2rem;
+}
+.ispc-text p {
+  font-size: 1rem;
+}
+.ispc-logo {
+  max-width: 120px;
+}
+}
+/* smartphones */
+@media (max-width: 480px) {
+.ispc-soluciones {
+  padding: 2rem 1rem;
+}
+.ispc-text h2 {
+  font-size: 1.6rem;
+}
+.ispc-text p {
+  font-size: 0.95rem;
+}
+.ispc-logo {
+  max-width: 100px;
+  margin-bottom: 1rem;
+}
+}
+/* desktop*/
+@media (min-width: 1024px) {
+.ispc-soluciones {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3rem;
+}
+.ispc-logo {
+  max-width: 180px;
+}
+.ispc-text {
+  flex: 1;
+  text-align: left;
+}
+.ispc-text h2 {
+  font-size: 2.8rem;
+  text-align: left;
+}
+.ispc-text p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  text-align: justify;
+}
+}
