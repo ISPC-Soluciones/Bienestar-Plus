@@ -1,0 +1,61 @@
+<div class="login-body">
+  <main class="login-container">
+    <section class="login-form">
+      <h1 class="login-h1">BienestarPlus</h1>
+      <div class="container__logo">
+        <img
+          src="/Bienestar_Plus_favicon.ico"
+          alt="Logo BienestarPlus"
+          class="logo__img"
+        />
+      </div>
+      <h2 class="login-h2">INICIAR SESIÓN</h2>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form-container">
+        <label for="email" class="login-label">Correo electrónico:</label>
+        <input 
+          class="login-input" 
+          id="email" 
+          type="email" 
+          formControlName="email" 
+          placeholder="Correo electrónico" 
+        />
+        @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+          <div class="error">El correo electrónico es obligatorio</div>
+        }
+
+        <label for="password" class="login-label">Contraseña:</label>
+        <input 
+          class="login-input" 
+          id="password" 
+          type="password" 
+          formControlName="password" 
+          placeholder="Contraseña" 
+        />
+        @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+          <div class="error">La contraseña es obligatoria</div>
+        }
+
+        <div class="container_bt_login">
+          <button 
+            class="login-button" 
+            type="submit" 
+            [disabled]="loginForm.invalid"
+          >
+            Iniciar Sesión
+          </button>
+        </div>
+      </form>
+
+      <a routerLink="/registro" class="register-link">
+        ¿No tenés cuenta? REGISTRARTE
+      </a>
+
+      <div class="container__volver__inicio">
+        <a routerLink="/" class="btn__volver__inicio">
+          Volver al Inicio <i class="fa-solid fa-rotate-left"></i>
+        </a>
+      </div>
+    </section>
+  </main>
+</div>c
