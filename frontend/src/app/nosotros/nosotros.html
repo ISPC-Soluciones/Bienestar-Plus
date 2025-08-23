@@ -1,0 +1,63 @@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+<main>
+
+  <section class="qs-section ispc-soluciones">
+    <div class="ispc-container">
+
+      <img src="./assets/logoTeam.png" alt="ISPC Soluciones Logo" class="ispc-logo" />
+      <div class="ispc-text">
+        <h2>ISPC Soluciones</h2>
+        <p>
+          ISPC Soluciones es una compañía de desarrollo de software conformada
+          por programadores del Instituto Superior Politécnico de Córdoba,
+          comprometidos con generar impacto social positivo a través de la
+          tecnología.
+        </p>
+        <p>
+          Creemos en el poder del código como herramienta de transformación,
+          promoviendo soluciones innovadoras que fomenten la sostenibilidad
+          ambiental, el desarrollo humano y la evolución tecnológica.
+        </p>
+        <p>
+          Nos enfocamos en crear sistemas escalables, eficientes y alineados
+          con los desafíos del presente y del futuro.
+        </p>
+        <p>
+          Más sobre nuestros proyectos
+          <a href="https://github.com/ISPC-Soluciones/Bienestar-Plus" target="_blank">aquí</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="qs-section">
+    <h2 class="qs-title">Nuestro Equipo</h2>
+
+
+    <div *ngFor="let miembro of equipo; let i = index" class="qs-profile" [ngClass]="{ 'alt': i % 2 !== 0 }">
+      <div class="qs-photo">
+
+        <img [src]="miembro.imagen" [alt]="miembro.nombre" />
+      </div>
+      <div class="qs-info">
+        <h3>{{ miembro.nombre }}</h3>
+        <p>{{ miembro.descripcion }}</p>
+        <div class="qs-links">
+          <a [href]="miembro.github" target="_blank" aria-label="GitHub">
+            <i class="fab fa-github"></i>
+          </a>
+          <a [href]="miembro.linkedin" target="_blank" aria-label="LinkedIn">
+            <i class="fab fa-linkedin"></i>
+          </a>
+          <a [href]="miembro.portafolio" target="_blank" aria-label="Portafolio">
+            <i class="fa-solid fa-suitcase"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
