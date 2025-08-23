@@ -5,6 +5,7 @@ import { Features } from "./features/features";
 import { CallToAction } from "./call-to-action/call-to-action";
 import { Testimonials } from './testimonials/testimonials';
 
+
 @Component({
   selector: 'app-home',
   imports: [CommonModule, Carousel, Features, Testimonials, CallToAction],
