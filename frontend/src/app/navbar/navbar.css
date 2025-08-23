@@ -1,0 +1,104 @@
+/* ########## NAVBAR ################ */
+
+.navbar {
+  background-image: linear-gradient(to right, #333b33, #6ec1e4, #7fffd4);
+  padding: 0.9375rem 7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--bg-y-fuentes);
+}
+
+.logo img {
+  max-height: 2.5rem;
+  margin-right: 0.9375rem;
+}
+
+.logo span {
+  font-size: 1.2em;
+  font-family: var(--fuente-titulo);
+  font-weight: bold;
+  color: var(--bg-fondo);
+}
+
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-links li a {
+  display: block;
+  font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+  text-decoration: none;
+  padding: 0.625rem 0.9375rem;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.nav-links li a:hover {
+  background-color: var(--secundario);
+}
+
+.nav-registrarse {
+  font-weight: bolder;
+}
+
+/* Estilos para el menú hamburguesa y el checkbox */
+.hamburger {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: var(--bg-y-fuentes);
+}
+
+#menu-toggle {
+  display: none; /* Mantenemos el checkbox oculto */
+}
+
+/* Estilos para la versión móvil (controlados por el checkbox) */
+@media (max-width: 55.9375em) {
+  .navbar {
+    padding: 0.9375rem 3rem;
+    transition: 0.5s;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 3.75rem;
+    left: 0;
+    background-image: linear-gradient(to right, #333b33, #6ec1e4, #7fffd4);
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links li a {
+    padding: 0.9375rem 1.25rem;
+  }
+
+  .hamburger {
+    display: flex; /* Mostrar el label del hamburguesa en pantallas pequeñas */
+  }
+
+  /* Mostrar el menú cuando el checkbox está marcado */
+  #menu-toggle:checked ~ .nav-links {
+    display: flex;
+  }
+}

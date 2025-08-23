@@ -5,6 +5,8 @@ import { Home } from './home/home';
 // import { NotFound } from './';
 
 export const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full'},
+  { path: 'home', component: Home},
   { path: 'perfil', component: Perfil },
   { path: 'habitos', component: Habitos },
   { path: '', component: Home  },
