@@ -5,7 +5,7 @@
       "use": "@vercel/static-build"
     }
   ],
-  "buildCommand": "npm install && npx ng build --configuration production",
+  "buildCommand": "npx ng build --configuration production",
   "outputDirectory": "dist/mi-proyecto",
   "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
 }
