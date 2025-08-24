@@ -5,9 +5,7 @@
       "use": "@vercel/static-build"
     }
   ],
-  "buildCommand": "npx ng build --configuration production",
-  "outputDirectory": "dist/mi-proyecto",
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  "buildCommand": "cd frontend && npx ng build --configuration production",
+  "outputDirectory": "frontend/dist/mi-proyecto",
+  "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
 }
