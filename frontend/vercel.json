@@ -1,6 +1,6 @@
 {
   "builds": [{ "src": "package.json", "use": "@vercel/static-build" }],
   "buildCommand": "npx ng build --configuration production",
-  "outputDirectory": "dist/mi-proyecto",
+  "outputDirectory": "dist/mi-proyecto/browser",
   "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
 }
