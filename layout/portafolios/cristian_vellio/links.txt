@@ -1,8 +1,0 @@
-Link al Repo:
-
-https://github.com/CristianVellio/PORT-FOLIO
-
-
-Link al Deploy:
-
-https://cristian-vellio-cv.vercel.app/
