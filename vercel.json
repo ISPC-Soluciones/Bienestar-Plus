@@ -12,5 +12,5 @@
     }
   ],
   "buildCommand": "ng build --prod",
-  "builds.outputDirectory": "dist/frontend"
+  "outputDirectory": "dist/frontend"
 }
