@@ -45,76 +45,23 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
 ---
 
 <h2 align=center> 
-  🗂️ Estructura del proyecto
+  📙 Wiki
 </h2>
 <br>
+En la Wiki encontrarás toda la información detallada que necesitas, incluyendo:
 
-```
-└── 📁Bienestar-Plus
-    └── 📁backend
-        └── 📁src
-            └── script.js
-    └── 📁frontend
-        └── index.html
-        └── 📁src
-            └── 📁styles
-                └── estilo.css
-    └── 📁layout
-        └── .gitignore
-        └── 📁assets
-            └── imagenes.jpg
-        └── habitos.html
-        └── index.html
-        └── login.html
-        └── nosotros.html
-        └── perfil.html
-        └── registro.html
-        └── 📁scripts
-            └── toggle_rutinas.js
-        └── 📁styles
-            └── estilo.css
-            └── normalize.css
-    └── README.md
-```
+-   **Visión y Alcance del Proyecto:** Un resumen de nuestros objetivos y metas.
+-   **Análisis y Requisitos:** Documentación sobre los requisitos funcionales y no funcionales.
+-   **Arquitectura de Software:** Diagramas de módulos y clases para entender la estructura del sistema.
+-   **Guía de Usuario y Equipo:** Roles, responsabilidades y minutas de las reuniones.
 
 ---
 
-<h2 align=center> 
-  🎨 Paleta de Colores
-</h2>
-<br>
-<div align="center">
-<img src="https://github.com/user-attachments/assets/0731895d-9fb1-4d81-b166-2d5b19b1b485" width="400" height="300">
-</div>
-<br>
+### **Accede a la documentación completa aquí:**
 
-| Color	    |   Hex	              | Uso Principal	                           | Efecto Psicológico/Visual                |
-|-----------|---------------------|------------------------------------------|------------------------------------------|
-| Primario	| #7FFFD4	        |	Botones principales, íconos activos, secciones clave |	Tranquilidad, frescura natural, bienestar visual     |
-| Secundario |	#DFF5E1	      | Fondos suaves, tarjetas, contenedores de contenido           | Limpieza, suavidad, cercanía emocional       |
-| Ternario |	#6EC1E4		      | 	Enlaces, botones secundarios, gráficos	     | Tecnología amigable, modernidad, confianza |
-| Cuaternario	| #FF8A65	     |	Acentos, llamados a la acción, badges	               | Calidez humana, energía positiva, motivación         |
-| BG Fondo	| #F5F7F8			| Fondo general, secciones amplias	                         | Claridad, espacio visual, enfoque en el contenido |
-| BG y Fuentes |	#333B3E		      | Texto principal, headers oscuros, contraste visual           | Estabilidad, legibilidad, profesionalismo   |
-<br>
-🌿 Razonamiento Visual y Psicológico<br>
-<br>
-☁️ Estética Suave y Reconfortante<br>
-El uso de tonos menta (#7FFFD4) y verde suave (#DFF5E1) genera una atmósfera calmada y accesible, ideal para una app de bienestar físico, mental y emocional.
-<br>
-🌞 Contrastes Positivos<br>
-El coral cálido (#FF8A65) introduce un punto de energía que motiva e inspira acción (como iniciar hábitos o completar actividades), sin resultar agresivo.
-<br>
-💧 Confianza & Tecnología<br>
-El celeste brillante (#6EC1E4) proyecta modernidad y frescura digital, mientras que el gris oscuro (#333B3E) mantiene el equilibrio, anclando la interfaz con una base sólida y profesional.
-<br>
-📖 Legibilidad & Accesibilidad<br>
-La combinación de tipografías sin serifas, como Montserrat y Nunito Sans, junto a una paleta clara y bien jerarquizada, garantiza que la experiencia visual sea agradable y accesible en cualquier dispositivo.
+➡️ **[Visita la Wiki del Proyecto Bienestar Plus](https://github.com/ISPC-Soluciones/Bienestar-Plus/wiki)**
 <br>
 <br>
-<br>
-La identidad visual de Bienestar Plus no solo comunica profesionalismo, sino también empatía y equilibrio. Su paleta está pensada para promover una experiencia que refleje salud, accesibilidad y tecnología moderna al servicio del bienestar. Ideal para plataformas enfocadas en hábitos saludables, mindfulness o desarrollo personal.
-
 
 <h2 align=center> 
   👥 Equipo de desarrollo
