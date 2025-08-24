@@ -6,5 +6,6 @@
     }
   ],
   "buildCommand": "ng build --configuration production",
-  "outputDirectory": "dist/mi-proyecto"
+  "outputDirectory": "dist/mi-proyecto",
+  "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
 }
