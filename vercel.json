@@ -1,16 +1,10 @@
 {
   "builds": [
     {
-      "src": "frontend/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build"
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
-    }
-  ],
-  "buildCommand": "ng build --prod",
-  "outputDirectory": "dist/frontend"
+  "buildCommand": "ng build --configuration production",
+  "outputDirectory": "dist/mi-proyecto"
 }
