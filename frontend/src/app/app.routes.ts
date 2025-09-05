@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { Home } from './home/home';
-import { Perfil } from './perfil/perfil';
-import { Habitos } from './habitos/habitos';
-import { Registro } from './registro/registro';
-import { NosotrosComponent } from './nosotros/nosotros';
-import { Login } from './login/login';
+import { Home } from './pages/home/home';
+import { Perfil } from './pages/perfil/perfil';
+import { Habitos } from './pages/habitos/habitos';
+import { Registro } from './pages/registro/registro';
+import { NosotrosComponent } from './pages/nosotros/nosotros';
+import { Login } from './pages/login/login';
 
 // import { NotFound } from './';
 
