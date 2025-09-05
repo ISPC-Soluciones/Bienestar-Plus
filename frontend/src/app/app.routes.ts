@@ -5,6 +5,7 @@ import { Habitos } from './pages/habitos/habitos';
 import { Registro } from './pages/registro/registro';
 import { NosotrosComponent } from './pages/nosotros/nosotros';
 import { Home } from './pages/home/home'; 
+import { Login } from './pages/login/login';
 
 export const routes: Routes = [
   
@@ -15,6 +16,7 @@ export const routes: Routes = [
   { path: 'habitos', component: Habitos },
   { path: 'registro', component: Registro },
   { path: 'nosotros', component: NosotrosComponent },
+  { path: 'login', component: Login},
 
   
 ];
