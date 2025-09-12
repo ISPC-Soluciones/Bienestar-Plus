@@ -1,22 +1,22 @@
+// app.routes.ts
 import { Routes } from '@angular/router';
-import { Home } from './home/home';
-import { Perfil } from './perfil/perfil';
-import { Habitos } from './habitos/habitos';
-import { Registro } from './registro/registro';
-import { NosotrosComponent } from './nosotros/nosotros';
-import { Login } from './login/login';
-
-// import { NotFound } from './';
+import { Perfil } from './pages/perfil/perfil';
+import { Habitos } from './pages/habitos/habitos';
+import { Registro } from './pages/registro/registro';
+import { NosotrosComponent } from './pages/nosotros/nosotros';
+import { Home } from './pages/home/home'; 
+import { Login } from './pages/login/login';
 
 export const routes: Routes = [
-  { path: '', component: Home  },
-  { path: 'login', component: Login },
+  
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+
+  { path: 'home', component: Home },
   { path: 'perfil', component: Perfil },
   { path: 'habitos', component: Habitos },
   { path: 'registro', component: Registro },
   { path: 'nosotros', component: NosotrosComponent },
-  { path:"", redirectTo:"/home", pathMatch:"full" }
-  // { path: '**', component: NotFound },
+  { path: 'login', component: Login},
+
+  
 ];
-
-
