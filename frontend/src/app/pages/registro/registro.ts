@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RegistroServicio } from '../../services/registroServicio';
 @Component({
   selector: 'app-registro',
   imports: [CommonModule,ReactiveFormsModule],
