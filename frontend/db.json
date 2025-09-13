@@ -1,24 +1,44 @@
 {
-    "habitos": [
-      {
-        "id": 1,
-        "nombre": "Correr",
-        "tipo": "Ejercicio",
-        "metaDiaria": "30 minutos",
-        "frecuenciaSemanal": 5,
-        "activo": true,
-        "createdAt": "2025-09-11T20:00:00Z",
-        "updatedAt": "2025-09-11T20:00:00Z"
-      },
-      {
-        "id": 2,
-        "nombre": "Tomar agua",
-        "tipo": "Hidratación",
-        "metaDiaria": "8 vasos",
-        "frecuenciaSemanal": 7,
-        "activo": true,
-        "createdAt": "2025-09-11T20:00:00Z",
-        "updatedAt": "2025-09-11T20:00:00Z"
-      }
-    ]
-  }
+  "habitos": [
+    {
+      "id": "1",
+      "nombre": "Correr",
+      "tipo": "Ejercicio",
+      "metaDiaria": "30 minutos",
+      "frecuenciaSemanal": 5,
+      "activo": true,
+      "createdAt": "2025-09-11T20:00:00Z",
+      "updatedAt": "2025-09-11T20:00:00Z"
+    },
+    {
+      "id": "2",
+      "nombre": "Tomar agua",
+      "tipo": "Hidratación",
+      "metaDiaria": "8 vasos",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-11T20:00:00Z",
+      "updatedAt": "2025-09-11T20:00:00Z"
+    },
+    {
+      "id": "3371",
+      "nombre": "Leer 20 min",
+      "tipo": "Desarrollo personal",
+      "metaDiaria": "20 minutos",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-13T02:55:42.103Z",
+      "updatedAt": "2025-09-13T02:55:42.103Z"
+    },
+    {
+      "id": "be30",
+      "nombre": "Leer 20 min",
+      "tipo": "Desarrollo personal",
+      "metaDiaria": "20 minutos",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-13T02:55:45.279Z",
+      "updatedAt": "2025-09-13T02:55:45.279Z"
+    }
+  ]
+}

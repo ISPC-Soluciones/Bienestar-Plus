@@ -19,6 +19,22 @@
         </p>
       </div>
       <div class="container__habitos__usuario">
+        
+        <div class="container__listado__habitos">
+          <h2>Mis Hábitos</h2>
+          <ul>
+            <li *ngFor="let habito of habitos">
+              <strong>{{ habito.nombre }}</strong> - {{ habito.tipo }}
+              <br />
+              Meta diaria: {{ habito.metaDiaria }} | Frecuencia:
+              {{ habito.frecuenciaSemanal }} días/semana
+            </li>
+          </ul>
+        </div>
+        
+        <button class="btn__habito btn--agregar" (click)="agregarHabito()">
+          Crear hábito de prueba <i class="fa-solid fa-plus"></i>
+        </button>
         <div class="container__listado__habitos">
           <h2>Rutinas</h2>
           <p class="parrafo__rutinas">
