@@ -88,11 +88,20 @@
 }
 
 .registro-input:focus {
-  border-color: var(--cuaternario);
+  border-color:green;
   outline: none;
-  box-shadow: 0 0 3px var(--cuaternario);
+  box-shadow: 0 0 3px green;
 }
-
+.registro-input.ng-invalid.ng-touched {
+  border-color: red;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+.error {
+  color: red;
+  font-size: 0.95rem;
+  margin-top: -0.8rem;
+  margin-bottom: 1.2rem;
+}
 .registro-button {
   background-color: var(--cuaternario);
   color: var(--bg-y-fuentes);

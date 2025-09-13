@@ -22,7 +22,21 @@
           @if (registroForm.get('email')?.touched && registroForm.get('email')?.invalid) {
             <div class="error">El correo es obligatorio </div>
           }
-
+           <label for="telefono" class="registro-label">Numero telefonico:</label>
+          <input class="registro-input" id="telefono" type="tel" formControlName="telefono" placeholder="Ej: +54 351 17777441" />
+          @if (registroForm.get('telefono')?.touched && registroForm.get('telefono')?.invalid) {
+            <div class="error">El telefono es obligatorio </div>
+          }
+          <label for="edad" class="registro-label">edad:</label>
+          <input class="registro-input" id="edad" type="date" formControlName="edad" placeholder="Ej: mm/aa/dd" />
+          @if (registroForm.get('edad')?.touched && registroForm.get('edad')?.invalid) {
+            <div class="error">la edad  es obligatoria </div>
+          }
+          <label for="sexo" class="registro-label">sexo:</label>
+          <input class="registro-input" id="sexo" type="text" formControlName="sexo" placeholder="masculino o femenino" />
+          @if (registroForm.get('sexo')?.touched && registroForm.get('sexo')?.invalid) {
+            <div class="error">este campo es obligatorio </div>
+          }
           <label for="password" class="registro-label">Contraseña:</label>
           <input class="registro-input" id="password" type="password" formControlName="password" placeholder="Debe tener al menos 8 caracteres" />
           @if (registroForm.get('password')?.touched && registroForm.get('password')?.invalid) {
