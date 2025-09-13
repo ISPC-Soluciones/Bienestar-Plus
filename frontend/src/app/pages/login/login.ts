@@ -1,42 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { AuthService } from '../../services/auth';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth';
+import { LoginService, LoginData } from '../../services/login';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrl: './login.css'
 })
 export class Login {
-  loginForm: FormGroup;
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private loginService = inject(LoginService);
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService
-  ) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
-  }
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
+  });
+
+  errorMessage = '';
 
   onSubmit() {
     if (this.loginForm.valid) {
-      // Simulación de login exitoso
-      const userId = 1; // Obtener el ID del usuario logueado
+      const loginData: LoginData = {
+        email: this.loginForm.value.email!,
+        password: this.loginForm.value.password!
+      };
 
-      this.authService.login(userId); // <-- Aquí se guarda el ID en el servicio
-      this.router.navigate(['/perfil', userId]);
+      this.loginService.login(loginData).subscribe({
+        next: (usuario) => {
+          if (usuario) {
+            console.log('Login exitoso:', usuario);
+            this.authService.login(usuario.id);
+            this.router.navigate(['/perfil', usuario.id]);
+          } else {
+            this.errorMessage = 'Email o contraseña incorrectos';
+          }
+        },
+        error: () => {
+          this.errorMessage = 'Error de conexión';
+        }
+      });
     } else {
       this.loginForm.markAllAsTouched();
     }
