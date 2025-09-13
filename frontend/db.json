@@ -1,4 +1,21 @@
 {
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Cosme Fulanito",
+      "email": "cosme@ispc.com.ar",
+      "habitos": [1, 2],
+      "progreso": "¡Felicidades has reducido tu estrés diario en un 50%!",
+      "foto": "assets/usuario.jpg",
+      "grafico": "assets/grafico_usuario_metricas.jpg"
+    },
+    {
+      "id": 2,
+      "nombre": "Hacerdor Paz",
+      "email": "hacerdor@ispc.com.ar",
+      "habitos": [3371]
+    }
+  ],
   "habitos": [
     {
       "id": "1",

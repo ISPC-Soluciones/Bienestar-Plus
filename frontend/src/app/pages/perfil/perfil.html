@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <section class="perfil">
-  <div class="container__perfil">
+  <div class="container__perfil" *ngIf="usuario">
     <div class="container__btn__cerrar__sesion">
       <a routerLink="/" class="btn__cerrar__sesion">
         Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
@@ -50,11 +50,13 @@
           />
         </p>
         <div class="container__btn__ir__mis__habitos">
-          <a routerLink="/habitos" class="btn__ir__mis__habitos"
-            >Ir a Mis Hábitos</a
-          >
+          <a routerLink="/habitos" class="btn__ir__mis__habitos">
+            Ir a Mis Hábitos
+          </a>
         </div>
       </div>
     </div>
   </div>
+
+  <div *ngIf="!usuario && loading">Cargando perfil...</div>
 </section>
