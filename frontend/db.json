@@ -4,6 +4,7 @@
       "id": 1,
       "nombre": "Cosme Fulanito",
       "email": "cosme@ispc.com.ar",
+      "password": "123456",
       "habitos": [1, 2],
       "progreso": "¡Felicidades has reducido tu estrés diario en un 50%!",
       "foto": "assets/usuario.jpg",
@@ -13,7 +14,15 @@
       "id": 2,
       "nombre": "Hacerdor Paz",
       "email": "hacerdor@ispc.com.ar",
+      "password": "admin123",
       "habitos": [3371]
+    },
+    {
+      "id": 3,
+      "nombre": "Test User",
+      "email": "test@ispc.com.ar",
+      "password": "test123",
+      "habitos": []
     }
   ],
   "habitos": [
@@ -55,7 +64,7 @@
       "frecuenciaSemanal": 7,
       "activo": true,
       "createdAt": "2025-09-13T02:55:45.279Z",
-      "updatedAt": "2025-09-13T02:55:45.279Z"
+      "updatedAt": "2025-09-13T02:55:42.103Z"
     }
   ]
 }
