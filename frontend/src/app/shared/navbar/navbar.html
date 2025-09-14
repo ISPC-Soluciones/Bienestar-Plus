@@ -15,7 +15,9 @@
         <a routerLink="/login" class="nav-registrarse">Iniciar Sesión</a>
       </li>
       <li>
-        <a routerLink="/perfil" class="nav-registrarse">Perfil</a>
+        <a [routerLink]="['/perfil', userId$ | async]" class="nav-registrarse"
+          >Perfil</a
+        >
       </li>
       <li>
         <a routerLink="/habitos" class="nav-registrarse">Habitos</a>
