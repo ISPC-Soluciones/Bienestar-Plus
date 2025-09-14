@@ -62,6 +62,62 @@
       "genero": "masculino",
       "password": "perro2025",
       "confirmar": "perro2025"
+    },
+    {
+      "id": "a3f8",
+      "nombre": "juana",
+      "email": "juana@example.com",
+      "telefono": "4564541",
+      "edad": "2025-09-13",
+      "genero": "femenino",
+      "password": "juana500",
+      "confirmar": "juana500"
+    },
+    {
+      "id": "668a",
+      "nombre": "cristiann",
+      "email": "cristian@hotmail.com",
+      "telefono": "351985462",
+      "edad": "2004-06-14",
+      "genero": "masculino",
+      "password": "Cristian2004",
+      "confirmar": "Cristian2004"
+    },
+    {
+      "id": "4af3",
+      "nombre": "Pedro",
+      "email": "perdo@gmail.com",
+      "telefono": "+543513984568",
+      "edad": "2025-09-14",
+      "genero": "masculino",
+      "password": "Pedro2025",
+      "confirmar": "Pedro2025"
+    },
+    {
+      "id": "c678",
+      "nombre": "Maria",
+      "email": "maria@example.com",
+      "telefono": "+5433517896524",
+      "edad": "2023-03-14",
+      "genero": "femenino",
+      "password": "Maria100",
+      "habitos": [],
+      "progreso": "Aún no tienes progreso. ¡Comienza a usar la app para verlo aquí!",
+      "foto": "assets/default-user.jpg",
+      "grafico": "assets/default-graph.jpg"
+    },
+    {
+      "id": "c419",
+      "nombre": "mario",
+      "email": "mario@example.com",
+      "telefono": "+5433517896524",
+      "edad": "2023-03-14",
+      "genero": "masculino",
+      "password": "mario100",
+      "habitos": [],
+      "progreso": "Aún no tienes progreso. ¡Comienza a usar la app para verlo aquí!",
+      "foto": "assets/default-user.jpg",
+      "grafico": "assets/default-graph.jpg"
     }
   ],
   "habitos": [
@@ -76,44 +132,274 @@
       "updatedAt": "2025-09-11T20:00:00Z"
     },
     {
-      "id": "07d5",
+      "id": "2",
+      "nombre": "Tomar agua",
+      "tipo": "Hidratación",
+      "metaDiaria": "8 vasos",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-11T20:00:00Z",
+      "updatedAt": "2025-09-11T20:00:00Z"
+    },
+    {
+      "id": "3371",
+      "nombre": "Leer 20 min",
+      "tipo": "Desarrollo personal",
+      "metaDiaria": "20 minutos",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-13T02:55:42.103Z",
+      "updatedAt": "2025-09-13T02:55:42.103Z"
+    },
+    {
+      "id": "be30",
+      "nombre": "Leer 20 min",
+      "tipo": "Desarrollo personal",
+      "metaDiaria": "20 minutos",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-13T02:55:45.279Z",
+      "updatedAt": "2025-09-13T02:55:42.103Z"
+    },
+    {
+      "id": "f6de",
       "nombre": "Flexiones",
       "tipo": "Ejercicio",
       "metaDiaria": "100 repeticiones",
       "frecuenciaSemanal": 7,
       "activo": true,
-      "createdAt": "2025-09-14T01:05:28.060Z",
-      "updatedAt": "2025-09-14T01:05:28.060Z"
+      "createdAt": "2025-09-14T22:24:42.395Z",
+      "updatedAt": "2025-09-14T22:24:42.395Z"
     },
     {
-      "id": "2a70",
+      "id": "72d2",
       "nombre": "Abdominales",
       "tipo": "Ejercicio",
       "metaDiaria": "100 repeticiones",
       "frecuenciaSemanal": 7,
       "activo": true,
-      "createdAt": "2025-09-14T01:19:37.945Z",
-      "updatedAt": "2025-09-14T01:19:37.945Z"
+      "createdAt": "2025-09-14T22:25:11.723Z",
+      "updatedAt": "2025-09-14T22:25:11.723Z"
     },
     {
-      "id": "7bf4",
-      "nombre": "Correr",
-      "tipo": "Ejercicio",
-      "metaDiaria": "10 km",
-      "frecuenciaSemanal": 5,
-      "activo": true,
-      "createdAt": "2025-09-14T01:27:02.705Z",
-      "updatedAt": "2025-09-14T01:27:02.705Z"
-    },
-    {
-      "id": "af9a",
+      "id": "fb2c",
       "nombre": "Sentadillas",
       "tipo": "Ejercicio",
       "metaDiaria": "100 repeticiones",
       "frecuenciaSemanal": 7,
       "activo": true,
-      "createdAt": "2025-09-14T01:27:06.156Z",
-      "updatedAt": "2025-09-14T01:27:06.156Z"
+      "createdAt": "2025-09-14T22:25:45.707Z",
+      "updatedAt": "2025-09-14T22:25:45.707Z"
+    },
+    {
+      "id": "4231",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:26:01.115Z",
+      "updatedAt": "2025-09-14T22:26:01.115Z"
+    },
+    {
+      "id": "c83b",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:08.356Z",
+      "updatedAt": "2025-09-14T22:28:08.356Z"
+    },
+    {
+      "id": "00ca",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:08.532Z",
+      "updatedAt": "2025-09-14T22:28:08.532Z"
+    },
+    {
+      "id": "6baa",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:08.708Z",
+      "updatedAt": "2025-09-14T22:28:08.708Z"
+    },
+    {
+      "id": "6874",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:09.044Z",
+      "updatedAt": "2025-09-14T22:28:09.044Z"
+    },
+    {
+      "id": "a5dd",
+      "nombre": "Abdominales",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:10.092Z",
+      "updatedAt": "2025-09-14T22:28:10.092Z"
+    },
+    {
+      "id": "4faa",
+      "nombre": "Abdominales",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:10.333Z",
+      "updatedAt": "2025-09-14T22:28:10.333Z"
+    },
+    {
+      "id": "7709",
+      "nombre": "Abdominales",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:10.524Z",
+      "updatedAt": "2025-09-14T22:28:10.524Z"
+    },
+    {
+      "id": "c215",
+      "nombre": "Abdominales",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:10.693Z",
+      "updatedAt": "2025-09-14T22:28:10.693Z"
+    },
+    {
+      "id": "9e79",
+      "nombre": "Abdominales",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:10.916Z",
+      "updatedAt": "2025-09-14T22:28:10.916Z"
+    },
+    {
+      "id": "0f29",
+      "nombre": "Sentadillas",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:12.812Z",
+      "updatedAt": "2025-09-14T22:28:12.812Z"
+    },
+    {
+      "id": "26aa",
+      "nombre": "Sentadillas",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:12.988Z",
+      "updatedAt": "2025-09-14T22:28:12.988Z"
+    },
+    {
+      "id": "c50c",
+      "nombre": "Correr",
+      "tipo": "Ejercicio",
+      "metaDiaria": "10 km",
+      "frecuenciaSemanal": 5,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:14.925Z",
+      "updatedAt": "2025-09-14T22:28:14.925Z"
+    },
+    {
+      "id": "005b",
+      "nombre": "Correr",
+      "tipo": "Ejercicio",
+      "metaDiaria": "10 km",
+      "frecuenciaSemanal": 5,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:15.309Z",
+      "updatedAt": "2025-09-14T22:28:15.309Z"
+    },
+    {
+      "id": "bbc3",
+      "nombre": "Correr",
+      "tipo": "Ejercicio",
+      "metaDiaria": "10 km",
+      "frecuenciaSemanal": 5,
+      "activo": true,
+      "createdAt": "2025-09-14T22:28:15.508Z",
+      "updatedAt": "2025-09-14T22:28:15.508Z"
+    },
+    {
+      "id": "0ceb",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:34:12.535Z",
+      "updatedAt": "2025-09-14T22:34:12.535Z"
+    },
+    {
+      "id": "3a4b",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:34:21.391Z",
+      "updatedAt": "2025-09-14T22:34:21.391Z"
+    },
+    {
+      "id": "4778",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T22:34:22.326Z",
+      "updatedAt": "2025-09-14T22:34:22.326Z"
+    },
+    {
+      "id": "af27",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T23:08:02.543Z",
+      "updatedAt": "2025-09-14T23:08:02.543Z"
+    },
+    {
+      "id": "5ecf",
+      "nombre": "Abdominales",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T23:08:04.409Z",
+      "updatedAt": "2025-09-14T23:08:04.409Z"
+    },
+    {
+      "id": "d7a0",
+      "nombre": "Sentadillas",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-14T23:08:18.857Z",
+      "updatedAt": "2025-09-14T23:08:18.857Z"
     }
   ]
 }
