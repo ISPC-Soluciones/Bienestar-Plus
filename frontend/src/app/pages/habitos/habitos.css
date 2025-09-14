@@ -314,24 +314,24 @@
 .listado__crud {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   gap: 1rem;
   width: 100%;
-  max-width: 500px; 
-  margin: 2rem auto; 
-  background-color: var(--bg-y-fuentes); 
-  color: #ffffff; 
+  max-width: 500px;
+  margin: 2rem auto;
+  background-color: var(--bg-y-fuentes);
+  color: #ffffff;
   padding: 1.5rem 2rem;
   border-radius: 16px;
-  border: 2px solid var(--ternario); 
+  border: 2px solid var(--ternario);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 .listado__crud h3 {
   font-family: var(--fuente-titulo);
-  font-size: 1.8rem; 
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #ffffff; 
+  color: var(--bg-fondo);
   text-align: center;
   margin-bottom: 1rem;
 }
@@ -341,21 +341,153 @@
   width: 100%;
   padding: 0;
   margin: 0;
-  border-top: 2px solid var(--ternario); 
+  border-top: 2px solid var(--ternario);
 }
 
 .listado__crud li {
   font-family: var(--fuente-base);
-  font-size: 0.95rem; 
+  font-size: 0.95rem;
   font-weight: 600;
   line-height: 1.4;
   padding: 0.5rem 0;
   text-align: center;
-  border-bottom: 1px solid var(--ternario); 
+  border-bottom: 1px solid var(--ternario);
 }
 
 .listado__crud li:last-child {
-  border-bottom: none; 
+  border-bottom: none;
+}
+
+/* Nuevos estilos para la edición de hábitos */
+.habito__display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem 0;
+  text-align: left;
+}
+
+.edicion__habito {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  text-align: center;
+}
+
+.edicion__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.edicion__habito h4 {
+  font-family: var(--fuente-base);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--bg-fondo);
+  text-align: center;
+  margin: 0;
+}
+
+.edicion__habito input {
+  display: inline-block; /* Opcional: para que se ajuste al contenido */
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--ternario);
+  font-family: var(--fuente-base);
+  font-size: 1rem;
+  background-color: white; /* Fondo blanco */
+  color: #333333; /* Letras en gris oscuro */
+  text-align: center;
+}
+
+.edicion__habito input::placeholder {
+  color: #a0a0a0; /* Placeholder gris claro */
+  opacity: 1;
+}
+
+.acciones__edicion {
+  display: flex;
+  gap: 10px;
+}
+
+.btn--guardar {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn--guardar:hover {
+  background-color: var(--secundario);
+}
+
+.btn--cancelar {
+  background-color: var(--cuaternario);
+  color: var(--bg-y-fuentes);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn--cancelar:hover {
+  background-color: #e07a55;
+}
+
+/* Estilos para el contenedor de los botones de acción */
+.crud__acciones {
+  display: flex;
+  gap: 10px;
+}
+
+/* Estilos para los botones de icono */
+.btn__icono {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: color 0.3s ease;
+}
+
+/* Color para el botón de editar */
+.btn__icono.editar {
+  color: var(--primario);
+}
+
+/* Color para el botón de eliminar */
+.btn__icono.eliminar {
+  color: var(--cuaternario);
+}
+
+.btn__icono:hover {
+  color: var(--ternario);
+}
+
+
+/* Nuevos estilos para los botones de Aceptar y Cancelar en la edición */
+.btn__icono.aceptar {
+  color: var(--primario);
+}
+
+.btn__icono.aceptar:hover {
+  color: #3b9e8d;
+}
+
+.btn__icono.cancelar {
+  color: var(--cuaternario);
+}
+
+.btn__icono.cancelar:hover {
+  color: #e07a55;
 }
 
 /* Accesibilidad */
@@ -447,5 +579,11 @@
 
   .card__habito__acciones {
     flex-direction: column;
+  }
+  
+  .habito__display {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 }
