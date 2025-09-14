@@ -1,24 +1,29 @@
 {
   "usuarios": [
     {
-      "id": 1,
+      "id": "1",
       "nombre": "Cosme Fulanito",
       "email": "cosme@ispc.com.ar",
       "password": "123456",
-      "habitos": [1, 2],
+      "habitos": [
+        1,
+        2
+      ],
       "progreso": "¡Felicidades has reducido tu estrés diario en un 50%!",
       "foto": "assets/usuario.jpg",
       "grafico": "assets/grafico_usuario_metricas.jpg"
     },
     {
-      "id": 2,
+      "id": "2",
       "nombre": "Hacerdor Paz",
       "email": "hacerdor@ispc.com.ar",
       "password": "admin123",
-      "habitos": [3371]
+      "habitos": [
+        3371
+      ]
     },
     {
-      "id": 3,
+      "id": "3",
       "nombre": "Test User",
       "email": "test@ispc.com.ar",
       "password": "test123",
@@ -37,34 +42,44 @@
       "updatedAt": "2025-09-11T20:00:00Z"
     },
     {
-      "id": "2",
-      "nombre": "Tomar agua",
-      "tipo": "Hidratación",
-      "metaDiaria": "8 vasos",
+      "id": "07d5",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
       "frecuenciaSemanal": 7,
       "activo": true,
-      "createdAt": "2025-09-11T20:00:00Z",
-      "updatedAt": "2025-09-11T20:00:00Z"
+      "createdAt": "2025-09-14T01:05:28.060Z",
+      "updatedAt": "2025-09-14T01:05:28.060Z"
     },
     {
-      "id": "3371",
-      "nombre": "Leer 20 min",
-      "tipo": "Desarrollo personal",
-      "metaDiaria": "20 minutos",
+      "id": "2a70",
+      "nombre": "Abdominales",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
       "frecuenciaSemanal": 7,
       "activo": true,
-      "createdAt": "2025-09-13T02:55:42.103Z",
-      "updatedAt": "2025-09-13T02:55:42.103Z"
+      "createdAt": "2025-09-14T01:19:37.945Z",
+      "updatedAt": "2025-09-14T01:19:37.945Z"
     },
     {
-      "id": "be30",
-      "nombre": "Leer 20 min",
-      "tipo": "Desarrollo personal",
-      "metaDiaria": "20 minutos",
+      "id": "7bf4",
+      "nombre": "Correr",
+      "tipo": "Ejercicio",
+      "metaDiaria": "10 km",
+      "frecuenciaSemanal": 5,
+      "activo": true,
+      "createdAt": "2025-09-14T01:27:02.705Z",
+      "updatedAt": "2025-09-14T01:27:02.705Z"
+    },
+    {
+      "id": "af9a",
+      "nombre": "Sentadillas",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
       "frecuenciaSemanal": 7,
       "activo": true,
-      "createdAt": "2025-09-13T02:55:45.279Z",
-      "updatedAt": "2025-09-13T02:55:42.103Z"
+      "createdAt": "2025-09-14T01:27:06.156Z",
+      "updatedAt": "2025-09-14T01:27:06.156Z"
     }
   ]
 }
