@@ -6,6 +6,7 @@ import { Registro } from './pages/registro/registro';
 import { NosotrosComponent } from './pages/nosotros/nosotros';
 import { Home } from './pages/home/home';
 import { Login } from './pages/login/login';
+import { PageNotFound } from './pages/page-not-found/page-not-found';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -15,4 +16,5 @@ export const routes: Routes = [
   { path: 'registro', component: Registro },
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'login', component: Login },
+  { path: '**', component: PageNotFound }
 ];
