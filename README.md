@@ -13,6 +13,17 @@
 Bienestar+ es una aplicación web orientada al bienestar físico, mental y emocional. Permite a los usuarios gestionar hábitos saludables, acceder a recursos de salud mental y recibir recomendaciones personalizadas para mejorar su calidad de vida.
 
 Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, esta app es parte de un proyecto académico colaborativo.
+<br>
+<br>
+
+<div align="center">
+  <a href="https://bienestar-plus.vercel.app/">➡️ Visita la demo en Vivo de Nuestra App Bienestar Plus</a>
+  <br>
+  <br>
+    <div>
+       <img src="https://github.com/user-attachments/assets/b9a98530-1b25-4f95-b58e-bdcc0d683dad" alt="Bienestar Plus" width="700" height="500">
+    </div>
+</div>
 
 ---
 
