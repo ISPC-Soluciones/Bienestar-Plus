@@ -19,22 +19,6 @@
         </p>
       </div>
       <div class="container__habitos__usuario">
-        
-        <div class="container__listado__habitos">
-          <h2>Mis Hábitos</h2>
-          <ul>
-            <li *ngFor="let habito of habitos">
-              <strong>{{ habito.nombre }}</strong> - {{ habito.tipo }}
-              <br />
-              Meta diaria: {{ habito.metaDiaria }} | Frecuencia:
-              {{ habito.frecuenciaSemanal }} días/semana
-            </li>
-          </ul>
-        </div>
-        
-        <button class="btn__habito btn--agregar" (click)="agregarHabito()">
-          Crear hábito de prueba <i class="fa-solid fa-plus"></i>
-        </button>
         <div class="container__listado__habitos">
           <h2>Rutinas</h2>
           <p class="parrafo__rutinas">
@@ -89,10 +73,18 @@
                   <div class="card__presentacion__logo">
                     <i class="fa-solid fa-person-running"></i>
                   </div>
-                  <button class="btn__habito btn--ir">
+                  <button class="btn__habito btn--ir" (click)="toggleRutina()">
                     ir a mi rutina <i class="fa-solid fa-dumbbell"></i>
                   </button>
                 </article>
+                <div class="listado__crud" *ngIf="mostrarRutina">
+                  <h3>Mis hábitos creados</h3>
+                  <ul>
+                    <li *ngFor="let habito of habitos">
+                      {{ habito.nombre }} - {{ habito.tipo }} - {{ habito.metaDiaria }}
+                    </li>
+                  </ul>
+                </div>
                 <div class="contenido__ejercicios">
                   <article class="card__habito">
                     <h4 class="card__habito__titulo">Flexiones</h4>
@@ -107,7 +99,8 @@
                       />
                     </div>
                     <div class="card__habito__acciones">
-                      <button class="btn__habito btn--agregar">
+                      <button class="btn__habito btn--agregar"
+                        (click)="agregarHabito('Flexiones','Ejercicio','100 repeticiones',7)">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                       <button class="btn__habito btn--quitar">
@@ -127,7 +120,8 @@
                       />
                     </div>
                     <div class="card__habito__acciones">
-                      <button class="btn__habito btn--agregar">
+                      <button class="btn__habito btn--agregar"
+                        (click)="agregarHabito('Abdominales','Ejercicio','100 repeticiones',7)">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                       <button class="btn__habito btn--quitar">
@@ -148,7 +142,8 @@
                       />
                     </div>
                     <div class="card__habito__acciones">
-                      <button class="btn__habito btn--agregar">
+                      <button class="btn__habito btn--agregar"
+                        (click)="agregarHabito('Sentadillas','Ejercicio','100 repeticiones',7)">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                       <button class="btn__habito btn--quitar">
@@ -169,7 +164,8 @@
                       />
                     </div>
                     <div class="card__habito__acciones">
-                      <button class="btn__habito btn--agregar">
+                      <button class="btn__habito btn--agregar"
+                        (click)="agregarHabito('Correr','Ejercicio','10 km',5)">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                       <button class="btn__habito btn--quitar">
