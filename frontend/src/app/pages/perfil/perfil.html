@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <section class="perfil">
-  <div class="container__perfil">
+  <div class="container__perfil" *ngIf="usuario">
     <div class="container__btn__cerrar__sesion">
       <a routerLink="/" class="btn__cerrar__sesion">
         Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
@@ -9,7 +9,8 @@
     <div class="container__bienvenida">
       <h1 class="texto__bienvenida__perfil">
         Bienvenido
-        <span>{{ usuario.nombre.split(" ")[0] }}</span>
+        <span>{{ usuario.nombre.split(" ")[0] }}</span
+        >&nbsp;
         <i class="fa-solid fa-heart-pulse"></i>
       </h1>
     </div>
@@ -50,11 +51,13 @@
           />
         </p>
         <div class="container__btn__ir__mis__habitos">
-          <a routerLink="/habitos" class="btn__ir__mis__habitos"
-            >Ir a Mis Hábitos</a
-          >
+          <a routerLink="/habitos" class="btn__ir__mis__habitos">
+            Ir a Mis Hábitos
+          </a>
         </div>
       </div>
     </div>
   </div>
+
+  <div *ngIf="!usuario && loading">Cargando perfil...</div>
 </section>

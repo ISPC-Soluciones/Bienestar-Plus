@@ -10,29 +10,62 @@
         </div>
         <h2 class="registro-h2">Registro</h2>
 
-        <form [formGroup]="registroForm" (ngSubmit)="onSubmit()" class="registro-form">
+        <form [formGroup]="registroForm" (ngSubmit)="EnviarFormulario()" class="registro-form">
           <label for="nombre" class="registro-label">Nombre :</label>
           <input class="registro-input" id="nombre" type="text" formControlName="nombre" placeholder="Ej: María" />
           @if (registroForm.get('nombre')?.touched && registroForm.get('nombre')?.invalid) {
           <div class="error">El nombre es obligatorio</div>
           }
-
+          @if (registroForm.get('nombre')?.touched && registroForm.get('nombre')?.hasError('minlength')) {
+          <div class="error">El nombre debe tener al menos 3 caracteres</div>
+          }
+          @if (registroForm.get('nombre')?.touched && registroForm.get('nombre')?.hasError('numerosNoPermitidos')) {
+          <div class="error">El nombre no debe contener números</div>
+          }
           <label for="email" class="registro-label">Correo electrónico:</label>
           <input class="registro-input" id="email" type="email" formControlName="email" placeholder="Ej: ejemplo@correo.com" />
           @if (registroForm.get('email')?.touched && registroForm.get('email')?.invalid) {
             <div class="error">El correo es obligatorio </div>
           }
+           @if (registroForm.get('email')?.touched && registroForm.get('email')?.hasError('email')) {
+            <div class="error">El formato del correo es inválido</div>
+            }
 
+           <label for="telefono" class="registro-label">Numero telefonico:</label>
+          <input class="registro-input" id="telefono" type="tel" formControlName="telefono" placeholder="Ej: +54 351 17777441" />
+          @if (registroForm.get('telefono')?.touched && registroForm.get('telefono')?.invalid) {
+            <div class="error">El telefono es obligatorio </div>
+          }
+          <label for="edad" class="registro-label">edad:</label>
+          <input class="registro-input" id="edad" type="date" formControlName="edad" placeholder="Ej: mm/aa/dd" />
+          @if (registroForm.get('edad')?.touched && registroForm.get('edad')?.invalid) {
+            <div class="error">la edad  es obligatoria </div>
+          }
+         <label for="genero" class="registro-label">Género:</label>
+            <select class="registro-input" id="genero" formControlName="genero">
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+            </select>
+            @if (registroForm.get('genero')?.touched && registroForm.get('genero')?.invalid) {
+            <div class="error">El género es obligatorio</div>
+            }
           <label for="password" class="registro-label">Contraseña:</label>
           <input class="registro-input" id="password" type="password" formControlName="password" placeholder="Debe tener al menos 8 caracteres" />
           @if (registroForm.get('password')?.touched && registroForm.get('password')?.invalid) {
             <div class="error">La contraseña es obligatoria</div>
           }
+          @if (registroForm.get('password')?.touched && registroForm.get('password')?.hasError('minlength')) {
+            <div class="error">La contraseña debe tener al menos 8 caracteres</div>
+            }
           <label for="confirmar" class="registro-label">Confirmar contraseña:</label>
           <input id="confirmar" class="registro-input" type="password" formControlName="confirmar" placeholder="Repita la contraseña" />
           @if (registroForm.get('confirmar')?.touched && registroForm.get('confirmar')?.invalid) {
             <div class="error">Debe confirmar la contraseña</div>
           }
+          @if (registroForm.touched && registroForm.hasError('mismatch')) {
+            <div class="error">Las contraseñas no coinciden</div>
+            }
           <button class="registro-button" type="submit" [disabled]="registroForm.invalid">Registrarse</button>
         </form>
         <div class="container__volver__inicio">
