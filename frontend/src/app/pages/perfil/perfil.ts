@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../models/perfil.model';
 import { PerfilService } from '../../services/perfil';
+import { Notificaciones, Notificacion } from '../../services/notificaciones';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
@@ -16,13 +17,18 @@ export class PerfilComponent implements OnInit {
   loading = false;
   error = '';
 
+  listaDeNotificaciones: Notificacion[] = [];
+
   // 1. Inyecta ActivatedRoute en el constructor
   constructor(
     private perfilService: PerfilService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notificacionesService: Notificaciones
   ) {}
 
   ngOnInit(): void {
+
+    this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
     this.loading = true;
 
     // 2. Lee el 'id' de la URL de forma segura
@@ -46,5 +52,11 @@ export class PerfilComponent implements OnInit {
         this.loading = false;
       }
     });
-  }
+  };
+
+  toggleNotificacion(id: number): void {
+    this.notificacionesService.toggleNotificacion(id);
+    this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
+  };
+
 }
