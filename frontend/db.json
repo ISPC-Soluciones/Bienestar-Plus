@@ -28,6 +28,40 @@
       "email": "test@ispc.com.ar",
       "password": "test123",
       "habitos": []
+    },
+    {
+      "id": "2fb3",
+      "nombre": "juana",
+      "email": "juana@gmail.com",
+      "password": "juana200",
+      "confirmar": "juana200"
+    },
+    {
+      "id": "3f4c",
+      "nombre": "dfdf",
+      "email": "nahir@example.com",
+      "password": "dffddffddfdf",
+      "confirmar": "dfdfdfdffddfdf"
+    },
+    {
+      "id": "d163",
+      "nombre": "dfdfdf",
+      "email": "pedro@gmai.com",
+      "telefono": "dffddfdf",
+      "edad": "2025-09-18",
+      "genero": "masculino",
+      "password": "fgfg",
+      "confirmar": "fgfg"
+    },
+    {
+      "id": "9195",
+      "nombre": "dfdf",
+      "email": "nahir@example.com",
+      "telefono": "ddfdf",
+      "edad": "2025-09-19",
+      "genero": "masculino",
+      "password": "perro2025",
+      "confirmar": "perro2025"
     }
   ],
   "habitos": [
