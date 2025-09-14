@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { HabitosService } from '../../services/habitos'; 
+import { HabitosService } from '../../services/habitos';
 import { Habito } from '../../models/habito.model';
 
 @Component({
   selector: 'app-habitos',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './habitos.html',
   styleUrls: ['./habitos.css'],
 })
@@ -15,6 +16,7 @@ export class Habitos implements OnInit {
   activeTab: string = 'ejercicio';
   habitos: Habito[] = [];
   mostrarRutina: boolean = false;
+  habitoEnEdicion: Habito | null = null;
 
   constructor(private habitosService: HabitosService) {}
 
@@ -42,14 +44,14 @@ export class Habitos implements OnInit {
   }
 
   agregarHabito(
-    nombre: string,
     tipo: string,
+    nombre: string,
     metaDiaria: string,
     frecuenciaSemanal: number
   ): void {
     const nuevoHabito: Habito = {
-      nombre,
       tipo,
+      nombre,
       metaDiaria,
       frecuenciaSemanal,
       activo: true,
@@ -62,5 +64,42 @@ export class Habitos implements OnInit {
       },
       error: (err) => console.error('Error creando hábito:', err),
     });
+  }
+
+  entrarEnModoEdicion(habito: Habito): void {
+    this.habitoEnEdicion = { ...habito }; // Crear una COPIA del objeto para no modificar el original directamente
+  }
+
+  guardarEdicion(): void {
+    if (this.habitoEnEdicion) {
+      this.habitosService.updateHabito(this.habitoEnEdicion).subscribe({
+        next: (habitoActualizado) => {
+          console.log('Hábito actualizado:', habitoActualizado);
+          // Actualizamos la lista local
+          const index = this.habitos.findIndex(h => h.id === habitoActualizado.id);
+          if (index !== -1) {
+            this.habitos[index] = habitoActualizado;
+          }
+          this.habitoEnEdicion = null; // Salimos del modo edición
+        },
+        error: (err) => console.error('Error actualizando hábito:', err),
+      });
+    }
+  }
+
+  cancelarEdicion(): void {
+    this.habitoEnEdicion = null; // Salimos del modo edición sin guardar
+  }
+
+  eliminarHabito(id?: number): void {
+    if (id) {
+      this.habitosService.deleteHabito(id).subscribe({
+        next: () => {
+          console.log('Hábito eliminado');
+          this.habitos = this.habitos.filter(h => h.id !== id);
+        },
+        error: (err) => console.error('Error eliminando hábito:', err),
+      });
+    }
   }
 }
