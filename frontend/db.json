@@ -114,6 +114,16 @@
       "activo": true,
       "createdAt": "2025-09-14T01:27:06.156Z",
       "updatedAt": "2025-09-14T01:27:06.156Z"
+    },
+    {
+      "id": "1b94",
+      "nombre": "Flexiones",
+      "tipo": "Ejercicio",
+      "metaDiaria": "100 repeticiones",
+      "frecuenciaSemanal": 7,
+      "activo": true,
+      "createdAt": "2025-09-21T19:46:28.740Z",
+      "updatedAt": "2025-09-21T19:46:28.740Z"
     }
   ]
 }

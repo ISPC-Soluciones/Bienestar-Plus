@@ -1,5 +1,3 @@
-/* SECCIÓN PERFIL */
-
 .container__perfil {
   background-color: var(--bg-fondo);
   color: var(--bg-y-fuentes);
@@ -25,14 +23,14 @@
   font-family: var(--fuente-titulo);
   font-size: 4rem;
   font-weight: 700;
-  color: var(--primario);
+  color: var(--ternario);
   text-align: center;
   letter-spacing: 1px;
   line-height: 1.2;
 }
 
 .texto__bienvenida__perfil i {
-  color: var(--cuaternario);
+  color: var(--primario);
   font-size: 4rem;
   margin-right: 0.5rem;
 }
@@ -40,7 +38,7 @@
 .container__bienvenida span {
   font-weight: 700;
   font-size: 4rem;
-  color: var(--cuaternario);
+  color: var(--primario);
 }
 
 .container__usuario {
@@ -133,7 +131,7 @@
   font-family: var(--fuente-titulo);
   font-size: 3rem;
   font-weight: 700;
-  color: var(--cuaternario);
+  color: var(--primario);
   text-align: center;
   padding-top: 0.2rem;
 }
