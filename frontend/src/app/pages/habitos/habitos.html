@@ -3,7 +3,7 @@
   <section class="rutinas">
     <div class="container__habitos">
       <div class="container__btn__cerrar__sesion">
-        <a routerLink="/" class="btn__cerrar__sesion">
+        <a routerLink="/" class="btn-custom btn-custom--rojo">
           Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
         </a>
       </div>
@@ -73,12 +73,15 @@
                   <div class="card__presentacion__logo">
                     <i class="fa-solid fa-person-running"></i>
                   </div>
-                  <button class="btn__habito btn--ir" (click)="toggleRutina()">
+                  <button
+                    class="btn-custom btn-custom--primario"
+                    (click)="toggleRutina()"
+                  >
                     ir a mi rutina <i class="fa-solid fa-dumbbell"></i>
                   </button>
                 </article>
                 <div class="listado__crud" *ngIf="mostrarRutina">
-                  <h3>Mis hábitos creados</h3>
+                  <h3>Mi Rutina de Ejercicio</h3>
                   <ul>
                     <li *ngFor="let habito of habitos">
                       <ng-container
@@ -269,7 +272,7 @@
                     <img src="assets/agua.jpg" alt="vaso con agua" />
                   </div>
                   <div class="card__habito__acciones">
-                    <button class="btn__habito btn--agregar">
+                    <button class="btn-custom btn-custom--primario">
                       Agregar un vaso de agua bebido
                       <i class="fa-solid fa-plus"></i>
                     </button>
@@ -300,7 +303,7 @@
                     <img src="assets/comida.jpg" alt="mesa con comida" />
                   </div>
                   <div class="card__habito__acciones">
-                    <button class="btn__habito btn--agregar">
+                    <button class="btn-custom btn-custom--primario">
                       Editar Mi Plan Nutricional
                       <i class="fa-solid fa-pen-to-square"></i>
                     </button>
@@ -327,7 +330,7 @@
                     <img src="assets/sueno.jpg" alt="hombre durmiendo" />
                   </div>
                   <div class="card__habito__acciones">
-                    <button class="btn__habito btn--agregar">
+                    <button class="btn-custom btn-custom--primario">
                       Agregar horas de sueño
                       <i class="fa-solid fa-moon"></i>
                     </button>
