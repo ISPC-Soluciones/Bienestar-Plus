@@ -11,6 +11,7 @@ export class HabitosService {
 
   constructor(private http: HttpClient) {}
 
+
   getHabitos(): Observable<Habito[]> {
     return this.http.get<Habito[]>(this.apiUrl);
   }
@@ -19,5 +20,16 @@ export class HabitosService {
     habito.createdAt = new Date().toISOString();
     habito.updatedAt = new Date().toISOString();
     return this.http.post<Habito>(this.apiUrl, habito);
+  }
+
+  updateHabito(habito: Habito): Observable<Habito> {
+    const url = `${this.apiUrl}/${habito.id}`;
+    habito.updatedAt = new Date().toISOString();
+    return this.http.put<Habito>(url, habito);
+  }
+  
+  deleteHabito(id: number): Observable<void> {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.delete<void>(url);
   }
 }

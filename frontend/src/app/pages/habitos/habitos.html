@@ -84,8 +84,61 @@
                   <h3>Mi Rutina de Ejercicio</h3>
                   <ul>
                     <li *ngFor="let habito of habitos">
-                      {{ habito.nombre }} - {{ habito.tipo }} -
-                      {{ habito.metaDiaria }}
+                      <ng-container
+                        *ngIf="
+                          habitoEnEdicion && habitoEnEdicion.id === habito.id;
+                          else mostrarHabito
+                        "
+                      >
+                        <div class="edicion__habito">
+                          <h4>
+                            {{ habitoEnEdicion.nombre }} -
+                            {{ habitoEnEdicion.tipo }}
+                          </h4>
+                          <div class="edicion__container">
+                            <input
+                              [(ngModel)]="habitoEnEdicion.metaDiaria"
+                              type="text"
+                            />
+                            <div class="acciones__edicion">
+                              <button
+                                class="btn__icono aceptar"
+                                (click)="guardarEdicion()"
+                              >
+                                <i class="fa-solid fa-check"></i>
+                              </button>
+                              <button
+                                class="btn__icono cancelar"
+                                (click)="cancelarEdicion()"
+                              >
+                                <i class="fa-solid fa-xmark"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                      <ng-template #mostrarHabito>
+                        <div class="habito__display">
+                          <p>
+                            {{ habito.nombre }} - {{ habito.tipo }} -
+                            {{ habito.metaDiaria }}
+                          </p>
+                          <div class="crud__acciones">
+                            <button
+                              class="btn__icono editar"
+                              (click)="entrarEnModoEdicion(habito)"
+                            >
+                              <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button
+                              class="btn__icono eliminar"
+                              (click)="eliminarHabito(habito.id)"
+                            >
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </ng-template>
                     </li>
                   </ul>
                 </div>
@@ -104,7 +157,7 @@
                     </div>
                     <div class="card__habito__acciones">
                       <button
-                        class="btn-custom btn-custom--primario"
+                        class="btn__habito btn--agregar"
                         (click)="
                           agregarHabito(
                             'Flexiones',
@@ -115,9 +168,6 @@
                         "
                       >
                         Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                      <button class="btn-custom btn-custom--rojo">
-                        Quitar <i class="fa-solid fa-xmark"></i>
                       </button>
                     </div>
                   </article>
@@ -134,7 +184,7 @@
                     </div>
                     <div class="card__habito__acciones">
                       <button
-                        class="btn-custom btn-custom--primario"
+                        class="btn__habito btn--agregar"
                         (click)="
                           agregarHabito(
                             'Abdominales',
@@ -145,9 +195,6 @@
                         "
                       >
                         Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                      <button class="btn-custom btn-custom--rojo">
-                        Quitar <i class="fa-solid fa-xmark"></i>
                       </button>
                     </div>
                   </article>
@@ -165,7 +212,7 @@
                     </div>
                     <div class="card__habito__acciones">
                       <button
-                        class="btn-custom btn-custom--primario"
+                        class="btn__habito btn--agregar"
                         (click)="
                           agregarHabito(
                             'Sentadillas',
@@ -176,9 +223,6 @@
                         "
                       >
                         Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                      <button class="btn-custom btn-custom--rojo">
-                        Quitar <i class="fa-solid fa-xmark"></i>
                       </button>
                     </div>
                   </article>
@@ -196,15 +240,12 @@
                     </div>
                     <div class="card__habito__acciones">
                       <button
-                        class="btn-custom btn-custom--primario"
+                        class="btn__habito btn--agregar"
                         (click)="
                           agregarHabito('Correr', 'Ejercicio', '10 km', 5)
                         "
                       >
                         Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                      <button class="btn-custom btn-custom--rojo">
-                        Quitar <i class="fa-solid fa-xmark"></i>
                       </button>
                     </div>
                   </article>
