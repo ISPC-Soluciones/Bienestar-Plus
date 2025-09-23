@@ -1,0 +1,4 @@
+# Entorno
+.env
+.env.local
+.env.*
