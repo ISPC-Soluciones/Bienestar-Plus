@@ -76,96 +76,6 @@
   ],
   "habitos": [
     {
-      "id": "6c3b",
-      "nombre": "Flexiones",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:09:13.895Z",
-      "updatedAt": "2025-09-23T02:09:13.895Z"
-    },
-    {
-      "id": "0bcb",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:12:41.344Z",
-      "updatedAt": "2025-09-23T02:12:41.344Z"
-    },
-    {
-      "id": "723b",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:26:57.441Z",
-      "updatedAt": "2025-09-23T02:26:57.441Z"
-    },
-    {
-      "id": "0379",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:07.359Z",
-      "updatedAt": "2025-09-23T02:27:07.359Z"
-    },
-    {
-      "id": "dd95",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:08.256Z",
-      "updatedAt": "2025-09-23T02:27:08.256Z"
-    },
-    {
-      "id": "0d15",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:09.072Z",
-      "updatedAt": "2025-09-23T02:27:09.072Z"
-    },
-    {
-      "id": "5c06",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:09.775Z",
-      "updatedAt": "2025-09-23T02:27:09.775Z"
-    },
-    {
-      "id": "4691",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:10.359Z",
-      "updatedAt": "2025-09-23T02:27:10.359Z"
-    },
-    {
-      "id": "05ba",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:11.306Z",
-      "updatedAt": "2025-09-23T02:27:11.306Z"
-    },
-    {
       "id": "9e5d",
       "nombre": "Abdominales",
       "tipo": "Ejercicio",
@@ -174,36 +84,6 @@
       "activo": true,
       "createdAt": "2025-09-23T02:27:11.848Z",
       "updatedAt": "2025-09-23T02:27:11.848Z"
-    },
-    {
-      "id": "bd2a",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:12.536Z",
-      "updatedAt": "2025-09-23T02:27:12.536Z"
-    },
-    {
-      "id": "5e2b",
-      "nombre": "Abdominales",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:27:13.376Z",
-      "updatedAt": "2025-09-23T02:27:13.376Z"
-    },
-    {
-      "id": "31a0",
-      "nombre": "Flexiones",
-      "tipo": "Ejercicio",
-      "metaDiaria": "100 repeticiones",
-      "frecuenciaSemanal": 7,
-      "activo": true,
-      "createdAt": "2025-09-23T02:28:46.688Z",
-      "updatedAt": "2025-09-23T02:28:46.689Z"
     }
   ]
 }
