@@ -2,16 +2,6 @@
   max-height: 20%;
 }
 
-.btn {
-  text-decoration: none;
-  cursor: pointer;
-  padding: 1rem 2rem;
-  border: none;
-  font-size: 1rem;
-  border-radius: 25px;
-  font-weight: 600;
-}
-
 .hero-text .btn {
   background-color: var(--primario);
   color: var(--bg-y-fuentes);
@@ -64,22 +54,6 @@
 .carousel-caption span {
   color: var(--primario);
 }
-
-.btn-primary {
-  background-color: var(--primario);
-  border-color: black;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: bold;
-  text-decoration: none;
-  color: var(--bg-y-fuentes);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-/* .btn-primary:hover {
-  background-color: var(--cuaternario);
-  border-color: #1e7e34;
-} */
 
 .hero-mobile-content {
   background-color: #f8f9fa;

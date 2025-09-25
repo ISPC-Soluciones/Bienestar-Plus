@@ -1,7 +1,7 @@
 export interface Habito {
     id?: number;
-    nombre: string;
     tipo: string;
+    nombre: string;
     metaDiaria: string;
     frecuenciaSemanal: number;
     activo: boolean;
