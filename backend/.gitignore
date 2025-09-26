@@ -1,0 +1,7 @@
+# Entorno
+.env
+.env.local
+.env.*
+
+# Entorno de Python
+venv/

@@ -2,7 +2,7 @@
 <section class="perfil">
   <div class="container__perfil" *ngIf="usuario">
     <div class="container__btn__cerrar__sesion">
-      <a routerLink="/" class="btn__cerrar__sesion">
+      <a routerLink="/" class="btn-custom btn-custom--rojo">
         Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
       </a>
     </div>
@@ -35,7 +35,7 @@
           <p><strong>Email:</strong> {{ usuario.email }}</p>
         </div>
         <div class="container__btn__editar__perfil">
-          <a routerLink="/" class="btn__editar__perfil">
+          <a routerLink="/" class="btn-custom btn-custom--primario">
             Editar <i class="fa-solid fa-pen-to-square"></i>
           </a>
         </div>
@@ -51,24 +51,28 @@
           />
         </p>
         <div class="container__btn__ir__mis__habitos">
-          <a routerLink="/habitos" class="btn__ir__mis__habitos">
+          <a routerLink="/habitos" class="btn-custom btn-custom--primario">
             Ir a Mis Hábitos
           </a>
         </div>
       </div>
       <div class="container__notificaciones">
         <h2>Gestión de Notificaciones</h2>
-        <p>Activa o desactiva los recordatorios para mantenerte al día con tus hábitos.</p>
+        <p>
+          Activa o desactiva los recordatorios para mantenerte al día con tus
+          hábitos.
+        </p>
         <ul class="lista__notificaciones">
           <li *ngFor="let notificacion of listaDeNotificaciones">
             <span class="nombre">{{ notificacion.mensaje }}</span>
-            <button (click)="toggleNotificacion(notificacion.id)" [class.activado]="notificacion.activado">
-              {{ notificacion.activado ? 'Activado' : 'Desactivado' }}
+            <button
+              (click)="toggleNotificacion(notificacion.id)"
+              [class.activado]="notificacion.activado"
+            >
+              {{ notificacion.activado ? "Activado" : "Desactivado" }}
             </button>
           </li>
-
         </ul>
-
       </div>
     </div>
   </div>
