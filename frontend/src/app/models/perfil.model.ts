@@ -22,6 +22,9 @@ export interface Usuario {
   id: ID;
   nombre: string;
   email: string;
+  telefono:string;
+  edad:string;
+  genero:string;
   habitosIds?: ID[];
   habitos?: Habito[];
   avatarUrl?: string;
@@ -36,6 +39,9 @@ export interface Usuario {
 export interface UsuarioCreateDTO {
   nombre: string;
   email: string;
+  telefono:string;
+  edad:string;
+  genero:string;
   habitos?: ID[] | Habito[];
   avatarUrl?: string;
 }

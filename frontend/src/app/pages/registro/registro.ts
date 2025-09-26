@@ -45,8 +45,20 @@ export class Registro  {
 
     EnviarFormulario(): void {
         if (this.registroForm.valid) {
-            const nuevoUsuario = this.registroForm.value;
-
+            const datosdelform = this.registroForm.value;
+             const nuevoUsuario = {
+                nombre: datosdelform.nombre,
+                email: datosdelform.email,
+                telefono: datosdelform.telefono,
+                edad: datosdelform.edad,
+                genero: datosdelform.genero,
+                password: datosdelform.password,
+            
+                habitos: [], 
+                progreso: 'Aún no tienes progreso. ¡Comienza a usar la app para verlo aquí!',
+                foto: 'assets/default-user.jpg',
+                grafico: 'assets/default-graph.jpg'
+            };
             
             this.registroService.registrarUsuario(nuevoUsuario).subscribe(
                 (respuesta) => {

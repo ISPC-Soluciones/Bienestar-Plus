@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UsuarioCreateDTO } from '../models/perfil.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class RegistroServicio {
   private apiUrl = 'http://localhost:3000/usuarios';
 
   constructor(private http: HttpClient) { }
-   registrarUsuario(usuario: any): Observable<any> {
+   registrarUsuario(usuario: UsuarioCreateDTO): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
