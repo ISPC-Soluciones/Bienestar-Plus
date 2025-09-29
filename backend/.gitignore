@@ -5,3 +5,6 @@
 
 # Entorno de Python
 venv/
+
+#cache 
+__pycache__/
