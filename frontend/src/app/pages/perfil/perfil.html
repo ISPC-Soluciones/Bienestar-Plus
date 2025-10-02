@@ -35,11 +35,109 @@
           <p><strong>Email:</strong> {{ usuario.email }}</p>
         </div>
         <div class="container__btn__editar__perfil">
-          <a routerLink="/" class="btn-custom btn-custom--primario">
+          <a  class="btn-custom btn-custom--primario" (click)="abrirModal()">
             Editar <i class="fa-solid fa-pen-to-square"></i>
           </a>
         </div>
       </div>
+  <!-- Modal editar perfil -->
+<div 
+  class="modal fade" 
+  tabindex="-1" 
+  [ngClass]="{'show d-block': modalAbierto}" 
+  [attr.aria-hidden]="!modalAbierto"
+  [style.display]="modalAbierto ? 'block' : 'none'"
+  style="background-color: rgba(0, 0, 0, 0.5); overflow-y: auto;"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
+        <div class="modal-header">
+          <h5 class="modal-title">Editar Perfil de Salud</h5>
+          <button type="button" class="btn-close" (click)="cerrarModal()" aria-label="Cerrar"></button>
+        </div>
+        
+        <div class="modal-body">
+          
+     
+          <div class="mb-3">
+            <label class="form-label">Peso (kg)</label>
+            <input type="text" class="form-control" formControlName="peso" placeholder="Ej: 75.5" />
+            
+        
+            @if (pesoControl.invalid && pesoControl.touched) {
+              <div class="invalid-feedback d-block">
+                Peso inválido (obligatorio y solo números/decimales)
+              </div>
+            }
+          </div>
+
+         
+          <div class="mb-3">
+            <label class="form-label">Altura (cm)</label>
+            <input type="text" class="form-control" formControlName="altura" placeholder="Ej: 175" />
+            
+          
+            @if (alturaControl.invalid && alturaControl.touched) {
+              <div class="invalid-feedback d-block">
+                Altura inválida (obligatorio y solo números/decimales)
+              </div>
+            }
+          </div>
+
+       
+          <div class="mb-3">
+            <label class="form-label">Género</label>
+            <select class="form-select" formControlName="genero">
+              <option value="">Selecciona</option>
+              <option value="masculino">Masculino</option>
+              <option value="femenino">Femenino</option>
+            </select>
+            
+         
+            @if (generoControl.invalid && generoControl.touched) {
+              <div class="invalid-feedback d-block">
+                Selecciona un género
+              </div>
+            }
+          </div>
+
+
+          <div class="mb-3">
+            <label class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" formControlName="fecha_nacimiento"/>
+            
+           
+            @if (fechaNacimientoControl.invalid && fechaNacimientoControl.touched) {
+              <div class="invalid-feedback d-block">
+                Fecha inválida
+              </div>
+            }
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+          <button 
+            type="submit" 
+            class="btn btn-primary" 
+            [disabled]="perfilForm.invalid"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+@if (modalAbierto) {
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+
       <div class="container__tu__progreso">
         <h2 class="texto__progreso__usuario">Mi Progreso</h2>
         <p class="parrafo__progreso">
