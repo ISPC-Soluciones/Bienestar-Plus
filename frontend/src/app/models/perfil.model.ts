@@ -23,7 +23,7 @@ export interface Usuario {
   nombre: string;
   email: string;
   telefono:string;
-  edad:string;
+  edad:number;
   genero:string;
   habitosIds?: ID[];
   habitos?: Habito[];
@@ -33,6 +33,9 @@ export interface Usuario {
   grafico?: string;
   createdAt?: string;
   updatedAt?: string;
+  fecha_nacimiento:number
+  peso?: number;         
+  altura?: number;   
 }
 
 /** DTO para crear usuario (request) */
