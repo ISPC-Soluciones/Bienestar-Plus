@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from django.utils import timezone
 # =========================================================
 # NOTA: Los ENUMS de PostgreSQL se replican con
 # TextChoices en Django para mantener la integridad de datos
@@ -186,6 +186,37 @@ class Habito(models.Model):
 
     class Meta:
         verbose_name_plural = "Hábitos"
+        
+class ProgresoDiarioManager(models.Manager):
+    def asegurar_progresos_para_usuario(self, usuario, fecha=None):
+        """
+        Crea registros (si faltan) para cada Habito existente
+        para el usuario y la fecha indicada (por defecto hoy).
+        Devuelve la lista de objetos creados (puede estar vacía).
+        """
+        if fecha is None:
+            fecha = timezone.localdate()
+        created = []
+        for habito in Habito.objects.all():
+            obj, creado = self.get_or_create(
+                usuario=usuario,
+                habito=habito,
+                fecha=fecha,
+                defaults={'completado': False}
+            )
+            if creado:
+                created.append(obj)
+        return created
+
+    def obtener_checklist_para_usuario(self, usuario, fecha=None):
+        """
+        Asegura que existan los registros del día y devuelve el queryset
+        con los ProgresoDiario del usuario para esa fecha (incluye habito).
+        """
+        if fecha is None:
+            fecha = timezone.localdate()
+        self.asegurar_progresos_para_usuario(usuario, fecha)
+        return self.filter(usuario=usuario, fecha=fecha).select_related('habito')
 
 
 class ProgresoDiario(models.Model):
@@ -196,6 +227,8 @@ class ProgresoDiario(models.Model):
     habito = models.ForeignKey(Habito, on_delete=models.CASCADE, related_name="progresos")
     fecha = models.DateField(auto_now_add=True)
     completado = models.BooleanField(default=False)
+    
+    objects = ProgresoDiarioManager()
 
     def __str__(self):
         estado = "✔️" if self.completado else "❌"
@@ -204,4 +237,7 @@ class ProgresoDiario(models.Model):
     class Meta:
         verbose_name_plural = "Progresos Diarios"
         unique_together = ("usuario", "habito", "fecha")  # Un hábito por usuario por día
+        
+
+
 
