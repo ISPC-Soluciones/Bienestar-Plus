@@ -9,7 +9,7 @@ def crear_habitos_iniciales(apps, schema_editor):
         "Hidratación",
         "Horas de sueño",
         "Alimentación saludable",
-        "Meditación / Relax"
+        "Meditación"
     ]
     for nombre in habitos:
         Habito.objects.get_or_create(nombre=nombre)
@@ -22,7 +22,7 @@ def eliminar_habitos_iniciales(apps, schema_editor):
             "Hidratación",
             "Horas de sueño",
             "Alimentación saludable",
-            "Meditación / Relax"
+            "Meditación"
         ]
     ).delete()
 

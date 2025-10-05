@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from bienestar.views import ProgresoDiarioView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("progreso/", ProgresoDiarioView.as_view(), name="progreso-diario"),
 ]

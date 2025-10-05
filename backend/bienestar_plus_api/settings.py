@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bienestar',
+    'rest_framework',
+    'bienestar'
 ]
 
 MIDDLEWARE = [
