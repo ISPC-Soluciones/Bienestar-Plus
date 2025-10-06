@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from django.utils import timezone
+from django.conf import settings
 # =========================================================
 # NOTA: Los ENUMS de PostgreSQL se replican con
 # TextChoices en Django para mantener la integridad de datos
@@ -167,3 +168,77 @@ class Notificacion(models.Model):
 
     def __str__(self):
         return f"Notificación: {self.mensaje[:30]}"
+    
+
+# =========================================================
+# MODELOS DE HÁBITOS Y PROGRESO DIARIO
+# =========================================================
+
+class Habito(models.Model):
+    """
+    Define los hábitos base que forman parte del bienestar.
+    Ejemplos: Hidratación, Ejercicio, Sueño, Alimentación, Meditación.
+    """
+    nombre = models.CharField(max_length=100, unique=True)
+    descripcion = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name_plural = "Hábitos"
+        
+class ProgresoDiarioManager(models.Manager):
+    def asegurar_progresos_para_usuario(self, usuario, fecha=None):
+        """
+        Crea registros (si faltan) para cada Habito existente
+        para el usuario y la fecha indicada (por defecto hoy).
+        Devuelve la lista de objetos creados (puede estar vacía).
+        """
+        if fecha is None:
+            fecha = timezone.localdate()
+        created = []
+        for habito in Habito.objects.all():
+            obj, creado = self.get_or_create(
+                usuario=usuario,
+                habito=habito,
+                fecha=fecha,
+                defaults={'completado': False}
+            )
+            if creado:
+                created.append(obj)
+        return created
+
+    def obtener_checklist_para_usuario(self, usuario, fecha=None):
+        """
+        Asegura que existan los registros del día y devuelve el queryset
+        con los ProgresoDiario del usuario para esa fecha (incluye habito).
+        """
+        if fecha is None:
+            fecha = timezone.localdate()
+        self.asegurar_progresos_para_usuario(usuario, fecha)
+        return self.filter(usuario=usuario, fecha=fecha).select_related('habito')
+
+
+class ProgresoDiario(models.Model):
+    """
+    Representa el progreso de un hábito en un día específico por usuario.
+    """
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="progresos")
+    habito = models.ForeignKey(Habito, on_delete=models.CASCADE, related_name="progresos")
+    fecha = models.DateField(auto_now_add=True)
+    completado = models.BooleanField(default=False)
+    
+    objects = ProgresoDiarioManager()
+
+    def __str__(self):
+        estado = "✔️" if self.completado else "❌"
+        return f"{self.usuario.nombre} - {self.habito.nombre} ({self.fecha}) {estado}"
+
+    class Meta:
+        verbose_name_plural = "Progresos Diarios"
+        unique_together = ("usuario", "habito", "fecha")  # Un hábito por usuario por día
+        
+
+
+
