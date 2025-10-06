@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.conf import settings
 # =========================================================
 # NOTA: Los ENUMS de PostgreSQL se replican con
 # TextChoices en Django para mantener la integridad de datos
@@ -223,7 +224,7 @@ class ProgresoDiario(models.Model):
     """
     Representa el progreso de un hábito en un día específico por usuario.
     """
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="progresos")
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="progresos")
     habito = models.ForeignKey(Habito, on_delete=models.CASCADE, related_name="progresos")
     fecha = models.DateField(auto_now_add=True)
     completado = models.BooleanField(default=False)
