@@ -1,57 +1,122 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework import status, permissions
-from datetime import date
-from .models import ProgresoDiario
-from .serializers import ProgresoDiarioSerializer
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+
+from .models import Usuario, ProgresoDiario
+from .serializers import (
+    UsuarioSerializer, 
+    UsuarioUpdateSerializer,
+    ProgresoDiarioSerializer
+)
+
 
 class ProgresoDiarioView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
+    """
+    Vista para obtener el checklist del usuario.
+    GET /progreso/?usuario_id=<id>
+    """
     def get(self, request):
-        """Devuelve los hábitos del día actual para el usuario autenticado"""
-        usuario = request.user
-        hoy = date.today()
-
-        ProgresoDiario.objects.asegurar_progresos_para_usuario(usuario, hoy)
-
-        progresos = ProgresoDiario.objects.filter(usuario=usuario, fecha=hoy)
-        serializer = ProgresoDiarioSerializer(progresos, many=True)
-
-        completados = progresos.filter(completado=True).count()
-
-        return Response({
-            "fecha": hoy,
-            "total_habitos": progresos.count(),
-            "completados": completados,
-            "progresos": serializer.data
-        })
-
-    def patch(self, request):
-        """
-        Permite marcar o desmarcar un hábito como completado.
-        Espera un JSON como:
-        {
-            "progreso_id": 1,
-            "completado": true
-        }
-        """
-        progreso_id = request.data.get("progreso_id")
-        completado = request.data.get("completado")
-
+        usuario_id = request.query_params.get("usuario_id")
+        if not usuario_id:
+            return Response(
+                {"error": "Falta el parámetro 'usuario_id'"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
         try:
-            progreso = ProgresoDiario.objects.get(id=progreso_id, usuario=request.user)
-        except ProgresoDiario.DoesNotExist:
-            return Response({"error": "Progreso no encontrado o no pertenece al usuario."},
-                            status=status.HTTP_404_NOT_FOUND)
+            usuario = Usuario.objects.get(pk=usuario_id)
+        except Usuario.DoesNotExist:
+            return Response(
+                {"error": "Usuario no encontrado"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        fecha = timezone.localdate()
+        progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
+        serializer = ProgresoDiarioSerializer(progresos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        progreso.completado = completado
-        progreso.save()
 
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para gestionar el perfil de usuario.
+    
+    Endpoints:
+    - GET /api/usuarios/{id}/ - Obtener datos del usuario
+    - PUT /api/usuarios/{id}/ - Actualizar datos completos
+    - PATCH /api/usuarios/{id}/ - Actualizar datos parciales
+    """
+    queryset = Usuario.objects.all()
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    
+    def get_serializer_class(self):
+        """Usa diferentes serializers según la acción"""
+        if self.action in ['update', 'partial_update']:
+            return UsuarioUpdateSerializer
+        return UsuarioSerializer
+    
+    def retrieve(self, request, pk=None):
+        """
+        Obtiene los datos completos del usuario.
+        GET /api/usuarios/{id}/
+        """
+        usuario = get_object_or_404(Usuario, pk=pk)
+        serializer = UsuarioSerializer(usuario)
         return Response({
-            "mensaje": "Progreso actualizado correctamente.",
-            "progreso_id": progreso.id,
-            "completado": progreso.completado
-        }, status=status.HTTP_200_OK)
-
+            'success': True,
+            'data': serializer.data
+        })
+    
+    def update(self, request, pk=None):
+        """
+        Actualiza completamente los datos del usuario (PUT).
+        PUT /api/usuarios/{id}/
+        """
+        usuario = get_object_or_404(Usuario, pk=pk)
+        serializer = UsuarioUpdateSerializer(usuario, data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            response_serializer = UsuarioSerializer(usuario)
+            return Response({
+                'success': True,
+                'message': 'Perfil actualizado exitosamente',
+                'data': response_serializer.data
+            })
+        
+        return Response({
+            'success': False,
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def partial_update(self, request, pk=None):
+        """
+        Actualiza parcialmente los datos del usuario (PATCH).
+        PATCH /api/usuarios/{id}/
+        
+        Permite actualizar solo los campos enviados.
+        """
+        usuario = get_object_or_404(Usuario, pk=pk)
+        serializer = UsuarioUpdateSerializer(
+            usuario, 
+            data=request.data, 
+            partial=True
+        )
+        
+        if serializer.is_valid():
+            serializer.save()
+            response_serializer = UsuarioSerializer(usuario)
+            return Response({
+                'success': True,
+                'message': 'Perfil actualizado exitosamente',
+                'data': response_serializer.data
+            })
+        
+        return Response({
+            'success': False,
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)

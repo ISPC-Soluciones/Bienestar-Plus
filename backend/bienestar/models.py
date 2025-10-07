@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
+
 # =========================================================
 # NOTA: Los ENUMS de PostgreSQL se replican con
 # TextChoices en Django para mantener la integridad de datos
@@ -28,6 +29,7 @@ class Usuario(models.Model):
     
     fecha_registro = models.DateTimeField(auto_now_add=True) 
     telefono = models.CharField(max_length=20, blank=True, null=True)
+    foto_perfil = models.ImageField(upload_to='perfiles/', blank=True, null=True)  
 
     def __str__(self):
         return self.nombre
@@ -238,7 +240,3 @@ class ProgresoDiario(models.Model):
     class Meta:
         verbose_name_plural = "Progresos Diarios"
         unique_together = ("usuario", "habito", "fecha")  # Un hábito por usuario por día
-        
-
-
-
