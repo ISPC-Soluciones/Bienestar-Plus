@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import ProgresoDiario, Usuario
+from .models import PerfilSalud, ProgresoDiario, Usuario
+from decimal import Decimal
 
 
 class ProgresoDiarioSerializer(serializers.ModelSerializer):
@@ -50,3 +51,27 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
         if not value or len(value.strip()) < 2:
             raise serializers.ValidationError("El nombre debe tener al menos 2 caracteres.")
         return value.strip()
+
+class PerfilSaludSerializer(serializers.ModelSerializer):
+    """
+    Serializador para la creación y actualización del PerfilSalud.
+    Muestra el IMC calculado automáticamente.
+    """
+    # El campo imc es de solo lectura y se obtiene del método del modelo
+    imc = serializers.DecimalField(max_digits=5, decimal_places=2, read_only=True)
+    
+    class Meta:
+        model = PerfilSalud
+        fields = ['peso', 'altura', 'genero', 'fecha_nacimiento', 'imc']
+
+    def validate_peso(self, value):
+        """Asegura que el peso es un valor positivo."""
+        if value is not None and value <= Decimal(0):
+            raise serializers.ValidationError("El peso debe ser un valor positivo.")
+        return value
+
+    def validate_altura(self, value):
+        """Asegura que la altura es un valor positivo."""
+        if value is not None and value <= Decimal(0):
+            raise serializers.ValidationError("La altura debe ser un valor positivo.")
+        return value
