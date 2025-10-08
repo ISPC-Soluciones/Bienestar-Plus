@@ -69,22 +69,21 @@ class RutinaEjercicio(models.Model):
     Representa el registro de un hábito de ejercicio de un usuario.
     Esto es el historial de lo que el usuario HIZO.
     """
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE,
-                                related_name='rutinas_ejercicio')
-    ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE,
-                                  related_name='registros_rutina')
-    fecha_registro = models.DateField(auto_now_add=True)
+class RutinaEjercicio(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='rutinas_ejercicio')
+    ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE, related_name='registros_rutina')
+    meta_cantidad = models.IntegerField(default=1) # repeticiones, minutos, etc.
     completado = models.BooleanField(default=False)
-    # Meta (ej: 10 repeticiones, 30 minutos)
-    meta_cantidad = models.IntegerField(help_text="Cantidad objetivo (repeticiones, minutos, etc.)")
-
-    def __str__(self):
-        return f"{self.usuario.nombre} - {self.ejercicio.nombre} ({self.fecha_registro})"
+    fecha_registro = models.DateField(default=timezone.now)
 
     class Meta:
-        verbose_name_plural = "Rutinas de Ejercicio"
-        unique_together = ('usuario', 'ejercicio', 'fecha_registro') # Evita duplicados en el mismo día
+        verbose_name = "Registro de Rutina"
+        verbose_name_plural = "Registros de Rutinas"
+        ordering = ['-fecha_registro']
 
+    def __str__(self):
+        return f"{self.ejercicio.nombre} - {self.usuario.nombre} ({self.fecha_registro})"
+    
 #=========================================================
 # MODELOS PERFIL DE SALUD Y RECURSOS
 #=========================================================
