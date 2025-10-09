@@ -26,7 +26,6 @@ export const routes: Routes = [
     component: Admin,
     // canActivate: [AdminGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
         loadComponent: () =>
@@ -39,6 +38,14 @@ export const routes: Routes = [
             (m) => m.Ejercicios
           ),
       },
+      {
+        path: 'perfil',
+        loadComponent: () =>
+          import('./pages/admin/admin-perfil/admin-perfil').then(
+            (m) => m.AdminPerfil
+          ),
+      },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
   { path: '**', component: PageNotFound },

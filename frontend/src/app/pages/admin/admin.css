@@ -39,3 +39,10 @@
   flex: 1;
   padding: 2rem;
 }
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    padding: 1rem;
+  }
+}
