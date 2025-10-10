@@ -180,7 +180,7 @@ class PerfilSaludView(APIView):
 class EstadisticasView(APIView):
     """
     API de solo lectura para el Dashboard Administrativo.
-    Calcula métricas clave de la aplicación.
+    Calcula métricas clave de la aplicación...
     Endpoint: /api/estadisticas/
     """
     
