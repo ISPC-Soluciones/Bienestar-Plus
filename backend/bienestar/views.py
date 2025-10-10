@@ -174,3 +174,153 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             'success': False,
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PerfilSaludView(APIView):
+    """
+    Gestiona el perfil de salud (relación 1:1 con Usuario).
+    Endpoint: /api/perfil-salud/<user_id>/
+    """
+    # permission_classes = [IsAuthenticated] # Asumimos autenticación para producción
+    
+    def get(self, request, user_id):
+        """Obtiene el perfil de salud para un usuario dado."""
+        # Nota: En un sistema real, user_id debería venir de request.user.id
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        
+        try:
+            perfil = usuario.perfilsalud
+            serializer = PerfilSaludSerializer(perfil)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except PerfilSalud.DoesNotExist:
+            return Response(
+                {"message": "Perfil de salud no encontrado. Use PUT para crearlo."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    def put(self, request, user_id):
+        """
+        Crea un nuevo perfil o actualiza uno existente (actualización completa).
+        Endpoint: /api/perfil-salud/<user_id>/
+        """
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        
+        try:
+            perfil = usuario.perfilsalud # Obtener si existe
+        except PerfilSalud.DoesNotExist:
+            perfil = None # Si no existe, se creará
+            
+        data = request.data.copy()
+        # Se requiere asignar el usuario, aunque el serializador lo maneja al guardar
+        # data['usuario'] = usuario.pk 
+
+        serializer = PerfilSaludSerializer(perfil, data=data)
+        
+        if serializer.is_valid():
+            # Al guardar, aseguramos la asignación del usuario para la relación 1:1
+            instance = serializer.save(usuario=usuario) 
+            return Response(
+                PerfilSaludSerializer(instance).data, 
+                status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
+            )
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, user_id):
+        """Actualización parcial del perfil de salud (PATCH)."""
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        
+        try:
+            perfil = usuario.perfilsalud
+        except PerfilSalud.DoesNotExist:
+            return Response(
+                {"error": "El perfil de salud no existe para actualizar. Use PUT para crearlo primero."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(PerfilSaludSerializer(perfil).data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EstadisticasView(APIView):
+    """
+    API de solo lectura para el Dashboard Administrativo.
+    Calcula métricas clave de la aplicación...
+    Endpoint: /api/estadisticas/
+    """
+    
+    def get(self, request):
+        """
+        Calcula y devuelve las métricas.
+        """
+        
+        # ----------------------------------------------------------------------
+        # PASO 0: Definir el rango de tiempo (Últimos 30 días para todas las métricas de actividad)
+        # ----------------------------------------------------------------------
+        hoy = timezone.localdate()
+        fecha_hace_30_dias = hoy - timedelta(days=30)
+        
+        # Filtro de registros de rutinas en el último mes
+        rutinas_del_mes = RutinaEjercicio.objects.filter(
+            fecha_registro__gte=fecha_hace_30_dias
+        )
+        
+        # 1. Total de Usuarios (siempre global)
+        total_usuarios = Usuario.objects.count()
+        
+        # 2. Total de Rutinas Registradas (FILTRADO POR EL ÚLTIMO MES)
+        total_rutinas_registradas = rutinas_del_mes.count()
+        
+        # 3. Ejercicios Más Populares (Top 5 - FILTRADO POR EL ÚLTIMO MES)
+        # Usamos el filtro de rutinas_del_mes para calcular la popularidad
+        ejercicios_populares = rutinas_del_mes.values(
+            'ejercicio__nombre', 
+            'ejercicio__tipo'
+        ).annotate(
+            conteo_rutinas=Count('ejercicio__nombre')
+        ).order_by('-conteo_rutinas')[:5].values(
+            nombre=F('ejercicio__nombre'), 
+            tipo=F('ejercicio__tipo'), 
+            conteo_rutinas=F('conteo_rutinas')
+        )
+
+        # 4. Total de Progreso Diario Completo (FILTRADO POR EL ÚLTIMO MES)
+        # Cuenta la actividad reciente de checklists completados.
+        progresos_completados = ProgresoDiario.objects.filter(
+            completado=True,
+            fecha__gte=fecha_hace_30_dias
+        ).count()
+        
+        # Construcción de la respuesta
+        metrics = {
+            "total_usuarios": total_usuarios,
+            "total_rutinas_registradas": total_rutinas_registradas,
+            "progresos_diarios_completados": progresos_completados,
+            "ejercicios_mas_populares": list(ejercicios_populares) 
+        }
+        
+        return Response(metrics, status=status.HTTP_200_OK)
+
+
+class EjercicioViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para el CRUD de Ejercicios base (gestionado por el Administrador).
+    Ruta generada: /api/ejercicios/
+    """
+    queryset = Ejercicio.objects.all()
+    serializer_class = EjercicioSerializer
+    # Se recomienda añadir permisos: permission_classes = [IsAdminUser]
+
+class RutinaEjercicioViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para el CRUD de RutinaEjercicio (registro de actividad de los usuarios).
+    Ruta generada: /api/rutinas-ejercicio/
+    """
+    queryset = RutinaEjercicio.objects.all()
+    serializer_class = RutinaEjercicioSerializer
+    # Se recomienda añadir un filtro para que los usuarios solo vean sus propias rutinas.
