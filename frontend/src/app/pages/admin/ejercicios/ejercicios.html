@@ -1,1 +1,99 @@
-<p>ejercicios works!</p>
+<section class="admin-ejercicios container">
+  <h2>Gestión de Ejercicios</h2>
+
+  @if (cargando) {
+  <p>Cargando ejercicios...</p>
+  } @else {
+  <table class="tabla-admin" *ngIf="ejercicios.length > 0; else sinEjercicios">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Tipo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (ejercicio of ejercicios; track ejercicio.id) {
+      <tr>
+        <td>{{ ejercicio.nombre }}</td>
+        <td>{{ ejercicio.descripcion }}</td>
+        <td>{{ ejercicio.tipo }}</td>
+        <td>
+          <button
+            class="btn__icono editar"
+            (click)="editarEjercicio(ejercicio)"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+          <button
+            class="btn__icono eliminar"
+            (click)="eliminarEjercicio(ejercicio.id!)"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <ng-template #sinEjercicios>
+    <p class="texto-centrado">No hay ejercicios registrados.</p>
+  </ng-template>
+  }
+
+  <div class="formulario-admin mt-4">
+    <h3>{{ enEdicion ? "Editar Ejercicio" : "Nuevo Ejercicio" }}</h3>
+
+    @if (mensajeError) {
+    <p class="error-texto">{{ mensajeError }}</p>
+    }
+
+    <form (ngSubmit)="guardarEjercicio()">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input
+          type="text"
+          [(ngModel)]="nuevoEjercicio.nombre"
+          name="nombre"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea
+          [(ngModel)]="nuevoEjercicio.descripcion"
+          name="descripcion"
+          rows="2"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Tipo</label>
+        <select [(ngModel)]="nuevoEjercicio.tipo" name="tipo" required>
+          <option value="" disabled>Seleccione un tipo</option>
+          <option value="fuerza">Fuerza</option>
+          <option value="cardio">Cardio</option>
+          <option value="flexibilidad">Flexibilidad</option>
+        </select>
+      </div>
+
+      <div class="acciones-form">
+        <button type="submit" class="btn-custom btn-custom--primario">
+          {{ enEdicion ? "Actualizar" : "Guardar" }}
+        </button>
+        @if (enEdicion) {
+        <button
+          type="button"
+          class="btn-custom btn-custom--rojo"
+          (click)="resetFormulario()"
+        >
+          Cancelar
+        </button>
+        }
+      </div>
+    </form>
+  </div>
+</section>
