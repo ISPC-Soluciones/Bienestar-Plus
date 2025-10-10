@@ -1,12 +1,5 @@
 from rest_framework import serializers
-from .models import (
-    ProgresoDiario, 
-    Usuario, 
-    PerfilSalud, 
-    Ejercicio,
-    RutinaEjercicio
-)
-from decimal import Decimal
+from .models import ProgresoDiario, Usuario
 
 
 class ProgresoDiarioSerializer(serializers.ModelSerializer):
@@ -17,16 +10,16 @@ class ProgresoDiarioSerializer(serializers.ModelSerializer):
         fields = ["id", "fecha", "habito", "habito_nombre", "usuario", "completado"]
         read_only_fields = ["usuario", "fecha"]
 
+
 class UsuarioSerializer(serializers.ModelSerializer):
     """Serializer para visualización completa del usuario"""
     foto_perfil_url = serializers.SerializerMethodField()
-
+    
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'mail', 'rol', 'fecha_registro', 'telefono', 'foto_perfil', 
-                  'foto_perfil_url']
+        fields = ['id', 'nombre', 'mail', 'rol', 'fecha_registro', 'telefono', 'foto_perfil', 'foto_perfil_url']
         read_only_fields = ['id', 'fecha_registro', 'rol']
-
+    
     def get_foto_perfil_url(self, obj):
         """Retorna la URL completa de la foto de perfil"""
         if obj.foto_perfil:
@@ -36,67 +29,24 @@ class UsuarioSerializer(serializers.ModelSerializer):
             return obj.foto_perfil.url
         return None
 
+
 class UsuarioUpdateSerializer(serializers.ModelSerializer):
     """Serializer para actualización de datos del usuario"""
     foto_perfil = serializers.ImageField(required=False, allow_null=True)
-
+    
     class Meta:
         model = Usuario
         fields = ['nombre', 'mail', 'foto_perfil']
-
+    
     def validate_mail(self, value):
         """Validación para evitar emails duplicados"""
         usuario = self.instance
         if Usuario.objects.exclude(pk=usuario.pk).filter(mail=value).exists():
             raise serializers.ValidationError("Este correo electrónico ya está en uso.")
         return value
-
+    
     def validate_nombre(self, value):
         """Validación básica del nombre"""
         if not value or len(value.strip()) < 2:
             raise serializers.ValidationError("El nombre debe tener al menos 2 caracteres.")
         return value.strip()
-
-
-class PerfilSaludSerializer(serializers.ModelSerializer):
-    """
-    Serializador para la creación y actualización del PerfilSalud.
-    Muestra el IMC calculado automáticamente.
-    """
-    imc = serializers.DecimalField(max_digits=5, decimal_places=2, read_only=True)
-    
-    class Meta:
-        model = PerfilSalud
-        fields = ['peso', 'altura', 'genero', 'fecha_nacimiento', 'imc']
-
-    def validate_peso(self, value):
-        """Asegura que el peso es un valor positivo."""
-        if value is not None and value <= Decimal(0):
-            raise serializers.ValidationError("El peso debe ser un valor positivo.")
-        return value
-
-    def validate_altura(self, value):
-        """Asegura que la altura es un valor positivo."""
-        if value is not None and value <= Decimal(0):
-            raise serializers.ValidationError("La altura debe ser un valor positivo.")
-        return value
-
-
-class EjercicioSerializer(serializers.ModelSerializer):
-    """Serializador para el modelo Ejercicio (CRUD por el administrador)."""
-    class Meta:
-        model = Ejercicio
-        fields = '__all__'
-
-class RutinaEjercicioSerializer(serializers.ModelSerializer):
-    """
-    Serializador para el modelo RutinaEjercicio (registro de actividad del usuario).
-    """
-    ejercicio_nombre = serializers.CharField(source='ejercicio.nombre', read_only=True)
-    
-    fecha_registro = serializers.DateField(required=False)
-
-    class Meta:
-        model = RutinaEjercicio
-        fields = '__all__'
-        read_only_fields = ['fecha_registro']
