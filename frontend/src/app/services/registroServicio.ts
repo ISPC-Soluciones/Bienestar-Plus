@@ -7,7 +7,7 @@ import { UsuarioCreateDTO } from '../models/perfil.model';
   providedIn: 'root'
 })
 export class RegistroServicio {
-  private apiUrl = 'http://127.0.0.1:8000/registro/';
+  private apiUrl = 'http://localhost:3000/usuarios';
 
   constructor(private http: HttpClient) { }
    registrarUsuario(usuario: UsuarioCreateDTO): Observable<any> {
