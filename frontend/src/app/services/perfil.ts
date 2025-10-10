@@ -6,7 +6,7 @@ import { switchMap, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  private base = 'http://localhost:3000';
+  private base = 'http://localhost:8000/api';
 
   constructor(private http: HttpClient) {}
 
