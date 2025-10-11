@@ -157,3 +157,79 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   border: 2px solid var(--ternario);
 }
+
+.perfil__container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 2rem;
+  padding: 2rem;
+  color: var(--bg-y-fuentes);
+}
+
+.perfil__sidebar {
+  background: var(--bg-fondo);
+  border: 2px solid var(--ternario);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.usuario__foto {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--primario);
+  margin-bottom: 1rem;
+}
+
+.perfil__progreso {
+  background: var(--bg-fondo);
+  border: 2px solid var(--ternario);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.barra__progreso {
+  width: 100%;
+  height: 20px;
+  background: var(--ternario);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.barra__relleno {
+  height: 100%;
+  background: var(--primario);
+  transition: width 0.3s ease;
+}
+
+.perfil__rutina {
+  background: var(--bg-fondo);
+  border: 2px solid var(--ternario);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.rutina__item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.rutina__item input {
+  transform: scale(1.2);
+}
+
+.rutina__item .completado {
+  text-decoration: line-through;
+  color: var(--cuaternario);
+}
+
+@media (max-width: 900px) {
+  .perfil__container {
+    grid-template-columns: 1fr;
+  }
+}

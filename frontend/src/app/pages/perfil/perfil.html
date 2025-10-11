@@ -1,179 +1,65 @@
-<!DOCTYPE html>
-<section class="perfil">
-  <div class="container__perfil" *ngIf="usuario">
-    <div class="container__btn__cerrar__sesion">
-      <a routerLink="/" class="btn-custom btn-custom--rojo">
-        Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
-      </a>
+<div class="perfil__container" *ngIf="usuario; else loadingTpl">
+
+
+  <aside class="perfil__sidebar">
+    <div class="usuario__info">
+      <img src="assets/img/user-default.png" alt="Foto de perfil" class="usuario__foto" />
+      <h2>{{ usuario.nombre }}</h2>
+      <p>{{ usuario.mail }}</p>
+      <button (click)="abrirModal()">Editar perfil</button>
     </div>
-    <div class="container__bienvenida">
-      <h1 class="texto__bienvenida__perfil">
-        Bienvenido
-        <span>{{ usuario.nombre.split(" ")[0] }}</span
-        >&nbsp;
-        <i class="fa-solid fa-heart-pulse"></i>
-      </h1>
+
+    <div class="usuario__detalles">
+      <p><strong>Género:</strong> {{ usuario.genero || 'Sin especificar' }}</p>
+      <p><strong>Peso:</strong> {{ usuario.peso || '-' }} kg</p>
+      <p><strong>Altura:</strong> {{ usuario.altura || '-' }} cm</p>
+      <p><strong>Fecha Nacimiento:</strong> {{ usuario.fecha_nacimiento | date }}</p>
     </div>
-    <div class="container__parrafo__saludo">
-      <p class="parrafo__saludo">
-        ¡Hola {{ usuario.nombre }}! Nos alegra verte aquí. Recuerda que cada
-        paso cuenta en tu camino hacia el bienestar. ¡Vamos juntos por más!
+  </aside>
+
+
+  <section class="perfil__progreso">
+    <h2>Tu progreso diario</h2>
+
+    <div class="progreso__grafico">
+      <p *ngIf="rutina?.length">
+        {{ rutina.filter(r => r.completado).length }} de {{ rutina.length }} hábitos completados
       </p>
-    </div>
-    <div class="container__usuario">
-      <div class="container__usuario__info">
-        <h2 class="texto__info__perfil">Información Personal</h2>
-        <div class="container__img__usuario">
-          <img
-            [src]="usuario.foto"
-            alt="Usuario {{ usuario.nombre }}"
-            class="img__perfil"
-          />
-        </div>
-        <div class="container__datos__usuario">
-          <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
-          <p><strong>Email:</strong> {{ usuario.email }}</p>
-        </div>
-        <div class="container__btn__editar__perfil">
-          <a  class="btn-custom btn-custom--primario" (click)="abrirModal()">
-            Editar <i class="fa-solid fa-pen-to-square"></i>
-          </a>
+
+      <div class="barra__progreso">
+        <div class="barra__relleno"
+          [style.width.%]="(rutina.filter(r => r.completado).length / rutina.length) * 100">
         </div>
       </div>
-  <!-- Modal editar perfil -->
-<div 
-  class="modal fade" 
-  tabindex="-1" 
-  [ngClass]="{'show d-block': modalAbierto}" 
-  [attr.aria-hidden]="!modalAbierto"
-  [style.display]="modalAbierto ? 'block' : 'none'"
-  style="background-color: rgba(0, 0, 0, 0.5); overflow-y: auto;"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
-        <div class="modal-header">
-          <h5 class="modal-title">Editar Perfil de Salud</h5>
-          <button type="button" class="btn-close" (click)="cerrarModal()" aria-label="Cerrar"></button>
-        </div>
-        
-        <div class="modal-body">
-          
-     
-          <div class="mb-3">
-            <label class="form-label">Peso (kg)</label>
-            <input type="text" class="form-control" formControlName="peso" placeholder="Ej: 75.5" />
-            
-        
-            @if (pesoControl.invalid && pesoControl.touched) {
-              <div class="invalid-feedback d-block">
-                Peso inválido (obligatorio y solo números/decimales)
-              </div>
-            }
-          </div>
-
-         
-          <div class="mb-3">
-            <label class="form-label">Altura (cm)</label>
-            <input type="text" class="form-control" formControlName="altura" placeholder="Ej: 175" />
-            
-          
-            @if (alturaControl.invalid && alturaControl.touched) {
-              <div class="invalid-feedback d-block">
-                Altura inválida (obligatorio y solo números/decimales)
-              </div>
-            }
-          </div>
-
-       
-          <div class="mb-3">
-            <label class="form-label">Género</label>
-            <select class="form-select" formControlName="genero">
-              <option value="">Selecciona</option>
-              <option value="masculino">Masculino</option>
-              <option value="femenino">Femenino</option>
-            </select>
-            
-         
-            @if (generoControl.invalid && generoControl.touched) {
-              <div class="invalid-feedback d-block">
-                Selecciona un género
-              </div>
-            }
-          </div>
-
-
-          <div class="mb-3">
-            <label class="form-label">Fecha de Nacimiento</label>
-            <input type="date" class="form-control" formControlName="fecha_nacimiento"/>
-            
-           
-            @if (fechaNacimientoControl.invalid && fechaNacimientoControl.touched) {
-              <div class="invalid-feedback d-block">
-                Fecha inválida
-              </div>
-            }
-          </div>
-        </div>
-        
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
-          <button 
-            type="submit" 
-            class="btn btn-primary" 
-            [disabled]="perfilForm.invalid"
-          >
-            Guardar
-          </button>
-        </div>
-      </form>
     </div>
-  </div>
+
+    <div class="progreso__detalle">
+      <p>Seguí completando tus hábitos para mantener una buena salud 💪</p>
+    </div>
+  </section>
+
+
+  <section class="perfil__rutina">
+    <h2>Mi rutina de hoy</h2>
+
+    <ul *ngIf="rutina?.length; else sinRutina">
+      <li *ngFor="let p of rutina">
+        <label class="rutina__item">
+          <input
+            type="checkbox"
+            [checked]="p.completado"
+            (change)="marcarHabito(p.id, $event.target.checked)" />
+          <span [class.completado]="p.completado">{{ p.habito.nombre }}</span>
+        </label>
+      </li>
+    </ul>
+
+    <ng-template #sinRutina>
+      <p>No hay hábitos cargados para hoy.</p>
+    </ng-template>
+  </section>
 </div>
 
-
-@if (modalAbierto) {
-    <div class="modal-backdrop fade show"></div>
-}
-
-
-
-      <div class="container__tu__progreso">
-        <h2 class="texto__progreso__usuario">Mi Progreso</h2>
-        <p class="parrafo__progreso">
-          {{ usuario.progreso }}
-          <img
-            [src]="usuario.grafico"
-            alt="Progreso del Usuario"
-            class="img__tu__progreso"
-          />
-        </p>
-        <div class="container__btn__ir__mis__habitos">
-          <a routerLink="/habitos" class="btn-custom btn-custom--primario">
-            Ir a Mis Hábitos
-          </a>
-        </div>
-      </div>
-      <div class="container__notificaciones">
-        <h2>Gestión de Notificaciones</h2>
-        <p>
-          Activa o desactiva los recordatorios para mantenerte al día con tus
-          hábitos.
-        </p>
-        <ul class="lista__notificaciones">
-          <li *ngFor="let notificacion of listaDeNotificaciones">
-            <span class="nombre">{{ notificacion.mensaje }}</span>
-            <button
-              (click)="toggleNotificacion(notificacion.id)"
-              [class.activado]="notificacion.activado"
-            >
-              {{ notificacion.activado ? "Activado" : "Desactivado" }}
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="!usuario && loading">Cargando perfil...</div>
-</section>
+<ng-template #loadingTpl>
+  <p class="loading">Cargando perfil...</p>
+</ng-template>

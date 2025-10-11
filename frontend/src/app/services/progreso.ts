@@ -2,33 +2,41 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface ProgresoDiario {
+export interface Habito {
   id: number;
-  fecha: string;
-  completado: boolean;
-  habito: {
-    id: number;
-    nombre: string;
-    descripcion: string;
-  };
+  nombre: string;
+  descripcion: string;
 }
 
-@Injectable({ providedIn: 'root' })
+export interface ProgresoDiario {
+  id: number;
+  habito: Habito;
+  completado: boolean;
+  fecha: string;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
 export class ProgresoService {
-  private base = 'http://localhost:8000';
+
+  private baseUrl = 'http://localhost:8000/api'; 
 
   constructor(private http: HttpClient) {}
 
   getProgresoDiario(usuarioId: number): Observable<ProgresoDiario[]> {
-    return this.http.get<ProgresoDiario[]>(
-      `${this.base}/progreso/?usuario_id=${usuarioId}`
-    );
+    return this.http.get<ProgresoDiario[]>(`${this.baseUrl}/progreso/?usuario_id=${usuarioId}`);
   }
 
-  marcarCompletado(progresoId: number, completado: boolean) {
-    return this.http.patch(`${this.base}/progreso/`, {
+  marcarCompletado(id: number, completado: boolean): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/${id}/`, { completado });
+  }
+
+
+  actualizarProgreso(progresoId: number, completado: boolean): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/progreso/`, {
       progreso_id: progresoId,
-      completado,
+      completado: completado,
     });
   }
 }

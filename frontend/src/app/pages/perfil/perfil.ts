@@ -5,6 +5,8 @@ import { Usuario } from '../../models/perfil.model';
 import { PerfilService } from '../../services/perfil';
 import { Notificaciones, Notificacion } from '../../services/notificaciones';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ProgresoService } from '../../services/progreso';
+
 
 @Component({
   selector: 'app-perfil',
@@ -23,9 +25,12 @@ export class PerfilComponent implements OnInit {
   // Modal
   modalAbierto = false;
   perfilForm: FormGroup;
+  rutina: any[] = []; 
+
 
   constructor(
     private perfilService: PerfilService,
+    private progresoService: ProgresoService,
     private route: ActivatedRoute,
     private notificacionesService: Notificaciones,
     private fb: FormBuilder
@@ -68,6 +73,7 @@ export class PerfilComponent implements OnInit {
               fecha_nacimiento: fecha ?? '',
             });
 
+            this.cargarProgreso(+id);
           },
           error: (err) => {
             this.error = 'No se pudo cargar el perfil';
@@ -80,6 +86,26 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
+
+  cargarProgreso(usuarioId: number) {
+    this.progresoService.getProgresoDiario(usuarioId).subscribe({
+      next: (progresos) => {
+        this.rutina = progresos; 
+        console.log('✅ Progreso diario:', progresos);
+      },
+      error: (err) => {
+        console.error('Error al obtener progreso diario', err);
+      },
+    });
+  }
+
+  marcarHabito(id: number, completado: boolean) {
+    this.progresoService.marcarCompletado(id, completado).subscribe({
+      next: () => console.log('✅ Hábito actualizado'),
+      error: (err) => console.error('Error al actualizar hábito', err),
+    });
+  }
+  
 
   // Modal
   abrirModal(): void {
