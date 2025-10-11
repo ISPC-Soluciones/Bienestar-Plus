@@ -8,6 +8,12 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum, F 
 from datetime import timedelta 
+<<<<<<< HEAD
+=======
+from django.contrib.auth.hashers import make_password, check_password
+from .models import Usuario, ProgresoDiario, PerfilSalud
+
+>>>>>>> a906cd896ad10e13520aeaf5f16b7e2036c0fa71
 
 from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles 
 from .serializers import (
@@ -18,6 +24,60 @@ from .serializers import (
     EjercicioSerializer, 
     RutinaEjercicioSerializer 
 )
+<<<<<<< HEAD
+=======
+class RegistroUsuarioView(APIView):
+    def post(self, request):
+        nombre = request.data.get('nombre')
+        mail = request.data.get('email')
+        password = request.data.get('password')
+        telefono = request.data.get('telefono', '')
+         # Campos del perfil salud
+        genero = request.data.get('genero')
+        fecha_nacimiento = request.data.get('fecha_nacimiento')
+
+
+        if not nombre or not mail or not password:
+            return Response({"error": "Faltan campos obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+        if Usuario.objects.filter(mail=mail).exists():
+            return Response({"error": "Correo ya registrado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        usuario = Usuario.objects.create(
+            nombre=nombre,
+            mail=mail,
+            password=make_password(password),
+            telefono=telefono
+        )
+        
+
+        PerfilSalud.objects.create(
+            usuario=usuario,
+            genero=genero,
+            fecha_nacimiento=fecha_nacimiento
+        )
+
+        serializer = UsuarioSerializer(usuario)
+        return Response({"success": True, "data": serializer.data}, status=status.HTTP_201_CREATED)
+
+class LoginUsuarioView(APIView):
+    def post(self, request):
+        mail = request.data.get('email')
+        password = request.data.get('password')
+        if not mail or not password:
+            return Response({"error": "Faltan email o password"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            usuario = Usuario.objects.get(mail=mail)
+        except Usuario.DoesNotExist:
+            return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not check_password(password, usuario.password):
+            return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = UsuarioSerializer(usuario)
+        return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
+
+>>>>>>> a906cd896ad10e13520aeaf5f16b7e2036c0fa71
 
 class ProgresoDiarioView(APIView):
     """
