@@ -166,6 +166,13 @@
   margin-bottom: 1rem;
 }
 
+
+.card__presentacion__titulo .fa-solid {
+  font-size: 2em;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
 .tab-content.active {
   display: block;
   text-align: center;
@@ -187,13 +194,13 @@
 }
 
 .contenido__ejercicios {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
   width: 100%;
   max-width: 1200px;
-  margin-bottom: 2rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
 .card__habito {
@@ -203,8 +210,8 @@
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-  max-width: 400px;
-  width: 100%;
+  /* max-width: 400px; */
+  /* width: 100%; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -235,12 +242,6 @@
   color: var(--bg-y-fuentes);
 }
 
-.card__presentacion__logo i {
-  font-size: 6rem;
-  color: var(--ternario);
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
 
 .card__habito__imagen img {
   width: 100%;
@@ -311,7 +312,7 @@
 }
 
 .listado__crud li:last-child {
-  border-bottom: none; 
+  border-bottom: none;
 }
 
 /* Nuevos estilos para la edición de hábitos */
@@ -322,6 +323,41 @@
   width: 100%;
   padding: 0.5rem 0;
   text-align: left;
+}
+
+/* Estilos para la checklist */
+
+.habito__contenido {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.habito__texto {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.habito__checkbox {
+  /* No usado con checkbox custom */
+  cursor: pointer;
+}
+
+.habito__display.completado {
+  background-color: var(--bg-y-fuentes);
+  opacity: 0.9;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+/* ESTILO CLAVE: Cambia el color del texto y lo tacha cuando está completado */
+.habito__display.completado .habito__texto {
+  color: #a0a0a0;
+  /* Gris más claro para el texto completado */
+  text-decoration: line-through;
+  /* Tachar el texto */
 }
 
 .edicion__habito {
@@ -352,19 +388,23 @@
 }
 
 .edicion__habito input {
-  display: inline-block; /* Opcional: para que se ajuste al contenido */
+  display: inline-block;
+  /* Opcional: para que se ajuste al contenido */
   padding: 0.5rem;
   border-radius: 8px;
   border: 1px solid var(--ternario);
   font-family: var(--fuente-base);
   font-size: 1rem;
-  background-color: white; /* Fondo blanco */
-  color: #333333; /* Letras en gris oscuro */
+  background-color: white;
+  /* Fondo blanco */
+  color: #333333;
+  /* Letras en gris oscuro */
   text-align: center;
 }
 
 .edicion__habito input::placeholder {
-  color: #a0a0a0; /* Placeholder gris claro */
+  color: #a0a0a0;
+  /* Placeholder gris claro */
   opacity: 1;
 }
 
@@ -402,6 +442,8 @@
 /* Estilos para el contenedor de los botones de acción */
 .crud__acciones {
   display: flex;
+  align-items: center;
+  /* AGREGADO para centrado vertical de iconos y checkbox */
   gap: 10px;
 }
 
@@ -446,6 +488,80 @@
   color: #e07a55;
 }
 
+/* ========================================================= */
+/* ESTILOS DEL CHECKBOX PERSONALIZADO (CUSTOM CHECKBOX) */
+/* ========================================================= */
+
+/* 1. Contenedor: Oculta el input original y define el área del checkbox */
+.custom-checkbox-container {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  width: 20px;
+  /* Tamaño del cuadrado */
+  height: 20px;
+}
+
+/* Oculta el checkbox nativo */
+.custom-checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* 2. El Checkmark (la caja visible) */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  /* Fondo: Usamos el color de fondo del listado (var(--bg-y-fuentes)) */
+  background-color: var(--bg-y-fuentes);
+  /* Borde: Usamos el color Primario para el estado no marcado */
+  border: 2px solid var(--primario);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+/* 3. Comportamiento al hacer hover */
+.custom-checkbox-container:hover input:not(:checked)~.checkmark {
+  background-color: var(--primario);
+  opacity: 0.5;
+}
+
+/* 4. Estilo al estar marcado (CHECKED) */
+.custom-checkbox-container input:checked~.checkmark {
+  /* Fondo cuando está marcado: Usamos el color Terciario (el turquesa) */
+  background-color: var(--ternario);
+  border-color: var(--ternario);
+}
+
+/* 5. El "Tick" (la marca de verificación) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  /* Ajuste fino para centrar el tick */
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  /* El color del tick debe contrastar con el fondo. Usamos el color de fondo del sitio. */
+  border: solid var(--bg-fondo);
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* Muestra el tick cuando está marcado */
+.custom-checkbox-container input:checked~.checkmark:after {
+  display: block;
+}
+
+
 /* Accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   :where(html) {
@@ -459,15 +575,36 @@
 }
 
 @media screen and (max-width: 768px) {
+
+  /* CORRECCIÓN 1: Ajustar el padding del contenedor principal para que no sea excesivo en móvil */
+  .container__habitos {
+    padding: 1rem;
+  }
+
   .container__habitos__usuario {
     flex-direction: column;
     align-items: center;
     gap: 2rem;
   }
 
+  /* CORRECCIÓN 2: Eliminar el padding lateral en el contenedor de pestañas */
   .container__tabs__rutinas {
     width: 100%;
+    padding: 0;
+    /* Lo establecimos a 0, si el padding interior lo necesita, lo agregamos en tab-content */
+  }
+
+  /* Nueva regla: Asegurar que el contenido de la pestaña tenga un padding legible, pero no excesivo */
+  .tab-content {
     padding: 1rem;
+  }
+
+  /* CORRECCIÓN 3: Ajustar el contenedor de tarjetas */
+  .contenido__ejercicios {
+    /* Reiniciamos el padding lateral para que las cards usen todo el ancho */
+    padding: 0;
+    /* Reset para que el grid funcione como una sola columna */
+    grid-template-columns: 1fr;
   }
 
   .tab-buttons {
@@ -480,15 +617,31 @@
     margin-bottom: 0.5rem;
   }
 
+  /* CORRECCIÓN 4: Permitir que la tarjeta use todo el ancho disponible y corregir el padding interno */
   .card__habito {
-    padding: 1.2rem;
-    max-width: 90%;
+    width: 100%;
+    /* Toma el 100% del espacio del .contenido__ejercicios (que ahora no tiene padding) */
+    max-width: 100%;
+    /* Elimina la limitación de 90% */
+    padding: 1.5rem;
+    /* Aseguramos que el padding interno de la tarjeta sea menor */
+  }
+
+  /* CORRECCIÓN 5: Ajustar la imagen principal en las tarjetas para que no se salga */
+  .card__habito__imagen img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* Ajustes para lista de hábitos */
+  .listado__crud {
+    max-width: 100%;
   }
 
   .card__habito__acciones {
     flex-direction: column;
   }
-  
+
   .habito__display {
     flex-direction: column;
     align-items: center;

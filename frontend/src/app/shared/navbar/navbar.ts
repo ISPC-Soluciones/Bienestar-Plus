@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -15,6 +15,8 @@ export class Navbar implements AfterViewInit {
   userId$: Observable<number | null>;
 
   constructor(private authService: AuthService) {
+
+
     this.userId$ = this.authService.currentUserId$;
   }
 

@@ -7,4 +7,5 @@ export interface Habito {
     activo: boolean;
     createdAt?: string;
     updatedAt?: string;
+    completado: boolean;
   }
