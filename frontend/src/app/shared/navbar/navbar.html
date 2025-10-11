@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <header>
   <nav class="navbar">
     <a routerLink="./" class="logo">
@@ -6,25 +7,32 @@
     </a>
     <input type="checkbox" id="menu-toggle" />
     <label for="menu-toggle" class="hamburger">&#9776;</label>
+
     <ul class="nav-links">
       <li><a routerLink="/" class="nav-registrarse">Inicio</a></li>
-      <li>
-        <a routerLink="/registro" class="nav-registrarse">Registrarse</a>
-      </li>
-      <li>
-        <a routerLink="/login" class="nav-registrarse">Iniciar Sesión</a>
-      </li>
-      <li>
-        <a [routerLink]="['/perfil', userId$ | async]" class="nav-registrarse"
-          >Perfil</a
-        >
-      </li>
-      <li>
-        <a routerLink="/habitos" class="nav-registrarse">Habitos</a>
-      </li>
-      <li>
-        <a routerLink="/nosotros" class="nav-registrarse">Nosotros</a>
-      </li>
+      <li><a routerLink="/nosotros" class="nav-registrarse">Nosotros</a></li>
+
+      @if (!(userId$ | async)) {
+        <li>
+          <a routerLink="/registro" class="nav-registrarse">Registrarse</a>
+        </li>
+        <li>
+          <a routerLink="/login" class="nav-registrarse">Iniciar Sesión</a>
+        </li>
+
+      }
+
+      @if (userId$ | async; as userId) {
+        <li>
+          <a [routerLink]="['/perfil', userId]" class="nav-registrarse"
+            >Perfil</a
+          >
+        </li>
+        <li>
+          <a routerLink="/habitos" class="nav-registrarse">Habitos</a>
+        </li>
+      }
+
     </ul>
   </nav>
 </header>

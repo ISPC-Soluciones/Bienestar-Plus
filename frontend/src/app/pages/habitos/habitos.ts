@@ -13,6 +13,9 @@ import { Habito } from '../../models/habito.model';
   styleUrls: ['./habitos.css'],
 })
 export class Habitos implements OnInit {
+marcarHabito(_t39: Habito) {
+throw new Error('Method not implemented.');
+}
   activeTab: string = 'ejercicio';
   habitos: Habito[] = [];
   mostrarRutina: boolean = false;
@@ -41,7 +44,41 @@ export class Habitos implements OnInit {
       },
       error: (err) => console.error('Error cargando hábitos:', err),
     });
-  }
+  } 
+
+/*  cargarHabitos(): void {
+        console.log('Cargando hábitos de prueba (Modo DEV)...');
+        
+        // --- DATOS DE PRUEBA MANUALES ---
+        const datosPrueba: Habito[] = [
+            {
+                id: 1, 
+                nombre: 'Flexiones', 
+                tipo: 'Ejercicio', 
+                metaDiaria: '100 repeticiones', 
+                frecuenciaSemanal: 7, 
+                activo: true, 
+                completado: true // Para probar el cambio de color
+            },
+            {
+                id: 2, 
+                nombre: 'Abdominales', 
+                tipo: 'Ejercicio', 
+                metaDiaria: '100 repeticiones', 
+                frecuenciaSemanal: 7, 
+                activo: true, 
+                completado: false // Para probar el estado pendiente
+            },
+
+        ];
+        
+        this.habitos = datosPrueba;
+        console.log('Hábitos de prueba cargados:', this.habitos);
+        
+        // Lógica de progreso (para mostrar "X de Y completados")
+        // this.actualizarContadorProgreso(); 
+        // Si no tienes esa función, déjala comentada por ahora.
+    } */
 
   agregarHabito(
     tipo: string,
@@ -55,6 +92,7 @@ export class Habitos implements OnInit {
       metaDiaria,
       frecuenciaSemanal,
       activo: true,
+      completado: false,
     };
 
     this.habitosService.createHabito(nuevoHabito).subscribe({

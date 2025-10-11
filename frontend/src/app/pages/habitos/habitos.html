@@ -22,126 +22,112 @@
         <div class="container__listado__habitos">
           <h2>Rutinas</h2>
           <p class="parrafo__rutinas">
-            Ver los hábitos que has seleccionado para mejorar tu bienestar.
+            Hábitos que has seleccionado para mejorar tu bienestar.
           </p>
         </div>
         <div class="container__rutinas">
           <div class="container__tabs__rutinas">
             <div class="tabs">
               <div class="tab-buttons">
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'ejercicio'"
-                  (click)="setActiveTab('ejercicio')"
-                >
-                  Ejercicio
+                <button class="tab-button" [class.active]="activeTab === 'ejercicio'"
+                  (click)="setActiveTab('ejercicio')">
+                  <i class="fa-solid fa-person-running"></i> Ejercicio
                 </button>
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'hidratacion'"
-                  (click)="setActiveTab('hidratacion')"
-                >
-                  Hidratación
+                <button class="tab-button" [class.active]="activeTab === 'hidratacion'"
+                  (click)="setActiveTab('hidratacion')">
+                 <i class="fa-solid fa-glass-water"></i> Hidratación
                 </button>
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'alimentacion'"
-                  (click)="setActiveTab('alimentacion')"
-                >
-                  Alimentación
+                <button class="tab-button" [class.active]="activeTab === 'alimentacion'"
+                  (click)="setActiveTab('alimentacion')">
+                 <i class="fa-solid fa-utensils"></i> Alimentación
                 </button>
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'sueno'"
-                  (click)="setActiveTab('sueno')"
-                >
-                  Sueño
+                <button class="tab-button" [class.active]="activeTab === 'sueno'" (click)="setActiveTab('sueno')">
+                  <i class="fa-solid fa-bed"></i> Sueño
                 </button>
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'ejercicio'"
-                id="ejercicio"
-              >
+              <div class="tab-content" [class.active]="activeTab === 'ejercicio'" id="ejercicio">
                 <article class="card__presentacion__habito">
-                  <h3 class="card__presentacion__titulo">Ejercicio</h3>
+
+                  <h3 class="card__presentacion__titulo">
+                    <i class="fa-solid fa-person-running"></i> Ejercicio
+                  </h3>
                   <p class="card__presentacion__descripcion">
                     Tu rutina de ejercicio actual. Puedes modificarla para que
                     se ajuste a tus necesidades.
                   </p>
-                  <div class="card__presentacion__logo">
-                    <i class="fa-solid fa-person-running"></i>
-                  </div>
-                  <button
-                    class="btn-custom btn-custom--primario"
-                    (click)="toggleRutina()"
-                  >
+
+                  <button class="btn-custom btn-custom--primario" (click)="toggleRutina()">
                     ir a mi rutina <i class="fa-solid fa-dumbbell"></i>
                   </button>
                 </article>
-                <div class="listado__crud" *ngIf="mostrarRutina">
+                @if (mostrarRutina) {
+                <div class="listado__crud">
                   <h3>Mi Rutina de Ejercicio</h3>
                   <ul>
-                    <li *ngFor="let habito of habitos">
-                      <ng-container
-                        *ngIf="
-                          habitoEnEdicion && habitoEnEdicion.id === habito.id;
-                          else mostrarHabito
-                        "
-                      >
-                        <div class="edicion__habito">
-                          <h4>
-                            {{ habitoEnEdicion.nombre }} -
-                            {{ habitoEnEdicion.tipo }}
-                          </h4>
-                          <div class="edicion__container">
-                            <input
-                              [(ngModel)]="habitoEnEdicion.metaDiaria"
-                              type="text"
-                            />
-                            <div class="acciones__edicion">
-                              <button
-                                class="btn__icono aceptar"
-                                (click)="guardarEdicion()"
-                              >
-                                <i class="fa-solid fa-check"></i>
-                              </button>
-                              <button
-                                class="btn__icono cancelar"
-                                (click)="cancelarEdicion()"
-                              >
-                                <i class="fa-solid fa-xmark"></i>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </ng-container>
-                      <ng-template #mostrarHabito>
-                        <div class="habito__display">
-                          <p>
-                            {{ habito.nombre }} - {{ habito.tipo }} -
-                            {{ habito.metaDiaria }}
-                          </p>
-                          <div class="crud__acciones">
-                            <button
-                              class="btn__icono editar"
-                              (click)="entrarEnModoEdicion(habito)"
-                            >
-                              <i class="fa-solid fa-pen-to-square"></i>
+                    @for (habito of habitos; track habito.id) {
+                    <li>
+                      @if (habitoEnEdicion && habitoEnEdicion.id === habito.id) {
+                      <div class="edicion__habito">
+                        <h4>
+                          {{ habitoEnEdicion.nombre }} -
+                          {{ habitoEnEdicion.tipo }}
+                        </h4>
+                        <div class="edicion__container">
+                          <input [(ngModel)]="habitoEnEdicion.metaDiaria" type="text" />
+                          <div class="acciones__edicion">
+                            <button class="btn__icono aceptar" (click)="guardarEdicion()">
+                              <i class="fa-solid fa-check"></i>
                             </button>
-                            <button
-                              class="btn__icono eliminar"
-                              (click)="eliminarHabito(habito.id)"
-                            >
+                            <button class="btn__icono cancelar" (click)="cancelarEdicion()">
                               <i class="fa-solid fa-xmark"></i>
                             </button>
                           </div>
                         </div>
-                      </ng-template>
+                      </div>
+
+                      } 
+                      
+                      @else {
+                      <div class="habito__display" [class.completado]="habito.completado">
+                        
+                        <p class="habito__texto">
+                          {{ habito.nombre }} - {{ habito.tipo }} -
+                          {{ habito.metaDiaria }}
+                        </p>
+                        
+                        <div class="crud__acciones">
+                            
+                            @if (!habito.completado) {
+                            <button class="btn__icono editar" (click)="entrarEnModoEdicion(habito)">
+                              <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn__icono eliminar" (click)="eliminarHabito(habito.id)">
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            }
+
+                            <label class="custom-checkbox-container" title="Marcar como completado">
+                                <input
+                                    type="checkbox"
+                                    [id]="'habito-check-' + habito.id"
+                                    [(ngModel)]="habito.completado"
+                                    (change)="marcarHabito(habito)"
+                                />
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                      </div>
+                      }
                     </li>
+                    }
+
+                    @empty {
+                    <li class="lista-vacia">No tienes hábitos agregados a tu rutina.</li>
+                    }
                   </ul>
                 </div>
+                }
                 <div class="contenido__ejercicios">
                   <article class="card__habito">
                     <h4 class="card__habito__titulo">Flexiones</h4>
@@ -150,23 +136,17 @@
                       resistencia.
                     </p>
                     <div class="card__habito__imagen">
-                      <img
-                        src="assets/flexiones.jpg"
-                        alt="Demostración de flexiones"
-                      />
+                      <img src="assets/flexiones.jpg" alt="Demostración de flexiones" />
                     </div>
                     <div class="card__habito__acciones">
-                      <button
-                        class="btn-custom btn-custom--primario"
-                        (click)="
+                      <button class="btn-custom btn-custom--primario" (click)="
                           agregarHabito(
                             'Flexiones',
                             'Ejercicio',
                             '100 repeticiones',
                             7
                           )
-                        "
-                      >
+                        ">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                     </div>
@@ -177,23 +157,17 @@
                       Realiza 100 abdominales diarias para fortalecer tu core.
                     </p>
                     <div class="card__habito__imagen">
-                      <img
-                        src="assets/abdominales.jpg"
-                        alt="Demostración de abdominales"
-                      />
+                      <img src="assets/abdominales.jpg" alt="Demostración de abdominales" />
                     </div>
                     <div class="card__habito__acciones">
-                      <button
-                        class="btn-custom btn-custom--primario"
-                        (click)="
+                      <button class="btn-custom btn-custom--primario" (click)="
                           agregarHabito(
                             'Abdominales',
                             'Ejercicio',
                             '100 repeticiones',
                             7
                           )
-                        "
-                      >
+                        ">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                     </div>
@@ -205,23 +179,17 @@
                       y glúteos.
                     </p>
                     <div class="card__habito__imagen">
-                      <img
-                        src="assets/sentadillas.jpg"
-                        alt="Demostración de sentadillas"
-                      />
+                      <img src="assets/sentadillas.jpg" alt="Demostración de sentadillas" />
                     </div>
                     <div class="card__habito__acciones">
-                      <button
-                        class="btn-custom btn-custom--primario"
-                        (click)="
+                      <button class="btn-custom btn-custom--primario" (click)="
                           agregarHabito(
                             'Sentadillas',
                             'Ejercicio',
                             '100 repeticiones',
                             7
                           )
-                        "
-                      >
+                        ">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                     </div>
@@ -233,18 +201,12 @@
                       cardiovascular.
                     </p>
                     <div class="card__habito__imagen">
-                      <img
-                        src="assets/correr.jpg"
-                        alt="Demostración de personas corriendo"
-                      />
+                      <img src="assets/correr.jpg" alt="Demostración de personas corriendo" />
                     </div>
                     <div class="card__habito__acciones">
-                      <button
-                        class="btn-custom btn-custom--primario"
-                        (click)="
+                      <button class="btn-custom btn-custom--primario" (click)="
                           agregarHabito('Correr', 'Ejercicio', '10 km', 5)
-                        "
-                      >
+                        ">
                         Agregar <i class="fa-solid fa-check"></i>
                       </button>
                     </div>
@@ -252,21 +214,17 @@
                 </div>
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'hidratacion'"
-                id="hidratacion"
-              >
+              <div class="tab-content" [class.active]="activeTab === 'hidratacion'" id="hidratacion">
                 <article class="card__presentacion__habito">
-                  <h3 class="card__presentacion__titulo">Hidratación</h3>
+                  <h3 class="card__presentacion__titulo">
+                    <i class="fa-solid fa-glass-water"></i> Hidratación
+                  </h3>
                   <p class="card__presentacion__descripcion">
                     Se recomienda que los adultos sanos consuman entre 1.5 y 2
                     litros de agua al día. Un vaso de agua estándar suele
                     equivaler a 250 ml (mililitros).
                   </p>
-                  <div class="card__presentacion__logo">
-                    <i class="fa-solid fa-glass-water"></i>
-                  </div>
+
                   <h4 class="card__habito__titulo">Mi Ingesta Diaria</h4>
                   <div class="card__habito__imagen__main">
                     <img src="assets/agua.jpg" alt="vaso con agua" />
@@ -280,13 +238,11 @@
                 </article>
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'alimentacion'"
-                id="alimentacion"
-              >
+              <div class="tab-content" [class.active]="activeTab === 'alimentacion'" id="alimentacion">
                 <article class="card__presentacion__habito">
-                  <h3 class="card__presentacion__titulo">Alimentación</h3>
+                  <h3 class="card__presentacion__titulo">
+                    <i class="fa-solid fa-utensils"></i> Alimentación
+                  </h3>
                   <p class="card__presentacion__descripcion">
                     Una dieta sana se define por la combinación equilibrada de
                     alimentos que aportan los nutrientes esenciales y la energía
@@ -295,9 +251,7 @@
                     (desayuno, almuerzo y cena) y, en algunos casos, incluir
                     colaciones intermedias.
                   </p>
-                  <div class="card__presentacion__logo">
-                    <i class="fa-solid fa-utensils"></i>
-                  </div>
+
                   <h4 class="card__habito__titulo">Mi Plan Nutricional</h4>
                   <div class="card__habito__imagen__main">
                     <img src="assets/comida.jpg" alt="mesa con comida" />
@@ -311,20 +265,16 @@
                 </article>
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'sueno'"
-                id="sueno"
-              >
+              <div class="tab-content" [class.active]="activeTab === 'sueno'" id="sueno">
                 <article class="card__presentacion__habito">
-                  <h3 class="card__presentacion__titulo">Sueño</h3>
+                  <h3 class="card__presentacion__titulo">
+                    <i class="fa-solid fa-bed"></i> Sueño
+                  </h3>
                   <p class="card__presentacion__descripcion">
                     En general, se recomienda que los adultos duerman entre 7 y
                     9 horas por noche para una buena salud y bienestar.
                   </p>
-                  <div class="card__presentacion__logo">
-                    <i class="fa-solid fa-bed"></i>
-                  </div>
+
                   <h4 class="card__habito__titulo">Mis Horas de Sueño</h4>
                   <div class="card__habito__imagen__main">
                     <img src="assets/sueno.jpg" alt="hombre durmiendo" />
