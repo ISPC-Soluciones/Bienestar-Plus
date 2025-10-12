@@ -8,12 +8,9 @@ from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum, F 
 from datetime import timedelta 
-<<<<<<< HEAD
-=======
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, ProgresoDiario, PerfilSalud
 
->>>>>>> a906cd896ad10e13520aeaf5f16b7e2036c0fa71
 
 from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles 
 from .serializers import (
@@ -24,8 +21,6 @@ from .serializers import (
     EjercicioSerializer, 
     RutinaEjercicioSerializer 
 )
-<<<<<<< HEAD
-=======
 class RegistroUsuarioView(APIView):
     def post(self, request):
         nombre = request.data.get('nombre')
@@ -77,7 +72,6 @@ class LoginUsuarioView(APIView):
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
 
->>>>>>> a906cd896ad10e13520aeaf5f16b7e2036c0fa71
 
 class ProgresoDiarioView(APIView):
     """
