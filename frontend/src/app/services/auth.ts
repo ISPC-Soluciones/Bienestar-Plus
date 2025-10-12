@@ -6,6 +6,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
+  // ==========================================================
+  // !!! PASO 1: EL INTERRUPTOR TEMPORAL !!!
+  // CÁMBIALO a 'false' CUANDO TERMINES TU TRABAJO.
+  private readonly IS_DEV_MODE = true;
+  // ==========================================================
+
   private userIdSource = new BehaviorSubject<number | null>(null);
   currentUserId$ = this.userIdSource.asObservable();
 

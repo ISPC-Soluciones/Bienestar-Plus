@@ -7,7 +7,8 @@ import { Habito } from '../models/habito.model';
   providedIn: 'root'
 })
 export class HabitosService {
-  private apiUrl = 'http://localhost:3000/habitos';
+  private apiUrl = 'http://localhost:3000/';
+  private progresoUrl = + 'progreso/';
 
   constructor(private http: HttpClient) {}
 
@@ -31,5 +32,17 @@ export class HabitosService {
   deleteHabito(id: number): Observable<void> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<void>(url);
+  }
+
+  getProgresoDiario(): Observable<Habito[]> {
+    return this.http.get<Habito[]>(this.progresoUrl + 'hoy/');
+  }
+
+  marcarHabitoComoCompletado(habitoId: Habito): Observable<Habito> {
+    const payload = {
+      habito_id: habitoId.id,
+      completado: habitoId.completado
+    };
+    return this.http.post<Habito>(this.progresoUrl + 'marcar/', payload);
   }
 }
