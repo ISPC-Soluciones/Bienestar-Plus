@@ -4,14 +4,14 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModul
 import { Usuario } from '../../models/perfil.model';
 import { PerfilService } from '../../services/perfil';
 import { Notificaciones, Notificacion } from '../../services/notificaciones';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProgresoService } from '../../services/progreso';
 
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css'],
 })
@@ -99,6 +99,19 @@ export class PerfilComponent implements OnInit {
     });
   }
 
+  get totalHabitos(): number {
+    return this.rutina?.length || 0;
+  }
+  
+  get habitosCompletados(): number {
+    return this.rutina?.filter(r => r.completado).length || 0;
+  }
+  
+  get porcentajeCompletado(): number {
+    if (!this.rutina?.length) return 0;
+    return (this.habitosCompletados / this.totalHabitos) * 100;
+  }
+  
   marcarHabito(id: number, completado: boolean) {
     this.progresoService.marcarCompletado(id, completado).subscribe({
       next: () => console.log('✅ Hábito actualizado'),
