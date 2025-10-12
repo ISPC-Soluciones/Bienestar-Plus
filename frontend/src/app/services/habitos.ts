@@ -7,42 +7,40 @@ import { Habito } from '../models/habito.model';
   providedIn: 'root'
 })
 export class HabitosService {
-  private apiUrl = 'http://localhost:3000/';
-  private progresoUrl = + 'progreso/';
+  private baseUrl = 'http://localhost:8000/api/';
+  private habitosUrl = this.baseUrl + 'habitos/';
+  private progresoUrl = this.baseUrl + 'progreso/';
 
   constructor(private http: HttpClient) {}
 
 
   getHabitos(): Observable<Habito[]> {
-    return this.http.get<Habito[]>(this.apiUrl);
+    return this.http.get<Habito[]>(this.habitosUrl);
   }
 
   createHabito(habito: Habito): Observable<Habito> {
     habito.createdAt = new Date().toISOString();
     habito.updatedAt = new Date().toISOString();
-    return this.http.post<Habito>(this.apiUrl, habito);
+    return this.http.post<Habito>(this.habitosUrl, habito);
   }
 
   updateHabito(habito: Habito): Observable<Habito> {
-    const url = `${this.apiUrl}/${habito.id}`;
+    const url = `${this.habitosUrl}${habito.id}/`;
     habito.updatedAt = new Date().toISOString();
     return this.http.put<Habito>(url, habito);
   }
   
   deleteHabito(id: number): Observable<void> {
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${this.habitosUrl}${id}/`;
     return this.http.delete<void>(url);
   }
 
-  getProgresoDiario(): Observable<Habito[]> {
-    return this.http.get<Habito[]>(this.progresoUrl + 'hoy/');
+  getProgresoDiario(usuarioId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.progresoUrl}?usuario_id=${usuarioId}`);
   }
 
-  marcarHabitoComoCompletado(habitoId: Habito): Observable<Habito> {
-    const payload = {
-      habito_id: habitoId.id,
-      completado: habitoId.completado
-    };
-    return this.http.post<Habito>(this.progresoUrl + 'marcar/', payload);
+  marcarHabitoComoCompletado(progresoId: number, completado: boolean): Observable<any> {
+    const payload = { progreso_id: progresoId, completado };
+    return this.http.patch<any>(this.progresoUrl, payload);
   }
 }

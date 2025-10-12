@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { Usuario } from '../../models/perfil.model';
 import { PerfilService } from '../../services/perfil';
 import { Notificaciones, Notificacion } from '../../services/notificaciones';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ProgresoService } from '../../services/progreso';
-
 
 @Component({
   selector: 'app-perfil',
@@ -25,8 +30,7 @@ export class PerfilComponent implements OnInit {
   // Modal
   modalAbierto = false;
   perfilForm: FormGroup;
-  rutina: any[] = []; 
-
+  rutina: any[] = [];
 
   constructor(
     private perfilService: PerfilService,
@@ -35,37 +39,51 @@ export class PerfilComponent implements OnInit {
     private notificacionesService: Notificaciones,
     private fb: FormBuilder
   ) {
-  
     this.perfilForm = this.fb.group({
-      peso: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      altura: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      peso: [
+        '',
+        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+      ],
+      altura: [
+        '',
+        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+      ],
       genero: ['', Validators.required],
       fecha_nacimiento: ['', Validators.required],
     });
   }
 
-
-  get pesoControl(): AbstractControl { return this.perfilForm.get('peso')!; }
-  get alturaControl(): AbstractControl { return this.perfilForm.get('altura')!; }
-  get generoControl(): AbstractControl { return this.perfilForm.get('genero')!; }
-  get fechaNacimientoControl(): AbstractControl { return this.perfilForm.get('fecha_nacimiento')!; }
+  get pesoControl(): AbstractControl {
+    return this.perfilForm.get('peso')!;
+  }
+  get alturaControl(): AbstractControl {
+    return this.perfilForm.get('altura')!;
+  }
+  get generoControl(): AbstractControl {
+    return this.perfilForm.get('genero')!;
+  }
+  get fechaNacimientoControl(): AbstractControl {
+    return this.perfilForm.get('fecha_nacimiento')!;
+  }
 
   ngOnInit(): void {
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
     this.loading = true;
-     // 2. Lee el 'id' de la URL de forma segura
+    // 2. Lee el 'id' de la URL de forma segura
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
 
       if (id) {
-         // 3. Pasa el id de la URL a tu servicio
+        // 3. Pasa el id de la URL a tu servicio
         this.perfilService.getUsuarioConHabitos(+id).subscribe({
           next: (u) => {
             this.usuario = u;
             this.loading = false;
 
-      
-            const fecha = new Date(u.fecha_nacimiento).toISOString().substring(0, 10);
+            const fecha = u.fecha_nacimiento
+              ? new Date(u.fecha_nacimiento).toISOString().substring(0, 10)
+              : '';
+
             this.perfilForm.setValue({
               peso: u.peso ?? '',
               altura: u.altura ?? '',
@@ -90,7 +108,7 @@ export class PerfilComponent implements OnInit {
   cargarProgreso(usuarioId: number) {
     this.progresoService.getProgresoDiario(usuarioId).subscribe({
       next: (progresos) => {
-        this.rutina = progresos; 
+        this.rutina = progresos;
         console.log('✅ Progreso diario:', progresos);
       },
       error: (err) => {
@@ -102,37 +120,42 @@ export class PerfilComponent implements OnInit {
   get totalHabitos(): number {
     return this.rutina?.length || 0;
   }
-  
+
   get habitosCompletados(): number {
-    return this.rutina?.filter(r => r.completado).length || 0;
+    return this.rutina?.filter((r) => r.completado).length || 0;
   }
-  
+
   get porcentajeCompletado(): number {
     if (!this.rutina?.length) return 0;
     return (this.habitosCompletados / this.totalHabitos) * 100;
   }
-  
-  marcarHabito(id: number, completado: boolean) {
+
+  marcarHabito(id: number, event: Event) {
+    const input = event.target as HTMLInputElement;
+    const completado = input.checked;
+
     this.progresoService.marcarCompletado(id, completado).subscribe({
       next: () => console.log('✅ Hábito actualizado'),
       error: (err) => console.error('Error al actualizar hábito', err),
     });
   }
-  
 
   // Modal
   abrirModal(): void {
     if (this.usuario) {
-      const fecha = new Date(this.usuario.fecha_nacimiento).toISOString().substring(0, 10);
+      const fecha = this.usuario.fecha_nacimiento
+        ? new Date(this.usuario.fecha_nacimiento).toISOString().substring(0, 10)
+        : '';
       this.perfilForm.setValue({
         peso: this.usuario.peso ?? '',
         altura: this.usuario.altura ?? '',
         genero: this.usuario.genero ?? '',
-        fecha_nacimiento: fecha ?? '',
+        fecha_nacimiento: fecha,
       });
     }
     this.modalAbierto = true;
   }
+  
 
   cerrarModal(): void {
     this.modalAbierto = false;

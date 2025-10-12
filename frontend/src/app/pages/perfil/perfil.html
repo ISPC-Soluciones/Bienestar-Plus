@@ -2,7 +2,7 @@
   <aside class="perfil__sidebar">
     <div class="usuario__info">
       <img
-        src="assets/img/user-default.png"
+        src="../../../../public/assets/user-default.png"
         alt="Foto de perfil"
         class="usuario__foto"
       />
@@ -51,7 +51,7 @@
           <input
             type="checkbox"
             [checked]="p.completado"
-            (change)="marcarHabito(p.id, $event.target.checked)"
+            (change)="marcarHabito(p.id, $event)"
           />
           <span [class.completado]="p.completado">{{ p.habito.nombre }}</span>
         </label>
