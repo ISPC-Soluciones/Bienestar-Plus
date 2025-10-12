@@ -9,7 +9,7 @@ import { LoginService, LoginData } from '../../services/login';
   selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrls: ['./login.css']
 })
 export class Login {
   private fb = inject(FormBuilder);
@@ -25,6 +25,9 @@ export class Login {
   errorMessage = '';
 
   onSubmit() {
+    
+    this.errorMessage = ''; 
+
     if (this.loginForm.valid) {
       const loginData: LoginData = {
         email: this.loginForm.value.email!,
@@ -33,16 +36,20 @@ export class Login {
 
       this.loginService.login(loginData).subscribe({
         next: (usuario) => {
-          if (usuario) {
-            console.log('Login exitoso:', usuario);
+          
+          if (usuario && typeof usuario.id === 'number') { 
+            console.log('Login exitoso. Navegando a /perfil con ID:', usuario.id);
             this.authService.login(usuario.id);
             this.router.navigate(['/perfil', usuario.id]);
           } else {
-            this.errorMessage = 'Email o contraseña incorrectos';
+       
+            this.errorMessage = 'Email o contraseña incorrectos.';
           }
         },
-        error: () => {
-          this.errorMessage = 'Error de conexión';
+        error: (err) => {
+  
+          console.error('Error de conexión o servidor:', err);
+          this.errorMessage = 'Error de conexión con el servidor. Intente más tarde.';
         }
       });
     } else {
