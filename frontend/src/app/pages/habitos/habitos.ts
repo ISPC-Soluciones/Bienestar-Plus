@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HabitosService } from '../../services/habitos';
+import { ProgresoService, ProgresoDiario } from '../../services/progreso';
 import { Habito } from '../../models/habito.model';
 
 @Component({
@@ -13,18 +14,22 @@ import { Habito } from '../../models/habito.model';
   styleUrls: ['./habitos.css'],
 })
 export class Habitos implements OnInit {
-marcarHabito(_t39: Habito) {
-throw new Error('Method not implemented.');
-}
+
   activeTab: string = 'ejercicio';
   habitos: Habito[] = [];
   mostrarRutina: boolean = false;
   habitoEnEdicion: Habito | null = null;
+  progresosDiarios: ProgresoDiario[] = [];
+  usuarioIdAutenticado: number = 1;
 
-  constructor(private habitosService: HabitosService) {}
+  constructor(
+    private habitosService: HabitosService,
+    private progresoService: ProgresoService
+  ) {}
 
   ngOnInit(): void {
     this.cargarHabitos();
+    this.cargarChecklistDiario();
   }
 
   setActiveTab(tabName: string): void {
@@ -44,9 +49,9 @@ throw new Error('Method not implemented.');
       },
       error: (err) => console.error('Error cargando hábitos:', err),
     });
-  } 
+  }
 
-/*  cargarHabitos(): void {
+  /*  cargarHabitos(): void {
         console.log('Cargando hábitos de prueba (Modo DEV)...');
         
         // --- DATOS DE PRUEBA MANUALES ---
@@ -114,7 +119,9 @@ throw new Error('Method not implemented.');
         next: (habitoActualizado) => {
           console.log('Hábito actualizado:', habitoActualizado);
           // Actualizamos la lista local
-          const index = this.habitos.findIndex(h => h.id === habitoActualizado.id);
+          const index = this.habitos.findIndex(
+            (h) => h.id === habitoActualizado.id
+          );
           if (index !== -1) {
             this.habitos[index] = habitoActualizado;
           }
@@ -134,10 +141,41 @@ throw new Error('Method not implemented.');
       this.habitosService.deleteHabito(id).subscribe({
         next: () => {
           console.log('Hábito eliminado');
-          this.habitos = this.habitos.filter(h => h.id !== id);
+          this.habitos = this.habitos.filter((h) => h.id !== id);
         },
         error: (err) => console.error('Error eliminando hábito:', err),
       });
     }
+  }
+
+  cargarChecklistDiario(): void {
+    console.log('Cargando checklist diario...');
+    // Llamar al nuevo método con el usuario ID (obtenido de tu sistema de auth)
+    this.progresoService.obtenerChecklist().subscribe({
+      next: (data) => {
+        console.log('Checklist recibido:', data);
+        // La respuesta es la lista de ProgresoDiario
+        this.progresosDiarios = data;
+      },
+      error: (err) => console.error('Error cargando checklist diario:', err),
+    });
+  }
+
+  marcarHabito(progreso: ProgresoDiario): void {
+    const nuevoEstado = progreso.completado; // El estado ya está en el modelo debido al [(ngModel)]
+
+    // Llama al servicio para persistir el cambio
+    this.progresoService.toggleCompletado(progreso.id, nuevoEstado).subscribe({
+      next: (data) => {
+        console.log('Progreso actualizado en el backend:', data);
+        // Opcional: El progreso en la lista ya está actualizado gracias al [(ngModel)]
+      },
+      error: (err) => {
+        console.error('Error al marcar hábito como completado:', err);
+        // Rollback: Revertir el estado si la llamada falla
+        progreso.completado = !nuevoEstado;
+        // Mostrar un mensaje de error al usuario
+      },
+    });
   }
 }
