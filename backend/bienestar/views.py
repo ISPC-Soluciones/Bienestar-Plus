@@ -19,32 +19,67 @@ from .serializers import (
     RutinaEjercicioSerializer 
 )
 
-class ProgresoDiarioView(APIView):
+class ProgresoDiarioChecklistView(APIView): # Renombrar para mayor claridad
     """
-    Vista para obtener el checklist del usuario.
-    GET /progreso/?usuario_id=<id>
+    Vista para obtener el checklist del usuario autenticado.
+    GET /api/progresos/checklist/
     """
-    # Nota: Aquí falta la autenticación, pero por ahora usamos el query_param
+    permission_classes = [IsAuthenticated] # Usa el usuario autenticado
+
     def get(self, request):
-        usuario_id = request.query_params.get("usuario_id")
+        usuario = request.user # Usar el usuario autenticado
         
-        if not usuario_id:
-            return Response(
-                {"error": "Falta el parámetro 'usuario_id'"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        # Opcional: Permitir la fecha como parámetro (ej: /progreso/checklist/?fecha=2025-10-14)
+        fecha_str = request.query_params.get("fecha")
+        fecha = None
+        if fecha_str:
+            try:
+                # Se asume formato YYYY-MM-DD
+                fecha = timezone.datetime.strptime(fecha_str, '%Y-%m-%d').date()
+            except ValueError:
+                return Response(
+                    {"error": "Formato de fecha inválido. Use YYYY-MM-DD."}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         
-        try:
-            usuario = Usuario.objects.get(pk=usuario_id)
-        except Usuario.DoesNotExist:
-            return Response(
-                {"error": "Usuario no encontrado"},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        
-        fecha = timezone.localdate()
+        # Si no se proporciona fecha, el manager usa timezone.localdate() por defecto.
         progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
         serializer = ProgresoDiarioSerializer(progresos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ProgresoDiarioToggleCompletadoView(APIView):
+    """
+    Permite cambiar el estado 'completado' de un ProgresoDiario específico.
+    PATCH /api/progresos/<progreso_id>/toggle/
+    """
+    permission_classes = [IsAuthenticated] # Asegúrate de tener autenticación
+
+    def patch(self, request, pk, format=None):
+        # 1. Buscar el objeto ProgresoDiario. Asegurar que pertenece al usuario autenticado.
+        try:
+            progreso = ProgresoDiario.objects.get(pk=pk, usuario=request.user)
+        except ProgresoDiario.DoesNotExist:
+            return Response(
+                {"error": "Progreso diario no encontrado o no autorizado."}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # 2. Obtener el nuevo estado 'completado' del cuerpo de la solicitud
+        nuevo_estado = request.data.get('completado')
+
+        if nuevo_estado is None or not isinstance(nuevo_estado, bool):
+             return Response(
+                {"error": "Debe enviar el campo 'completado' como booleano."}, 
+                status=status.HTTP_400_BAD_REQUEST
+             )
+
+        # 3. Actualizar y guardar
+        progreso.completado = nuevo_estado
+        progreso.save(update_fields=['completado']) # Optimizar la consulta a DB
+
+        # 4. Devolver el objeto actualizado
+        serializer = ProgresoDiarioSerializer(progreso)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
