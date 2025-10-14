@@ -1,12 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  AbstractControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { Usuario } from '../../models/perfil.model';
 import { PerfilService } from '../../services/perfil';
 import { Notificaciones, Notificacion } from '../../services/notificaciones';
@@ -27,10 +21,10 @@ export class PerfilComponent implements OnInit {
 
   listaDeNotificaciones: Notificacion[] = [];
 
-  // Modal
   modalAbierto = false;
   perfilForm: FormGroup;
-  rutina: any[] = [];
+
+  rutina: any[] = []; 
 
   constructor(
     private perfilService: PerfilService,
@@ -40,72 +34,56 @@ export class PerfilComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.perfilForm = this.fb.group({
-      peso: [
-        '',
-        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-      ],
-      altura: [
-        '',
-        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-      ],
+      peso: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      altura: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       genero: ['', Validators.required],
       fecha_nacimiento: ['', Validators.required],
     });
   }
 
-  get pesoControl(): AbstractControl {
-    return this.perfilForm.get('peso')!;
-  }
-  get alturaControl(): AbstractControl {
-    return this.perfilForm.get('altura')!;
-  }
-  get generoControl(): AbstractControl {
-    return this.perfilForm.get('genero')!;
-  }
-  get fechaNacimientoControl(): AbstractControl {
-    return this.perfilForm.get('fecha_nacimiento')!;
-  }
+  get pesoControl(): AbstractControl { return this.perfilForm.get('peso')!; }
+  get alturaControl(): AbstractControl { return this.perfilForm.get('altura')!; }
+  get generoControl(): AbstractControl { return this.perfilForm.get('genero')!; }
+  get fechaNacimientoControl(): AbstractControl { return this.perfilForm.get('fecha_nacimiento')!; }
 
   ngOnInit(): void {
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
     this.loading = true;
-    // 2. Lee el 'id' de la URL de forma segura
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
+      if (!id) {
+        this.error = 'No se encontró el ID del usuario en la URL.';
+        this.loading = false;
+        return;
+      }
 
-      if (id) {
-        // 3. Pasa el id de la URL a tu servicio
-        this.perfilService.getUsuarioConHabitos(+id).subscribe({
-          next: (u) => {
-            this.usuario = u;
-            this.loading = false;
+      this.perfilService.getUsuarioConHabitos(+id).subscribe({
+        next: (u) => {
+          this.usuario = u;
+          this.loading = false;
 
-            const fecha = u.fecha_nacimiento
-              ? new Date(u.fecha_nacimiento).toISOString().substring(0, 10)
-              : '';
-
+          if (u.fecha_nacimiento) {
+            const fecha = new Date(u.fecha_nacimiento).toISOString().substring(0, 10);
             this.perfilForm.setValue({
               peso: u.peso ?? '',
               altura: u.altura ?? '',
               genero: u.genero ?? '',
               fecha_nacimiento: fecha ?? '',
             });
+          }
 
-            this.cargarProgreso(+id);
-          },
-          error: (err) => {
-            this.error = 'No se pudo cargar el perfil';
-            this.loading = false;
-          },
-        });
-      } else {
-        this.error = 'No se encontró el ID del usuario en la URL.';
-        this.loading = false;
-      }
+          this.cargarProgreso(+id);
+        },
+        error: () => {
+          this.error = 'No se pudo cargar el perfil';
+          this.loading = false;
+        },
+      });
     });
   }
 
-  cargarProgreso(usuarioId: number) {
+  cargarProgreso(usuarioId: number): void {
     this.progresoService.getProgresoDiario(usuarioId).subscribe({
       next: (progresos) => {
         this.rutina = progresos;
@@ -130,32 +108,32 @@ export class PerfilComponent implements OnInit {
     return (this.habitosCompletados / this.totalHabitos) * 100;
   }
 
-  marcarHabito(id: number, event: Event) {
-    const input = event.target as HTMLInputElement;
-    const completado = input.checked;
+  onCheckboxChange(event: Event, id: number): void {
+    const target = event.target as HTMLInputElement | null;
+    if (!target) return;
+    const checked = target.checked;
+    this.marcarHabito(id, checked);
+  }
 
+  marcarHabito(id: number, completado: boolean): void {
     this.progresoService.marcarCompletado(id, completado).subscribe({
       next: () => console.log('✅ Hábito actualizado'),
       error: (err) => console.error('Error al actualizar hábito', err),
     });
   }
 
-  // Modal
   abrirModal(): void {
-    if (this.usuario) {
-      const fecha = this.usuario.fecha_nacimiento
-        ? new Date(this.usuario.fecha_nacimiento).toISOString().substring(0, 10)
-        : '';
+    if (this.usuario && this.usuario.fecha_nacimiento) {
+      const fecha = new Date(this.usuario.fecha_nacimiento).toISOString().substring(0, 10);
       this.perfilForm.setValue({
         peso: this.usuario.peso ?? '',
         altura: this.usuario.altura ?? '',
         genero: this.usuario.genero ?? '',
-        fecha_nacimiento: fecha,
+        fecha_nacimiento: fecha ?? '',
       });
     }
     this.modalAbierto = true;
   }
-  
 
   cerrarModal(): void {
     this.modalAbierto = false;
@@ -171,7 +149,6 @@ export class PerfilComponent implements OnInit {
     this.cerrarModal();
   }
 
-  // Notificaciones
   toggleNotificacion(id: number): void {
     this.notificacionesService.toggleNotificacion(id);
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();

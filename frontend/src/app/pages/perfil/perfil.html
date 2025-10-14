@@ -1,8 +1,9 @@
 <div class="perfil__container" *ngIf="usuario; else loadingTpl">
+
   <aside class="perfil__sidebar">
     <div class="usuario__info">
       <img
-        src="../../../../public/assets/user-default.png"
+        src="assets/user-default.png"
         alt="Foto de perfil"
         class="usuario__foto"
       />
@@ -22,13 +23,22 @@
   </aside>
 
   <section class="perfil__progreso">
-    <h2>Tu progreso diario</h2>
+    <h2>Tu progreso mensual y semanal</h2>
 
-    <div class="progreso__grafico">
-      <p *ngIf="rutina?.length">
-        {{ habitosCompletados }} de {{ totalHabitos }} hábitos completados
+    <div class="progreso__imagen">
+      <img src="assets/grafico_usuario_metricas.jpg" alt="Gráfico de progreso" />
+    </div>
+
+    
+  </section>
+
+  <section class="perfil__rutina">
+    <h2>Mi rutina de hoy</h2>
+    <div class="progreso__detalle">
+      <p>
+        <strong>{{ habitosCompletados }}</strong> de
+        <strong>{{ totalHabitos }}</strong> hábitos completados hoy.
       </p>
-
       <div class="barra__progreso">
         <div
           class="barra__relleno"
@@ -37,23 +47,17 @@
       </div>
     </div>
 
-    <div class="progreso__detalle">
-      <p>Seguí completando tus hábitos para mantener una buena salud 💪</p>
-    </div>
-  </section>
-
-  <section class="perfil__rutina">
-    <h2>Mi rutina de hoy</h2>
-
     <ul *ngIf="rutina?.length; else sinRutina">
-      <li *ngFor="let p of rutina">
+      <li *ngFor="let h of rutina">
         <label class="rutina__item">
           <input
             type="checkbox"
-            [checked]="p.completado"
-            (change)="marcarHabito(p.id, $event)"
+            [checked]="h.completado"
+            (change)="onCheckboxChange($event, h.id)"
           />
-          <span [class.completado]="p.completado">{{ p.habito.nombre }}</span>
+          <span [class.completado]="h.completado">
+            {{ h.habito_nombre || h.habito?.nombre }}
+          </span>
         </label>
       </li>
     </ul>
