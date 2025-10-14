@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UsuarioViewSet, PerfilSaludView, EstadisticasView, EjercicioViewSet,  RutinaEjercicioViewSet
+from .views import UsuarioViewSet, PerfilSaludView, EstadisticasView, EjercicioViewSet,  RutinaEjercicioViewSet, ProgresoDiarioChecklistView, ProgresoDiarioToggleCompletadoView
 router = DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 router.register(r'ejercicios', EjercicioViewSet, basename='ejercicio')
@@ -12,4 +12,8 @@ urlpatterns = [
     path('perfil-salud/<int:user_id>/', PerfilSaludView.as_view(), name='perfil-salud'), 
 
     path('estadisticas/', EstadisticasView.as_view(), name='estadisticas'),
+
+    path('progresos/checklist/', ProgresoDiarioChecklistView.as_view(), name='progresos-checklist'),
+    
+    path('progresos/<int:pk>/toggle/', ProgresoDiarioToggleCompletadoView.as_view(), name='progreso-toggle'),
 ]
