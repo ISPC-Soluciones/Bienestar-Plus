@@ -1,0 +1,43 @@
+<section class="news">
+
+    <div class="container py-5">
+
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h2>Mantente Informado: Últimas Noticias</h2>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div *ngIf="articles.length === 0" class="col-12 text-center">
+                <p>Cargando noticias...</p>
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <div *ngFor="let article of articles | slice:0:3" class="col-12 col-md-6 col-lg-4 mb-4">
+
+                <div class="card h-100">
+
+                    <ng-container *ngIf="article.urlToImage; else noImage">
+                        <img [src]="article.urlToImage" class="card-img-top" alt="Imagen de: {{ article.title }}">
+                    </ng-container>
+                    <ng-template #noImage>
+                        <img src="https://via.placeholder.com/400x200.png?text=Noticia" class="card-img-top" alt="Imagen no disponible">
+                    </ng-template>
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <p class="card-text flex-grow-1">{{ article.description }}</p>
+                        <a [href]="article.url" target="_blank" rel="noopener noreferrer" class="btn-custom btn-custom--primario">Leer Más</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
