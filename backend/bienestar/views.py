@@ -89,6 +89,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     """
     queryset = Usuario.objects.all()
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+    perfil_salud = PerfilSaludSerializer(read_only=True)
 
     def get_serializer_class(self):
         """Usa diferentes serializers según la acción"""
@@ -175,19 +176,18 @@ class PerfilSaludView(APIView):
         except PerfilSalud.DoesNotExist:
             perfil = None # Si no existe, se creará
             
-        data = request.data.copy()
+        #data = request.data.copy()
         # Se requiere asignar el usuario, aunque el serializador lo maneja al guardar
         # data['usuario'] = usuario.pk 
 
-        serializer = PerfilSaludSerializer(perfil, data=data)
+        serializer = PerfilSaludSerializer(perfil, data=request.data, context={'usuario': usuario})
         
         if serializer.is_valid():
-            # Al guardar, aseguramos la asignación del usuario para la relación 1:1
-            instance = serializer.save(usuario=usuario) 
-            return Response(
-                PerfilSaludSerializer(instance).data, 
-                status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
-            )
+        # ✅ El serializer ahora sabe a qué usuario asociar el perfil
+            instance = serializer.save()
+            return Response(PerfilSaludSerializer(instance).data,
+            status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
+             )
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -203,7 +203,7 @@ class PerfilSaludView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True)
+        serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True, context={'usuario': usuario})
         
         if serializer.is_valid():
             serializer.save()
