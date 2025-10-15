@@ -18,6 +18,14 @@ export interface Habito {
 /**
  * Modelo de usuario/perfil.
  */
+
+export interface PerfilSalud {
+  peso?: number;
+  altura?: number;
+  genero?: string;
+  fecha_nacimiento?: number;
+  imc?: number;
+}
 export interface Usuario {
   id: ID;
   nombre: string;
@@ -36,6 +44,8 @@ export interface Usuario {
   fecha_nacimiento:number
   peso?: number;         
   altura?: number;   
+  perfil_salud?: PerfilSalud;
+
 }
 
 /** DTO para crear usuario (request) */

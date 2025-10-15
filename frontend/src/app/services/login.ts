@@ -35,16 +35,15 @@ interface LoginApiResponse {
 export class LoginService {
   private http = inject(HttpClient);
   private apiUrl = 'http://127.0.0.1:8000/login/';
-  private usuariosUrl = 'http://127.0.0.1:8000/api/usuarios/';
+  /*private usuariosUrl = 'http://127.0.0.1:8000/api/usuarios/';*/
 
   login(loginData: LoginData): Observable<Usuario | null> { 
     return this.http.post<LoginApiResponse>(this.apiUrl, loginData).pipe(
       map(response => {
-        // Asegura que la estructura exista y tenga id numérico
         if (response?.success && response?.data?.id != null) {
           const usuarioConformado: Usuario = {
             id: response.data.id,
-            email: response.data.mail,   // ajusta si tu API usa 'email' en lugar de 'mail'
+            email: response.data.mail,   
             nombre: response.data.nombre
           };
           return usuarioConformado;
@@ -62,16 +61,8 @@ export class LoginService {
     );
   }
 
-  /**
-   * Obtiene todos los usuarios (para testing)
-   */
-  getUsuarios(): Observable<Usuario[]> {
-    // Si la API devuelve { data: Usuario[], success: boolean }, adapta así:
-    // return this.http.get<{ data: Usuario[]; success: boolean }>(this.usuariosUrl).pipe(
-    //   map(res => res?.data ?? [])
-    // );
-    // Por ahora asume que devuelve un array directo
+  /*getUsuarios(): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(this.usuariosUrl);
-  }
+  }*/
 }
 

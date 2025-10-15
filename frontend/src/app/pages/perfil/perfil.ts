@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import { Usuario } from '../../models/perfil.model';
-import { PerfilService } from '../../services/perfil';
-import { Notificaciones, Notificacion } from '../../services/notificaciones';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { PerfilService } from '../../services/perfil';
 import { ProgresoService } from '../../services/progreso';
+import { Notificaciones, Notificacion } from '../../services/notificaciones';
+import { Usuario, PerfilSalud } from '../../models/perfil.model';
 
 @Component({
   selector: 'app-perfil',
@@ -18,13 +18,12 @@ export class PerfilComponent implements OnInit {
   usuario?: Usuario;
   loading = false;
   error = '';
-
   listaDeNotificaciones: Notificacion[] = [];
-
   modalAbierto = false;
+
   perfilForm: FormGroup;
 
-  rutina: any[] = []; 
+  rutina: any[] = [];
 
   constructor(
     private perfilService: PerfilService,
@@ -41,67 +40,48 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  get pesoControl(): AbstractControl { return this.perfilForm.get('peso')!; }
-  get alturaControl(): AbstractControl { return this.perfilForm.get('altura')!; }
-  get generoControl(): AbstractControl { return this.perfilForm.get('genero')!; }
-  get fechaNacimientoControl(): AbstractControl { return this.perfilForm.get('fecha_nacimiento')!; }
-
   ngOnInit(): void {
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
     this.loading = true;
   
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-  
       if (id) {
-        // 🔹 Caso 1: viene por la URL
-        this.cargarPerfil(+id);
+        this.cargarPerfil(+id); // Trae del backend
       } else {
-        // 🔹 Caso 2: lo obtenemos del localStorage
         const usuarioGuardado = localStorage.getItem('usuario');
-    if (usuarioGuardado) {
-      this.usuario = JSON.parse(usuarioGuardado);
-    }
-
-    if (id) {
-      // ✅ Cargar datos actualizados del backend
-      this.cargarPerfil(+id);
-    } else if (this.usuario?.id) {
-      // ✅ Si no hay ID en la ruta, usar el del localStorage
-      this.cargarPerfil(Number(this.usuario.id));
-    } else {
-      this.error = 'No se encontró información del usuario.';
-    }
+        if (usuarioGuardado) {
+          this.usuario = JSON.parse(usuarioGuardado);
+          this.cargarPerfil(Number(this.usuario?.id)); // Siempre refrescar del backend
+        } else {
+          this.error = 'No se encontró información del usuario.';
+          this.loading = false;
+        }
       }
     });
   }
   
+
   private cargarPerfil(id: number): void {
-    console.log('🟦 Cargando perfil para ID:', id);
-  
     this.perfilService.getUsuarioConHabitos(id).subscribe({
-      next: (u) => {
-        console.log('🟩 Respuesta del backend:', u);
-  
-        // ✅ Adaptar la estructura si viene envuelta en { success, data }
-        const usuarioData = (u as any)?.data ? (u as any).data : u;
-  
-        this.usuario = { ...this.usuario, ...usuarioData };
-        this.loading = false;
-  
-        if (usuarioData.fecha_nacimiento) {
-          const fecha = new Date(usuarioData.fecha_nacimiento)
-            .toISOString()
-            .substring(0, 10);
+      next: (res) => {
+        const usuarioData: Usuario = (res as any)?.data ? (res as any).data : res;
+        this.usuario = usuarioData;
+
+        const salud: PerfilSalud | undefined = usuarioData.perfil_salud;
+        if (salud) {
           this.perfilForm.setValue({
-            peso: usuarioData.peso ?? '',
-            altura: usuarioData.altura ?? '',
-            genero: usuarioData.genero ?? '',
-            fecha_nacimiento: fecha ?? '',
+            peso: salud.peso ?? '',
+            altura: salud.altura ?? '',
+            genero: salud.genero ?? '',
+            fecha_nacimiento: salud.fecha_nacimiento
+              ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
+              : '',
           });
         }
-  
-        this.cargarProgreso(id);
+
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
+        this.loading = false;
       },
       error: () => {
         this.error = 'No se pudo cargar el perfil';
@@ -109,20 +89,72 @@ export class PerfilComponent implements OnInit {
       },
     });
   }
-  
 
-  cargarProgreso(usuarioId: number): void {
-    this.progresoService.getProgresoDiario(usuarioId).subscribe({
-      next: (progresos) => {
-        this.rutina = progresos;
-        console.log('✅ Progreso diario:', progresos);
+  abrirModal(): void {
+    if (!this.usuario) return;
+
+    const salud = this.usuario.perfil_salud;
+    this.perfilForm.setValue({
+      peso: salud?.peso ?? '',
+      altura: salud?.altura ?? '',
+      genero: salud?.genero ?? '',
+      fecha_nacimiento: salud?.fecha_nacimiento
+        ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
+        : '',
+    });
+    this.modalAbierto = true;
+  }
+
+  cerrarModal(): void {
+    this.modalAbierto = false;
+  }
+
+  guardarPerfil(): void {
+    if (!this.usuario || this.perfilForm.invalid) {
+      this.perfilForm.markAllAsTouched();
+      return;
+    }
+
+    const datos = { ...this.perfilForm.value };
+
+if (datos.peso) datos.peso = Number(datos.peso);
+if (datos.altura) datos.altura = Number(datos.altura);
+
+if (datos.fecha_nacimiento) {
+  datos.fecha_nacimiento = new Date(datos.fecha_nacimiento)
+    .toISOString()
+    .substring(0, 10);
+}
+
+
+    this.perfilService.updatePerfilSalud(Number(this.usuario.id), datos).subscribe({
+      next: (perfilActualizado: PerfilSalud) => {
+        console.log('✅ Perfil actualizado:', perfilActualizado);
+
+        // Actualizamos solo perfil_salud
+        this.usuario = {
+          ...this.usuario!,
+          perfil_salud: perfilActualizado
+        };
+
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
+        this.cerrarModal();
       },
       error: (err) => {
-        console.error('Error al obtener progreso diario', err);
+        console.error('❌ Error al actualizar perfil de salud:', err);
+        alert('Hubo un error al actualizar el perfil. Verifica los datos ingresados.');
       },
     });
   }
 
+  cargarProgreso(usuarioId: number): void {
+    this.progresoService.getProgresoDiario(usuarioId).subscribe({
+      next: (res) => (this.rutina = res),
+      error: (err) => console.error('Error al obtener progreso diario', err),
+    });
+  }
+
+  // Funciones de progreso
   get totalHabitos(): number {
     return this.rutina?.length || 0;
   }
@@ -137,10 +169,9 @@ export class PerfilComponent implements OnInit {
   }
 
   onCheckboxChange(event: Event, id: number): void {
-    const target = event.target as HTMLInputElement | null;
+    const target = event.target as HTMLInputElement;
     if (!target) return;
-    const checked = target.checked;
-    this.marcarHabito(id, checked);
+    this.marcarHabito(id, target.checked);
   }
 
   marcarHabito(id: number, completado: boolean): void {
@@ -149,43 +180,6 @@ export class PerfilComponent implements OnInit {
       error: (err) => console.error('Error al actualizar hábito', err),
     });
   }
-
-  abrirModal(): void {
-    if (this.usuario && this.usuario.fecha_nacimiento) {
-      const fecha = new Date(this.usuario.fecha_nacimiento).toISOString().substring(0, 10);
-      this.perfilForm.setValue({
-        peso: this.usuario.peso ?? '',
-        altura: this.usuario.altura ?? '',
-        genero: this.usuario.genero ?? '',
-        fecha_nacimiento: fecha ?? '',
-      });
-    }
-    this.modalAbierto = true;
-  }
-
-  cerrarModal(): void {
-    this.modalAbierto = false;
-  }
-
-  guardarPerfil(): void {
-    if (this.perfilForm.invalid || !this.usuario) {
-      this.perfilForm.markAllAsTouched();
-      return;
-    }
-  
-    const datos = this.perfilForm.value;
-  
-    this.perfilService.updatePerfilSalud(Number(this.usuario.id), datos).subscribe({
-      next: (resp) => {
-        console.log('✅ Perfil de salud actualizado:', resp);
-        this.cerrarModal();
-      },
-      error: (err) => {
-        console.error('❌ Error al actualizar perfil de salud:', err);
-      },
-    });
-  }
-  
 
   toggleNotificacion(id: number): void {
     this.notificacionesService.toggleNotificacion(id);
