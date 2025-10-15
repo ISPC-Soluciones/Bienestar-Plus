@@ -25,29 +25,29 @@ export class Login {
   errorMessage = '';
 
   onSubmit() {
-    
     this.errorMessage = ''; 
-
+  
     if (this.loginForm.valid) {
       const loginData: LoginData = {
         email: this.loginForm.value.email!,
         password: this.loginForm.value.password!
       };
-
+  
       this.loginService.login(loginData).subscribe({
         next: (usuario) => {
-          
-          if (usuario && typeof usuario.id === 'number') { 
+          if (usuario && typeof usuario.id === 'number') {
             console.log('Login exitoso. Navegando a /perfil con ID:', usuario.id);
+  
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+  
             this.authService.login(usuario.id);
+
             this.router.navigate(['/perfil', usuario.id]);
           } else {
-       
             this.errorMessage = 'Email o contraseña incorrectos.';
           }
         },
         error: (err) => {
-  
           console.error('Error de conexión o servidor:', err);
           this.errorMessage = 'Error de conexión con el servidor. Intente más tarde.';
         }

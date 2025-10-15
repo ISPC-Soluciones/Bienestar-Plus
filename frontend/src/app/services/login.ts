@@ -37,38 +37,25 @@ export class LoginService {
   private apiUrl = 'http://127.0.0.1:8000/login/';
   private usuariosUrl = 'http://127.0.0.1:8000/api/usuarios/';
 
-  
   login(loginData: LoginData): Observable<Usuario | null> { 
-  
     return this.http.post<LoginApiResponse>(this.apiUrl, loginData).pipe(
-      
-      
       map(response => {
-
-
-          if (response.success && response.data && typeof response.data.id === 'number') {
-              
-      const usuarioConformado: Usuario = {
-                  id: response.data.id,
-                  email: response.data.mail,
-                  nombre: response.data.nombre,
-                
-              };
-              return usuarioConformado;
-          }
-      
-          return null;
+        // Asegura que la estructura exista y tenga id numérico
+        if (response?.success && response?.data?.id != null) {
+          const usuarioConformado: Usuario = {
+            id: response.data.id,
+            email: response.data.mail,   // ajusta si tu API usa 'email' en lugar de 'mail'
+            nombre: response.data.nombre
+          };
+          return usuarioConformado;
+        }
+        return null;
       }),
-
-      
       catchError((error: HttpErrorResponse) => {
-
         if (error.status === 401 || error.status === 403) {
           console.warn('LoginService: Credenciales inválidas. Devolviendo null.', error.status);
           return of(null); 
         }
-
-   
         console.error('LoginService: Error grave de conexión o servidor.', error);
         return throwError(() => error);
       })
@@ -79,6 +66,12 @@ export class LoginService {
    * Obtiene todos los usuarios (para testing)
    */
   getUsuarios(): Observable<Usuario[]> {
+    // Si la API devuelve { data: Usuario[], success: boolean }, adapta así:
+    // return this.http.get<{ data: Usuario[]; success: boolean }>(this.usuariosUrl).pipe(
+    //   map(res => res?.data ?? [])
+    // );
+    // Por ahora asume que devuelve un array directo
     return this.http.get<Usuario[]>(this.usuariosUrl);
   }
 }
+

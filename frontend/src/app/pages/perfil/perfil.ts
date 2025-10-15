@@ -49,39 +49,67 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
     this.loading = true;
-
+  
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-      if (!id) {
-        this.error = 'No se encontró el ID del usuario en la URL.';
-        this.loading = false;
-        return;
+  
+      if (id) {
+        // 🔹 Caso 1: viene por la URL
+        this.cargarPerfil(+id);
+      } else {
+        // 🔹 Caso 2: lo obtenemos del localStorage
+        const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      this.usuario = JSON.parse(usuarioGuardado);
+    }
+
+    if (id) {
+      // ✅ Cargar datos actualizados del backend
+      this.cargarPerfil(+id);
+    } else if (this.usuario?.id) {
+      // ✅ Si no hay ID en la ruta, usar el del localStorage
+      this.cargarPerfil(Number(this.usuario.id));
+    } else {
+      this.error = 'No se encontró información del usuario.';
+    }
       }
-
-      this.perfilService.getUsuarioConHabitos(+id).subscribe({
-        next: (u) => {
-          this.usuario = u;
-          this.loading = false;
-
-          if (u.fecha_nacimiento) {
-            const fecha = new Date(u.fecha_nacimiento).toISOString().substring(0, 10);
-            this.perfilForm.setValue({
-              peso: u.peso ?? '',
-              altura: u.altura ?? '',
-              genero: u.genero ?? '',
-              fecha_nacimiento: fecha ?? '',
-            });
-          }
-
-          this.cargarProgreso(+id);
-        },
-        error: () => {
-          this.error = 'No se pudo cargar el perfil';
-          this.loading = false;
-        },
-      });
     });
   }
+  
+  private cargarPerfil(id: number): void {
+    console.log('🟦 Cargando perfil para ID:', id);
+  
+    this.perfilService.getUsuarioConHabitos(id).subscribe({
+      next: (u) => {
+        console.log('🟩 Respuesta del backend:', u);
+  
+        // ✅ Adaptar la estructura si viene envuelta en { success, data }
+        const usuarioData = (u as any)?.data ? (u as any).data : u;
+  
+        this.usuario = { ...this.usuario, ...usuarioData };
+        this.loading = false;
+  
+        if (usuarioData.fecha_nacimiento) {
+          const fecha = new Date(usuarioData.fecha_nacimiento)
+            .toISOString()
+            .substring(0, 10);
+          this.perfilForm.setValue({
+            peso: usuarioData.peso ?? '',
+            altura: usuarioData.altura ?? '',
+            genero: usuarioData.genero ?? '',
+            fecha_nacimiento: fecha ?? '',
+          });
+        }
+  
+        this.cargarProgreso(id);
+      },
+      error: () => {
+        this.error = 'No se pudo cargar el perfil';
+        this.loading = false;
+      },
+    });
+  }
+  
 
   cargarProgreso(usuarioId: number): void {
     this.progresoService.getProgresoDiario(usuarioId).subscribe({
