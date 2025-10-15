@@ -247,9 +247,8 @@ class ProgresoDiario(models.Model):
     """
     Representa el progreso de un hábito en un día específico por usuario.
     """
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, 
-                                on_delete=models.CASCADE, 
-                                related_name="progresos")
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="progresos")
+
     habito = models.ForeignKey(Habito, on_delete=models.CASCADE, 
                                related_name="progresos")
     fecha = models.DateField(auto_now_add=True)
