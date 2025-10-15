@@ -35,11 +35,11 @@
                 </button>
                 <button class="tab-button" [class.active]="activeTab === 'hidratacion'"
                   (click)="setActiveTab('hidratacion')">
-                 <i class="fa-solid fa-glass-water"></i> Hidratación
+                  <i class="fa-solid fa-glass-water"></i> Hidratación
                 </button>
                 <button class="tab-button" [class.active]="activeTab === 'alimentacion'"
                   (click)="setActiveTab('alimentacion')">
-                 <i class="fa-solid fa-utensils"></i> Alimentación
+                  <i class="fa-solid fa-utensils"></i> Alimentación
                 </button>
                 <button class="tab-button" [class.active]="activeTab === 'sueno'" (click)="setActiveTab('sueno')">
                   <i class="fa-solid fa-bed"></i> Sueño
@@ -63,67 +63,29 @@
                 </article>
                 @if (mostrarRutina) {
                 <div class="listado__crud">
-                  <h3>Mi Rutina de Ejercicio</h3>
+                  <h3>Mi Checklist Diario</h3>
                   <ul>
-                    @for (habito of habitos; track habito.id) {
+                    @for (progreso of progresosDiarios; track progreso.id) {
                     <li>
-                      @if (habitoEnEdicion && habitoEnEdicion.id === habito.id) {
-                      <div class="edicion__habito">
-                        <h4>
-                          {{ habitoEnEdicion.nombre }} -
-                          {{ habitoEnEdicion.tipo }}
-                        </h4>
-                        <div class="edicion__container">
-                          <input [(ngModel)]="habitoEnEdicion.metaDiaria" type="text" />
-                          <div class="acciones__edicion">
-                            <button class="btn__icono aceptar" (click)="guardarEdicion()">
-                              <i class="fa-solid fa-check"></i>
-                            </button>
-                            <button class="btn__icono cancelar" (click)="cancelarEdicion()">
-                              <i class="fa-solid fa-xmark"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <div class="habito__display" [class.completado]="progreso.completado">
 
-                      } 
-                      
-                      @else {
-                      <div class="habito__display" [class.completado]="habito.completado">
-                        
                         <p class="habito__texto">
-                          {{ habito.nombre }} - {{ habito.tipo }} -
-                          {{ habito.metaDiaria }}
+                          {{ progreso.habito.nombre }}
                         </p>
-                        
-                        <div class="crud__acciones">
-                            
-                            @if (!habito.completado) {
-                            <button class="btn__icono editar" (click)="entrarEnModoEdicion(habito)">
-                              <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button class="btn__icono eliminar" (click)="eliminarHabito(habito.id)">
-                              <i class="fa-solid fa-xmark"></i>
-                            </button>
-                            }
 
-                            <label class="custom-checkbox-container" title="Marcar como completado">
-                                <input
-                                    type="checkbox"
-                                    [id]="'habito-check-' + habito.id"
-                                    [(ngModel)]="habito.completado"
-                                    (change)="marcarHabito(habito)"
-                                />
-                                <span class="checkmark"></span>
-                            </label>
+                        <div class="crud__acciones">
+                          <label class="custom-checkbox-container" title="Marcar como completado">
+                            <input type="checkbox" [id]="'progreso-check-' + progreso.id"
+                              [(ngModel)]="progreso.completado" (change)="marcarHabito(progreso)" />
+                            <span class="checkmark"></span>
+                          </label>
                         </div>
                       </div>
-                      }
                     </li>
                     }
 
                     @empty {
-                    <li class="lista-vacia">No tienes hábitos agregados a tu rutina.</li>
+                    <li class="lista-vacia">No hay hábitos definidos para tu checklist de hoy.</li>
                     }
                   </ul>
                 </div>
