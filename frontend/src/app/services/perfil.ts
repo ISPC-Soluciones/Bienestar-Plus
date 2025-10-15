@@ -22,6 +22,15 @@ export class PerfilService {
       .join('&');
     return this.http.get<Habito[]>(`${this.base}/habitos?${qs}`);
   }
+    /** Actualiza datos personales (nombre, mail, foto) */
+    updateUsuario(id: number, data: FormData | any): Observable<any> {
+      return this.http.patch(`${this.base}/usuarios/${id}/`, data);
+    }
+  
+    /** Actualiza datos del perfil de salud (peso, altura, genero, fecha nacimiento) */
+    updatePerfilSalud(id: number, data: any): Observable<any> {
+      return this.http.put(`${this.base}/perfil-salud/${id}/`, data);
+    }
 
   // Devuelve el usuario, y si trae habitosIds los reemplaza por habitos[]
   getUsuarioConHabitos(id: ID): Observable<Usuario> {

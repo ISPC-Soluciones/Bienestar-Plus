@@ -140,14 +140,24 @@ export class PerfilComponent implements OnInit {
   }
 
   guardarPerfil(): void {
-    if (this.perfilForm.invalid) {
+    if (this.perfilForm.invalid || !this.usuario) {
       this.perfilForm.markAllAsTouched();
       return;
     }
-    const formValue = this.perfilForm.value;
-    console.log('Perfil guardado:', formValue);
-    this.cerrarModal();
+  
+    const datos = this.perfilForm.value;
+  
+    this.perfilService.updatePerfilSalud(Number(this.usuario.id), datos).subscribe({
+      next: (resp) => {
+        console.log('✅ Perfil de salud actualizado:', resp);
+        this.cerrarModal();
+      },
+      error: (err) => {
+        console.error('❌ Error al actualizar perfil de salud:', err);
+      },
+    });
   }
+  
 
   toggleNotificacion(id: number): void {
     this.notificacionesService.toggleNotificacion(id);

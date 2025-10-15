@@ -7,7 +7,7 @@
         alt="Foto de perfil"
         class="usuario__foto"
       />
-      <h2>{{ usuario.nombre }}</h2>
+      <h2>Hola, {{ usuario.nombre }}</h2>
       <p>{{ usuario.email }}</p>
       <button (click)="abrirModal()">Editar perfil</button>
     </div>
@@ -71,3 +71,43 @@
 <ng-template #loadingTpl>
   <p class="loading">Cargando perfil...</p>
 </ng-template>
+
+<!-- 🧾 Modal de edición de perfil -->
+<div class="modal__overlay" *ngIf="modalAbierto">
+  <div class="modal__content">
+    <h2>Editar perfil</h2>
+
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
+      <div class="form__group">
+        <label for="peso">Peso (kg)</label>
+        <input id="peso" type="number" formControlName="peso" />
+      </div>
+
+      <div class="form__group">
+        <label for="altura">Altura (cm)</label>
+        <input id="altura" type="number" formControlName="altura" />
+      </div>
+
+      <div class="form__group">
+        <label for="genero">Género</label>
+        <select id="genero" formControlName="genero">
+          <option value="">Seleccione...</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Otro</option>
+        </select>
+      </div>
+
+      <div class="form__group">
+        <label for="fecha_nacimiento">Fecha de nacimiento</label>
+        <input id="fecha_nacimiento" type="date" formControlName="fecha_nacimiento" />
+      </div>
+
+      <div class="modal__acciones">
+        <button type="submit" [disabled]="perfilForm.invalid">Guardar</button>
+        <button type="button" (click)="cerrarModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+

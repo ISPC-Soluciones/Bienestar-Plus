@@ -13,6 +13,45 @@
     grid-template-columns: 1fr;
   }
 }
+.perfil__saludo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2f855a;
+}
+
+.perfil__saludo h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal__content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+}
+
+.form__group {
+  margin-bottom: 1rem;
+}
+
+.modal__acciones {
+  display: flex;
+  justify-content: space-between;
+}
 
 /* === COLUMNA IZQUIERDA (Perfil del usuario) === */
 .perfil__sidebar {
