@@ -1,258 +1,73 @@
-<!DOCTYPE html>
-<main class="mis-habitos">
-  <section class="rutinas">
-    <div class="container__habitos">
-      <div class="container__btn__cerrar__sesion">
-        <a routerLink="/" class="btn-custom btn-custom--rojo">
-          Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
-        </a>
-      </div>
-      <div class="container__titulo__habitos">
-        <h1>Hábitos de <span>Cosme</span></h1>
-      </div>
-      <div class="container__parrafo__habitos">
-        <p class="texto__parrafo__habitos">
-          Aquí puedes ver y gestionar tus hábitos, evaluar tu progreso y
-          modificar tus rutinas, para lograr los mejores resultados. Recuerda
-          que cada pequeño paso cuenta en tu camino hacia una vida más
-          saludable. ¡Sigue adelante!
-        </p>
-      </div>
-      <div class="container__habitos__usuario">
-        <div class="container__listado__habitos">
-          <h2>Rutinas</h2>
-          <p class="parrafo__rutinas">
-            Hábitos que has seleccionado para mejorar tu bienestar.
-          </p>
-        </div>
-        <div class="container__rutinas">
-          <div class="container__tabs__rutinas">
-            <div class="tabs">
-              <div class="tab-buttons">
-                <button class="tab-button" [class.active]="activeTab === 'ejercicio'"
-                  (click)="setActiveTab('ejercicio')">
-                  <i class="fa-solid fa-person-running"></i> Ejercicio
-                </button>
-                <button class="tab-button" [class.active]="activeTab === 'hidratacion'"
-                  (click)="setActiveTab('hidratacion')">
-                  <i class="fa-solid fa-glass-water"></i> Hidratación
-                </button>
-                <button class="tab-button" [class.active]="activeTab === 'alimentacion'"
-                  (click)="setActiveTab('alimentacion')">
-                  <i class="fa-solid fa-utensils"></i> Alimentación
-                </button>
-                <button class="tab-button" [class.active]="activeTab === 'sueno'" (click)="setActiveTab('sueno')">
-                  <i class="fa-solid fa-bed"></i> Sueño
-                </button>
-              </div>
+<!-- src/app/pages/habitos/habitos.html -->
+<section class="habitos-container">
+  <div class="header">
+    <h1>Mis hábitos</h1>
+    <p class="subtitulo">Checklist diario — marca lo que completaste</p>
+  </div>
 
-              <div class="tab-content" [class.active]="activeTab === 'ejercicio'" id="ejercicio">
-                <article class="card__presentacion__habito">
+  <p *ngIf="cargando" class="info">Cargando hábitos...</p>
+  <p *ngIf="error" class="error">{{ error }}</p>
 
-                  <h3 class="card__presentacion__titulo">
-                    <i class="fa-solid fa-person-running"></i> Ejercicio
-                  </h3>
-                  <p class="card__presentacion__descripcion">
-                    Tu rutina de ejercicio actual. Puedes modificarla para que
-                    se ajuste a tus necesidades.
-                  </p>
+  <ul *ngIf="!cargando && !error && progresos.length > 0" class="lista-habitos">
+    <li *ngFor="let progreso of progresos" class="item-habito">
+      <label class="habito-label">
+        <input
+          type="checkbox"
+          [checked]="progreso.completado"
+          (change)="alternarCompletado(progreso)"
+        />
+        <span [class.completado]="progreso.completado">{{ progreso.habito.nombre }}</span>
+      </label>
+    </li>
+  </ul>
 
-                  <button class="btn-custom btn-custom--primario" (click)="toggleRutina()">
-                    ir a mi rutina <i class="fa-solid fa-dumbbell"></i>
-                  </button>
-                </article>
-                @if (mostrarRutina) {
-                <div class="listado__crud">
-                  <h3>Mi Checklist Diario</h3>
-                  <ul>
-                    @for (progreso of progresosDiarios; track progreso.id) {
-                    <li>
-                      <div class="habito__display" [class.completado]="progreso.completado">
+  <p *ngIf="!cargando && !error && progresos.length === 0" class="info">
+    No hay hábitos definidos para tu checklist de hoy.
+  </p>
+</section>
+<hr />
+<h2>Ejercicios disponibles</h2>
 
-                        <p class="habito__texto">
-                          {{ progreso.habito.nombre }}
-                        </p>
-
-                        <div class="crud__acciones">
-                          <label class="custom-checkbox-container" title="Marcar como completado">
-                            <input type="checkbox" [id]="'progreso-check-' + progreso.id"
-                              [(ngModel)]="progreso.completado" (change)="marcarHabito(progreso)" />
-                            <span class="checkmark"></span>
-                          </label>
-                        </div>
-                      </div>
-                    </li>
-                    }
-
-                    @empty {
-                    <li class="lista-vacia">No hay hábitos definidos para tu checklist de hoy.</li>
-                    }
-                  </ul>
-                </div>
-                }
-                <div class="contenido__ejercicios">
-                  <article class="card__habito">
-                    <h4 class="card__habito__titulo">Flexiones</h4>
-                    <p class="card__habito__descripcion">
-                      Realiza 100 flexiones diarias para mejorar tu fuerza y
-                      resistencia.
-                    </p>
-                    <div class="card__habito__imagen">
-                      <img src="assets/flexiones.jpg" alt="Demostración de flexiones" />
-                    </div>
-                    <div class="card__habito__acciones">
-                      <button class="btn-custom btn-custom--primario" (click)="
-                          agregarHabito(
-                            'Flexiones',
-                            'Ejercicio',
-                            '100 repeticiones',
-                            7
-                          )
-                        ">
-                        Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                    </div>
-                  </article>
-                  <article class="card__habito">
-                    <h4 class="card__habito__titulo">Abdominales</h4>
-                    <p class="card__habito__descripcion">
-                      Realiza 100 abdominales diarias para fortalecer tu core.
-                    </p>
-                    <div class="card__habito__imagen">
-                      <img src="assets/abdominales.jpg" alt="Demostración de abdominales" />
-                    </div>
-                    <div class="card__habito__acciones">
-                      <button class="btn-custom btn-custom--primario" (click)="
-                          agregarHabito(
-                            'Abdominales',
-                            'Ejercicio',
-                            '100 repeticiones',
-                            7
-                          )
-                        ">
-                        Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                    </div>
-                  </article>
-                  <article class="card__habito">
-                    <h4 class="card__habito__titulo">Sentadillas</h4>
-                    <p class="card__habito__descripcion">
-                      Realiza 100 sentadillas diarias para tonificar tus piernas
-                      y glúteos.
-                    </p>
-                    <div class="card__habito__imagen">
-                      <img src="assets/sentadillas.jpg" alt="Demostración de sentadillas" />
-                    </div>
-                    <div class="card__habito__acciones">
-                      <button class="btn-custom btn-custom--primario" (click)="
-                          agregarHabito(
-                            'Sentadillas',
-                            'Ejercicio',
-                            '100 repeticiones',
-                            7
-                          )
-                        ">
-                        Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                    </div>
-                  </article>
-                  <article class="card__habito">
-                    <h4 class="card__habito__titulo">Correr</h4>
-                    <p class="card__habito__descripcion">
-                      Correr 10 km diarios para mejorar tu resistencia
-                      cardiovascular.
-                    </p>
-                    <div class="card__habito__imagen">
-                      <img src="assets/correr.jpg" alt="Demostración de personas corriendo" />
-                    </div>
-                    <div class="card__habito__acciones">
-                      <button class="btn-custom btn-custom--primario" (click)="
-                          agregarHabito('Correr', 'Ejercicio', '10 km', 5)
-                        ">
-                        Agregar <i class="fa-solid fa-check"></i>
-                      </button>
-                    </div>
-                  </article>
-                </div>
-              </div>
-
-              <div class="tab-content" [class.active]="activeTab === 'hidratacion'" id="hidratacion">
-                <article class="card__presentacion__habito">
-                  <h3 class="card__presentacion__titulo">
-                    <i class="fa-solid fa-glass-water"></i> Hidratación
-                  </h3>
-                  <p class="card__presentacion__descripcion">
-                    Se recomienda que los adultos sanos consuman entre 1.5 y 2
-                    litros de agua al día. Un vaso de agua estándar suele
-                    equivaler a 250 ml (mililitros).
-                  </p>
-
-                  <h4 class="card__habito__titulo">Mi Ingesta Diaria</h4>
-                  <div class="card__habito__imagen__main">
-                    <img src="assets/agua.jpg" alt="vaso con agua" />
-                  </div>
-                  <div class="card__habito__acciones">
-                    <button class="btn-custom btn-custom--primario">
-                      Agregar un vaso de agua bebido
-                      <i class="fa-solid fa-plus"></i>
-                    </button>
-                  </div>
-                </article>
-              </div>
-
-              <div class="tab-content" [class.active]="activeTab === 'alimentacion'" id="alimentacion">
-                <article class="card__presentacion__habito">
-                  <h3 class="card__presentacion__titulo">
-                    <i class="fa-solid fa-utensils"></i> Alimentación
-                  </h3>
-                  <p class="card__presentacion__descripcion">
-                    Una dieta sana se define por la combinación equilibrada de
-                    alimentos que aportan los nutrientes esenciales y la energía
-                    que necesita el cuerpo para funcionar óptimamente. Se
-                    recomienda realizar al menos 3 comidas principales al día
-                    (desayuno, almuerzo y cena) y, en algunos casos, incluir
-                    colaciones intermedias.
-                  </p>
-
-                  <h4 class="card__habito__titulo">Mi Plan Nutricional</h4>
-                  <div class="card__habito__imagen__main">
-                    <img src="assets/comida.jpg" alt="mesa con comida" />
-                  </div>
-                  <div class="card__habito__acciones">
-                    <button class="btn-custom btn-custom--primario">
-                      Editar Mi Plan Nutricional
-                      <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
-                  </div>
-                </article>
-              </div>
-
-              <div class="tab-content" [class.active]="activeTab === 'sueno'" id="sueno">
-                <article class="card__presentacion__habito">
-                  <h3 class="card__presentacion__titulo">
-                    <i class="fa-solid fa-bed"></i> Sueño
-                  </h3>
-                  <p class="card__presentacion__descripcion">
-                    En general, se recomienda que los adultos duerman entre 7 y
-                    9 horas por noche para una buena salud y bienestar.
-                  </p>
-
-                  <h4 class="card__habito__titulo">Mis Horas de Sueño</h4>
-                  <div class="card__habito__imagen__main">
-                    <img src="assets/sueno.jpg" alt="hombre durmiendo" />
-                  </div>
-                  <div class="card__habito__acciones">
-                    <button class="btn-custom btn-custom--primario">
-                      Agregar horas de sueño
-                      <i class="fa-solid fa-moon"></i>
-                    </button>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<ul *ngIf="!cargando && ejercicios.length > 0" class="lista-habitos">
+  <li *ngFor="let e of ejercicios" class="item-habito">
+    <div class="habito-label">
+      <strong>{{ e.nombre }}</strong> — {{ e.descripcion }}
+      <small>({{ e.categoria }}, {{ e.duracion }} min)</small>
     </div>
-  </section>
-</main>
+  </li>
+</ul>
+
+<p *ngIf="!cargando && ejercicios.length === 0" class="info">
+  No hay ejercicios disponibles en este momento.
+</p>
+
+<ul *ngIf="ejercicios.length > 0" class="lista-habitos">
+  <li *ngFor="let e of ejercicios" class="item-habito">
+    <div class="habito-label">
+      <strong>{{ e.nombre }}</strong> — {{ e.descripcion }}
+      <small>({{ e.categoria }}, {{ e.duracion }} min)</small>
+
+      <!-- Agregar al checklist -->
+      <button (click)="agregarEjercicio(e)">Agregar</button>
+    </div>
+  </li>
+</ul>
+
+<h3>Mi checklist</h3>
+<ul class="lista-habitos">
+  <li *ngFor="let progreso of progresos" class="item-habito">
+    <label class="habito-label">
+      <input
+        type="checkbox"
+        [checked]="progreso.completado"
+        (change)="alternarCompletado(progreso)"
+      />
+      <span [class.completado]="progreso.completado">
+        {{ progreso.habito.nombre || progreso.ejercicio?.nombre }}
+      </span>
+      <button (click)="quitarEjercicio(progreso)">Eliminar</button>
+    </label>
+  </li>
+</ul>
+
+
