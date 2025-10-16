@@ -1,18 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
-:root {
-  /* Paleta de Colores */
-  --primario: #7fffd4;
-  --secundario: #dff5e1;
-  --ternario: #6ec1e4;
-  --cuaternario: #ff8a65;
-  --bg-fondo: #f5f7f8;
-  --bg-y-fuentes: #333b3e;
-  --fav-cristian: #c7bcf2;
-
-  /* Tipografías */
-  --fuente-base: "Montserrat", sans-serif;
-  --fuente-titulo: "Nunito Sans", sans-serif;
-}
+/* UNIVERSALES */
 
 :where(*, *::before, *::after) {
   margin: 0;
@@ -32,7 +18,123 @@
   min-height: 100dvh;
 }
 
-/* BTN VOLVER AL INICIO */
+:root {
+  /* Paleta de Colores */
+  --primario: #7fffd4;
+  --secundario: #dff5e1;
+  --ternario: #6ec1e4;
+  --cuaternario: #ff8a65;
+  --bg-fondo: #f5f7f8;
+  --bg-y-fuentes: #333b3e;
+  --fav-cristian: #c7bcf2;
+
+  /* Tipografías */
+  --fuente-base: "Montserrat", sans-serif;
+  --fuente-titulo: "Nunito Sans", sans-serif;
+}
+
+/* BOTONES */
+
+.btn-custom {
+  text-decoration: none;
+  font-family: var(--fuente-base);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-custom--primario {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
+  border: 1.5px solid var(--ternario);
+}
+.btn-custom--primario:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 10px var(--ternario);
+}
+
+.btn-custom--rojo {
+  background-color: var(--cuaternario);
+  color: var(--bg-y-fuentes);
+}
+.btn-custom--rojo:hover {
+  background-color: #ffb499;
+  box-shadow: 0 0 10px var(--ternario);
+}
+
+/* FORMULARIOS */
+
+.formulario--form {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fuente-base);
+}
+
+.formulario--label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--bg-y-fuentes);
+}
+
+.formulario--input {
+  width: 100%;
+  margin-bottom: 1.2rem;
+  padding: 0.75rem;
+  border: 1.5px solid var(--primario);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: var(--fuente-base);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.formulario--input:focus {
+  border-color: var(--cuaternario);
+  outline: none;
+  box-shadow: 0 0 3px var(--cuaternario);
+}
+
+.formulario--input.ng-invalid.ng-touched {
+  border-color: red;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+.formulario--error {
+  color: red;
+  margin-top: -0.8rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+  font-family: var(--fuente-base);
+}
+
+.formulario--btn[disabled] {
+  background-color: #a4b0be;
+  color: #6a6a6a;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.formulario--btn {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--fuente-base);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.formulario--btn:hover {
+  background-color: #ffb499;
+  box-shadow: 0 0 10px var(--ternario);
+}
+
+/* CONTAINERS */
 
 .container__volver__inicio {
   display: flex;
@@ -46,43 +148,6 @@
   text-decoration: none;
   font-family: var(--fuente-base);
   font-weight: 500;
-}
-
-.container_bt_login,
-.container a,
-.carousel-caption a,
-.container__btn__editar__perfil,
-.container__btn__ir__mis__habitos {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.login-form button,
-.btn__editar__perfil,
-.btn__ir__mis__habitos {
-  background-color: var(--primario);
-  color: var(--bg-y-fuentes);
-  font-family: var(--fuente-base);
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  border: 1.5px solid var(--ternario);
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.btn__editar__perfil:hover,
-.container a:hover,
-.carousel-caption a:hover,
-.btn__ir__mis__habitos:hover,
-.login-form button:hover {
-  background-color: var(--secundario);
-  box-shadow: 0 0 10px var(--ternario);
 }
 
 .container a,
@@ -107,23 +172,4 @@
   align-items: center;
   width: 100%;
   padding: 1rem;
-}
-
-.btn__cerrar__sesion {
-  background-color: var(--cuaternario);
-  color: var(--bg-y-fuentes);
-  font-family: var(--fuente-base);
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  border: 1.5px solid var(--fav-cristian);
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-}
-
-.btn__cerrar__sesion:hover {
-  background-color: #ffb499;
-  box-shadow: 0 0 10px var(--ternario);
 }

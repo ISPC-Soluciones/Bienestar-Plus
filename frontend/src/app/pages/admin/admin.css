@@ -1,0 +1,48 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-fondo);
+}
+
+.sidebar {
+  width: 260px;
+  background-color: var(--bg-y-fuentes);
+  color: white;
+  padding: 2rem;
+}
+
+.sidebar h2 {
+  color: var(--primario);
+  margin-bottom: 1.5rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 1rem;
+}
+
+.sidebar a {
+  color: var(--favorite);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.sidebar a:hover {
+  color: var(--primario);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+    padding: 1rem;
+  }
+}

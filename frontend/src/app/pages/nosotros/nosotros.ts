@@ -43,7 +43,7 @@ export class NosotrosComponent {
       imagen: '/assets/perfil4.png',
       github: 'https://github.com/Heredia-Eric',
       linkedin: 'https://linkedin.com/in/eric-heredia-arg',
-      portafolio: 'https://heredia-eric.github.io/portafolio/'
+      portafolio: 'https://heredia-eric.github.io/'
     },
     {
       nombre: 'Santiago Bustos',

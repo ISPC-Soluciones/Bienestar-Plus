@@ -1,62 +1,184 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../models/perfil.model';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PerfilService } from '../../services/perfil';
+import { ProgresoService } from '../../services/progreso';
 import { Notificaciones, Notificacion } from '../../services/notificaciones';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Usuario, PerfilSalud } from '../../models/perfil.model';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './perfil.html',
-  styleUrl: './perfil.css',
+  styleUrls: ['./perfil.css'],
 })
 export class PerfilComponent implements OnInit {
   usuario?: Usuario;
   loading = false;
   error = '';
-
   listaDeNotificaciones: Notificacion[] = [];
+  modalAbierto = false;
 
-  // 1. Inyecta ActivatedRoute en el constructor
+  perfilForm: FormGroup;
+  rutina: any[] = [];
+
   constructor(
     private perfilService: PerfilService,
+    private progresoService: ProgresoService,
     private route: ActivatedRoute,
-    private notificacionesService: Notificaciones
-  ) {}
+    private notificacionesService: Notificaciones,
+    private fb: FormBuilder
+  ) {
+    this.perfilForm = this.fb.group({
+      peso: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      altura: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      genero: ['', Validators.required],
+      fecha_nacimiento: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
-
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
     this.loading = true;
 
-    // 2. Lee el 'id' de la URL de forma segura
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
-
       if (id) {
-        // 3. Pasa el id de la URL a tu servicio
-        this.perfilService.getUsuarioConHabitos(+id).subscribe({
-          next: (u) => {
-            this.usuario = u;
-            this.loading = false;
-          },
-          error: (err) => {
-            this.error = 'No se pudo cargar el perfil';
-            this.loading = false;
-          },
-        });
+        this.cargarPerfil(+id);
       } else {
-        this.error = 'No se encontró el ID del usuario en la URL.';
-        this.loading = false;
+        const usuarioGuardado = localStorage.getItem('usuario');
+        if (usuarioGuardado) {
+          this.usuario = JSON.parse(usuarioGuardado);
+          this.cargarPerfil(Number(this.usuario?.id));
+        } else {
+          this.error = 'No se encontró información del usuario.';
+          this.loading = false;
+        }
       }
     });
-  };
+  }
+
+  private cargarPerfil(id: number): void {
+    this.perfilService.getUsuarioConHabitos(id).subscribe({
+      next: (res) => {
+        const usuarioData: Usuario = (res as any)?.data ? (res as any).data : res;
+        this.usuario = usuarioData;
+
+        const salud = usuarioData.perfil_salud;
+        if (salud) {
+          this.perfilForm.setValue({
+            peso: salud.peso ?? '',
+            altura: salud.altura ?? '',
+            genero: salud.genero ?? '',
+            fecha_nacimiento: salud.fecha_nacimiento
+              ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
+              : '',
+          });
+        }
+
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('❌ Error cargando perfil:', err);
+        this.error = 'No se pudo cargar el perfil.';
+        this.loading = false;
+      },
+    });
+  }
+
+  abrirModal(): void {
+    if (!this.usuario) return;
+
+    const salud = this.usuario.perfil_salud;
+    this.perfilForm.setValue({
+      peso: salud?.peso ?? '',
+      altura: salud?.altura ?? '',
+      genero: salud?.genero ?? '',
+      fecha_nacimiento: salud?.fecha_nacimiento
+        ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
+        : '',
+    });
+    this.modalAbierto = true;
+  }
+
+  cerrarModal(): void {
+    this.modalAbierto = false;
+  }
+
+  guardarPerfil(): void {
+    if (!this.usuario || this.perfilForm.invalid) {
+      this.perfilForm.markAllAsTouched();
+      return;
+    }
+
+    const datos = { ...this.perfilForm.value };
+
+    if (datos.peso) datos.peso = Number(datos.peso);
+    if (datos.altura) datos.altura = Number(datos.altura);
+    if (datos.fecha_nacimiento) {
+      datos.fecha_nacimiento = new Date(datos.fecha_nacimiento).toISOString().substring(0, 10);
+    }
+
+    this.loading = true;
+
+    this.perfilService
+      .updatePerfilSalud(Number(this.usuario.id), datos)
+      .pipe(switchMap(() => this.perfilService.getUsuarioConHabitos(Number(this.usuario!.id))))
+      .subscribe({
+        next: (usuarioActualizado) => {
+          console.log('✅ Perfil actualizado desde backend:', usuarioActualizado);
+          this.usuario = usuarioActualizado;
+          localStorage.setItem('usuario', JSON.stringify(this.usuario));
+          this.loading = false;
+          this.cerrarModal();
+        },
+        error: (err) => {
+          console.error('❌ Error al actualizar perfil de salud:', err);
+          alert('Hubo un error al actualizar el perfil. Verifica los datos ingresados.');
+          this.loading = false;
+        },
+      });
+  }
+
+  cargarProgreso(usuarioId: number): void {
+    this.progresoService.getProgresoDiario(usuarioId).subscribe({
+      next: (res) => (this.rutina = res),
+      error: (err) => console.error('Error al obtener progreso diario', err),
+    });
+  }
+
+  get totalHabitos(): number {
+    return this.rutina?.length || 0;
+  }
+
+  get habitosCompletados(): number {
+    return this.rutina?.filter((r) => r.completado).length || 0;
+  }
+
+  get porcentajeCompletado(): number {
+    if (!this.rutina?.length) return 0;
+    return (this.habitosCompletados / this.totalHabitos) * 100;
+  }
+
+  onCheckboxChange(event: Event, id: number): void {
+    const target = event.target as HTMLInputElement;
+    if (!target) return;
+    this.marcarHabito(id, target.checked);
+  }
+
+  marcarHabito(id: number, completado: boolean): void {
+    this.progresoService.marcarCompletado(id, completado).subscribe({
+      next: () => console.log('✅ Hábito actualizado'),
+      error: (err) => console.error('Error al actualizar hábito', err),
+    });
+  }
 
   toggleNotificacion(id: number): void {
     this.notificacionesService.toggleNotificacion(id);
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
-  };
-
+  }
 }
