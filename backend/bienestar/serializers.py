@@ -5,7 +5,8 @@ from .models import (
     Usuario, 
     PerfilSalud, 
     Ejercicio,
-    RutinaEjercicio
+    RutinaEjercicio,
+    ProgresoChecklist
 )
 from decimal import Decimal
 
@@ -117,3 +118,8 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
         model = RutinaEjercicio
         fields = '__all__'
         read_only_fields = ['fecha_registro']
+        
+class ProgresoChecklistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProgresoChecklist
+        fields = '__all__'

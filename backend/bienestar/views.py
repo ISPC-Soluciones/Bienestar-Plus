@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -9,14 +10,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum, F 
 from datetime import timedelta 
 from django.contrib.auth.hashers import make_password, check_password
-from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles 
+from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Habito, ProgresoChecklist 
 from .serializers import (
     UsuarioSerializer, 
     UsuarioUpdateSerializer,
     ProgresoDiarioSerializer,
     PerfilSaludSerializer,
     EjercicioSerializer, 
-    RutinaEjercicioSerializer 
+    RutinaEjercicioSerializer,
+    HabitoSerializer, 
+    ProgresoChecklistSerializer
 )
 
 class ProgresoDiarioChecklistView(APIView): # Renombrar para mayor claridad
@@ -90,6 +93,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     parser_classes = [MultiPartParser, FormParser, JSONParser]
     perfil_salud = PerfilSaludSerializer(read_only=True)
+    serializer_class = UsuarioSerializer
 
     def get_serializer_class(self):
         """Usa diferentes serializers según la acción"""
@@ -142,12 +146,14 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PerfilSaludView(APIView):
+class PerfilSaludViewSet(viewsets.ModelViewSet):
     """
     Gestiona el perfil de salud (relación 1:1 con Usuario).
     Endpoint: /api/perfil-salud/<user_id>/
     """
     # permission_classes = [IsAuthenticated] # Asumimos autenticación para producción
+    queryset = PerfilSalud.objects.all()
+    serializer_class = PerfilSaludSerializer
     
     def get(self, request, user_id):
         """Obtiene el perfil de salud para un usuario dado."""
@@ -282,13 +288,17 @@ class EjercicioViewSet(viewsets.ModelViewSet):
     # Se recomienda añadir permisos: permission_classes = [IsAdminUser]
 
 class RutinaEjercicioViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet para el CRUD de RutinaEjercicio (registro de actividad de los usuarios).
-    Ruta generada: /api/rutinas-ejercicio/
-    """
     queryset = RutinaEjercicio.objects.all()
     serializer_class = RutinaEjercicioSerializer
-    # Se recomienda añadir un filtro para que los usuarios solo vean sus propias rutinas.
+
+    def list(self, request, *args, **kwargs):
+        usuario_id = request.query_params.get('usuario_id')
+        if usuario_id:
+            queryset = self.queryset.filter(usuario_id=usuario_id)
+        else:
+            queryset = self.queryset
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
     
 class RegistroUsuarioView(APIView):
     def post(self, request):
@@ -340,3 +350,47 @@ class LoginUsuarioView(APIView):
 
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
+
+
+class HabitoViewSet(viewsets.ModelViewSet):
+    queryset = Habito.objects.all()
+    serializer_class = HabitoSerializer
+
+class ProgresoChecklistViewSet(viewsets.ModelViewSet):
+    queryset = ProgresoChecklist.objects.all()
+    serializer_class = ProgresoChecklistSerializer
+
+class ProgresoDiarioViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet que gestiona el progreso diario de hábitos del usuario.
+    Compatible con Angular para /api/progresoschecklist/
+    """
+    queryset = ProgresoDiario.objects.all()
+    serializer_class = ProgresoDiarioSerializer
+
+    def list(self, request, *args, **kwargs):
+        usuario_id = request.query_params.get('usuario_id')
+        fecha = request.query_params.get('fecha', timezone.localdate())
+
+        if not usuario_id:
+            return Response({"error": "Falta el parámetro usuario_id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            usuario = Usuario.objects.get(pk=usuario_id)
+        except Usuario.DoesNotExist:
+            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
+        serializer = self.get_serializer(progresos, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def toggle(self, request, pk=None):
+        """
+        Alterna el estado completado de un hábito.
+        Endpoint: /api/progresoschecklist/{id}/toggle/
+        """
+        progreso = get_object_or_404(ProgresoDiario, pk=pk)
+        progreso.completado = not progreso.completado
+        progreso.save()
+        return Response({'id': progreso.id, 'completado': progreso.completado})
