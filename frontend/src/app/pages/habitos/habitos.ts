@@ -1,105 +1,152 @@
+// src/app/pages/habitos/habitos.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { HabitosService } from '../../services/habitos';
-import { Habito } from '../../models/habito.model';
+import { HabitosService, ProgresoDiario, Ejercicio } from '../../services/habitos';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-habitos',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './habitos.html',
-  styleUrls: ['./habitos.css'],
+  styleUrls: ['./habitos.css']
 })
-export class Habitos implements OnInit {
-  activeTab: string = 'ejercicio';
-  habitos: Habito[] = [];
-  mostrarRutina: boolean = false;
-  habitoEnEdicion: Habito | null = null;
+export class HabitosComponent implements OnInit {
+  progresos: ProgresoDiario[] = [];
+  ejercicios: Ejercicio[] = [];
+  cargando = true;
+  error = '';
+  usuarioId: number | null = null; // lo obtendrás del estado de sesión / localStorage
 
-  constructor(private habitosService: HabitosService) {}
+  constructor(private habitosService: HabitosService, private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.cargarHabitos();
+    // Ejemplo: obtén el usuario logueado desde localStorage (ajusta según tu auth)
+    const user = localStorage.getItem('usuario'); // puede ser JSON string con id
+    if (user) {
+      try {
+        const u = JSON.parse(user);
+        this.usuarioId = u.id ?? null;
+      } catch {
+        this.usuarioId = null;
+      }
+    }
+
+    if (!this.usuarioId) {
+      // Si no tienes usuario en localStorage quizás lo tengas en otro servicio; adapta según tu app
+      this.error = 'Usuario no identificado. Inicia sesión para ver tus hábitos.';
+      this.cargando = false;
+      return;
+    }
+
+    this.cargarChecklist();
+    this.cargarEjercicios();
+    this.cargarProgresos();
   }
 
-  setActiveTab(tabName: string): void {
-    this.activeTab = tabName;
-  }
+  cargarChecklist(): void {
+    if (!this.usuarioId) return;
+    this.cargando = true;
+    this.error = '';
 
-  toggleRutina(): void {
-    this.mostrarRutina = !this.mostrarRutina;
-  }
-
-  cargarHabitos(): void {
-    console.log('Cargando hábitos...');
-    this.habitosService.getHabitos().subscribe({
+    // No pasamos fecha: backend usará timezone.localdate() si no se envía
+    this.habitosService.obtenerChecklist(this.usuarioId).subscribe({
       next: (data) => {
-        console.log('Datos recibidos:', data);
-        this.habitos = data;
+        this.progresos = data;
+        this.cargando = false;
       },
-      error: (err) => console.error('Error cargando hábitos:', err),
+      error: (err) => {
+        console.error('Error al cargar checklist:', err);
+        this.error = 'No se pudieron cargar los hábitos. Reintenta más tarde.';
+        this.cargando = false;
+      }
     });
   }
 
-  agregarHabito(
-    tipo: string,
-    nombre: string,
-    metaDiaria: string,
-    frecuenciaSemanal: number
-  ): void {
-    const nuevoHabito: Habito = {
-      tipo,
-      nombre,
-      metaDiaria,
-      frecuenciaSemanal,
-      activo: true,
-    };
+  cargarProgresos() {
+    if (!this.usuarioId) return;
 
-    this.habitosService.createHabito(nuevoHabito).subscribe({
-      next: (habito) => {
-        console.log('Hábito creado:', habito);
-        this.habitos.push(habito);
+    this.cargando = true;
+    this.habitosService.obtenerProgresos(this.usuarioId).subscribe({
+      next: (data) => {
+        this.progresos = data;
+        this.cargando = false;
       },
-      error: (err) => console.error('Error creando hábito:', err),
+      error: (err) => {
+        console.error(err);
+        this.error = 'Error al cargar hábitos';
+        this.cargando = false;
+      },
     });
   }
 
-  entrarEnModoEdicion(habito: Habito): void {
-    this.habitoEnEdicion = { ...habito }; // Crear una COPIA del objeto para no modificar el original directamente
+  cargarEjercicios() {
+    this.habitosService.obtenerEjercicios().subscribe({
+      next: (data: any) => {
+        this.ejercicios = data.results ?? data; // ✅ maneja ambos casos
+        console.log('📦 Ejercicios cargados:', this.ejercicios);
+      },
+      error: (err) => {
+        console.error('Error al cargar ejercicios:', err);
+        this.error = 'Error al cargar ejercicios';
+      },
+    });
   }
 
-  guardarEdicion(): void {
-    if (this.habitoEnEdicion) {
-      this.habitosService.updateHabito(this.habitoEnEdicion).subscribe({
-        next: (habitoActualizado) => {
-          console.log('Hábito actualizado:', habitoActualizado);
-          // Actualizamos la lista local
-          const index = this.habitos.findIndex(h => h.id === habitoActualizado.id);
-          if (index !== -1) {
-            this.habitos[index] = habitoActualizado;
-          }
-          this.habitoEnEdicion = null; // Salimos del modo edición
-        },
-        error: (err) => console.error('Error actualizando hábito:', err),
-      });
-    }
+  agregarEjercicio(e: Ejercicio) {
+    if (!this.usuarioId) return;
+  
+    this.habitosService.agregarEjercicioAChecklist(e.id).subscribe({
+      next: (progreso) => {
+        this.progresos.push(progreso); // se agrega a la lista de checkboxes
+      },
+      error: (err) => {
+        console.error(err);
+        alert('No se pudo agregar el ejercicio a tu checklist');
+      }
+    });
+  }
+  
+  quitarEjercicio(progreso: ProgresoDiario) {
+    this.habitosService.quitarProgreso(progreso.id).subscribe({
+      next: () => {
+        this.progresos = this.progresos.filter(p => p.id !== progreso.id);
+      },
+      error: (err) => {
+        console.error(err);
+        alert('No se pudo eliminar el ejercicio de tu checklist');
+      }
+    });
   }
 
-  cancelarEdicion(): void {
-    this.habitoEnEdicion = null; // Salimos del modo edición sin guardar
-  }
+  /**
+   * Llama al endpoint POST toggle (no necesita payload según el viewset).
+   * Actualiza el estado local inmediatamente si la llamada es exitosa.
+   */
+  alternarCompletado(progreso: ProgresoDiario): void {
+    const id = progreso.id;
+    // Feedback inmediato opcional:
+    const estadoPrevio = progreso.completado;
+    progreso.completado = !estadoPrevio;
 
-  eliminarHabito(id?: number): void {
-    if (id) {
-      this.habitosService.deleteHabito(id).subscribe({
-        next: () => {
-          console.log('Hábito eliminado');
-          this.habitos = this.habitos.filter(h => h.id !== id);
-        },
-        error: (err) => console.error('Error eliminando hábito:', err),
-      });
-    }
+    this.habitosService.toggleCompletado(id).subscribe({
+      next: (resp) => {
+        // Si tu backend devuelve el objeto o {id, completado}, intenta usarlo
+        if (resp && typeof resp.completado === 'boolean') {
+          progreso.completado = resp.completado;
+        } else if (resp && resp.id && resp.id === id && typeof resp.completado === 'boolean') {
+          progreso.completado = resp.completado;
+        } else {
+          // Si backend no devuelve estado confiable, dejamos el cambio local
+        }
+      },
+      error: (err) => {
+        console.error('Error al alternar completado:', err);
+        // revertir cambio visual si falla
+        progreso.completado = estadoPrevio;
+        alert('No se pudo actualizar el estado del hábito. Intenta nuevamente.');
+      }
+    });
   }
 }

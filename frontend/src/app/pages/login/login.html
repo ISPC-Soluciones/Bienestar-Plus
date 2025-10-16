@@ -23,6 +23,7 @@
           type="email"
           formControlName="email"
           placeholder="Correo electrónico"
+          autocomplete="username" 
         />
         @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid)
         {
@@ -31,13 +32,14 @@
         </div>
         }
 
-        <label for="password" class="login-label">Contraseña:</label>
+        <label for="password" class="login-label">Contraseña:</label> 
         <input
           class="formulario--input"
           id="password"
           type="password"
           formControlName="password"
           placeholder="Contraseña"
+          autocomplete="current-password" 
         />
         @if (loginForm.get('password')?.touched &&
         loginForm.get('password')?.invalid) {
