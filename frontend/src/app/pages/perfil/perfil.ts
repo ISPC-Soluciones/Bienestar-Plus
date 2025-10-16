@@ -6,6 +6,7 @@ import { PerfilService } from '../../services/perfil';
 import { ProgresoService } from '../../services/progreso';
 import { Notificaciones, Notificacion } from '../../services/notificaciones';
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-perfil',
@@ -22,7 +23,6 @@ export class PerfilComponent implements OnInit {
   modalAbierto = false;
 
   perfilForm: FormGroup;
-
   rutina: any[] = [];
 
   constructor(
@@ -43,16 +43,16 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
     this.loading = true;
-  
+
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
-        this.cargarPerfil(+id); // Trae del backend
+        this.cargarPerfil(+id);
       } else {
         const usuarioGuardado = localStorage.getItem('usuario');
         if (usuarioGuardado) {
           this.usuario = JSON.parse(usuarioGuardado);
-          this.cargarPerfil(Number(this.usuario?.id)); // Siempre refrescar del backend
+          this.cargarPerfil(Number(this.usuario?.id));
         } else {
           this.error = 'No se encontró información del usuario.';
           this.loading = false;
@@ -60,7 +60,6 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
-  
 
   private cargarPerfil(id: number): void {
     this.perfilService.getUsuarioConHabitos(id).subscribe({
@@ -68,7 +67,7 @@ export class PerfilComponent implements OnInit {
         const usuarioData: Usuario = (res as any)?.data ? (res as any).data : res;
         this.usuario = usuarioData;
 
-        const salud: PerfilSalud | undefined = usuarioData.perfil_salud;
+        const salud = usuarioData.perfil_salud;
         if (salud) {
           this.perfilForm.setValue({
             peso: salud.peso ?? '',
@@ -83,8 +82,9 @@ export class PerfilComponent implements OnInit {
         localStorage.setItem('usuario', JSON.stringify(this.usuario));
         this.loading = false;
       },
-      error: () => {
-        this.error = 'No se pudo cargar el perfil';
+      error: (err) => {
+        console.error('❌ Error cargando perfil:', err);
+        this.error = 'No se pudo cargar el perfil.';
         this.loading = false;
       },
     });
@@ -117,34 +117,31 @@ export class PerfilComponent implements OnInit {
 
     const datos = { ...this.perfilForm.value };
 
-if (datos.peso) datos.peso = Number(datos.peso);
-if (datos.altura) datos.altura = Number(datos.altura);
+    if (datos.peso) datos.peso = Number(datos.peso);
+    if (datos.altura) datos.altura = Number(datos.altura);
+    if (datos.fecha_nacimiento) {
+      datos.fecha_nacimiento = new Date(datos.fecha_nacimiento).toISOString().substring(0, 10);
+    }
 
-if (datos.fecha_nacimiento) {
-  datos.fecha_nacimiento = new Date(datos.fecha_nacimiento)
-    .toISOString()
-    .substring(0, 10);
-}
+    this.loading = true;
 
-
-    this.perfilService.updatePerfilSalud(Number(this.usuario.id), datos).subscribe({
-      next: (perfilActualizado: PerfilSalud) => {
-        console.log('✅ Perfil actualizado:', perfilActualizado);
-
-        // Actualizamos solo perfil_salud
-        this.usuario = {
-          ...this.usuario!,
-          perfil_salud: perfilActualizado
-        };
-
-        localStorage.setItem('usuario', JSON.stringify(this.usuario));
-        this.cerrarModal();
-      },
-      error: (err) => {
-        console.error('❌ Error al actualizar perfil de salud:', err);
-        alert('Hubo un error al actualizar el perfil. Verifica los datos ingresados.');
-      },
-    });
+    this.perfilService
+      .updatePerfilSalud(Number(this.usuario.id), datos)
+      .pipe(switchMap(() => this.perfilService.getUsuarioConHabitos(Number(this.usuario!.id))))
+      .subscribe({
+        next: (usuarioActualizado) => {
+          console.log('✅ Perfil actualizado desde backend:', usuarioActualizado);
+          this.usuario = usuarioActualizado;
+          localStorage.setItem('usuario', JSON.stringify(this.usuario));
+          this.loading = false;
+          this.cerrarModal();
+        },
+        error: (err) => {
+          console.error('❌ Error al actualizar perfil de salud:', err);
+          alert('Hubo un error al actualizar el perfil. Verifica los datos ingresados.');
+          this.loading = false;
+        },
+      });
   }
 
   cargarProgreso(usuarioId: number): void {
@@ -154,7 +151,6 @@ if (datos.fecha_nacimiento) {
     });
   }
 
-  // Funciones de progreso
   get totalHabitos(): number {
     return this.rutina?.length || 0;
   }
