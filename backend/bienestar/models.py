@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.conf import settings
 from decimal import Decimal
+from django.db import IntegrityError, transaction
 
 # =========================================================
 # ENUMS
@@ -123,21 +124,27 @@ class Habito(models.Model):
 
 
 class ProgresoDiarioManager(models.Manager):
-    def asegurar_progresos_para_usuario(self, usuario, fecha=None):
+    def obtener_checklist_para_usuario(self, usuario, fecha=None):
         if fecha is None:
-            fecha = timezone.localdate()
+            fecha = timezone.now().date()
+        return self.filter(usuario=usuario, fecha=fecha)
 
-        created = []
-        for habito in Habito.objects.all():
-            obj, creado = self.get_or_create(
-                usuario=usuario,
-                habito=habito,
-                fecha=fecha,
-                defaults={'completado': False}
-            )
-            if creado:
-                created.append(obj)
-        return created
+def asegurar_progresos_para_usuario(self, usuario, fecha):
+    habitos = Habito.objects.filter(usuario=usuario)
+
+    for habito in habitos:
+        try:
+            with transaction.atomic():
+                self.get_or_create(
+                    usuario=usuario,
+                    habito=habito,
+                    fecha=fecha,
+                    defaults={'completado': False}
+                )
+        except IntegrityError:
+            # Ya existe, lo ignoramos
+            continue
+
 
     def obtener_checklist_para_usuario(self, usuario, fecha=None):
         if fecha is None:

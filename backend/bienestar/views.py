@@ -394,3 +394,22 @@ class ProgresoDiarioViewSet(viewsets.ModelViewSet):
         progreso.completado = not progreso.completado
         progreso.save()
         return Response({'id': progreso.id, 'completado': progreso.completado})
+    def create(self, request):
+        usuario = request.user
+        ejercicio_id = request.data.get('ejercicio_id')
+        habito_id = request.data.get('habito_id')
+
+        if not ejercicio_id and not habito_id:
+            return Response({"error": "Se requiere habito_id o ejercicio_id"}, status=400)
+
+        progreso, created = ProgresoDiario.objects.get_or_create(
+            usuario=usuario,
+            ejercicio_id=ejercicio_id if ejercicio_id else None,
+            habito_id=habito_id if habito_id else None,
+            fecha=timezone.localdate()
+        )
+    def destroy(self, request, pk=None):
+        usuario = request.user
+        progreso = get_object_or_404(ProgresoDiario, pk=pk, usuario=usuario)
+        progreso.delete()
+        return Response(status=204)
