@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <main class="mis-habitos">
   <section class="rutinas">
     <div class="container__habitos">
@@ -130,6 +131,78 @@
           </div>
         </div>
       </div>
+=======
+<!-- src/app/pages/habitos/habitos.html -->
+<section class="habitos-container">
+  <div class="header">
+    <h1>Mis hábitos</h1>
+    <p class="subtitulo">Checklist diario — marca lo que completaste</p>
+  </div>
+
+  <p *ngIf="cargando" class="info">Cargando hábitos...</p>
+  <p *ngIf="error" class="error">{{ error }}</p>
+
+  <ul *ngIf="!cargando && !error && progresos.length > 0" class="lista-habitos">
+    <li *ngFor="let progreso of progresos" class="item-habito">
+      <label class="habito-label">
+        <input
+          type="checkbox"
+          [checked]="progreso.completado"
+          (change)="alternarCompletado(progreso)"
+        />
+        <span [class.completado]="progreso.completado">{{ progreso.habito.nombre }}</span>
+      </label>
+    </li>
+  </ul>
+
+  <p *ngIf="!cargando && !error && progresos.length === 0" class="info">
+    No hay hábitos definidos para tu checklist de hoy.
+  </p>
+</section>
+<hr />
+<h2>Ejercicios disponibles</h2>
+
+<ul *ngIf="!cargando && ejercicios.length > 0" class="lista-habitos">
+  <li *ngFor="let e of ejercicios" class="item-habito">
+    <div class="habito-label">
+      <strong>{{ e.nombre }}</strong> — {{ e.descripcion }}
+      <small>({{ e.categoria }}, {{ e.duracion }} min)</small>
+>>>>>>> 29fffd37c685ccac3aa7fea2c2e00c380462872b
     </div>
-  </section>
-</main>
+  </li>
+</ul>
+
+<p *ngIf="!cargando && ejercicios.length === 0" class="info">
+  No hay ejercicios disponibles en este momento.
+</p>
+
+<ul *ngIf="ejercicios.length > 0" class="lista-habitos">
+  <li *ngFor="let e of ejercicios" class="item-habito">
+    <div class="habito-label">
+      <strong>{{ e.nombre }}</strong> — {{ e.descripcion }}
+      <small>({{ e.categoria }}, {{ e.duracion }} min)</small>
+
+      <!-- Agregar al checklist -->
+      <button (click)="agregarEjercicio(e)">Agregar</button>
+    </div>
+  </li>
+</ul>
+
+<h3>Mi checklist</h3>
+<ul class="lista-habitos">
+  <li *ngFor="let progreso of progresos" class="item-habito">
+    <label class="habito-label">
+      <input
+        type="checkbox"
+        [checked]="progreso.completado"
+        (change)="alternarCompletado(progreso)"
+      />
+      <span [class.completado]="progreso.completado">
+        {{ progreso.habito.nombre || progreso.ejercicio?.nombre }}
+      </span>
+      <button (click)="quitarEjercicio(progreso)">Eliminar</button>
+    </label>
+  </li>
+</ul>
+
+

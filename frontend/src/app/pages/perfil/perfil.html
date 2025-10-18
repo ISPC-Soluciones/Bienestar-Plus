@@ -2,33 +2,52 @@
   <aside class="perfil__sidebar">
     <div class="usuario__info">
       <img
-        src="../../../../public/assets/user-default.png"
+        src="assets/user-default.png"
         alt="Foto de perfil"
         class="usuario__foto"
       />
-      <h2>{{ usuario.nombre }}</h2>
+      <h2>Hola, {{ usuario.nombre }}. ¡Bienvenido!</h2>
       <p>{{ usuario.email }}</p>
       <button (click)="abrirModal()">Editar perfil</button>
     </div>
 
     <div class="usuario__detalles">
-      <p><strong>Género:</strong> {{ usuario.genero || "Sin especificar" }}</p>
-      <p><strong>Peso:</strong> {{ usuario.peso || "-" }} kg</p>
-      <p><strong>Altura:</strong> {{ usuario.altura || "-" }} cm</p>
+      <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
+      <p><strong>Altura:</strong> {{ usuario.perfil_salud?.altura || "-" }} cm</p>
       <p>
-        <strong>Fecha Nacimiento:</strong> {{ usuario.fecha_nacimiento | date }}
+        <strong>Género:</strong>
+        {{ usuario.perfil_salud?.genero || "Sin especificar" }}
+      </p>
+      <p>
+        <strong>Fecha de Nacimiento:</strong>
+        {{ usuario.perfil_salud?.fecha_nacimiento | date }}
+      </p>
+      <p *ngIf="usuario.perfil_salud?.imc">
+        <strong>IMC:</strong>
+        {{ usuario.perfil_salud?.imc | number: '1.1-2' }}
       </p>
     </div>
   </aside>
 
   <section class="perfil__progreso">
-    <h2>Tu progreso diario</h2>
+    <h2>Tu progreso mensual y semanal</h2>
 
-    <div class="progreso__grafico">
-      <p *ngIf="rutina?.length">
-        {{ habitosCompletados }} de {{ totalHabitos }} hábitos completados
+    <div class="progreso__imagen">
+      <img
+        src="assets/grafico_usuario_metricas.jpg"
+        alt="Gráfico de progreso"
+      />
+    </div>
+  </section>
+
+  <section class="perfil__rutina">
+    <h2>Mi rutina de hoy</h2>
+
+    <div class="progreso__detalle" *ngIf="totalHabitos > 0">
+      <p>
+        <strong>{{ habitosCompletados }}</strong> de
+        <strong>{{ totalHabitos }}</strong> hábitos completados hoy.
       </p>
-
       <div class="barra__progreso">
         <div
           class="barra__relleno"
@@ -37,23 +56,17 @@
       </div>
     </div>
 
-    <div class="progreso__detalle">
-      <p>Seguí completando tus hábitos para mantener una buena salud 💪</p>
-    </div>
-  </section>
-
-  <section class="perfil__rutina">
-    <h2>Mi rutina de hoy</h2>
-
     <ul *ngIf="rutina?.length; else sinRutina">
-      <li *ngFor="let p of rutina">
+      <li *ngFor="let h of rutina">
         <label class="rutina__item">
           <input
             type="checkbox"
-            [checked]="p.completado"
-            (change)="marcarHabito(p.id, $event)"
+            [checked]="h.completado"
+            (change)="onCheckboxChange($event, h.id)"
           />
-          <span [class.completado]="p.completado">{{ p.habito.nombre }}</span>
+          <span [class.completado]="h.completado">
+            {{ h.habito_nombre || h.habito?.nombre }}
+          </span>
         </label>
       </li>
     </ul>
@@ -67,3 +80,62 @@
 <ng-template #loadingTpl>
   <p class="loading">Cargando perfil...</p>
 </ng-template>
+
+<div class="modal__overlay" *ngIf="modalAbierto">
+  <div class="modal__content">
+    <h2>Editar perfil de salud</h2>
+
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
+      <div class="form__group">
+        <label for="peso">Peso (kg)</label>
+        <input
+          id="peso"
+          type="number"
+          formControlName="peso"
+          [class.invalid]="perfilForm.get('peso')?.invalid && perfilForm.get('peso')?.touched"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="altura">Altura (cm)</label>
+        <input
+          id="altura"
+          type="number"
+          formControlName="altura"
+          [class.invalid]="perfilForm.get('altura')?.invalid && perfilForm.get('altura')?.touched"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="genero">Género</label>
+        <select
+          id="genero"
+          formControlName="genero"
+          [class.invalid]="perfilForm.get('genero')?.invalid && perfilForm.get('genero')?.touched"
+        >
+          <option value="">Seleccione...</option>
+          <option value="M">Masculino</option>
+          <option value="F">Femenino</option>
+          <option value="O">Otro</option>
+        </select>
+      </div>
+
+      <div class="form__group">
+        <label for="fecha_nacimiento">Fecha de nacimiento</label>
+        <input
+          id="fecha_nacimiento"
+          type="date"
+          formControlName="fecha_nacimiento"
+          [class.invalid]="perfilForm.get('fecha_nacimiento')?.invalid && perfilForm.get('fecha_nacimiento')?.touched"
+        />
+      </div>
+
+      <div class="modal__acciones">
+        <button type="submit" [disabled]="perfilForm.invalid || loading">
+          {{ loading ? 'Guardando...' : 'Guardar' }}
+        </button>
+        <button type="button" (click)="cerrarModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

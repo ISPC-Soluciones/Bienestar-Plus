@@ -5,7 +5,8 @@ from .models import (
     Usuario, 
     PerfilSalud, 
     Ejercicio,
-    RutinaEjercicio
+    RutinaEjercicio,
+    ProgresoChecklist
 )
 from decimal import Decimal
 from rest_framework import serializers
@@ -23,19 +24,54 @@ class ProgresoDiarioSerializer(serializers.ModelSerializer):
         model = ProgresoDiario
         fields = ["id", "fecha", "habito", "usuario", "completado"]
         read_only_fields = ["usuario", "fecha"]
+        
+class PerfilSaludSerializer(serializers.ModelSerializer):
+    imc = serializers.DecimalField(max_digits=5, decimal_places=2, read_only=True)
+    
+    class Meta:
+        model = PerfilSalud
+        fields = ['peso', 'altura', 'genero', 'fecha_nacimiento', 'imc']
+
+    def create(self, validated_data):
+        usuario = self.context.get('usuario')
+        if not usuario:
+            raise serializers.ValidationError("Usuario no proporcionado")
+        return PerfilSalud.objects.create(usuario=usuario, **validated_data)
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+
+
+    def validate_peso(self, value):
+        """Asegura que el peso es un valor positivo."""
+        if value is not None and value <= Decimal(0):
+            raise serializers.ValidationError("El peso debe ser un valor positivo.")
+        return value
+
+    def validate_altura(self, value):
+        """Asegura que la altura es un valor positivo."""
+        if value is not None and value <= Decimal(0):
+            raise serializers.ValidationError("La altura debe ser un valor positivo.")
+        return value
 
 class UsuarioSerializer(serializers.ModelSerializer):
     """Serializer para visualización completa del usuario"""
     foto_perfil_url = serializers.SerializerMethodField()
+    perfil_salud = PerfilSaludSerializer(read_only=True)
 
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'mail', 'rol', 'fecha_registro', 'telefono', 'foto_perfil', 
-                  'foto_perfil_url']
+        fields = [
+            'id', 'nombre', 'mail', 'rol', 'fecha_registro', 'telefono',
+            'foto_perfil', 'foto_perfil_url', 'perfil_salud'
+        ]
         read_only_fields = ['id', 'fecha_registro', 'rol']
 
+
     def get_foto_perfil_url(self, obj):
-        """Retorna la URL completa de la foto de perfil"""
         if obj.foto_perfil:
             request = self.context.get('request')
             if request:
@@ -65,29 +101,6 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
         return value.strip()
 
 
-class PerfilSaludSerializer(serializers.ModelSerializer):
-    """
-    Serializador para la creación y actualización del PerfilSalud.
-    Muestra el IMC calculado automáticamente.
-    """
-    imc = serializers.DecimalField(max_digits=5, decimal_places=2, read_only=True)
-    
-    class Meta:
-        model = PerfilSalud
-        fields = ['peso', 'altura', 'genero', 'fecha_nacimiento', 'imc']
-
-    def validate_peso(self, value):
-        """Asegura que el peso es un valor positivo."""
-        if value is not None and value <= Decimal(0):
-            raise serializers.ValidationError("El peso debe ser un valor positivo.")
-        return value
-
-    def validate_altura(self, value):
-        """Asegura que la altura es un valor positivo."""
-        if value is not None and value <= Decimal(0):
-            raise serializers.ValidationError("La altura debe ser un valor positivo.")
-        return value
-
 
 class EjercicioSerializer(serializers.ModelSerializer):
     """Serializador para el modelo Ejercicio (CRUD por el administrador)."""
@@ -114,4 +127,9 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
 class NotificacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notificacion
+        fields = '__all__'
+        
+class ProgresoChecklistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProgresoChecklist
         fields = '__all__'
