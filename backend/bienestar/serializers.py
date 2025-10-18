@@ -8,6 +8,8 @@ from .models import (
     RutinaEjercicio
 )
 from decimal import Decimal
+from rest_framework import serializers
+from .models import Notificacion
 
 class HabitoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -105,3 +107,11 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
         model = RutinaEjercicio
         fields = '__all__'
         read_only_fields = ['fecha_registro']
+
+
+
+
+class NotificacionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notificacion
+        fields = '__all__'

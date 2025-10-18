@@ -1,52 +1,92 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets # AÑADIDO: viewsets
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser # AÑADIDO: Parsers
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Sum, F 
-from datetime import timedelta 
-from django.contrib.auth.hashers import make_password, check_password
-from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles 
+from datetime import datetime, timedelta # AÑADIDO: timedelta para EstadisticasView
+from django.db.models import Count, F # AÑADIDO: Count y F para EstadisticasView
+from django.contrib.auth.hashers import make_password, check_password # AÑADIDO: Funciones de autenticación
+from .serializers import NotificacionSerializer
+from rest_framework.decorators import action
+# Importa tus modelos y serializadores
+# He asumido y listado los modelos utilizados en el resto del código
+from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio 
 from .serializers import (
+    ProgresoDiarioSerializer, 
     UsuarioSerializer, 
-    UsuarioUpdateSerializer,
-    ProgresoDiarioSerializer,
-    PerfilSaludSerializer,
+    UsuarioUpdateSerializer, # Asumido para UsuarioViewSet
+    PerfilSaludSerializer, 
     EjercicioSerializer, 
-    RutinaEjercicioSerializer 
-)
+    RutinaEjercicioSerializer # Asumido para los ViewSets
+) 
+from .models import Notificacion
+from .serializers import NotificacionSerializer
 
 class ProgresoDiarioView(APIView):
     """
-    Vista para obtener el checklist del usuario.
-    GET /progreso/?usuario_id=<id>
+    Vista para obtener el checklist de progreso diario del usuario,
+    opcionalmente filtrado por fecha.
+
+    GET /progreso/?usuario_id=<id>&fecha=<YYYY-MM-DD>
     """
-    # Nota: Aquí falta la autenticación, pero por ahora usamos el query_param
-    def get(self, request):
+
+    def get (self, request):
         usuario_id = request.query_params.get("usuario_id")
-        
+        fecha_param = request.query_params.get("fecha") # <-- Lee el parámetro 'fecha'
+
         if not usuario_id:
-            return Response(
+            return Response (
                 {"error": "Falta el parámetro 'usuario_id'"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         try:
+            # 1. Obtener el usuario
+            # Nota: Asegúrate de que tu modelo 'Usuario' esté importado correctamente
             usuario = Usuario.objects.get(pk=usuario_id)
         except Usuario.DoesNotExist:
-            return Response(
+            return Response (
                 {"error": "Usuario no encontrado"},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
-        fecha = timezone.localdate()
-        progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
+
+        # 2. Determinar la fecha de filtrado
+        if fecha_param:
+            try:
+                # Intenta convertir el string de la URL a un objeto date (YYYY-MM-DD)
+                fecha = datetime.strptime(fecha_param, '%Y-%m-%d').date()
+            except ValueError:
+                return Response (
+                    {"error": "Formato de fecha inválido. Use YYYY-MM-DD."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        else:
+            # Si no se proporciona fecha, usa la fecha local de hoy (comportamiento por defecto)
+            fecha = timezone.localdate()
+
+        # 3. Filtrar los progresos por usuario y fecha
+        try:
+            # Nota: Asegúrate de que tu modelo 'ProgresoDiario' tenga un campo 'fecha' de tipo DateField
+            progresos = ProgresoDiario.objects.filter(
+                usuario=usuario,
+                fecha=fecha
+            )
+        except Exception as e:
+            # Manejo genérico de errores de base de datos o consulta
+            return Response (
+                {"error": f"Error al consultar progresos: {e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+        # 4. Serializar y devolver la respuesta
+        # Nota: Asegúrate de que tu 'ProgresoDiarioSerializer' esté importado y listo para serializar
         serializer = ProgresoDiarioSerializer(progresos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+# --- AÑADIDOS NECESARIOS ---
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     """
@@ -197,7 +237,8 @@ class EstadisticasView(APIView):
         
         # Filtro de registros de rutinas en el último mes
         rutinas_del_mes = RutinaEjercicio.objects.filter(
-            fecha_registro__gte=fecha_hace_30_dias
+            # Asumo que tu modelo RutinaEjercicio tiene un campo 'fecha_registro'
+            fecha_registro__gte=fecha_hace_30_dias 
         )
         
         # 1. Total de Usuarios (siempre global)
@@ -305,3 +346,13 @@ class LoginUsuarioView(APIView):
 
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
+
+class NotificacionViewSet(viewsets.ModelViewSet):
+    queryset = Notificacion.objects.all().order_by('-enviado')
+    serializer_class = NotificacionSerializer
+
+    def get_queryset(self):
+        usuario_id = self.request.query_params.get('usuario_id')
+        if usuario_id:
+            return self.queryset.filter(usuario_id=usuario_id)
+        return self.queryset

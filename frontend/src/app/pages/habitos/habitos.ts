@@ -1,181 +1,127 @@
-import { Component, OnInit } from '@angular/core';
+// ==========================================================
+// src/app/pages/habitos/habitos.component.ts (INTEGRADO Y CORREGIDO)
+// ==========================================================
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { HabitosService } from '../../services/habitos';
-import { ProgresoService, ProgresoDiario } from '../../services/progreso';
-import { Habito } from '../../models/habito.model';
+
+// Importamos Rutina y Ejercicio del servicio de Rutina
+import { RutinaEjercicioService,RutinaEjercicio,Ejercicio } from '../../services/rutina-ejercicio'; 
+
+// Importamos ProgresoDiario y ProgresoService
+import { ProgresoService,ProgresoDiario } from '../../services/progreso';
+
+
 
 @Component({
   selector: 'app-habitos',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
-  templateUrl: './habitos.html',
-  styleUrls: ['./habitos.css'],
+  imports: [CommonModule, FormsModule],
+  templateUrl: './habitos.html', // Usamos la ruta simplificada que elegiste
+  styleUrls: ['./habitos.css']
 })
-export class Habitos implements OnInit {
+export class HabitosComponent implements OnInit {
+  activeTab = 'ejercicio';
+  mostrarRutina = false;
+  usuarioIdAutenticado = 1;
 
-  activeTab: string = 'ejercicio';
-  habitos: Habito[] = [];
-  mostrarRutina: boolean = false;
-  habitoEnEdicion: Habito | null = null;
-  progresosDiarios: ProgresoDiario[] = [];
-  usuarioIdAutenticado: number = 1;
+  ejerciciosDisponibles: Ejercicio[] = [];
+  rutinaUsuario: RutinaEjercicio[] = [];
+  progresosDiarios: ProgresoDiario[] = []; // Para el checklist de Progreso
 
-  constructor(
-    private habitosService: HabitosService,
-    private progresoService: ProgresoService
-  ) {}
+  private rutinaService = inject(RutinaEjercicioService);
+  private progresoService = inject(ProgresoService); // Nuevo servicio inyectado
 
   ngOnInit(): void {
-    this.cargarHabitos();
-    this.cargarChecklistDiario();
+    this.cargarEjercicios();
+    this.cargarRutina();
+    this.cargarProgresoDiario(); // Nueva llamada para cargar el checklist
   }
 
-  setActiveTab(tabName: string): void {
-    this.activeTab = tabName;
+  // --- MÉTODOS DE PROGRESO DIARIO (CHECKLIST) ---
+  cargarProgresoDiario(): void {
+    this.progresoService.getProgresoDiario(this.usuarioIdAutenticado).subscribe({
+      next: (data: ProgresoDiario[]) => (this.progresosDiarios = data),
+      error: (err: any) => console.error('Error cargando checklist diario:', err) // 💡 CORRECCIÓN TS7006
+    });
+  }
+
+  marcarProgresoDiario(progreso: ProgresoDiario): void {
+    this.progresoService.actualizarProgreso(progreso.id, progreso.completado).subscribe({
+        next: () => console.log('Progreso de hábito actualizado.'),
+        error: (err: any) => { // 💡 CORRECCIÓN TS7006
+            console.error('Error al actualizar progreso:', err);
+            progreso.completado = !progreso.completado; // Rollback
+        }
+    });
+  }
+
+  // --- MÉTODOS DE RUTINA DE EJERCICIOS ---
+  cargarEjercicios(): void {
+    this.rutinaService.obtenerEjercicios().subscribe({
+      next: (data: Ejercicio[]) => (this.ejerciciosDisponibles = data),
+      error: (err: any) => console.error('Error cargando ejercicios:', err) // 💡 CORRECCIÓN TS7006
+    });
+  }
+
+  cargarRutina(): void {
+    this.rutinaService.obtenerRutina(this.usuarioIdAutenticado).subscribe({
+      next: (data: RutinaEjercicio[]) => (this.rutinaUsuario = data),
+      error: (err: any) => console.error('Error cargando rutina:', err) // 💡 CORRECCIÓN TS7006
+    });
+  }
+
+  agregarEjercicio(ejercicio: Ejercicio): void {
+    this.rutinaService.agregarEjercicio(this.usuarioIdAutenticado, ejercicio.id).subscribe({
+      next: (nuevo: RutinaEjercicio) => {
+        this.rutinaUsuario.push(nuevo);
+        alert(`Ejercicio "${ejercicio.nombre}" agregado a la rutina.`);
+      },
+      error: (err: any) => console.error('Error agregando ejercicio:', err) // 💡 CORRECCIÓN TS7006
+    });
+  }
+
+  eliminarDeRutina(rutina: RutinaEjercicio): void {
+    if (!rutina) return;
+    const rutinaId = rutina.id;
+    
+    if (confirm('¿Deseas eliminar este ejercicio de tu rutina?')) {
+      this.rutinaService.eliminarDeRutina(rutinaId).subscribe({
+        next: () => {
+            this.rutinaUsuario = this.rutinaUsuario.filter(r => r.id !== rutinaId);
+            alert('Ejercicio eliminado de la rutina.');
+        },
+        error: (err: any) => console.error('Error eliminando ejercicio:', err) // 💡 CORRECCIÓN TS7006
+      });
+    }
+  }
+
+  marcarCompletado(rutina: RutinaEjercicio): void {
+    this.rutinaService.toggleCompletado(rutina.id, rutina.completado).subscribe({
+      next: () => console.log('Completado actualizado.'),
+      error: (err: any) => { // 💡 CORRECCIÓN TS7006
+        console.error('Error actualizando estado:', err);
+        rutina.completado = !rutina.completado; // rollback
+      }
+    });
+  }
+
+  // --- MÉTODOS DE UI ---
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
   }
 
   toggleRutina(): void {
     this.mostrarRutina = !this.mostrarRutina;
   }
 
-  cargarHabitos(): void {
-    console.log('Cargando hábitos...');
-    this.habitosService.getHabitos().subscribe({
-      next: (data) => {
-        console.log('Datos recibidos:', data);
-        this.habitos = data;
-      },
-      error: (err) => console.error('Error cargando hábitos:', err),
-    });
+  estaEnRutina(ejercicio: Ejercicio): boolean {
+    return this.rutinaUsuario.some(r => r.ejercicio.id === ejercicio.id);
   }
 
-  /*  cargarHabitos(): void {
-        console.log('Cargando hábitos de prueba (Modo DEV)...');
-        
-        // --- DATOS DE PRUEBA MANUALES ---
-        const datosPrueba: Habito[] = [
-            {
-                id: 1, 
-                nombre: 'Flexiones', 
-                tipo: 'Ejercicio', 
-                metaDiaria: '100 repeticiones', 
-                frecuenciaSemanal: 7, 
-                activo: true, 
-                completado: true // Para probar el cambio de color
-            },
-            {
-                id: 2, 
-                nombre: 'Abdominales', 
-                tipo: 'Ejercicio', 
-                metaDiaria: '100 repeticiones', 
-                frecuenciaSemanal: 7, 
-                activo: true, 
-                completado: false // Para probar el estado pendiente
-            },
-
-        ];
-        
-        this.habitos = datosPrueba;
-        console.log('Hábitos de prueba cargados:', this.habitos);
-        
-        // Lógica de progreso (para mostrar "X de Y completados")
-        // this.actualizarContadorProgreso(); 
-        // Si no tienes esa función, déjala comentada por ahora.
-    } */
-
-  agregarHabito(
-    tipo: string,
-    nombre: string,
-    metaDiaria: string,
-    frecuenciaSemanal: number
-  ): void {
-    const nuevoHabito: Habito = {
-      tipo,
-      nombre,
-      metaDiaria,
-      frecuenciaSemanal,
-      activo: true,
-      completado: false,
-    };
-
-    this.habitosService.createHabito(nuevoHabito).subscribe({
-      next: (habito) => {
-        console.log('Hábito creado:', habito);
-        this.habitos.push(habito);
-      },
-      error: (err) => console.error('Error creando hábito:', err),
-    });
-  }
-
-  entrarEnModoEdicion(habito: Habito): void {
-    this.habitoEnEdicion = { ...habito }; // Crear una COPIA del objeto para no modificar el original directamente
-  }
-
-  guardarEdicion(): void {
-    if (this.habitoEnEdicion) {
-      this.habitosService.updateHabito(this.habitoEnEdicion).subscribe({
-        next: (habitoActualizado) => {
-          console.log('Hábito actualizado:', habitoActualizado);
-          // Actualizamos la lista local
-          const index = this.habitos.findIndex(
-            (h) => h.id === habitoActualizado.id
-          );
-          if (index !== -1) {
-            this.habitos[index] = habitoActualizado;
-          }
-          this.habitoEnEdicion = null; // Salimos del modo edición
-        },
-        error: (err) => console.error('Error actualizando hábito:', err),
-      });
-    }
-  }
-
-  cancelarEdicion(): void {
-    this.habitoEnEdicion = null; // Salimos del modo edición sin guardar
-  }
-
-  eliminarHabito(id?: number): void {
-    if (id) {
-      this.habitosService.deleteHabito(id).subscribe({
-        next: () => {
-          console.log('Hábito eliminado');
-          this.habitos = this.habitos.filter((h) => h.id !== id);
-        },
-        error: (err) => console.error('Error eliminando hábito:', err),
-      });
-    }
-  }
-
-  cargarChecklistDiario(): void {
-    console.log('Cargando checklist diario...');
-    // Llamar al nuevo método con el usuario ID (obtenido de tu sistema de auth)
-    this.progresoService.obtenerChecklist().subscribe({
-      next: (data) => {
-        console.log('Checklist recibido:', data);
-        // La respuesta es la lista de ProgresoDiario
-        this.progresosDiarios = data;
-      },
-      error: (err) => console.error('Error cargando checklist diario:', err),
-    });
-  }
-
-  marcarHabito(progreso: ProgresoDiario): void {
-    const nuevoEstado = progreso.completado; // El estado ya está en el modelo debido al [(ngModel)]
-
-    // Llama al servicio para persistir el cambio
-    this.progresoService.toggleCompletado(progreso.id, nuevoEstado).subscribe({
-      next: (data) => {
-        console.log('Progreso actualizado en el backend:', data);
-        // Opcional: El progreso en la lista ya está actualizado gracias al [(ngModel)]
-      },
-      error: (err) => {
-        console.error('Error al marcar hábito como completado:', err);
-        // Rollback: Revertir el estado si la llamada falla
-        progreso.completado = !nuevoEstado;
-        // Mostrar un mensaje de error al usuario
-      },
-    });
+  getRutinaPorEjercicio(ejercicioId: number): RutinaEjercicio | undefined {
+    return this.rutinaUsuario.find(r => r.ejercicio.id === ejercicioId);
   }
 }
