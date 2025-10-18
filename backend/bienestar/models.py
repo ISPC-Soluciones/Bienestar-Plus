@@ -217,6 +217,7 @@ class ProgresoChecklist(models.Model):
     fecha = models.DateField(default=timezone.localdate)
     progresos = models.ManyToManyField(ProgresoDiario, related_name="checklists")
     completado = models.BooleanField(default=False)
+    habito = models.CharField(max_length=255)
 
     class Meta:
         verbose_name_plural = "Progresos Checklist"
@@ -234,3 +235,34 @@ class ProgresoChecklist(models.Model):
             self.completado = all(p.completado for p in self.progresos.all())
             self.save()
 
+    class Meta:
+        verbose_name_plural = "Progresos Diarios"
+        unique_together = ("usuario", "habito", "fecha") # Un hábito por usuario por día
+
+
+
+class Notificacion(models.Model):
+    ESTADOS = [
+        ('pendiente', 'Pendiente'),
+        ('enviado', 'Enviado'),
+        ('leido', 'Leído'),
+    ]
+
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE, related_name='notificaciones')
+    mensaje = models.TextField()
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
+    enviado = models.DateTimeField(null=True, blank=True)
+    leido = models.DateTimeField(null=True, blank=True)
+
+    def marcar_como_enviado(self):
+        self.estado = 'enviado'
+        self.enviado = timezone.now()
+        self.save()
+
+    def marcar_como_leido(self):
+        self.estado = 'leido'
+        self.leido = timezone.now()
+        self.save()
+
+    def __str__(self):
+        return f"{self.usuario.nombre} - {self.mensaje[:40]}"

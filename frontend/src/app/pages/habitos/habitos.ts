@@ -149,4 +149,8 @@ export class HabitosComponent implements OnInit {
       }
     });
   }
+  marcarProgresoDiario(progreso: any) {
+   
+    console.log('Progreso diario marcado:', progreso);
+  }
 }

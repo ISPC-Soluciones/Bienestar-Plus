@@ -1,6 +1,5 @@
-from rest_framework import viewsets, status
+from rest_framework import status, viewsets # AÑADIDO: viewsets
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -12,15 +11,19 @@ from datetime import timedelta
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Habito, ProgresoChecklist 
 from .serializers import (
+    ProgresoDiarioSerializer, 
     UsuarioSerializer, 
-    UsuarioUpdateSerializer,
-    ProgresoDiarioSerializer,
-    PerfilSaludSerializer,
+    UsuarioUpdateSerializer, # Asumido para UsuarioViewSet
+    PerfilSaludSerializer, 
     EjercicioSerializer, 
     RutinaEjercicioSerializer,
     HabitoSerializer, 
-    ProgresoChecklistSerializer
+    ProgresoChecklistSerializer,
+    NotificacionSerializer
 )
+from django.shortcuts import render
+from .models import Notificacion
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 class ProgresoDiarioChecklistView(APIView): # Renombrar para mayor claridad
     """
@@ -50,6 +53,7 @@ class ProgresoDiarioChecklistView(APIView): # Renombrar para mayor claridad
         serializer = ProgresoDiarioSerializer(progresos, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+# --- AÑADIDOS NECESARIOS ---
 
 class ProgresoDiarioToggleCompletadoView(APIView):
     """
@@ -238,7 +242,8 @@ class EstadisticasView(APIView):
         
         # Filtro de registros de rutinas en el último mes
         rutinas_del_mes = RutinaEjercicio.objects.filter(
-            fecha_registro__gte=fecha_hace_30_dias
+            # Asumo que tu modelo RutinaEjercicio tiene un campo 'fecha_registro'
+            fecha_registro__gte=fecha_hace_30_dias 
         )
         
         # 1. Total de Usuarios (siempre global)
@@ -351,6 +356,15 @@ class LoginUsuarioView(APIView):
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
 
+class NotificacionViewSet(viewsets.ModelViewSet):
+    queryset = Notificacion.objects.all().order_by('-enviado')
+    serializer_class = NotificacionSerializer
+
+    def get_queryset(self):
+        usuario_id = self.request.query_params.get('usuario_id')
+        if usuario_id:
+            return self.queryset.filter(usuario_id=usuario_id)
+        return self.queryset
 
 class HabitoViewSet(viewsets.ModelViewSet):
     queryset = Habito.objects.all()
@@ -413,3 +427,9 @@ class ProgresoDiarioViewSet(viewsets.ModelViewSet):
         progreso = get_object_or_404(ProgresoDiario, pk=pk, usuario=usuario)
         progreso.delete()
         return Response(status=204)
+
+
+def ver_notificaciones(request):
+    notificaciones = Notificacion.objects.all()
+    mensaje = request.GET.get('mensaje', '')  # opcional para feedback
+    return render(request, 'notificaciones.html', {'notificaciones': notificaciones, 'mensaje': mensaje})

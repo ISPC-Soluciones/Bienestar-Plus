@@ -6,7 +6,8 @@ from .views import (
     HabitoViewSet,
     ProgresoDiarioViewSet,
     EjercicioViewSet,
-    RutinaEjercicioViewSet
+    RutinaEjercicioViewSet,
+    NotificacionViewSet
 )
 
 router = DefaultRouter()
@@ -16,6 +17,7 @@ router.register(r'habitos', HabitoViewSet, basename='habitos')
 router.register(r'progresoschecklist', ProgresoDiarioViewSet, basename='progresoschecklist')
 router.register(r'ejercicios', EjercicioViewSet, basename='ejercicios')
 router.register(r'rutinas', RutinaEjercicioViewSet, basename='rutinas')
+router.register(r'notificaciones', NotificacionViewSet, basename='notificacion') 
 
 urlpatterns = router.urls
 
