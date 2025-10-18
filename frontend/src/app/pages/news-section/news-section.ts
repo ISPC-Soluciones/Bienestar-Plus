@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Noticias } from '../../services/noticias/noticias';
+import { Noticias } from '../../services/noticias';
 
 @Component({
   selector: 'app-news-section',
@@ -16,7 +16,6 @@ export class NewsSection implements OnInit {
 
  ngOnInit(): void {
     this.noticias.getNews().subscribe(data => {
-      // Filtramos artículos que no tengan imagen para evitar errores visuales
       this.articles = data.articles.filter((article: any) => article.urlToImage);
     });
   }
