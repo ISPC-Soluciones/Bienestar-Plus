@@ -85,6 +85,45 @@
       registroForm.get('genero')?.invalid) {
       <div class="formulario--error">El género es obligatorio</div>
       }
+
+      <div formGroupName="perfil_salud">
+        <label for="peso" class="formulario--label">Peso (kg):</label>
+        <input
+          class="formulario--input"
+          id="peso"
+          type="number"
+          step="0.1"
+          formControlName="peso"
+          placeholder="Ej: 75.5"
+          min="10"
+          max="300"
+        />
+        @if (registroForm.get('perfil_salud.peso')?.touched &&
+        registroForm.get('perfil_salud.peso')?.errors) {
+        <div class="formulario--error">
+          El peso debe ser un valor numérico entre 10 y 300 kg.
+        </div>
+        }
+
+        <label for="altura" class="formulario--label">Altura (m):</label>
+        <input
+          class="formulario--input"
+          id="altura"
+          type="number"
+          step="0.01"
+          formControlName="altura"
+          placeholder="Ej: 1.75 (metros)"
+          min="0.5"
+          max="2.5"
+        />
+        @if (registroForm.get('perfil_salud.altura')?.touched &&
+        registroForm.get('perfil_salud.altura')?.errors) {
+        <div class="formulario--error">
+          La altura debe estar en metros (0.50m - 2.50m).
+        </div>
+        }
+      </div>
+
       <label for="password" class="formulario--label">Contraseña:</label>
       <input
         class="formulario--input"
