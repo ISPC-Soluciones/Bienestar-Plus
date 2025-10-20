@@ -1,14 +1,70 @@
-.testimonios{
-  padding: 3rem 2rem;
+/* TESTIMONIOS */
+
+.testimonios {
+  background-color: var(--secundario);
+  padding: 3rem 1rem;
   text-align: center;
 }
 
-.testimonios h3 {
-  font-size: 1.3rem;
+.testimonios__titulo {
+  font-family: var(--fuente-titulo);
+  font-size: 2rem;
+  color: var(--bg-y-fuentes);
+  margin-bottom: 2rem;
+}
+
+.testimonios__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .testimonio {
-  margin-bottom: 2rem;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonio:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.testimonio__img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid var(--primario);
+}
+
+.testimonio__texto {
   font-style: italic;
+  margin-bottom: 1rem;
   color: var(--bg-y-fuentes);
 }
+
+.testimonio__nombre {
+  font-weight: 600;
+  color: var(--ternario);
+  font-family: var(--fuente-base);
+}
+
+/* ==== ANIMACIONES SUAVES ==== */
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
