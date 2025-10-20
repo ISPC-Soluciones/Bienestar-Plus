@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { RegistroServicio } from '../../services/registroServicio';
 import { Router } from '@angular/router';
+import { ModalBienvenida } from './modal-bienvenida/modal-bienvenida';
 
 const contraseñaigual: ValidatorFn = (
   control: AbstractControl
@@ -30,7 +31,8 @@ const soloCaracteres: ValidatorFn = (
 };
 @Component({
   selector: 'app-registro',
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true, // Asegurar que sea standalone si no lo es
+  imports: [CommonModule, ReactiveFormsModule, ModalBienvenida],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })
@@ -39,6 +41,7 @@ export class Registro {
 
   recomendacionUsuario: string | null = null;
   mostrarModalRecomendacion: boolean = false;
+  private ultimoUsuarioId: number | null = null; // ✅ Guardaremos el ID aquí
 
   constructor(
     private fb: FormBuilder,
@@ -67,61 +70,66 @@ export class Registro {
   }
 
   cerrarModal(): void {
-    this.mostrarModalRecomendacion = false;
-    this.router.navigate(['/login']);
+    this.mostrarModalRecomendacion = false; // ✅ REDIRECCIÓN FINAL: Ir al perfil con el ID guardado
+    if (this.ultimoUsuarioId) {
+      this.router.navigate(['/perfil', this.ultimoUsuarioId]);
+    } else {
+      // Fallback: Si no hay ID, ir a login
+      this.router.navigate(['/login']);
+    }
   }
 
   EnviarFormulario(): void {
     if (this.registroForm.valid) {
-      const datosdelform = this.registroForm.value;
+      const datosdelform = this.registroForm.value; // 1. Desestructurar para separar perfil_salud y descartar confirmar
 
-      // 1. Desestructurar para separar perfil_salud y descartar confirmar
-      const { perfil_salud, confirmar, ...usuarioData } = datosdelform;
+      const { perfil_salud, confirmar, ...usuarioData } = datosdelform; // 2. Construir el payload final, incluyendo campos por defecto
 
-      // 2. Construir el payload final, incluyendo campos por defecto
       const payload: any = {
-        // Usamos 'any' porque vamos a eliminar una propiedad dinámicamente
         ...usuarioData,
         habitos: [],
         progreso:
           'Aún no tienes progreso. ¡Comienza a usar la app para verlo aquí!',
         foto: 'assets/default-user.jpg',
-        grafico: 'assets/default-graph.jpg', // 3. Añadir perfil_salud con valores numéricos o null
+        grafico: 'assets/default-graph.jpg',
 
         perfil_salud: {
           peso: perfil_salud.peso ? Number(perfil_salud.peso) : null,
           altura: perfil_salud.altura ? Number(perfil_salud.altura) : null,
         },
-      }; // 4. Eliminar el grupo perfil_salud si ambos campos están vacíos (TK77)
+      };
 
       if (
         payload.perfil_salud.peso === null &&
         payload.perfil_salud.altura === null
       ) {
         delete payload.perfil_salud;
-      } // 5. Enviar el payload completo
+      }
 
       this.registroService.registrarUsuario(payload).subscribe(
         (respuesta) => {
           console.log('Usuario registrado:', respuesta);
-          this.registroForm.reset(); // Resetear el formulario al éxito
+          this.registroForm.reset();
 
-          // 6. Lógica de manejo de respuesta (TK78 / Redirección)
-          if (
-            respuesta.perfil_salud &&
-            respuesta.perfil_salud.mostrar_modal_imc
-          ) {
-            this.recomendacionUsuario =
-              respuesta.perfil_salud.recomendacion_enfoque;
-            this.mostrarModalRecomendacion = true;
+          const perfilSalud = respuesta?.data?.perfil_salud;
+          const usuarioId = respuesta?.data?.id;
+
+          const mostrarModal = perfilSalud?.mostrar_modal_imc === true;
+          const recomendacion = perfilSalud?.recomendacion_enfoque;
+
+          this.ultimoUsuarioId = usuarioId; // ✅ Guardamos el ID aquí // 3. Lógica de manejo de respuesta (Mostrar Modal o Redirigir)
+
+          if (mostrarModal) {
+            // ✅ ACTIVAR EL MODAL DE BIENVENIDA
+            this.recomendacionUsuario = recomendacion || 'GENERAL';
+            this.mostrarModalRecomendacion = true; // La redirección ocurre cuando se llama this.cerrarModal()
           } else {
-            // Redirección si no se muestra el modal
-            this.router.navigate(['/login']);
+            // Redirección inmediata si no se necesita el modal
+            this.router.navigate(['/perfil', usuarioId]);
           }
         },
         (error: any) => {
-          // ✅ Corregido el error TS7006 al especificar el tipo 'any'
-          console.error('Error al registrar usuario:', error); // Reemplazar alert por una notificación adecuada si es posible
+          console.error('Error al registrar usuario:', error);
           alert('Ocurrió un error. Por favor, inténtelo de nuevo.');
         }
       );

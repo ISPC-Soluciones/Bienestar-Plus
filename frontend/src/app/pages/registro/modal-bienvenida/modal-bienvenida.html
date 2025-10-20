@@ -1,0 +1,39 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <button class="modal-close-btn" (click)="cerrarModal()">×</button>
+
+    <div class="modal-header">
+      <h2 class="modal-title">¡Bienvenido a BienestarPlus!</h2>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-message">
+        Gracias por registrarte. Hemos analizado tus datos de salud y, para
+        ayudarte a empezar, te ofrecemos la siguiente recomendación de enfoque
+        inicial:
+      </p>
+
+      @if (recomendacion) {
+      <div class="modal-recommendation">
+        <p><strong>Enfoque Recomendado:</strong></p>
+        <p class="recommendation-text">{{ recomendacion }}</p>
+      </div>
+      } @else {
+      <p class="recommendation-text">
+        No se pudo obtener una recomendación de enfoque específica en este
+        momento.
+      </p>
+      }
+
+      <p class="modal-footer-text">
+        Haz clic en "Continuar" para acceder a la aplicación e iniciar sesión.
+      </p>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-btn-confirm" (click)="cerrarModal()">
+        Continuar
+      </button>
+    </div>
+  </div>
+</div>

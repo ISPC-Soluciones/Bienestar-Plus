@@ -56,6 +56,7 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
     Serializer usado para el registro inicial, maneja la creación anidada
     del PerfilSalud y activa el cálculo.
     """
+    email = serializers.EmailField(source='mail')
     # Usa el Serializer de PerfilSalud anidado
     perfil_salud = PerfilSaludSerializer(required=False)
 
@@ -72,7 +73,7 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
         
         # 1. Crear el usuario
-        usuario = Usuario.objects.create_user(**validated_data, password=password)
+        usuario = Usuario.objects.create(**validated_data, password=password)
         
         # 2. Crear el PerfilSalud
         perfil_salud = PerfilSalud.objects.create(usuario=usuario, **perfil_salud_data)
@@ -83,7 +84,10 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
         
         # 4. Guardar la instancia de PerfilSalud con el resultado del cálculo
         # (y con el campo mostrar_modal_imc=True por defecto)
-        perfil_salud.save() 
+        perfil_salud.save()
+
+        # Esto asegura que el Serializer anidado tenga los datos para el JSON de respuesta.
+        usuario.perfil_salud = perfil_salud
         
         return usuario
 

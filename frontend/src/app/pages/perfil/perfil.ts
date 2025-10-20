@@ -1,12 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { PerfilService } from '../../services/perfil';
 import { ProgresoService } from '../../services/progreso';
 import { Notificaciones, Notificacion } from '../../services/notificaciones';
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
 import { switchMap } from 'rxjs/operators';
+// NOTA: Se ha eliminado la inyección de ChangeDetectorRef y la importación de ModalBienvenida
 
 @Component({
   selector: 'app-perfil',
@@ -20,8 +26,7 @@ export class PerfilComponent implements OnInit {
   loading = false;
   error = '';
   listaDeNotificaciones: Notificacion[] = [];
-  modalAbierto = false;
-
+  modalAbierto = false; // Solo para el modal de edición de perfil // Se eliminó 'private debeAbrirModalIMC'
   perfilForm: FormGroup;
   rutina: any[] = [];
 
@@ -30,11 +35,18 @@ export class PerfilComponent implements OnInit {
     private progresoService: ProgresoService,
     private route: ActivatedRoute,
     private notificacionesService: Notificaciones,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.perfilForm = this.fb.group({
-      peso: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      altura: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      peso: [
+        '',
+        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+      ],
+      altura: [
+        '',
+        [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+      ],
       genero: ['', Validators.required],
       fecha_nacimiento: ['', Validators.required],
     });
@@ -42,7 +54,7 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit(): void {
     this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
-    this.loading = true;
+    this.loading = true; // Se eliminó la lectura del estado del Router (this.debeAbrirModalIMC)
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -64,7 +76,9 @@ export class PerfilComponent implements OnInit {
   private cargarPerfil(id: number): void {
     this.perfilService.getUsuarioConHabitos(id).subscribe({
       next: (res) => {
-        const usuarioData: Usuario = (res as any)?.data ? (res as any).data : res;
+        const usuarioData: Usuario = (res as any)?.data
+          ? (res as any).data
+          : res;
         this.usuario = usuarioData;
 
         const salud = usuarioData.perfil_salud;
@@ -81,6 +95,8 @@ export class PerfilComponent implements OnInit {
 
         localStorage.setItem('usuario', JSON.stringify(this.usuario));
         this.loading = false;
+
+        // Se eliminó la lógica de activación del modal de bienvenida aquí
       },
       error: (err) => {
         console.error('❌ Error cargando perfil:', err);
@@ -120,17 +136,26 @@ export class PerfilComponent implements OnInit {
     if (datos.peso) datos.peso = Number(datos.peso);
     if (datos.altura) datos.altura = Number(datos.altura);
     if (datos.fecha_nacimiento) {
-      datos.fecha_nacimiento = new Date(datos.fecha_nacimiento).toISOString().substring(0, 10);
+      datos.fecha_nacimiento = new Date(datos.fecha_nacimiento)
+        .toISOString()
+        .substring(0, 10);
     }
 
     this.loading = true;
 
     this.perfilService
       .updatePerfilSalud(Number(this.usuario.id), datos)
-      .pipe(switchMap(() => this.perfilService.getUsuarioConHabitos(Number(this.usuario!.id))))
+      .pipe(
+        switchMap(() =>
+          this.perfilService.getUsuarioConHabitos(Number(this.usuario!.id))
+        )
+      )
       .subscribe({
         next: (usuarioActualizado) => {
-          console.log('✅ Perfil actualizado desde backend:', usuarioActualizado);
+          console.log(
+            '✅ Perfil actualizado desde backend:',
+            usuarioActualizado
+          );
           this.usuario = usuarioActualizado;
           localStorage.setItem('usuario', JSON.stringify(this.usuario));
           this.loading = false;
@@ -138,7 +163,9 @@ export class PerfilComponent implements OnInit {
         },
         error: (err) => {
           console.error('❌ Error al actualizar perfil de salud:', err);
-          alert('Hubo un error al actualizar el perfil. Verifica los datos ingresados.');
+          alert(
+            'Hubo un error al actualizar el perfil. Verifica los datos ingresados.'
+          );
           this.loading = false;
         },
       });
