@@ -18,7 +18,8 @@ from .serializers import (
     RutinaEjercicioSerializer,
     HabitoSerializer, 
     ProgresoChecklistSerializer,
-    NotificacionSerializer
+    NotificacionSerializer,
+    RegistroUsuarioSerializer
 )
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
@@ -27,34 +28,23 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 # =========================================================
 
 class RegistroUsuarioView(APIView):
+    """
+    Vista que utiliza RegistroUsuarioSerializer para manejar la validación,
+    la creación anidada del PerfilSalud, el hasheo de contraseña,
+    y la lógica de recomendación inicial (TK85).
+    """
     def post(self, request):
-        nombre = request.data.get('nombre')
-        mail = request.data.get('email')
-        password = request.data.get('password')
-        telefono = request.data.get('telefono', '')
-        genero = request.data.get('genero')
-        fecha_nacimiento = request.data.get('fecha_nacimiento')
-
-        if not nombre or not mail or not password:
-            return Response({"error": "Faltan campos obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
-        if Usuario.objects.filter(mail=mail).exists():
-            return Response({"error": "Correo ya registrado"}, status=status.HTTP_400_BAD_REQUEST)
-
-        usuario = Usuario.objects.create(
-            nombre=nombre,
-            mail=mail,
-            password=make_password(password),
-            telefono=telefono
-        )
+        serializer = RegistroUsuarioSerializer(data=request.data)
         
-        PerfilSalud.objects.create(
-            usuario=usuario,
-            genero=genero,
-            fecha_nacimiento=fecha_nacimiento
-        )
-
-        serializer = UsuarioSerializer(usuario)
-        return Response({"success": True, "data": serializer.data}, status=status.HTTP_201_CREATED)
+        if serializer.is_valid(raise_exception=True):
+    
+            usuario_creado = serializer.save()
+        
+        
+            return Response(
+                {"success": True, "data": serializer.data}, 
+                status=status.HTTP_201_CREATED
+            )
 
 class LoginUsuarioView(APIView):
     def post(self, request):

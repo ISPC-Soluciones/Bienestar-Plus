@@ -66,6 +66,11 @@ class PerfilSalud(models.Model):
         help_text="Recomendación de enfoque de ejercicio basada en el IMC"
     )
 
+    mostrar_modal_imc = models.BooleanField(
+        default=True,  # Por defecto, se debe mostrar al nuevo usuario
+        help_text="Indica si el modal de recomendación inicial debe ser mostrado al usuario."
+    )
+
     def calcular_imc(self):
         if self.peso and self.altura and self.altura > 0:
             imc_value = self.peso / (self.altura * self.altura)
