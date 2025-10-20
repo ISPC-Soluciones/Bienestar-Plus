@@ -93,6 +93,11 @@ class Generos(models.TextChoices):
     FEMENINO = 'F', _('Femenino')
     OTRO = 'Otro', _('Otro')
 
+RECOMENDACION_CHOICES = [
+    ('FUERZA_CARDIO', 'Fuerza y Cardio'),
+    ('FLEXIBILIDAD_MANTENIMIENTO', 'Flexibilidad y Mantenimiento'),
+]
+
 class PerfilSalud(models.Model):
     """
     Modelo para la tabla Perfil Salud. Relación 1:1 con Usuario.
@@ -112,6 +117,14 @@ class PerfilSalud(models.Model):
     fecha_nacimiento = models.DateField(null=True, blank=True)
     # imc ya no se almacena en la DB, se calcula en la propiedad.
 
+    recomendacion_enfoque = models.CharField(
+        max_length=50,
+        choices=RECOMENDACION_CHOICES,
+        null=True,
+        blank=True,
+        help_text="Recomendación de enfoque de ejercicio basada en el IMC"
+    )
+
     def calcular_imc(self):
         """Calcula el Índice de Masa Corporal (IMC). Peso en kg, Altura en metros."""
         if self.peso and self.altura and self.altura > 0:
@@ -124,6 +137,24 @@ class PerfilSalud(models.Model):
     def imc(self):
         """Propiedad para acceder al IMC calculado."""
         return self.calcular_imc()
+    
+    def mapear_recomendacion(self, imc_value):
+        """Mapea el valor del IMC a una recomendación de enfoque."""
+        if imc_value is None:
+            return None
+        if imc_value < 18.5:  # Bajo Peso
+            return 'FUERZA_CARDIO'
+        elif 18.5 <= imc_value <= 24.9:  # Peso Normal
+            return 'FLEXIBILIDAD_MANTENIMIENTO'
+        elif imc_value > 24.9:  # Sobrepeso y Obesidad
+            return 'FUERZA_CARDIO'
+        
+        return None
+    
+    def actualizar_recomendacion(self):
+        """Calcula el IMC y actualiza el campo de recomendación."""
+        imc = self.calcular_imc()
+        self.recomendacion_enfoque = self.mapear_recomendacion(imc)
 
     def __str__(self):
         return f"Perfil de {self.usuario.nombre}"
