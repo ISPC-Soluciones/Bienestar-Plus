@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from django.conf import settings
-from decimal import Decimal
 from django.db import IntegrityError, transaction
 
 # =========================================================
@@ -13,24 +11,20 @@ class Roles(models.TextChoices):
     ESTANDAR = 'estandar', _('Estándar')
     ADMIN = 'admin', _('Administrador')
 
-
 class Tipos(models.TextChoices):
     FUERZA = 'fuerza', _('Fuerza')
     CARDIO = 'cardio', _('Cardio')
     FLEXIBILIDAD = 'flexibilidad', _('Flexibilidad')
-
 
 class Generos(models.TextChoices):
     MASCULINO = 'M', _('Masculino')
     FEMENINO = 'F', _('Femenino')
     OTRO = 'Otro', _('Otro')
 
-
 class Estado(models.TextChoices):
     PENDIENTE = 'pendiente', _('Pendiente')
     ENVIADO = 'enviado', _('Enviado')
     LEIDO = 'leido', _('Leído')
-
 
 # =========================================================
 # MODELOS DE USUARIO Y PERFIL
@@ -77,7 +71,7 @@ class PerfilSalud(models.Model):
 
 
 # =========================================================
-# MODELOS DE CONTENIDO Y EJERCICIOS
+# MODELOS DE CONTENIDO Y EJERCICIOS (NUESTRA SECCIÓN)
 # =========================================================
 
 class Ejercicio(models.Model):
@@ -97,11 +91,14 @@ class RutinaEjercicio(models.Model):
     ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE, related_name='registros_rutina')
     meta_cantidad = models.IntegerField(default=1)
     completado = models.BooleanField(default=False)
-    fecha_registro = models.DateField(default=timezone.now)
+    # AJUSTE: Usamos localdate para la rutina diaria
+    fecha_registro = models.DateField(default=timezone.localdate) 
 
     class Meta:
         verbose_name = "Registro de Rutina"
         verbose_name_plural = "Registros de Rutinas"
+        # CLAVE: Evita duplicados en la rutina diaria
+        unique_together = ('usuario', 'ejercicio', 'fecha_registro') 
         ordering = ['-fecha_registro']
 
     def __str__(self):
@@ -109,7 +106,7 @@ class RutinaEjercicio(models.Model):
 
 
 # =========================================================
-# MODELOS DE HÁBITOS Y PROGRESO DIARIO
+# MODELOS DE HÁBITOS Y PROGRESO DIARIO (INALTERADOS)
 # =========================================================
 
 class Habito(models.Model):
@@ -124,27 +121,20 @@ class Habito(models.Model):
 
 
 class ProgresoDiarioManager(models.Manager):
-    def obtener_checklist_para_usuario(self, usuario, fecha=None):
-        if fecha is None:
-            fecha = timezone.now().date()
-        return self.filter(usuario=usuario, fecha=fecha)
+    def asegurar_progresos_para_usuario(self, usuario, fecha):
+        habitos = Habito.objects.all() 
 
-def asegurar_progresos_para_usuario(self, usuario, fecha):
-    habitos = Habito.objects.filter(usuario=usuario)
-
-    for habito in habitos:
-        try:
-            with transaction.atomic():
-                self.get_or_create(
-                    usuario=usuario,
-                    habito=habito,
-                    fecha=fecha,
-                    defaults={'completado': False}
-                )
-        except IntegrityError:
-            # Ya existe, lo ignoramos
-            continue
-
+        for habito in habitos:
+            try:
+                with transaction.atomic():
+                    self.get_or_create(
+                        usuario=usuario,
+                        habito=habito,
+                        fecha=fecha,
+                        defaults={'completado': False}
+                    )
+            except IntegrityError:
+                continue
 
     def obtener_checklist_para_usuario(self, usuario, fecha=None):
         if fecha is None:
@@ -156,7 +146,7 @@ def asegurar_progresos_para_usuario(self, usuario, fecha):
 class ProgresoDiario(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="progresos")
     habito = models.ForeignKey(Habito, on_delete=models.CASCADE, related_name="progresos")
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateField(default=timezone.localdate)
     completado = models.BooleanField(default=False)
 
     objects = ProgresoDiarioManager()
@@ -171,7 +161,7 @@ class ProgresoDiario(models.Model):
 
 
 # =========================================================
-# MODELOS DE RECURSOS, RECOMENDACIONES Y NOTIFICACIONES
+# OTROS MODELOS (Inalterados)
 # =========================================================
 
 class Recurso(models.Model):
@@ -206,18 +196,28 @@ class Notificacion(models.Model):
     enviado = models.DateTimeField(null=True, blank=True)
     leido = models.DateTimeField(null=True, blank=True)
 
+    def marcar_como_enviado(self):
+        self.estado = Estado.ENVIADO
+        self.enviado = timezone.now()
+        self.save()
+
+    def marcar_como_leido(self):
+        self.estado = Estado.LEIDO
+        self.leido = timezone.now()
+        self.save()
+
     def __str__(self):
         return f"Notificación: {self.mensaje[:30]}"
 
     class Meta:
         verbose_name_plural = "Notificaciones"
         
+        
 class ProgresoChecklist(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="checklists")
     fecha = models.DateField(default=timezone.localdate)
     progresos = models.ManyToManyField(ProgresoDiario, related_name="checklists")
     completado = models.BooleanField(default=False)
-    habito = models.CharField(max_length=255)
 
     class Meta:
         verbose_name_plural = "Progresos Checklist"
@@ -228,41 +228,6 @@ class ProgresoChecklist(models.Model):
         return f"Checklist de {self.usuario.nombre} - {self.fecha}"
 
     def actualizar_estado(self):
-        """
-        Marca el checklist como completado si todos los progresos del día están completados.
-        """
         if self.progresos.exists():
             self.completado = all(p.completado for p in self.progresos.all())
             self.save()
-
-    class Meta:
-        verbose_name_plural = "Progresos Diarios"
-        unique_together = ("usuario", "habito", "fecha") # Un hábito por usuario por día
-
-
-
-class Notificacion(models.Model):
-    ESTADOS = [
-        ('pendiente', 'Pendiente'),
-        ('enviado', 'Enviado'),
-        ('leido', 'Leído'),
-    ]
-
-    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE, related_name='notificaciones')
-    mensaje = models.TextField()
-    estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
-    enviado = models.DateTimeField(null=True, blank=True)
-    leido = models.DateTimeField(null=True, blank=True)
-
-    def marcar_como_enviado(self):
-        self.estado = 'enviado'
-        self.enviado = timezone.now()
-        self.save()
-
-    def marcar_como_leido(self):
-        self.estado = 'leido'
-        self.leido = timezone.now()
-        self.save()
-
-    def __str__(self):
-        return f"{self.usuario.nombre} - {self.mensaje[:40]}"
