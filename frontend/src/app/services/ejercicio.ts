@@ -3,16 +3,27 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ejercicio } from '../models/ejercicio';
 
+// NOTA: Se asume que la API de Django usa paginación y devuelve { results: [] }
+interface PaginacionResponse {
+    results: Ejercicio[];
+    count: number;
+    next: string | null;
+    previous: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class EjercicioService {
   private apiUrl = 'http://localhost:8000/api/ejercicios/';
 
   constructor(private http: HttpClient) {}
 
-  obtenerEjercicios(): Observable<{ results: Ejercicio[] }> {
-    return this.http.get<{ results: Ejercicio[] }>(this.apiUrl);
+  /**
+   * Obtiene la lista completa de ejercicios predefinidos.
+   */
+  obtenerEjercicios(): Observable<PaginacionResponse> { 
+    return this.http.get<PaginacionResponse>(this.apiUrl);
   }
-
+  
   crearEjercicio(ejercicio: Ejercicio): Observable<Ejercicio> {
     return this.http.post<Ejercicio>(this.apiUrl, ejercicio);
   }

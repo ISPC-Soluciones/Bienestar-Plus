@@ -228,3 +228,18 @@ p.error {
   color: #e53e3e;
   text-align: center;
 }
+
+.invalid {
+  border: 1px solid #e74c3c;
+}
+
+.loading {
+  text-align: center;
+  font-weight: bold;
+  color: #777;
+}
+
+.modal__acciones button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

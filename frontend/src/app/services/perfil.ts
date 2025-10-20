@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Usuario, Habito, ID } from '../models/perfil.model';
+import { Usuario, Habito, ID, PerfilSalud } from '../models/perfil.model';
 import { Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
@@ -11,7 +11,7 @@ export class PerfilService {
   constructor(private http: HttpClient) {}
 
   getUsuario(id: ID): Observable<Usuario> {
-    return this.http.get<{ success: boolean; data: Usuario }>(`${this.base}/usuarios/${id}`).pipe(
+    return this.http.get<{ success: boolean; data: Usuario }>(`${this.base}/usuarios/${id}/`).pipe(
       map((res) => res.data ?? (res as any))
     );
   }
@@ -28,23 +28,37 @@ export class PerfilService {
     );
   }
 
-  updatePerfilSalud(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.base}/perfil-salud/${id}/`, data);
+  getPerfilSalud(id: number): Observable<PerfilSalud> {
+    return this.http.get<PerfilSalud>(`${this.base}/perfil-salud/${id}/`);
   }
-  
+
+  updatePerfilSalud(id: number, data: Partial<PerfilSalud>): Observable<PerfilSalud> {
+    return this.http.put<PerfilSalud>(`${this.base}/perfil-salud/${id}/`, data).pipe(
+      tap((resp) => console.log('Perfil de salud actualizado:', resp))
+    );
+  }
 
   getUsuarioConHabitos(id: ID): Observable<Usuario> {
     return this.getUsuario(id).pipe(
       switchMap((user) => {
-        if (Array.isArray(user.habitos) && user.habitos.length) {
-          return of(user);
-        }
-        if (Array.isArray(user.habitosIds) && user.habitosIds.length) {
-          return this.getHabitosByIds(user.habitosIds).pipe(
-            map((habitos) => ({ ...user, habitos }))
-          );
-        }
-        return of(user);
+        const habitos$ =
+          Array.isArray(user.habitos) && user.habitos.length
+            ? of(user.habitos)
+            : Array.isArray(user.habitosIds) && user.habitosIds.length
+            ? this.getHabitosByIds(user.habitosIds)
+            : of([]);
+
+        return habitos$.pipe(
+          switchMap((habitos) => {
+            return this.getPerfilSalud(Number(id)).pipe(
+              map((perfilSalud) => ({
+                ...user,
+                habitos,
+                perfil_salud: perfilSalud,
+              }))
+            );
+          })
+        );
       })
     );
   }

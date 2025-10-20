@@ -6,23 +6,25 @@
         alt="Foto de perfil"
         class="usuario__foto"
       />
-      <h2>Hola, {{ usuario.nombre }}. Bienvenido!</h2>
+      <h2>Hola, {{ usuario.nombre }}. ¡Bienvenido!</h2>
       <p>{{ usuario.email }}</p>
       <button (click)="abrirModal()">Editar perfil</button>
     </div>
 
     <div class="usuario__detalles">
       <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
-      <p>
-        <strong>Altura:</strong> {{ usuario.perfil_salud?.altura || "-" }} cm
-      </p>
+      <p><strong>Altura:</strong> {{ usuario.perfil_salud?.altura || "-" }} cm</p>
       <p>
         <strong>Género:</strong>
         {{ usuario.perfil_salud?.genero || "Sin especificar" }}
       </p>
       <p>
-        <strong>Fecha Nacimiento:</strong>
+        <strong>Fecha de Nacimiento:</strong>
         {{ usuario.perfil_salud?.fecha_nacimiento | date }}
+      </p>
+      <p *ngIf="usuario.perfil_salud?.imc">
+        <strong>IMC:</strong>
+        {{ usuario.perfil_salud?.imc | number: '1.1-2' }}
       </p>
     </div>
   </aside>
@@ -40,7 +42,8 @@
 
   <section class="perfil__rutina">
     <h2>Mi rutina de hoy</h2>
-    <div class="progreso__detalle">
+
+    <div class="progreso__detalle" *ngIf="totalHabitos > 0">
       <p>
         <strong>{{ habitosCompletados }}</strong> de
         <strong>{{ totalHabitos }}</strong> hábitos completados hoy.
@@ -78,25 +81,38 @@
   <p class="loading">Cargando perfil...</p>
 </ng-template>
 
-<!-- 🧾 Modal de edición de perfil -->
 <div class="modal__overlay" *ngIf="modalAbierto">
   <div class="modal__content">
-    <h2>Editar perfil</h2>
+    <h2>Editar perfil de salud</h2>
 
     <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
       <div class="form__group">
         <label for="peso">Peso (kg)</label>
-        <input id="peso" type="number" formControlName="peso" />
+        <input
+          id="peso"
+          type="number"
+          formControlName="peso"
+          [class.invalid]="perfilForm.get('peso')?.invalid && perfilForm.get('peso')?.touched"
+        />
       </div>
 
       <div class="form__group">
         <label for="altura">Altura (cm)</label>
-        <input id="altura" type="number" formControlName="altura" />
+        <input
+          id="altura"
+          type="number"
+          formControlName="altura"
+          [class.invalid]="perfilForm.get('altura')?.invalid && perfilForm.get('altura')?.touched"
+        />
       </div>
 
       <div class="form__group">
         <label for="genero">Género</label>
-        <select id="genero" formControlName="genero">
+        <select
+          id="genero"
+          formControlName="genero"
+          [class.invalid]="perfilForm.get('genero')?.invalid && perfilForm.get('genero')?.touched"
+        >
           <option value="">Seleccione...</option>
           <option value="M">Masculino</option>
           <option value="F">Femenino</option>
@@ -110,11 +126,14 @@
           id="fecha_nacimiento"
           type="date"
           formControlName="fecha_nacimiento"
+          [class.invalid]="perfilForm.get('fecha_nacimiento')?.invalid && perfilForm.get('fecha_nacimiento')?.touched"
         />
       </div>
 
       <div class="modal__acciones">
-        <button type="submit" [disabled]="perfilForm.invalid">Guardar</button>
+        <button type="submit" [disabled]="perfilForm.invalid || loading">
+          {{ loading ? 'Guardando...' : 'Guardar' }}
+        </button>
         <button type="button" (click)="cerrarModal()">Cancelar</button>
       </div>
     </form>
