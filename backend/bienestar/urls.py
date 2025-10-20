@@ -20,4 +20,3 @@ router.register(r'rutinas', RutinaEjercicioViewSet, basename='rutinas')
 router.register(r'notificaciones', NotificacionViewSet, basename='notificacion') 
 
 urlpatterns = router.urls
-

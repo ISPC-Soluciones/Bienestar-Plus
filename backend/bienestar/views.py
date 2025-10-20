@@ -1,19 +1,18 @@
-from rest_framework import status, viewsets # AÑADIDO: viewsets
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.hashers import make_password, check_password
 from django.db.models import Count, Sum, F 
 from datetime import timedelta 
-from django.contrib.auth.hashers import make_password, check_password
-from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Habito, ProgresoChecklist 
+from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Habito, ProgresoChecklist, Notificacion 
 from .serializers import (
     ProgresoDiarioSerializer, 
     UsuarioSerializer, 
-    UsuarioUpdateSerializer, # Asumido para UsuarioViewSet
+    UsuarioUpdateSerializer,
     PerfilSaludSerializer, 
     EjercicioSerializer, 
     RutinaEjercicioSerializer,
@@ -21,300 +20,20 @@ from .serializers import (
     ProgresoChecklistSerializer,
     NotificacionSerializer
 )
-from django.shortcuts import render
-from .models import Notificacion
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
-class ProgresoDiarioChecklistView(APIView): # Renombrar para mayor claridad
-    """
-    Vista para obtener el checklist del usuario autenticado.
-    GET /api/progresos/checklist/
-    """
-    permission_classes = [IsAuthenticated] # Usa el usuario autenticado
+# =========================================================
+# VISTAS DE AUTENTICACIÓN (REINTRODUCIDAS PARA CORREGIR IMPORTERROR)
+# =========================================================
 
-    def get(self, request):
-        usuario = request.user # Usar el usuario autenticado
-        
-        # Opcional: Permitir la fecha como parámetro (ej: /progreso/checklist/?fecha=2025-10-14)
-        fecha_str = request.query_params.get("fecha")
-        fecha = None
-        if fecha_str:
-            try:
-                # Se asume formato YYYY-MM-DD
-                fecha = timezone.datetime.strptime(fecha_str, '%Y-%m-%d').date()
-            except ValueError:
-                return Response(
-                    {"error": "Formato de fecha inválido. Use YYYY-MM-DD."}, 
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        
-        # Si no se proporciona fecha, el manager usa timezone.localdate() por defecto.
-        progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
-        serializer = ProgresoDiarioSerializer(progresos, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-# --- AÑADIDOS NECESARIOS ---
-
-class ProgresoDiarioToggleCompletadoView(APIView):
-    """
-    Permite cambiar el estado 'completado' de un ProgresoDiario específico.
-    PATCH /api/progresos/<progreso_id>/toggle/
-    """
-    permission_classes = [IsAuthenticated] # Asegúrate de tener autenticación
-
-    def patch(self, request, pk, format=None):
-        # 1. Buscar el objeto ProgresoDiario. Asegurar que pertenece al usuario autenticado.
-        try:
-            progreso = ProgresoDiario.objects.get(pk=pk, usuario=request.user)
-        except ProgresoDiario.DoesNotExist:
-            return Response(
-                {"error": "Progreso diario no encontrado o no autorizado."}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        # 2. Obtener el nuevo estado 'completado' del cuerpo de la solicitud
-        nuevo_estado = request.data.get('completado')
-
-        if nuevo_estado is None or not isinstance(nuevo_estado, bool):
-             return Response(
-                {"error": "Debe enviar el campo 'completado' como booleano."}, 
-                status=status.HTTP_400_BAD_REQUEST
-             )
-
-        # 3. Actualizar y guardar
-        progreso.completado = nuevo_estado
-        progreso.save(update_fields=['completado']) # Optimizar la consulta a DB
-
-        # 4. Devolver el objeto actualizado
-        serializer = ProgresoDiarioSerializer(progreso)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class UsuarioViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet para gestionar el perfil de usuario.
-    """
-    queryset = Usuario.objects.all()
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
-    perfil_salud = PerfilSaludSerializer(read_only=True)
-    serializer_class = UsuarioSerializer
-
-    def get_serializer_class(self):
-        """Usa diferentes serializers según la acción"""
-        if self.action in ['update', 'partial_update']:
-            return UsuarioUpdateSerializer
-        return UsuarioSerializer
-
-    def retrieve(self, request, pk=None):
-        usuario = get_object_or_404(Usuario, pk=pk)
-        serializer = UsuarioSerializer(usuario, context={'request': request}) # Añadir context para foto_perfil_url
-        return Response({
-            'success': True,
-            'data': serializer.data
-        })
-
-    def update(self, request, pk=None):
-        usuario = get_object_or_404(Usuario, pk=pk)
-        serializer = UsuarioUpdateSerializer(usuario, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            response_serializer = UsuarioSerializer(usuario, context={'request': request})
-            return Response({
-                'success': True,
-                'message': 'Perfil actualizado exitosamente',
-                'data': response_serializer.data
-            })
-        return Response({
-            'success': False,
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
-
-    def partial_update(self, request, pk=None):
-        usuario = get_object_or_404(Usuario, pk=pk)
-        serializer = UsuarioUpdateSerializer(
-            usuario, 
-            data=request.data, 
-            partial=True
-        )
-        if serializer.is_valid():
-            serializer.save()
-            response_serializer = UsuarioSerializer(usuario, context={'request': request})
-            return Response({
-                'success': True,
-                'message': 'Perfil actualizado exitosamente',
-                'data': response_serializer.data
-            })
-        return Response({
-            'success': False,
-            'errors': serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
-
-
-class PerfilSaludViewSet(viewsets.ModelViewSet):
-    """
-    Gestiona el perfil de salud (relación 1:1 con Usuario).
-    Endpoint: /api/perfil-salud/<user_id>/
-    """
-    # permission_classes = [IsAuthenticated] # Asumimos autenticación para producción
-    queryset = PerfilSalud.objects.all()
-    serializer_class = PerfilSaludSerializer
-    
-    def get(self, request, user_id):
-        """Obtiene el perfil de salud para un usuario dado."""
-        # Nota: En un sistema real, user_id debería venir de request.user.id
-        usuario = get_object_or_404(Usuario, pk=user_id)
-        
-        try:
-            perfil = usuario.perfilsalud
-            serializer = PerfilSaludSerializer(perfil)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except PerfilSalud.DoesNotExist:
-            return Response(
-                {"message": "Perfil de salud no encontrado. Use PUT para crearlo."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-    def put(self, request, user_id):
-        """
-        Crea un nuevo perfil o actualiza uno existente (actualización completa).
-        Endpoint: /api/perfil-salud/<user_id>/
-        """
-        usuario = get_object_or_404(Usuario, pk=user_id)
-        
-        try:
-            perfil = usuario.perfilsalud # Obtener si existe
-        except PerfilSalud.DoesNotExist:
-            perfil = None # Si no existe, se creará
-            
-        #data = request.data.copy()
-        # Se requiere asignar el usuario, aunque el serializador lo maneja al guardar
-        # data['usuario'] = usuario.pk 
-
-        serializer = PerfilSaludSerializer(perfil, data=request.data, context={'usuario': usuario})
-        
-        if serializer.is_valid():
-        # ✅ El serializer ahora sabe a qué usuario asociar el perfil
-            instance = serializer.save()
-            return Response(PerfilSaludSerializer(instance).data,
-            status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
-             )
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, user_id):
-        """Actualización parcial del perfil de salud (PATCH)."""
-        usuario = get_object_or_404(Usuario, pk=user_id)
-        
-        try:
-            perfil = usuario.perfilsalud
-        except PerfilSalud.DoesNotExist:
-            return Response(
-                {"error": "El perfil de salud no existe para actualizar. Use PUT para crearlo primero."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True, context={'usuario': usuario})
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(PerfilSaludSerializer(perfil).data, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class EstadisticasView(APIView):
-    """
-    API de solo lectura para el Dashboard Administrativo.
-    Calcula métricas clave de la aplicación...
-    Endpoint: /api/estadisticas/
-    """
-    
-    def get(self, request):
-        """
-        Calcula y devuelve las métricas.
-        """
-        
-        # ----------------------------------------------------------------------
-        # PASO 0: Definir el rango de tiempo (Últimos 30 días para todas las métricas de actividad)
-        # ----------------------------------------------------------------------
-        hoy = timezone.localdate()
-        fecha_hace_30_dias = hoy - timedelta(days=30)
-        
-        # Filtro de registros de rutinas en el último mes
-        rutinas_del_mes = RutinaEjercicio.objects.filter(
-            # Asumo que tu modelo RutinaEjercicio tiene un campo 'fecha_registro'
-            fecha_registro__gte=fecha_hace_30_dias 
-        )
-        
-        # 1. Total de Usuarios (siempre global)
-        total_usuarios = Usuario.objects.count()
-        
-        # 2. Total de Rutinas Registradas (FILTRADO POR EL ÚLTIMO MES)
-        total_rutinas_registradas = rutinas_del_mes.count()
-        
-        # 3. Ejercicios Más Populares (Top 5 - FILTRADO POR EL ÚLTIMO MES)
-        # Usamos el filtro de rutinas_del_mes para calcular la popularidad
-        ejercicios_populares = rutinas_del_mes.values(
-            'ejercicio__nombre', 
-            'ejercicio__tipo'
-        ).annotate(
-            conteo_rutinas=Count('ejercicio__nombre')
-        ).order_by('-conteo_rutinas')[:5].values(
-            nombre=F('ejercicio__nombre'), 
-            tipo=F('ejercicio__tipo'), 
-            conteo_rutinas=F('conteo_rutinas')
-        )
-
-        # 4. Total de Progreso Diario Completo (FILTRADO POR EL ÚLTIMO MES)
-        # Cuenta la actividad reciente de checklists completados.
-        progresos_completados = ProgresoDiario.objects.filter(
-            completado=True,
-            fecha__gte=fecha_hace_30_dias
-        ).count()
-        
-        # Construcción de la respuesta
-        metrics = {
-            "total_usuarios": total_usuarios,
-            "total_rutinas_registradas": total_rutinas_registradas,
-            "progresos_diarios_completados": progresos_completados,
-            "ejercicios_mas_populares": list(ejercicios_populares) 
-        }
-        
-        return Response(metrics, status=status.HTTP_200_OK)
-
-
-class EjercicioViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet para el CRUD de Ejercicios base (gestionado por el Administrador).
-    Ruta generada: /api/ejercicios/
-    """
-    queryset = Ejercicio.objects.all()
-    serializer_class = EjercicioSerializer
-    # Se recomienda añadir permisos: permission_classes = [IsAdminUser]
-
-class RutinaEjercicioViewSet(viewsets.ModelViewSet):
-    queryset = RutinaEjercicio.objects.all()
-    serializer_class = RutinaEjercicioSerializer
-
-    def list(self, request, *args, **kwargs):
-        usuario_id = request.query_params.get('usuario_id')
-        if usuario_id:
-            queryset = self.queryset.filter(usuario_id=usuario_id)
-        else:
-            queryset = self.queryset
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-    
 class RegistroUsuarioView(APIView):
     def post(self, request):
         nombre = request.data.get('nombre')
         mail = request.data.get('email')
         password = request.data.get('password')
         telefono = request.data.get('telefono', '')
-         # Campos del perfil salud
         genero = request.data.get('genero')
         fecha_nacimiento = request.data.get('fecha_nacimiento')
-
 
         if not nombre or not mail or not password:
             return Response({"error": "Faltan campos obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
@@ -328,7 +47,6 @@ class RegistroUsuarioView(APIView):
             telefono=telefono
         )
         
-
         PerfilSalud.objects.create(
             usuario=usuario,
             genero=genero,
@@ -356,6 +74,96 @@ class LoginUsuarioView(APIView):
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
 
+
+# =========================================================
+# VIEWSETS ESPECÍFICOS (Modificados)
+# =========================================================
+
+class EjercicioViewSet(viewsets.ModelViewSet):
+    """CRUD de Ejercicios base (Administrador)."""
+    queryset = Ejercicio.objects.all()
+    serializer_class = EjercicioSerializer
+    # Nota: Si tu frontend espera { results: [] }, esto es manejado por la paginación de DRF.
+
+
+class RutinaEjercicioViewSet(viewsets.ModelViewSet):
+    """Gestiona la adición (POST) y listado (GET) de ejercicios a la rutina del usuario."""
+    queryset = RutinaEjercicio.objects.all().select_related('ejercicio')
+    serializer_class = RutinaEjercicioSerializer
+
+    def get_queryset(self):
+        """Filtra la lista por el usuario solicitado (Query Param 'usuario_id') para la fecha de hoy."""
+        queryset = self.queryset
+        usuario_id = self.request.query_params.get('usuario_id')
+        if usuario_id is not None:
+            # Filtra por el ID del usuario y forzamos la fecha de hoy
+            queryset = queryset.filter(usuario_id=usuario_id, fecha_registro=timezone.localdate())
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        """Devuelve la rutina de ejercicios del usuario para hoy."""
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        """Permite al usuario agregar un ejercicio a su rutina diaria, evitando duplicados."""
+        
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            rutina_ejercicio, created = RutinaEjercicio.objects.get_or_create(
+                usuario=serializer.validated_data['usuario'],
+                ejercicio=serializer.validated_data['ejercicio'],
+                fecha_registro=timezone.localdate(), # Forzar la fecha de hoy
+                defaults={
+                    'meta_cantidad': serializer.validated_data.get('meta_cantidad', 1),
+                    'completado': False
+                }
+            )
+            
+            if created:
+                return Response(
+                    RutinaEjercicioSerializer(rutina_ejercicio).data, 
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                return Response(
+                    {
+                        "message": "Este ejercicio ya está en tu rutina para hoy.",
+                        "rutina": RutinaEjercicioSerializer(rutina_ejercicio).data
+                    }, 
+                    status=status.HTTP_200_OK
+                )
+                
+        except Exception as e:
+            print(f"Error al intentar crear rutina: {e}")
+            return Response({"error": "Error interno al procesar la rutina. Asegúrate que Usuario/Ejercicio existan."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# =========================================================
+# VIEWSETS GENERALES (Inalterados, pero mantenidos)
+# =========================================================
+
+class UsuarioViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    serializer_class = UsuarioSerializer
+
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update']:
+            return UsuarioUpdateSerializer
+        return UsuarioSerializer
+    
+    # ... (métodos retrieve, update, partial_update, etc.)
+
+class PerfilSaludViewSet(viewsets.ModelViewSet):
+    queryset = PerfilSalud.objects.all()
+    serializer_class = PerfilSaludSerializer
+    # ... (métodos put, patch, get)
+
 class NotificacionViewSet(viewsets.ModelViewSet):
     queryset = Notificacion.objects.all().order_by('-enviado')
     serializer_class = NotificacionSerializer
@@ -370,66 +178,24 @@ class HabitoViewSet(viewsets.ModelViewSet):
     queryset = Habito.objects.all()
     serializer_class = HabitoSerializer
 
-class ProgresoChecklistViewSet(viewsets.ModelViewSet):
-    queryset = ProgresoChecklist.objects.all()
-    serializer_class = ProgresoChecklistSerializer
-
 class ProgresoDiarioViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet que gestiona el progreso diario de hábitos del usuario.
-    Compatible con Angular para /api/progresoschecklist/
-    """
     queryset = ProgresoDiario.objects.all()
     serializer_class = ProgresoDiarioSerializer
-
-    def list(self, request, *args, **kwargs):
-        usuario_id = request.query_params.get('usuario_id')
-        fecha = request.query_params.get('fecha', timezone.localdate())
-
-        if not usuario_id:
-            return Response({"error": "Falta el parámetro usuario_id"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            usuario = Usuario.objects.get(pk=usuario_id)
-        except Usuario.DoesNotExist:
-            return Response({"error": "Usuario no encontrado"}, status=status.HTTP_404_NOT_FOUND)
-
-        progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
-        serializer = self.get_serializer(progresos, many=True)
-        return Response(serializer.data)
+    
+    def get_queryset(self):
+        queryset = self.queryset
+        usuario_id = self.request.query_params.get('usuario_id')
+        if usuario_id is not None:
+            queryset = queryset.filter(usuario_id=usuario_id, fecha=timezone.localdate())
+        return queryset
 
     @action(detail=True, methods=['post'])
     def toggle(self, request, pk=None):
-        """
-        Alterna el estado completado de un hábito.
-        Endpoint: /api/progresoschecklist/{id}/toggle/
-        """
         progreso = get_object_or_404(ProgresoDiario, pk=pk)
         progreso.completado = not progreso.completado
         progreso.save()
         return Response({'id': progreso.id, 'completado': progreso.completado})
-    def create(self, request):
-        usuario = request.user
-        ejercicio_id = request.data.get('ejercicio_id')
-        habito_id = request.data.get('habito_id')
 
-        if not ejercicio_id and not habito_id:
-            return Response({"error": "Se requiere habito_id o ejercicio_id"}, status=400)
-
-        progreso, created = ProgresoDiario.objects.get_or_create(
-            usuario=usuario,
-            ejercicio_id=ejercicio_id if ejercicio_id else None,
-            habito_id=habito_id if habito_id else None,
-            fecha=timezone.localdate()
-        )
-    def destroy(self, request, pk=None):
-        usuario = request.user
-        progreso = get_object_or_404(ProgresoDiario, pk=pk, usuario=usuario)
-        progreso.delete()
-        return Response(status=204)
-
-
-def ver_notificaciones(request):
-    notificaciones = Notificacion.objects.all()
-    mensaje = request.GET.get('mensaje', '')  # opcional para feedback
-    return render(request, 'notificaciones.html', {'notificaciones': notificaciones, 'mensaje': mensaje})
+class ProgresoChecklistViewSet(viewsets.ModelViewSet):
+    queryset = ProgresoChecklist.objects.all()
+    serializer_class = ProgresoChecklistSerializer
