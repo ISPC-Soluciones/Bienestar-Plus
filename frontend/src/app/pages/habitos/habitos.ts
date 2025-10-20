@@ -1,156 +1,187 @@
-// src/app/pages/habitos/habitos.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HabitosService, ProgresoDiario, Ejercicio } from '../../services/habitos';
-import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
+import { EjercicioService } from '../../services/ejercicio'; 
+import { RutinaEjercicioService } from '../../services/rutina-ejercicio'; 
+import { Ejercicio, RutinaEjercicio } from '../../models/ejercicio'; 
 
 @Component({
   selector: 'app-habitos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './habitos.html',
-  styleUrls: ['./habitos.css']
+  styleUrls: ['./habitos.css'],
+  providers: [EjercicioService, RutinaEjercicioService]
 })
-export class HabitosComponent implements OnInit {
-  progresos: ProgresoDiario[] = [];
-  ejercicios: Ejercicio[] = [];
-  cargando = true;
-  error = '';
-  usuarioId: number | null = null; // lo obtendrás del estado de sesión / localStorage
+export class Habitos implements OnInit {
 
-  constructor(private habitosService: HabitosService, private http: HttpClient) {}
+  activeTab: string = 'ejercicio';
+  ejerciciosDisponibles: Ejercicio[] = []; 
+  rutinaDelUsuario: RutinaEjercicio[] = []; 
+  
+  // Almacena el ID del registro de rutina que se está editando
+  rutinaIdEnEdicion: number | null = null; 
+  // Almacena temporalmente la nueva cantidad durante la edición
+  cantidadEnEdicion: number | undefined; 
+
+  usuarioNombre: string = 'Cosme'; 
+  usuarioIdAutenticado: number = 1; 
+
+  constructor(
+    private ejercicioService: EjercicioService,
+    private rutinaService: RutinaEjercicioService
+  ) {}
 
   ngOnInit(): void {
-    // Ejemplo: obtén el usuario logueado desde localStorage (ajusta según tu auth)
-    const user = localStorage.getItem('usuario'); // puede ser JSON string con id
-    if (user) {
-      try {
-        const u = JSON.parse(user);
-        this.usuarioId = u.id ?? null;
-      } catch {
-        this.usuarioId = null;
-      }
-    }
-
-    if (!this.usuarioId) {
-      // Si no tienes usuario en localStorage quizás lo tengas en otro servicio; adapta según tu app
-      this.error = 'Usuario no identificado. Inicia sesión para ver tus hábitos.';
-      this.cargando = false;
-      return;
-    }
-
-    this.cargarChecklist();
-    this.cargarEjercicios();
-    this.cargarProgresos();
+    this.cargarEjerciciosDisponibles();
+    this.cargarRutinaDelUsuario();
   }
 
-  cargarChecklist(): void {
-    if (!this.usuarioId) return;
-    this.cargando = true;
-    this.error = '';
+  setActiveTab(tabName: string): void {
+    this.activeTab = tabName;
+  }
 
-    // No pasamos fecha: backend usará timezone.localdate() si no se envía
-    this.habitosService.obtenerChecklist(this.usuarioId).subscribe({
-      next: (data) => {
-        this.progresos = data;
-        this.cargando = false;
+  obtenerRutaImagen(nombre: string): string {
+    const nombreLimpio = nombre.toLowerCase().replace(/ /g, ''); 
+    return `assets/${nombreLimpio}.jpg`; 
+  }
+
+
+  cargarEjerciciosDisponibles(): void {
+    this.ejercicioService.obtenerEjercicios().subscribe({
+      next: (response) => {
+        this.ejerciciosDisponibles = response.results; 
       },
-      error: (err) => {
-        console.error('Error al cargar checklist:', err);
-        this.error = 'No se pudieron cargar los hábitos. Reintenta más tarde.';
-        this.cargando = false;
-      }
+      error: (err) => console.error('Error cargando ejercicios:', err),
     });
   }
 
-  cargarProgresos() {
-    if (!this.usuarioId) return;
-
-    this.cargando = true;
-    this.habitosService.obtenerProgresos(this.usuarioId).subscribe({
-      next: (data) => {
-        this.progresos = data;
-        this.cargando = false;
+  cargarRutinaDelUsuario(): void {
+    this.rutinaService.obtenerRutinaDelUsuario(this.usuarioIdAutenticado).subscribe({
+      next: (rutina) => {
+        this.rutinaDelUsuario = rutina; 
       },
-      error: (err) => {
-        console.error(err);
-        this.error = 'Error al cargar hábitos';
-        this.cargando = false;
-      },
+      error: (err) => console.error('Error cargando rutina del usuario:', err),
     });
   }
 
-  cargarEjercicios() {
-    this.habitosService.obtenerEjercicios().subscribe({
-      next: (data: any) => {
-        this.ejercicios = data.results ?? data; // ✅ maneja ambos casos
-        console.log('📦 Ejercicios cargados:', this.ejercicios);
-      },
-      error: (err) => {
-        console.error('Error al cargar ejercicios:', err);
-        this.error = 'Error al cargar ejercicios';
-      },
-    });
+
+  /**
+   * Verifica si el ejercicio ya está en la rutina del usuario.
+   */
+  estaEnRutina(ejercicio: Ejercicio): boolean {
+    if (!ejercicio.id) return false;
+    return this.rutinaDelUsuario.some(rutinaItem => 
+        rutinaItem.ejercicio === ejercicio.id
+    );
   }
 
-  agregarEjercicio(e: Ejercicio) {
-    if (!this.usuarioId) return;
-  
-    this.habitosService.agregarEjercicioAChecklist(e.id).subscribe({
-      next: (progreso) => {
-        this.progresos.push(progreso); // se agrega a la lista de checkboxes
-      },
-      error: (err) => {
-        console.error(err);
-        alert('No se pudo agregar el ejercicio a tu checklist');
-      }
-    });
-  }
-  
-  quitarEjercicio(progreso: ProgresoDiario) {
-    this.habitosService.quitarProgreso(progreso.id).subscribe({
+
+  agregarEjercicioARutina(ejercicio: Ejercicio): void {
+    if (!ejercicio.id || this.estaEnRutina(ejercicio)) return;
+
+    // Usamos 20 como meta por defecto para que la edición tenga sentido
+    const metaPorDefecto = 20; 
+
+    this.rutinaService.agregarARutina(
+        this.usuarioIdAutenticado, 
+        ejercicio.id, 
+        metaPorDefecto 
+    ).subscribe({
       next: () => {
-        this.progresos = this.progresos.filter(p => p.id !== progreso.id);
+        // Operación silenciosa
+        this.cargarRutinaDelUsuario(); 
       },
       error: (err) => {
-        console.error(err);
-        alert('No se pudo eliminar el ejercicio de tu checklist');
-      }
+        console.error('Error agregando ejercicio a la rutina:', err);
+      },
+    });
+  }
+  
+  // =========================================================
+  // LÓGICA DE GESTIÓN DE RUTINA (CRUD - Actualización/Eliminación/Check)
+  // =========================================================
+
+  /**
+   * Habilita el modo de edición para un registro de rutina.
+   */
+  entrarEnModoEdicion(rutina: RutinaEjercicio): void {
+    if (!rutina.id || rutina.completado) return;
+    this.rutinaIdEnEdicion = rutina.id;
+    this.cantidadEnEdicion = rutina.meta_cantidad; // Carga el valor actual
+  }
+
+  /**
+   * Sale del modo de edición.
+   */
+  cancelarEdicion(): void {
+    this.rutinaIdEnEdicion = null;
+    this.cantidadEnEdicion = undefined;
+  }
+
+  /**
+   * Guarda la nueva meta (cantidad) usando PATCH.
+   */
+  guardarEdicion(rutina: RutinaEjercicio): void {
+    if (!rutina.id || this.cantidadEnEdicion === undefined || this.cantidadEnEdicion <= 0) {
+        console.error("La cantidad debe ser un número positivo.");
+        return;
+    }
+    
+    const nuevaCantidad = this.cantidadEnEdicion;
+
+    // Llama al PATCH endpoint de Django
+    this.rutinaService.actualizarRutina(rutina.id, { meta_cantidad: nuevaCantidad }).subscribe({
+        next: (rutinaActualizada) => {
+            // Actualiza el objeto en la lista localmente
+            rutina.meta_cantidad = rutinaActualizada.meta_cantidad; 
+            // Operación silenciosa
+            this.cancelarEdicion();
+        },
+        error: (err) => console.error('Error al actualizar la meta:', err)
     });
   }
 
   /**
-   * Llama al endpoint POST toggle (no necesita payload según el viewset).
-   * Actualiza el estado local inmediatamente si la llamada es exitosa.
+   * Elimina un registro de rutina de la base de datos (DELETE).
+   * CORREGIDO: Se quita la ventana emergente de confirmación.
    */
-  alternarCompletado(progreso: ProgresoDiario): void {
-    const id = progreso.id;
-    // Feedback inmediato opcional:
-    const estadoPrevio = progreso.completado;
-    progreso.completado = !estadoPrevio;
+  eliminarRutina(id?: number): void {
+    if (!id) return;
+    
+    // ELIMINADO: window.confirm()
 
-    this.habitosService.toggleCompletado(id).subscribe({
-      next: (resp) => {
-        // Si tu backend devuelve el objeto o {id, completado}, intenta usarlo
-        if (resp && typeof resp.completado === 'boolean') {
-          progreso.completado = resp.completado;
-        } else if (resp && resp.id && resp.id === id && typeof resp.completado === 'boolean') {
-          progreso.completado = resp.completado;
-        } else {
-          // Si backend no devuelve estado confiable, dejamos el cambio local
-        }
-      },
-      error: (err) => {
-        console.error('Error al alternar completado:', err);
-        // revertir cambio visual si falla
-        progreso.completado = estadoPrevio;
-        alert('No se pudo actualizar el estado del hábito. Intenta nuevamente.');
-      }
+    // Llama al DELETE endpoint de Django
+    this.rutinaService.eliminarRutina(id).subscribe({
+        next: () => {
+            // Elimina el elemento de la lista local
+            this.rutinaDelUsuario = this.rutinaDelUsuario.filter(r => r.id !== id);
+        },
+        error: (err) => console.error('Error al eliminar el ejercicio:', err)
     });
   }
-  marcarProgresoDiario(progreso: any) {
-   
-    console.log('Progreso diario marcado:', progreso);
+
+  /**
+   * Marca o desmarca un ejercicio como completado (PATCH).
+   */
+  marcarCompletado(rutina: RutinaEjercicio): void {
+    // Si ya está completado, no se hace nada, el botón está oculto en el HTML
+    if (!rutina.id || rutina.completado) return; 
+
+    // Solo marcamos como TRUE
+    const nuevoEstado = true; 
+    
+    // Llama al PATCH endpoint de Django para actualizar el estado
+    this.rutinaService.actualizarRutina(rutina.id, { completado: nuevoEstado }).subscribe({
+        next: (rutinaActualizada) => {
+            // Actualiza el estado localmente
+            rutina.completado = rutinaActualizada.completado;
+            // Desactivamos el modo edición si estaba activo
+            this.cancelarEdicion();
+        },
+        error: (err) => console.error('Error al marcar como completado:', err)
+    });
   }
 }
+
