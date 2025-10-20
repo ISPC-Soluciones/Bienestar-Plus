@@ -431,5 +431,5 @@ class ProgresoDiarioViewSet(viewsets.ModelViewSet):
 
 def ver_notificaciones(request):
     notificaciones = Notificacion.objects.all()
-    mensaje = request.GET.get('mensaje', '')  # opcional para feedback
+    mensaje = request.GET.get('mensaje', '')  
     return render(request, 'notificaciones.html', {'notificaciones': notificaciones, 'mensaje': mensaje})
