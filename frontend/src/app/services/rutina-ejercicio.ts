@@ -1,60 +1,61 @@
-// ==========================================================
-// src/app/services/rutina-ejercicio.service.ts
-// ==========================================================
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { RutinaEjercicio } from '../models/ejercicio'; 
 
-// ==========================================================
-// INTERFACES (Exportadas para usarlas en el componente)
-// ==========================================================
-export interface Ejercicio {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  tipo: string;
+// NUEVO: Interfaz para tipar los datos parciales que se envían en la actualización (PATCH)
+interface RutinaUpdate {
+    meta_cantidad?: number;
+    completado?: boolean;
 }
 
-export interface RutinaEjercicio {
-  id: number;
-  usuario: number;
-  ejercicio: Ejercicio;
-  completado: boolean;
-  fecha_registro: string;
-  meta_cantidad?: number;
-}
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class RutinaEjercicioService {
-  private baseUrl = 'http://localhost:8000/api/';
-  private ejerciciosUrl = this.baseUrl + 'ejercicios/';
-  private rutinasUrl = this.baseUrl + 'rutinas-ejercicio/';
+  private apiUrl = 'http://localhost:8000/api/rutinas/'; 
 
   constructor(private http: HttpClient) {}
 
-  /** Trae los ejercicios disponibles creados por el admin */
-  obtenerEjercicios(): Observable<Ejercicio[]> {
-    return this.http.get<Ejercicio[]>(this.ejerciciosUrl);
+  /**
+   * Obtiene la rutina de ejercicios del usuario para hoy, filtrando por usuario_id.
+   */
+  obtenerRutinaDelUsuario(usuarioId: number): Observable<RutinaEjercicio[]> {
+    let params = new HttpParams().set('usuario_id', usuarioId.toString());
+    return this.http.get<RutinaEjercicio[]>(this.apiUrl, { params });
   }
 
-  /** Trae la rutina personalizada del usuario */
-  obtenerRutina(usuarioId: number): Observable<RutinaEjercicio[]> {
-    return this.http.get<RutinaEjercicio[]>(`${this.rutinasUrl}?usuario=${usuarioId}`);
+  /**
+   * Registra un ejercicio en la rutina del usuario.
+   */
+  agregarARutina(
+    usuarioId: number, 
+    ejercicioId: number, 
+    metaCantidad: number
+  ): Observable<any> { 
+    const data = {
+      usuario: usuarioId, 
+      ejercicio: ejercicioId, 
+      meta_cantidad: metaCantidad,
+    };
+    return this.http.post<any>(this.apiUrl, data);
+  }
+  
+  /**
+   * NUEVO: Actualiza parcialmente un registro de rutina (PATCH).
+   * Se usa para cambiar la cantidad o marcar como completado.
+   * @param id ID del registro de rutina (RutinaEjercicio.id).
+   * @param data Objeto con los campos a actualizar (meta_cantidad o completado).
+   */
+  actualizarRutina(id: number, data: RutinaUpdate): Observable<RutinaEjercicio> {
+    return this.http.patch<RutinaEjercicio>(`${this.apiUrl}${id}/`, data);
   }
 
-  /** Agrega un ejercicio a la rutina del usuario */
-  agregarEjercicio(usuarioId: number, ejercicioId: number): Observable<RutinaEjercicio> {
-    const payload = { usuario: usuarioId, ejercicio: ejercicioId, completado: false };
-    return this.http.post<RutinaEjercicio>(this.rutinasUrl, payload);
-  }
-
-  /** Elimina un ejercicio de la rutina */
-  eliminarDeRutina(rutinaId: number): Observable<void> {
-    return this.http.delete<void>(`${this.rutinasUrl}${rutinaId}/`);
-  }
-
-  /** Marca o desmarca como completado */
-  toggleCompletado(rutinaId: number, completado: boolean): Observable<RutinaEjercicio> {
-    return this.http.patch<RutinaEjercicio>(`${this.rutinasUrl}${rutinaId}/`, { completado });
+  /**
+   * NUEVO: Elimina un registro de rutina (DELETE).
+   * @param id ID del registro de rutina (RutinaEjercicio.id).
+   */
+  eliminarRutina(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
 }

@@ -1,33 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-export interface Notificacion {
-  id: number;
-  mensaje: string;
-  activado: boolean;
-  fecha?: Date;
-};
+import { Observable, tap } from 'rxjs';
+import { Notificacion } from '../models/notificacion';
+import { ID } from '../models/perfil.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class Notificaciones {
-  private notificaciones: Notificacion[] = [
-    { id: 1, mensaje: 'Recordatorio para beber agua', activado: true, fecha: new Date() },
-    { id: 2, mensaje: 'Recordatorio para registrar desayuno', activado: false, fecha: new Date() },
-    { id: 3, mensaje: 'Recordatorio para actividad física', activado: true, fecha: new Date() }
-  ];
+export class NotificacionesService {
+  private baseUrl = 'http://localhost:8000/api/notificaciones/';
 
-  constructor(private http: HttpClient) { };
+  constructor(private http: HttpClient) {}
 
-  getNotificaciones(): Notificacion[] {
-    return this.notificaciones;
-  };
+  /** 📥 Obtiene todas las notificaciones del usuario */
+  getNotificacionesPorUsuario(usuarioId: ID): Observable<Notificacion[]> {
+    return this.http.get<Notificacion[]>(`${this.baseUrl}?usuario=${usuarioId}`)
+      .pipe(
+        tap(res => console.log('✅ Notificaciones cargadas:', res))
+      );
+  }
 
-  toggleNotificacion(id: number): void {
-    const notificacion = this.notificaciones.find(n => n.id === id);
-    if (notificacion) {
-      notificacion.activado = !notificacion.activado;
-    }
-  };
+  /** 📨 Marca una notificación como leída o pendiente */
+  marcarComoLeida(id: ID): Observable<Notificacion> {
+    return this.http.patch<Notificacion>(`${this.baseUrl}${id}/`, { estado: 'leido' });
+  }
 }
