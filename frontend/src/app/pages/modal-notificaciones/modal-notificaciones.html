@@ -1,0 +1,23 @@
+<div class="modal-fondo" [class.visible]="abierto">
+  <div class="modal-contenido">
+    <h2>Tus Notificaciones</h2>
+
+    @if (notificaciones.length > 0) {
+      <ul>
+        @for (noti of notificaciones; track noti.id) {
+          <li>
+            <button (click)="toggleLeida(noti)">
+              {{ noti.estado !== 'leido' ? '🔔' : '✔️' }}
+            </button>
+            {{ noti.mensaje }}
+            <small>— {{ noti.enviado | date:'short' }}</small>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p>No tenés notificaciones por el momento 😊</p>
+    }
+
+    <button (click)="cerrarClick()">Cerrar</button>
+  </div>
+</div>

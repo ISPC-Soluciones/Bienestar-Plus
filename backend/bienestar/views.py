@@ -2,21 +2,20 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.contrib.auth.hashers import make_password, check_password
-from django.db.models import Count, Sum, F 
-from datetime import timedelta 
-from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Habito, ProgresoChecklist, Notificacion 
+from django.contrib.auth.hashers import check_password
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import login  
+
+from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Habito, ProgresoChecklist, Notificacion, Estado
 from .serializers import (
-    ProgresoDiarioSerializer, 
-    UsuarioSerializer, 
+    ProgresoDiarioSerializer,
+    UsuarioSerializer,
     UsuarioUpdateSerializer,
-    PerfilSaludSerializer, 
-    EjercicioSerializer, 
+    PerfilSaludSerializer,
+    EjercicioSerializer,
     RutinaEjercicioSerializer,
-    HabitoSerializer, 
+    HabitoSerializer,
     ProgresoChecklistSerializer,
     NotificacionSerializer,
     RegistroUsuarioSerializer
@@ -24,27 +23,29 @@ from .serializers import (
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 # =========================================================
-# VISTAS DE AUTENTICACIÓN (REINTRODUCIDAS PARA CORREGIR IMPORTERROR)
+# REGISTRO Y LOGIN
 # =========================================================
 
 class RegistroUsuarioView(APIView):
-    """
-    Vista que utiliza RegistroUsuarioSerializer para manejar la validación,
-    la creación anidada del PerfilSalud, el hasheo de contraseña,
-    y la lógica de recomendación inicial (TK85).
-    """
     def post(self, request):
         serializer = RegistroUsuarioSerializer(data=request.data)
-        
         if serializer.is_valid(raise_exception=True):
-    
             usuario_creado = serializer.save()
-        
-        
-            return Response(
-                {"success": True, "data": serializer.data}, 
-                status=status.HTTP_201_CREATED
-            )
+            # --- CREAR NOTIFICACIÓN AUTOMÁTICA ---
+            try:
+                perfil_salud = usuario_creado.perfil_salud
+            except PerfilSalud.DoesNotExist:
+                perfil_salud = None
+
+            if perfil_salud:
+                Notificacion.objects.create(
+                    usuario=usuario_creado,
+                    mensaje=perfil_salud.recomendacion_enfoque or "Tu recomendación será calculada luego",
+                    estado=Estado.PENDIENTE.value,
+                    enviado=timezone.now()
+                )
+
+            return Response({"success": True, "data": serializer.data}, status=status.HTTP_201_CREATED)
 
 class LoginUsuarioView(APIView):
     def post(self, request):
@@ -52,117 +53,117 @@ class LoginUsuarioView(APIView):
         password = request.data.get('password')
         if not mail or not password:
             return Response({"error": "Faltan email o password"}, status=status.HTTP_400_BAD_REQUEST)
-
         try:
             usuario = Usuario.objects.get(mail=mail)
         except Usuario.DoesNotExist:
             return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
-
         if not check_password(password, usuario.password):
             return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
-
+        
         serializer = UsuarioSerializer(usuario)
+
+
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
 
-
 # =========================================================
-# VIEWSETS ESPECÍFICOS (Modificados)
+# VIEWSETS
 # =========================================================
 
 class EjercicioViewSet(viewsets.ModelViewSet):
-    """CRUD de Ejercicios base (Administrador)."""
     queryset = Ejercicio.objects.all()
     serializer_class = EjercicioSerializer
-    # Nota: Si tu frontend espera { results: [] }, esto es manejado por la paginación de DRF.
-
 
 class RutinaEjercicioViewSet(viewsets.ModelViewSet):
-    """Gestiona la adición (POST) y listado (GET) de ejercicios a la rutina del usuario."""
     queryset = RutinaEjercicio.objects.all().select_related('ejercicio')
     serializer_class = RutinaEjercicioSerializer
 
     def get_queryset(self):
-        """Filtra la lista por el usuario solicitado (Query Param 'usuario_id') para la fecha de hoy."""
         queryset = self.queryset
         usuario_id = self.request.query_params.get('usuario_id')
-        if usuario_id is not None:
-            # Filtra por el ID del usuario y forzamos la fecha de hoy
+        if usuario_id:
             queryset = queryset.filter(usuario_id=usuario_id, fecha_registro=timezone.localdate())
         return queryset
 
-    def list(self, request, *args, **kwargs):
-        """Devuelve la rutina de ejercicios del usuario para hoy."""
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
     def create(self, request, *args, **kwargs):
-        """Permite al usuario agregar un ejercicio a su rutina diaria, evitando duplicados."""
-        
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
         try:
             rutina_ejercicio, created = RutinaEjercicio.objects.get_or_create(
                 usuario=serializer.validated_data['usuario'],
                 ejercicio=serializer.validated_data['ejercicio'],
-                fecha_registro=timezone.localdate(), # Forzar la fecha de hoy
-                defaults={
-                    'meta_cantidad': serializer.validated_data.get('meta_cantidad', 1),
-                    'completado': False
-                }
+                fecha_registro=timezone.localdate(),
+                defaults={'meta_cantidad': serializer.validated_data.get('meta_cantidad', 1), 'completado': False}
             )
-            
             if created:
-                return Response(
-                    RutinaEjercicioSerializer(rutina_ejercicio).data, 
-                    status=status.HTTP_201_CREATED
-                )
+                return Response(RutinaEjercicioSerializer(rutina_ejercicio).data, status=status.HTTP_201_CREATED)
             else:
-                return Response(
-                    {
-                        "message": "Este ejercicio ya está en tu rutina para hoy.",
-                        "rutina": RutinaEjercicioSerializer(rutina_ejercicio).data
-                    }, 
-                    status=status.HTTP_200_OK
-                )
-                
+                return Response({"message": "Este ejercicio ya está en tu rutina para hoy.", "rutina": RutinaEjercicioSerializer(rutina_ejercicio).data}, status=status.HTTP_200_OK)
         except Exception as e:
-            print(f"Error al intentar crear rutina: {e}")
-            return Response({"error": "Error interno al procesar la rutina. Asegúrate que Usuario/Ejercicio existan."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+            return Response({"error": f"Error interno: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # =========================================================
-# VIEWSETS GENERALES (Inalterados, pero mantenidos)
+# USUARIO
 # =========================================================
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     parser_classes = [MultiPartParser, FormParser, JSONParser]
-    serializer_class = UsuarioSerializer
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
             return UsuarioUpdateSerializer
         return UsuarioSerializer
-    
-    # ... (métodos retrieve, update, partial_update, etc.)
 
 class PerfilSaludViewSet(viewsets.ModelViewSet):
     queryset = PerfilSalud.objects.all()
     serializer_class = PerfilSaludSerializer
-    # ... (métodos put, patch, get)
+
+# =========================================================
+# NOTIFICACIONES
+# =========================================================
 
 class NotificacionViewSet(viewsets.ModelViewSet):
     queryset = Notificacion.objects.all().order_by('-enviado')
     serializer_class = NotificacionSerializer
 
     def get_queryset(self):
-        usuario_id = self.request.query_params.get('usuario_id')
-        if usuario_id:
-            return self.queryset.filter(usuario_id=usuario_id)
-        return self.queryset
+        queryset = self.queryset
+        if self.action == 'list':  # solo filtrar al listar
+            usuario_id = self.request.query_params.get('usuario', None)
+            if usuario_id:
+                queryset = queryset.filter(usuario_id=usuario_id)
+            else:
+                queryset = queryset.none()
+        return queryset
+
+
+    @action(detail=False, methods=['post'], url_path='crear-recomendacion')
+    def crear_notificacion_recomendacion(self, request):
+        mensaje = request.data.get('mensaje')
+        if not mensaje:
+            return Response({"detail": "El campo 'mensaje' es obligatorio."}, status=status.HTTP_400_BAD_REQUEST)
+        usuario_a_usar = request.user if request.user and request.user.is_authenticated else Usuario.objects.filter(pk=1).first()
+        if not usuario_a_usar:
+            return Response({"detail": "No hay usuario autenticado ni usuario de prueba (ID 1)."}, status=status.HTTP_401_UNAUTHORIZED)
+        notificacion = Notificacion.objects.create(usuario=usuario_a_usar, mensaje=mensaje, estado=Estado.PENDIENTE, enviado=timezone.now())
+        serializer = self.get_serializer(notificacion)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def partial_update(self, request, pk=None):
+        instance = self.get_object()
+        if 'estado' in request.data:
+            estado_val = request.data['estado']
+            if estado_val not in [Estado.PENDIENTE, Estado.ENVIADO, Estado.LEIDO]:
+                return Response({"error": "Estado inválido"}, status=status.HTTP_400_BAD_REQUEST)
+            instance.estado = estado_val
+            instance.save()
+            return Response(self.get_serializer(instance).data)
+        return super().partial_update(request, pk)
+
+# =========================================================
+# HÁBITOS Y PROGRESO
+# =========================================================
 
 class HabitoViewSet(viewsets.ModelViewSet):
     queryset = Habito.objects.all()
@@ -175,7 +176,7 @@ class ProgresoDiarioViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         usuario_id = self.request.query_params.get('usuario_id')
-        if usuario_id is not None:
+        if usuario_id:
             queryset = queryset.filter(usuario_id=usuario_id, fecha=timezone.localdate())
         return queryset
 

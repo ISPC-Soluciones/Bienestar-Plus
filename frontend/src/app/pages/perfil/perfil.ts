@@ -9,8 +9,10 @@ import {
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { PerfilService } from '../../services/perfil';
 import { ProgresoService } from '../../services/progreso';
-import { Notificaciones, Notificacion } from '../../services/notificaciones';
+import { Notificacion } from '../../models/notificacion';
+import { NotificacionesService } from '../../services/notificaciones'; 
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
+// ...
 import { switchMap } from 'rxjs/operators';
 // NOTA: Se ha eliminado la inyección de ChangeDetectorRef y la importación de ModalBienvenida
 
@@ -34,7 +36,7 @@ export class PerfilComponent implements OnInit {
     private perfilService: PerfilService,
     private progresoService: ProgresoService,
     private route: ActivatedRoute,
-    private notificacionesService: Notificaciones,
+    private notificacionesService: NotificacionesService,
     private fb: FormBuilder,
     private router: Router
   ) {
@@ -53,7 +55,7 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
+   // this.listaDeNotificaciones = this.notificacionesService.getNotificaciones(); no sirve pa nada
     this.loading = true; // Se eliminó la lectura del estado del Router (this.debeAbrirModalIMC)
 
     this.route.paramMap.subscribe((params) => {
@@ -204,8 +206,5 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  toggleNotificacion(id: number): void {
-    this.notificacionesService.toggleNotificacion(id);
-    this.listaDeNotificaciones = this.notificacionesService.getNotificaciones();
-  }
+ 
 }

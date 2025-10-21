@@ -10,9 +10,10 @@ from .models import (
     Notificacion
 )
 from decimal import Decimal
+from django.contrib.auth.hashers import make_password
 
 # =========================================================
-# SERIALIZADORES DE USUARIO Y PERFIL (Inalterados)
+# SERIALIZADORES DE PERFIL
 # =========================================================
 
 class PerfilSaludSerializer(serializers.ModelSerializer):
@@ -21,9 +22,8 @@ class PerfilSaludSerializer(serializers.ModelSerializer):
     class Meta:
         model = PerfilSalud
         fields = ['peso', 'altura', 'genero', 'fecha_nacimiento', 'imc', 'recomendacion_enfoque', 'mostrar_modal_imc']
-
         read_only_fields = ('recomendacion_enfoque', 'mostrar_modal_imc',)
-    # ... (métodos validate y create/update) ...
+
     def create(self, validated_data):
         usuario = self.context.get('usuario')
         if not usuario:
@@ -47,49 +47,39 @@ class PerfilSaludSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("La altura debe ser un valor positivo.")
         return value
 
-# ----------------------------------------------------
-# B. Serializer del Usuario (Para el REGISTRO inicial)
-# ----------------------------------------------------
+# =========================================================
+# SERIALIZADOR DE REGISTRO DE USUARIO
+# =========================================================
 
 class RegistroUsuarioSerializer(serializers.ModelSerializer):
-    """
-    Serializer usado para el registro inicial, maneja la creación anidada
-    del PerfilSalud y activa el cálculo.
-    """
     email = serializers.EmailField(source='mail')
-    # Usa el Serializer de PerfilSalud anidado
     perfil_salud = PerfilSaludSerializer(required=False)
 
     class Meta:
         model = Usuario
-        # El frontend envía datos de perfil_salud en el mismo payload
         fields = ('id', 'email', 'password', 'nombre', 'perfil_salud')
         extra_kwargs = {'password': {'write_only': True}}
     
     def create(self, validated_data):
-        """Sobrescribe el create para manejar la creación anidada y el cálculo inicial."""
-        
         perfil_salud_data = validated_data.pop('perfil_salud', {})
         password = validated_data.pop('password')
         
-        # 1. Crear el usuario
-        usuario = Usuario.objects.create(**validated_data, password=password)
+        # Crear usuario con password hasheado
+        usuario = Usuario.objects.create(**validated_data, password=make_password(password))
         
-        # 2. Crear el PerfilSalud
+        # Crear PerfilSalud
         perfil_salud = PerfilSalud.objects.create(usuario=usuario, **perfil_salud_data)
         
-        # 3. Lógica de Negocio: Ejecutar la lógica de recomendación inicial (TK82)
-        # El peso y altura deben haber sido provistos en perfil_salud_data
+        # Lógica de recomendación inicial
         perfil_salud.actualizar_recomendacion()
-        
-        # 4. Guardar la instancia de PerfilSalud con el resultado del cálculo
-        # (y con el campo mostrar_modal_imc=True por defecto)
         perfil_salud.save()
 
-        # Esto asegura que el Serializer anidado tenga los datos para el JSON de respuesta.
         usuario.perfil_salud = perfil_salud
-        
         return usuario
+
+# =========================================================
+# SERIALIZADORES DE USUARIO
+# =========================================================
 
 class UsuarioSerializer(serializers.ModelSerializer):
     foto_perfil_url = serializers.SerializerMethodField()
@@ -129,20 +119,16 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("El nombre debe tener al menos 2 caracteres.")
         return value.strip()
 
-
 # =========================================================
-# SERIALIZADORES DE EJERCICIO Y RUTINA (Modificados)
+# SERIALIZADORES DE EJERCICIOS Y RUTINA
 # =========================================================
 
 class EjercicioSerializer(serializers.ModelSerializer):
-    """Serializador para el modelo Ejercicio (Admin)."""
     class Meta:
         model = Ejercicio
         fields = '__all__' 
 
 class RutinaEjercicioSerializer(serializers.ModelSerializer):
-    """Serializador para el modelo RutinaEjercicio (Usuario)."""
-    
     ejercicio_nombre = serializers.CharField(source='ejercicio.nombre', read_only=True)
     ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all(), write_only=True)
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)
@@ -153,9 +139,8 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['completado']
 
-
 # =========================================================
-# SERIALIZADORES DE HÁBITOS Y PROGRESO (Inalterados)
+# SERIALIZADORES DE HÁBITOS Y PROGRESO
 # =========================================================
 
 class HabitoSerializer(serializers.ModelSerializer):
@@ -177,6 +162,8 @@ class ProgresoChecklistSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class NotificacionSerializer(serializers.ModelSerializer):
+    estado = serializers.CharField(source='get_estado_display', read_only=True)
+
     class Meta:
         model = Notificacion
-        fields = '__all__'
+        fields = ['id', 'usuario', 'mensaje', 'estado', 'enviado', 'leido']
