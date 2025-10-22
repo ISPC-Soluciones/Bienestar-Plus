@@ -49,33 +49,48 @@ export class Habitos implements OnInit {
 
 
   cargarEjerciciosDisponibles(): void {
-    this.ejercicioService.obtenerEjercicios().subscribe({
-      next: (response) => {
-        this.ejerciciosDisponibles = response.results; 
-      },
-      error: (err) => console.error('Error cargando ejercicios:', err),
-    });
-  }
+  this.ejercicioService.obtenerEjercicios().subscribe({
+    next: (response) => {
+      if (Array.isArray(response)) {
+        this.ejerciciosDisponibles = response;
+      } else if (response && 'results' in response) {
+        this.ejerciciosDisponibles = response.results;
+      } else {
+        this.ejerciciosDisponibles = [];
+        console.warn('Formato inesperado de respuesta:', response);
+      }
+    },
+    error: (err) => console.error('Error cargando ejercicios:', err),
+  });
+}
+
 
   cargarRutinaDelUsuario(): void {
-    this.rutinaService.obtenerRutinaDelUsuario(this.usuarioIdAutenticado).subscribe({
-      next: (rutina) => {
-        this.rutinaDelUsuario = rutina; 
-      },
-      error: (err) => console.error('Error cargando rutina del usuario:', err),
-    });
-  }
+  this.rutinaService.obtenerRutinaDelUsuario(this.usuarioIdAutenticado).subscribe({
+    next: (rutina) => {
+      console.log('🧩 Datos recibidos de la API rutina:', rutina);
 
-
-  /**
-   * Verifica si el ejercicio ya está en la rutina del usuario.
-   */
-  estaEnRutina(ejercicio: Ejercicio): boolean {
-    if (!ejercicio.id) return false;
-    return this.rutinaDelUsuario.some(rutinaItem => 
-        rutinaItem.ejercicio === ejercicio.id
-    );
-  }
+      if (Array.isArray(rutina)) {
+        this.rutinaDelUsuario = rutina;
+      } else if (rutina && 'results' in rutina) {
+        this.rutinaDelUsuario = rutina.results;
+      } else {
+        console.warn('⚠️ Respuesta inesperada del backend:', rutina);
+        this.rutinaDelUsuario = [];
+      }
+    },
+    error: (err) => {
+      console.error('Error cargando rutina del usuario:', err);
+      this.rutinaDelUsuario = [];
+    },
+  });
+}
+ 
+ estaEnRutina(ejercicio: Ejercicio): boolean {
+  if (!ejercicio.id) return false;
+  if (!Array.isArray(this.rutinaDelUsuario)) return false;
+  return this.rutinaDelUsuario.some(r => r.ejercicio === ejercicio.id);
+}
 
 
   agregarEjercicioARutina(ejercicio: Ejercicio): void {

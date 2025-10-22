@@ -20,10 +20,16 @@ export class RutinaEjercicioService {
   /**
    * Obtiene la rutina de ejercicios del usuario para hoy, filtrando por usuario_id.
    */
-  obtenerRutinaDelUsuario(usuarioId: number): Observable<RutinaEjercicio[]> {
-    let params = new HttpParams().set('usuario_id', usuarioId.toString());
-    return this.http.get<RutinaEjercicio[]>(this.apiUrl, { params });
-  }
+ obtenerRutinaDelUsuario(
+  usuarioId: number
+ ): Observable<RutinaEjercicio[] | { results: RutinaEjercicio[] }> {
+    const params = new HttpParams().set('usuario_id', usuarioId.toString());
+    return this.http.get<RutinaEjercicio[] | { results: RutinaEjercicio[] }>(
+      this.apiUrl,
+      { params }
+    );
+}
+
 
   /**
    * Registra un ejercicio en la rutina del usuario.
