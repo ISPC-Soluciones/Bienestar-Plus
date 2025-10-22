@@ -16,7 +16,7 @@ export class NotificacionesService {
   getNotificacionesPorUsuario(usuarioId: ID): Observable<Notificacion[]> {
     return this.http.get<Notificacion[]>(`${this.baseUrl}?usuario=${usuarioId}`)
       .pipe(
-        tap(res => console.log('✅ Notificaciones cargadas:', res))
+        tap(res => console.log(' Notificaciones cargadas:', res))
       );
   }
 

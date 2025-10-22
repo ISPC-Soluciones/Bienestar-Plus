@@ -128,16 +128,18 @@ class EjercicioSerializer(serializers.ModelSerializer):
         model = Ejercicio
         fields = '__all__' 
 
+
 class RutinaEjercicioSerializer(serializers.ModelSerializer):
     ejercicio_nombre = serializers.CharField(source='ejercicio.nombre', read_only=True)
     ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all(), write_only=True)
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)
-    fecha_registro = serializers.DateField(required=False, read_only=True) 
+    fecha_registro = serializers.DateField(required=False, read_only=True)
 
     class Meta:
         model = RutinaEjercicio
         fields = '__all__'
-        read_only_fields = ['completado']
+        read_only_fields = ['fecha_registro', 'ejercicio_nombre'] 
+      
 
 # =========================================================
 # SERIALIZADORES DE HÁBITOS Y PROGRESO
