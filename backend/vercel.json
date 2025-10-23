@@ -7,9 +7,15 @@
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.11" }
     }
   ],
-  "buildCommand": "python manage.py collectstatic --noinput",
+  "buildCommand": "python manage.py collectstatic --clear --noinput",
   "routes": [
-    { "src": "/static/(.*)", "dest": "staticfiles/$1" },
-    { "src": "/(.*)", "dest": "wsgi.py" }
+    {
+      "src": "/static/(.*)",
+      "dest": "staticfiles/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "wsgi.py"
+    }
   ]
 }

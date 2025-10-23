@@ -20,8 +20,8 @@ import dj_database_url
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-BASE_DIR = PROJECT_ROOT
+PROJECT_ROOT = Path(__file__).resolve().parent.parent 
+BASE_DIR = PROJECT_ROOT # Ahora es 'backend/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -140,10 +140,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'backend', 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'backend', 'static_src'),
+    os.path.join(BASE_DIR, 'static_src'),
 ]
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
