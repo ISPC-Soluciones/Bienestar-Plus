@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from './../../environments/environment';
 
 export interface Habito {
   id: number;
@@ -29,11 +30,11 @@ export interface ProgresoDiario {
   providedIn: 'root',
 })
 export class HabitosService {
-  private apiProgresos = 'http://localhost:8000/api/progresoschecklist/';
-  private apiEjercicios = 'http://localhost:8000/api/ejercicios/';
+  private apiProgresos = `${environment.backendUrl}/api/progresoschecklist/`;
+  private apiEjercicios = `${environment.backendUrl}/api/ejercicios/`;
 
   constructor(private http: HttpClient) {}
-  private baseUrl = 'http://localhost:8000/api/habitos';
+  private baseUrl = `${environment.backendUrl}/api/habitos`;
 
   /**
    * Obtener checklist para un usuario.
