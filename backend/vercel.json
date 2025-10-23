@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "wsgi.py",
+      "src": "bienestar_plus_api/wsgi.py",
       "use": "@vercel/python",
       "config": {
         "runtime": "python3.11"
@@ -17,7 +17,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "wsgi.py"
+      "dest": "bienestar_plus_api/wsgi.py"
     }
   ]
 }
