@@ -1,0 +1,15 @@
+# Entorno
+.env
+.env.local
+.env.*
+
+# Entorno de Python
+venv/
+
+# Python bytecode files
+*.pyc
+__pycache__/
+*cpython*
+
+# Django Migrations Caches
+*/migrations/__pycache__/

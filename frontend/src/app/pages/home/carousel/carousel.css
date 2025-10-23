@@ -1,0 +1,71 @@
+.img-carousel {
+  max-height: 20%;
+}
+
+.hero-text .btn {
+  background-color: var(--primario);
+  color: var(--bg-y-fuentes);
+  font-family: var(--fuente-base);
+  margin-top: 2rem;
+}
+.hero-text .btn:hover {
+  background-color: var(--secundario);
+  box-shadow: 0 0 10px var(--ternario);
+}
+
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  max-height: 75vh;
+  height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.carousel-item img.img-carousel {
+  height: 75vh;
+  object-fit: cover;
+  filter: brightness(0.6);
+  width: 100%;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  width: 80%;
+  max-width: 800px;
+  padding-bottom: 20px;
+}
+
+.carousel-caption h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.carousel-caption p {
+  font-size: 1.2rem;
+}
+
+.carousel-caption span {
+  color: var(--primario);
+}
+
+.hero-mobile-content {
+  background-color: #f8f9fa;
+  padding: 3rem 0;
+}
+
+.hero-mobile-content h2 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.hero-mobile-content p {
+  font-size: 1.1rem;
+  color: #555;
+}

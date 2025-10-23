@@ -1,0 +1,119 @@
+.registro-body {
+  font-family: var(--fuente-base);
+  background-color: var(--secundario);
+  background-image: url(/assets/persona-fondo.png);
+  background-repeat: no-repeat;
+  background-repeat: repeat-x;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+.registro-button[disabled] {
+  background-color: #a4b0be;
+  color: #6a6a6a;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.registro-contenedor-main {
+  background-color: var(--bg-fondo);
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+.logo-vertical-registro {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  height: 7rem;
+  margin-bottom: 2rem;
+}
+
+.registro-h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+}
+.registro-h2 {
+  margin-bottom: 1rem;
+  font-size: 1.9rem;
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+}
+.container__logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.container__logo img {
+  width: 100%;
+  height: auto;
+  max-width: 60px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* DISEÑO RESPONSIVE(MEDIA QUERIES) PAG REGISTRO */
+
+/* tamaño Mobile  */
+@media (max-width: 480px) {
+  .registro-contenedor-main {
+    padding: 1.2rem;
+  }
+
+  .registro-h1,
+  .registro-h2 {
+    font-size: 1.5rem;
+  }
+
+  .formulario--input {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+
+  .formulario--btn {
+    font-size: 0.95rem;
+    padding: 0.65rem;
+  }
+}
+
+/* tamaño  tablets  */
+@media (max-width: 768px) {
+  .registro-contenedor-main {
+    padding: 2rem;
+  }
+
+  .registro-h1,
+  .registro-h2 {
+    font-size: 1.7rem;
+  }
+
+  .formulario--input {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+
+  .formulario--btn {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+}
+
+/* tamaño Desktop */
+@media (max-width: 1024px) {
+  .registro-contenedor-main {
+    max-width: 380px;
+  }
+}

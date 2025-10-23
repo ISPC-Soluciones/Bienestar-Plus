@@ -1,0 +1,165 @@
+/* ------------------------------------------------------------------ */
+/* Estilos Base del Modal (Fondo y Contenido) */
+/* ------------------------------------------------------------------ */
+
+/* Fondo del modal (cubre toda la pantalla) */
+.modal-fondo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6); /* Semitransparente oscuro */
+  display: block; 
+  z-index: 1000; 
+  
+  /* Transición para la aparición */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+/* El modal es visible cuando tiene la clase 'visible' */
+.modal-fondo.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Contenido del modal (Anclado al botón de notificaciones) */
+.modal-contenido {
+  background: #ffffff;
+  padding: 20px; /* Ajuste para un mejor look and feel */
+  border-radius: 8px;
+  max-width: 350px; 
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+  position: absolute;
+  top: 60px; /* Separación de la parte superior */
+  right: 20px; /* Distancia desde el borde derecho */
+  
+  transform-origin: top right;
+  transform: scale(0.95);
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  
+  /* Uso de variables generales */
+  font-family: var(--fuente-base);
+  color: var(--bg-y-fuentes);
+}
+
+.modal-fondo.visible .modal-contenido {
+    transform: scale(1);
+}
+
+/* ------------------------------------------------------------------ */
+/* Componentes Internos del Modal */
+/* ------------------------------------------------------------------ */
+
+/* Título */
+.modal-titulo {
+  font-family: var(--fuente-titulo);
+  color: var(--bg-y-fuentes); 
+  border-bottom: 2px solid var(--primario); /* Uso de color primario */
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 1.4rem; 
+  font-weight: 700;
+}
+
+/* Contenido vacío */
+.modal-vacio {
+    text-align: center;
+    padding: 20px 0;
+    font-style: italic;
+    color: #888;
+}
+
+/* Lista de Notificaciones */
+.notificaciones-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px; 
+  overflow-y: auto;
+  border-radius: 4px;
+}
+
+/* 💡 Estilo de cada Notificación (li) */
+.notificaciones-lista li {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 5px;
+    border-bottom: 1px solid var(--secundario); /* Separador suave */
+    transition: background-color 0.2s;
+}
+
+.notificaciones-lista li.leido {
+    opacity: 0.7;
+    background-color: var(--bg-fondo); /* Fondo leve para notificaciones leídas */
+}
+
+.notificaciones-lista li:last-child {
+    border-bottom: none;
+}
+
+/* Botón de marcar como leído/no leído */
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-right: 10px;
+    padding: 0;
+    flex-shrink: 0;
+    transition: transform 0.1s;
+}
+
+.toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Contenedor del mensaje para manejar el texto */
+.mensaje-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.mensaje-texto {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+.mensaje-fecha {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 2px;
+}
+
+/* Botón de Cerrar (Solo ajustes de layout, el estilo lo da .btn-custom) */
+.modal-cerrar-btn {
+  /* La clase btn-custom ya tiene los estilos base (padding, font-size, border-radius, etc.) */
+  width: 100%; 
+  margin-top: 15px;
+}
+
+
+/* ------------------------------------------------------------------ */
+/* Adaptación para Móvil */
+/* ------------------------------------------------------------------ */
+@media (max-width: 70.3125em) {
+    /* En móvil, volvemos a centrar el modal para mejor experiencia */
+    .modal-contenido {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        right: auto;
+        transform: translate(-50%, -50%);
+        max-width: 90%;
+        width: 90%;
+    }
+    
+    .modal-fondo.visible .modal-contenido {
+        transform: translate(-50%, -50%);
+    }
+}

@@ -1,0 +1,52 @@
+.dashboard {
+  padding: 2rem;
+  color: var(--texto-principal);
+}
+
+.titulo__dashboard {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--primario);
+  text-align: center;
+}
+
+.tarjetas__estadisticas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.tarjeta {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.tarjeta:hover {
+  transform: translateY(-4px);
+}
+
+.tarjeta h3 {
+  color: var(--primario);
+  margin-bottom: 0.5rem;
+}
+
+.tarjeta p {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.grafico__contenedor {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.grafico__img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}

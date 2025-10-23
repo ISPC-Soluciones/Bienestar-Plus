@@ -1,0 +1,205 @@
+<main class="mis-habitos">
+  <section class="rutinas">
+    <div class="container__habitos">
+      <div class="container__btn__cerrar__sesion">
+        <a routerLink="/" class="btn-custom btn-custom--rojo">
+          Cerrar Sesión <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+      </div>
+      <div class="container__titulo__habitos">
+        <h1>Hábitos de <span>{{ usuarioNombre }}</span></h1>
+      </div>
+      <div class="container__parrafo__habitos">
+        <p class="texto__parrafo__habitos">
+          Aquí puedes ver y gestionar tus hábitos, modificar tus rutinas, para lograr los mejores resultados. Recuerda
+          que cada pequeño paso cuenta en tu camino hacia una vida más saludable. ¡Sigue adelante!
+        </p>
+      </div>
+      <div class="container__habitos__usuario">
+        <div class="container__listado__habitos">
+        </div>
+        <div class="container__rutinas">
+          <div class="container__tabs__rutinas">
+            <div class="tabs">
+              <div class="tab-buttons">
+                <button class="tab-button" [class.active]="activeTab === 'ejercicio'"
+                  (click)="setActiveTab('ejercicio')">
+                  <i class="fa-solid fa-person-running"></i> Ejercicio
+                </button>
+                <button class="tab-button" [class.active]="activeTab === 'hidratacion'"
+                  (click)="setActiveTab('hidratacion')">
+                  <i class="fa-solid fa-glass-water"></i> Hidratación
+                </button>
+                <button class="tab-button" [class.active]="activeTab === 'alimentacion'"
+                  (click)="setActiveTab('alimentacion')">
+                  <i class="fa-solid fa-utensils"></i> Alimentación
+                </button>
+                <button class="tab-button" [class.active]="activeTab === 'sueno'" (click)="setActiveTab('sueno')">
+                  <i class="fa-solid fa-bed"></i> Sueño
+                </button>
+              </div>
+
+              <div class="tab-content" [class.active]="activeTab === 'ejercicio'" id="ejercicio">
+
+                <article class="card__presentacion__habito">
+                  <h3 class="card__presentacion__titulo">
+                    <i class="fa-solid fa-dumbbell"></i> Mi Rutina de Ejercicios
+                  </h3>
+                  
+                  <div class="listado__crud">
+                    <p class="card__presentacion__descripcion">
+                        Ejercicios agregados a tu rutina:
+                    </p>
+                    <ul>
+                      @for (rutina of rutinaDelUsuario; track rutina.id) {
+                        <li class="rutina__item">
+                            <div class="habito__display" [class.completado]="rutina.completado">
+                                
+                                @if (rutina.id === rutinaIdEnEdicion) {
+                                    <div class="edicion__container">
+                                        <p class="habito__texto">
+                                            {{ rutina.ejercicio_nombre }} - Cant.
+                                        </p>
+                                        <input 
+                                            type="number" 
+                                            [(ngModel)]="cantidadEnEdicion"
+                                            placeholder="20"
+                                            class="input-edicion-cantidad"
+                                            min="1"
+                                        />
+                                        <p class="habito__texto">
+                                            repeticiones/km
+                                        </p>
+                                    </div>
+                                    <div class="crud__acciones">
+                                        <button class="btn__icono aceptar" (click)="guardarEdicion(rutina)" title="Guardar Cambios">
+                                            <i class="fa-solid fa-save"></i>
+                                        </button>
+                                        <button class="btn__icono cancelar" (click)="cancelarEdicion()" title="Cancelar">
+                                            <i class="fa-solid fa-times"></i>
+                                        </button>
+                                    </div>
+                                } @else {
+                                    <p class="habito__texto">
+                                        {{ rutina.ejercicio_nombre }} - Cant. {{ rutina.meta_cantidad }} repeticiones/km
+                                    </p>
+                                    
+                                    <div class="crud__acciones">
+                                        
+                                        <button class="btn__icono eliminar" (click)="eliminarRutina(rutina.id)" title="Eliminar Ejercicio">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+
+                                        @if (!rutina.completado) {
+                                            <button class="btn__icono editar" (click)="entrarEnModoEdicion(rutina)" title="Editar Cantidad">
+                                                <i class="fa-solid fa-pencil"></i>
+                                            </button>
+                                            
+                                            <button class="btn__icono completado-inactivo" 
+                                                    (click)="marcarCompletado(rutina)" 
+                                                    title="Marcar como completado">
+                                                <i class="fa-solid fa-check-circle"></i>
+                                            </button>
+                                        } @else {
+                                            <i class="fa-solid fa-check-circle completado-activo" title="Completado"></i>
+                                        }
+                                    </div>
+                                }
+                                </div>
+                        </li>
+                      } @empty {
+                        <li class="lista-vacia">No has agregado ningún ejercicio a tu rutina de hoy.</li>
+                      }
+                    </ul>
+                  </div>
+                </article>
+
+                <hr>
+
+                <h3 class="card__presentacion__titulo-small">Ejercicios Disponibles para Agregar a tu Rutina </h3>
+
+                <div class="contenido__ejercicios grid-3-cols">
+
+                  @for (ejercicio of ejerciciosDisponibles; track ejercicio.id) {
+
+                    @if (ejercicio.id) {
+                    @if (estaEnRutina(ejercicio)) {
+                    <article class="card__habito">
+                      <h4 class="card__habito__titulo">{{ ejercicio.nombre }}</h4>
+                      <p class="card__habito__descripcion">
+                        {{ ejercicio.descripcion }} (Tipo: {{ ejercicio.tipo | titlecase }})
+                      </p>
+                      <div class="card__habito__imagen">
+                        <img [src]="obtenerRutaImagen(ejercicio.nombre)" alt="Demostración de {{ ejercicio.nombre }}" />
+                      </div>
+                      <div class="card__habito__acciones">
+                        <button class="btn-custom btn-custom--gris" disabled>
+                          Agregado <i class="fa-solid fa-check"></i>
+                        </button>
+                      </div>
+                    </article>
+                    } @else {
+                    <article class="card__habito">
+                      <h4 class="card__habito__titulo">{{ ejercicio.nombre }}</h4>
+                      <p class="card__habito__descripcion">
+                        {{ ejercicio.descripcion }} (Tipo: {{ ejercicio.tipo | titlecase }})
+                      </p>
+                      <div class="card__habito__imagen">
+                        <img [src]="obtenerRutaImagen(ejercicio.nombre)" alt="Demostración de {{ ejercicio.nombre }}" />
+                      </div>
+                      <div class="card__habito__acciones">
+                        <button class="btn-custom btn-custom--primario" (click)="agregarEjercicioARutina(ejercicio)">
+                          Agregar <i class="fa-solid fa-plus"></i>
+                        </button>
+                      </div>
+                    </article>
+                    }
+                    }
+                  } @empty {
+                  <p class="lista-vacia">No hay ejercicios disponibles para mostrar.</p>
+                  }
+                </div>
+              </div>
+
+              <div class="tab-content" [class.active]="activeTab === 'hidratacion'" id="hidratacion">
+                <article class="card__presentacion__habito construccion">
+                  <h3 class="card__presentacion__titulo-small">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Próximamente disponible...
+                  </h3>
+                  <p class="card__presentacion__descripcion" style="margin-top: 2rem;">
+                    Estamos trabajando en la sección de Hidratación para ofrecerte las mejores herramientas de
+                    seguimiento. ¡Vuelve pronto!
+                  </p>
+                </article>
+              </div>
+
+              <div class="tab-content" [class.active]="activeTab === 'alimentacion'" id="alimentacion">
+                <article class="card__presentacion__habito construccion">
+                  <h3 class="card__presentacion__titulo-small">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Próximamente disponible...
+                  </h3>
+                  <p class="card__presentacion__descripcion" style="margin-top: 2rem;">
+                    Estamos trabajando en la sección de Alimentación para ofrecerte las mejores herramientas de
+                    seguimiento. ¡Vuelve pronto!
+                  </p>
+                </article>
+              </div>
+
+              <div class="tab-content" [class.active]="activeTab === 'sueno'" id="sueno">
+                <article class="card__presentacion__habito construccion">
+                  <h3 class="card__presentacion__titulo-small">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Próximamente disponible...
+                  </h3>
+                  <p class="card__presentacion__descripcion" style="margin-top: 2rem;">
+                    Estamos trabajando en la sección de Sueño para ofrecerte las mejores herramientas de seguimiento.
+                    ¡Vuelve pronto!
+                  </p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

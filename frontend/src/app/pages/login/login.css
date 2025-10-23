@@ -1,0 +1,142 @@
+.login-body {
+  font-family: var(--fuente-base);
+  background-image: url("/assets/healthy-llifestyle-elements-frame-background-free-vector.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: rgba(245, 247, 248, 0.9);
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.login-form {
+  background-color: var(--bg-fondo);
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  border: 2px solid var(--ternario);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  font-weight: 700;
+  color: var(--cuaternario);
+  text-align: center;
+}
+
+.login-h2 {
+  margin-bottom: 1rem;
+  font-size: 1.9rem;
+  font-family: var(--fuente-titulo);
+  font-style: italic;
+  color: var(--bg-y-fuentes);
+  text-align: center;
+}
+
+.container__logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.container__logo img {
+  width: 100%;
+  height: auto;
+  max-width: 60px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fuente-base);
+}
+
+.register-link {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--ternario);
+  font-weight: bold;
+  text-decoration: none;
+  font-family: var(--fuente-base);
+}
+
+.register-link:hover {
+  color: var(--bg-y-fuentes);
+  text-decoration: none;
+}
+
+/* DISEÑO RESPONSIVE (MEDIA QUERIES) PAG LOGIN */
+
+/* tamaño Mobile */
+@media (max-width: 480px) {
+  .formulario--form {
+    padding: 1.2rem;
+  }
+
+  .login-h1,
+  .login-h2 {
+    font-size: 1.5rem;
+  }
+
+  .formulario--input {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+
+  .formulario--btn {
+    font-size: 0.95rem;
+    padding: 0.65rem;
+  }
+
+  .login-body {
+    padding: 1rem;
+  }
+}
+
+/* tamaño tablets */
+@media (max-width: 768px) {
+  .formulario--form {
+    padding: 2rem;
+  }
+
+  .login-h1,
+  .login-h2 {
+    font-size: 1.7rem;
+  }
+
+  .formulario--input {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+
+  .formulario--btn {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
+}
+
+/* tamaño Desktop */
+@media (max-width: 1024px) {
+  .formulario--form {
+    max-width: 380px;
+  }
+}
