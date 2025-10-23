@@ -31,7 +31,6 @@ class RegistroUsuarioView(APIView):
         serializer = RegistroUsuarioSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             usuario_creado = serializer.save()
-            # --- CREAR NOTIFICACIÓN AUTOMÁTICA ---
             try:
                 perfil_salud = usuario_creado.perfil_salud
             except PerfilSalud.DoesNotExist:
@@ -129,7 +128,7 @@ class NotificacionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        if self.action == 'list':  # solo filtrar al listar
+        if self.action == 'list':
             usuario_id = self.request.query_params.get('usuario', None)
             if usuario_id:
                 queryset = queryset.filter(usuario_id=usuario_id)

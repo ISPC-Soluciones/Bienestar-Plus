@@ -12,7 +12,6 @@ export class NotificacionesService {
 
   constructor(private http: HttpClient) {}
 
-  /** 📥 Obtiene todas las notificaciones del usuario */
   getNotificacionesPorUsuario(usuarioId: ID): Observable<Notificacion[]> {
     return this.http.get<Notificacion[]>(`${this.baseUrl}?usuario=${usuarioId}`)
       .pipe(
@@ -20,7 +19,6 @@ export class NotificacionesService {
       );
   }
 
-  /** 📨 Marca una notificación como leída o pendiente */
   marcarComoLeida(id: ID): Observable<Notificacion> {
     return this.http.patch<Notificacion>(`${this.baseUrl}${id}/`, { estado: 'leido' });
   }

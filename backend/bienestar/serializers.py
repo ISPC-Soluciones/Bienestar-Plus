@@ -64,13 +64,10 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
         perfil_salud_data = validated_data.pop('perfil_salud', {})
         password = validated_data.pop('password')
         
-        # Crear usuario con password hasheado
         usuario = Usuario.objects.create(**validated_data, password=make_password(password))
         
-        # Crear PerfilSalud
         perfil_salud = PerfilSalud.objects.create(usuario=usuario, **perfil_salud_data)
         
-        # Lógica de recomendación inicial
         perfil_salud.actualizar_recomendacion()
         perfil_salud.save()
 

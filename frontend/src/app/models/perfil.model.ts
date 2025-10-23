@@ -1,9 +1,6 @@
-// src/app/models/perfil.model.ts
+
 export type ID = string | number;
 
-/**
- * Modelo de un hábito (habito)
- */
 export interface Habito {
   id: ID;
   nombre: string;
@@ -11,13 +8,10 @@ export interface Habito {
   metaDiaria?: string;
   frecuenciaSemanal?: number;
   activo?: boolean;
-  createdAt?: string; // ISO date
-  updatedAt?: string; // ISO date
+  createdAt?: string; 
+  updatedAt?: string; 
 }
 
-/**
- * Modelo de usuario/perfil.
- */
 
 export interface PerfilSalud {
   peso?: number;
@@ -48,7 +42,6 @@ export interface Usuario {
 
 }
 
-/** DTO para crear usuario (request) */
 export interface UsuarioCreateDTO {
   nombre: string;
   email: string;
@@ -59,5 +52,4 @@ export interface UsuarioCreateDTO {
   avatarUrl?: string;
 }
 
-/** DTO para actualizar usuario (patch/put) */
 export interface UsuarioUpdateDTO extends Partial<UsuarioCreateDTO> {}

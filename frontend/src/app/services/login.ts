@@ -35,7 +35,6 @@ interface LoginApiResponse {
 export class LoginService {
   private http = inject(HttpClient);
   private apiUrl = 'http://127.0.0.1:8000/login/';
-  /*private usuariosUrl = 'http://127.0.0.1:8000/api/usuarios/';*/
 
   login(loginData: LoginData): Observable<Usuario | null> { 
     return this.http.post<LoginApiResponse>(this.apiUrl, loginData).pipe(
@@ -61,8 +60,6 @@ export class LoginService {
     );
   }
 
-  /*getUsuarios(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(this.usuariosUrl);
-  }*/
+
 }
 

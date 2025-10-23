@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { PerfilComponent } from './pages/perfil/perfil';
-// CORRECCIÓN: Cambiado de { HabitosComponent } a { Habitos }
 import { Habitos } from './pages/habitos/habitos';
 import { Registro } from './pages/registro/registro';
 import { NosotrosComponent } from './pages/nosotros/nosotros';
@@ -17,7 +16,6 @@ export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'perfil/:id', component: PerfilComponent },
   { path: 'home', component: Home },
-  // CORRECCIÓN: Usando el nombre correcto del componente
   { path: 'habitos', component: Habitos }, 
   { path: 'registro', component: Registro },
   { path: 'nosotros', component: NosotrosComponent },
@@ -25,7 +23,6 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: Admin,
-    // canActivate: [AdminGuard],
     children: [
       {
         path: 'dashboard',

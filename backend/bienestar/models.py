@@ -67,7 +67,7 @@ class PerfilSalud(models.Model):
     )
 
     mostrar_modal_imc = models.BooleanField(
-        default=True,  # Por defecto, se debe mostrar al nuevo usuario
+        default=True,
         help_text="Indica si el modal de recomendación inicial debe ser mostrado al usuario."
     )
 
@@ -85,11 +85,11 @@ class PerfilSalud(models.Model):
         """Mapea el valor del IMC a una recomendación de enfoque."""
         if imc_value is None:
             return None
-        if imc_value < 18.5:  # Bajo Peso
+        if imc_value < 18.5:  
             return 'FUERZA_CARDIO'
-        elif 18.5 <= imc_value <= 24.9:  # Peso Normal
+        elif 18.5 <= imc_value <= 24.9:  
             return 'FLEXIBILIDAD_MANTENIMIENTO'
-        elif imc_value > 24.9:  # Sobrepeso y Obesidad
+        elif imc_value > 24.9:  
             return 'FUERZA_CARDIO'
         
         return None
@@ -127,13 +127,11 @@ class RutinaEjercicio(models.Model):
     ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE, related_name='registros_rutina')
     meta_cantidad = models.IntegerField(default=1)
     completado = models.BooleanField(default=False)
-    # AJUSTE: Usamos localdate para la rutina diaria
     fecha_registro = models.DateField(default=timezone.localdate) 
 
     class Meta:
         verbose_name = "Registro de Rutina"
         verbose_name_plural = "Registros de Rutinas"
-        # CLAVE: Evita duplicados en la rutina diaria
         unique_together = ('usuario', 'ejercicio', 'fecha_registro') 
         ordering = ['-fecha_registro']
 

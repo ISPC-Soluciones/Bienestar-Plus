@@ -12,9 +12,7 @@ import { ProgresoService } from '../../services/progreso';
 import { Notificacion } from '../../models/notificacion';
 import { NotificacionesService } from '../../services/notificaciones'; 
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
-// ...
 import { switchMap } from 'rxjs/operators';
-// NOTA: Se ha eliminado la inyección de ChangeDetectorRef y la importación de ModalBienvenida
 
 @Component({
   selector: 'app-perfil',
@@ -28,7 +26,7 @@ export class PerfilComponent implements OnInit {
   loading = false;
   error = '';
   listaDeNotificaciones: Notificacion[] = [];
-  modalAbierto = false; // Solo para el modal de edición de perfil // Se eliminó 'private debeAbrirModalIMC'
+  modalAbierto = false; 
   perfilForm: FormGroup;
   rutina: any[] = [];
 
@@ -55,8 +53,7 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // this.listaDeNotificaciones = this.notificacionesService.getNotificaciones(); no sirve pa nada
-    this.loading = true; // Se eliminó la lectura del estado del Router (this.debeAbrirModalIMC)
+    this.loading = true; 
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -98,7 +95,6 @@ export class PerfilComponent implements OnInit {
         localStorage.setItem('usuario', JSON.stringify(this.usuario));
         this.loading = false;
 
-        // Se eliminó la lógica de activación del modal de bienvenida aquí
       },
       error: (err) => {
         console.error('❌ Error cargando perfil:', err);

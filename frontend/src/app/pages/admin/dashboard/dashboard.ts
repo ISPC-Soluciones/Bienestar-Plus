@@ -58,7 +58,6 @@ export class Dashboard implements OnInit {
 
         const ejercicios = data.ejercicios_mas_populares || [];
 
-        // ✅ Mapear correctamente los nombres de las propiedades
         this.barChartData.labels = ejercicios.map((e: any) => e.nombre);
         this.barChartData.datasets[0].data = ejercicios.map(
           (e: any) => e.conteo_rutinas
