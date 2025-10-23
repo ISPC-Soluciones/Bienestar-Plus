@@ -144,7 +144,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'bienestar', 'static'),
+    os.path.join(BASE_DIR, 'static_src'),
 ]
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
