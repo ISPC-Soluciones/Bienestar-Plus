@@ -18,7 +18,7 @@
     }
   ],
 
-  "buildCommand": "npm run build --prefix frontend && python backend/manage.py collectstatic --noinput",
+  "buildCommand": "ng build && python backend/manage.py collectstatic --noinput",
 
   "routes": [
     {
