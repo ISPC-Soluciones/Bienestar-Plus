@@ -1,6 +1,37 @@
 {
-  "builds": [{ "src": "package.json", "use": "@vercel/static-build" }],
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/mi-proyecto/browser",
-  "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/wsgi.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.11"
+      }
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "outputDirectory": "frontend/dist/mi-proyecto/browser"
+      }
+    }
+  ],
+
+  "buildCommand": "cd backend && python manage.py collectstatic --noinput",
+
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "backend/staticfiles/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/wsgi.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/dist/mi-proyecto/browser/index.html"
+    }
+  ]
 }
