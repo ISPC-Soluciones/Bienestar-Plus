@@ -139,14 +139,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_src'), 
-]
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static_src'),
+]   
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 # En producción, obliga a usar HTTPS
 if not DEBUG:
