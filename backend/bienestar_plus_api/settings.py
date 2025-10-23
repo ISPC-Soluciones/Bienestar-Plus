@@ -146,6 +146,10 @@ STATIC_ROOT = PROJECT_ROOT / "staticfiles"
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, 'staticfiles_build'), # Directorio temporal de estáticos
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
