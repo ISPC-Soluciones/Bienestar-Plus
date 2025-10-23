@@ -14,7 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 import dj_database_url
-import rest_framework
+
 
 # Carga las variables del archivo .env
 load_dotenv()
@@ -23,11 +23,6 @@ load_dotenv()
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-STATICFILES_DIRS = [
-    os.path.join(os.path.dirname(rest_framework.__file__), 'static'), 
-    os.path.join(BASE_DIR, 'bienestar', 'static'), 
-]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -143,12 +138,37 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+import rest_framework
 
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+STATICFILES_DIRS = [
+    os.path.join(os.path.dirname(rest_framework.__file__), 'static'),
+    os.path.join(BASE_DIR, 'bienestar', 'static'),
+]
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'bienestar', 'static'),
+    ]
+
+# En producción, obliga a usar HTTPS
+if not DEBUG:
+    # Agrega tu llave secreta como variable de entorno en Vercel
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key-local-only') 
+    
+    # Configuración de seguridad recomendada
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # Solo si Vercel NO maneja la redirección HTTPS automáticamente:
+    # SECURE_SSL_REDIRECT = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -184,23 +204,3 @@ CORS_ALLOWED_ORIGINS = list(filter(None, [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
-
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'bienestar', 'static'),
-    ]
-
-# En producción, obliga a usar HTTPS
-if not DEBUG:
-    # Agrega tu llave secreta como variable de entorno en Vercel
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key-local-only') 
-    
-    # Configuración de seguridad recomendada
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    # Solo si Vercel NO maneja la redirección HTTPS automáticamente:
-    # SECURE_SSL_REDIRECT = True
