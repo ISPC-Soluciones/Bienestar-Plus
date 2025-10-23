@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RutinaEjercicio } from '../models/ejercicio';
-import { environment } from './../../environments/environment';
+import { environment } from './../../environments/enviroment';
 
 interface RutinaUpdate {
   meta_cantidad?: number;

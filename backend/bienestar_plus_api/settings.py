@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 import dj_database_url
+import rest_framework
 
 # Carga las variables del archivo .env
 load_dotenv()
@@ -23,6 +24,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATICFILES_DIRS = [
+    os.path.join(os.path.dirname(rest_framework.__file__), 'static'), 
+    os.path.join(BASE_DIR, 'bienestar', 'static'), 
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
