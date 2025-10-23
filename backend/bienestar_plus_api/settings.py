@@ -33,8 +33,6 @@ SECRET_KEY = os.environ.get(
     'django-insecure-wkd(h%y!0(^ue(1ml(z+$k663^)8_69tjry9xgwv*1=lmoh-lt' # Valor de fallback para desarrollo local
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('VERCEL_ENV') == 'development'
 
 ALLOWED_HOSTS = [
     '.vercel.app',
@@ -181,7 +179,12 @@ CORS_ALLOWED_ORIGINS = list(filter(None, [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEBUG = os.environ.get('VERCEL_ENV') == 'development'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'bienestar', 'static'),
+    ]
 
 # En producción, obliga a usar HTTPS
 if not DEBUG:
