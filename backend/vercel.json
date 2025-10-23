@@ -2,20 +2,26 @@
   "version": 2,
   "builds": [
     {
-      "src": "wsgi.py",
+      "src": "backend/bienestar_plus_api/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.11" }
+    },
+    {
+      "src": "backend/manage.py",
+      "use": "@vercel/python"
     }
   ],
-  "buildCommand": "python manage.py collectstatic --clear --noinput",
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "staticfiles/$1"
+      "dest": "/staticfiles/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "wsgi.py"
+      "dest": "backend/bienestar_plus_api/wsgi.py"
     }
-  ]
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "bienestar_plus_api.settings"
+  }
 }
