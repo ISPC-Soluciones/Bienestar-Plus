@@ -20,9 +20,8 @@ import dj_database_url
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-
-BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = PROJECT_ROOT
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -141,10 +140,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'backend', 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_src'),
+    os.path.join(BASE_DIR, 'backend', 'static_src'),
 ]
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
@@ -195,5 +194,5 @@ CORS_ALLOWED_ORIGINS = list(filter(None, [
 # MEDIA FILES CONFIGURATION (para fotos de perfil)
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'backend', 'media')
 
