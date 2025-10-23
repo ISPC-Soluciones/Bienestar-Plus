@@ -15,7 +15,7 @@
     }
   ],
 
-  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput",
+  "buildCommand": "python copy_rest_framework_static.py && python manage.py collectstatic --clear --noinput",
 
   "routes": [
     {
