@@ -142,12 +142,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 
-STATIC_ROOT = PROJECT_ROOT / "staticfiles"
+STATIC_URL = '/static/'
 
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, 'staticfiles_build'), # Directorio temporal de estáticos
+    os.path.join(BASE_DIR, 'staticfiles_build'),
 ]
 
 # Default primary key field type
