@@ -13,7 +13,9 @@
 
     <div class="usuario__detalles">
       <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
-      <p><strong>Altura:</strong> {{ usuario.perfil_salud?.altura || "-" }} cm</p>
+      <p>
+        <strong>Altura:</strong> {{ usuario.perfil_salud?.altura || "-" }} cm
+      </p>
       <p>
         <strong>Género:</strong>
         {{ usuario.perfil_salud?.genero || "Sin especificar" }}
@@ -24,7 +26,7 @@
       </p>
       <p *ngIf="usuario.perfil_salud?.imc">
         <strong>IMC:</strong>
-        {{ usuario.perfil_salud?.imc | number: '1.1-2' }}
+        {{ usuario.perfil_salud?.imc | number : "1.1-2" }}
       </p>
     </div>
   </aside>
@@ -92,7 +94,9 @@
           id="peso"
           type="number"
           formControlName="peso"
-          [class.invalid]="perfilForm.get('peso')?.invalid && perfilForm.get('peso')?.touched"
+          [class.invalid]="
+            perfilForm.get('peso')?.invalid && perfilForm.get('peso')?.touched
+          "
         />
       </div>
 
@@ -102,7 +106,10 @@
           id="altura"
           type="number"
           formControlName="altura"
-          [class.invalid]="perfilForm.get('altura')?.invalid && perfilForm.get('altura')?.touched"
+          [class.invalid]="
+            perfilForm.get('altura')?.invalid &&
+            perfilForm.get('altura')?.touched
+          "
         />
       </div>
 
@@ -111,7 +118,10 @@
         <select
           id="genero"
           formControlName="genero"
-          [class.invalid]="perfilForm.get('genero')?.invalid && perfilForm.get('genero')?.touched"
+          [class.invalid]="
+            perfilForm.get('genero')?.invalid &&
+            perfilForm.get('genero')?.touched
+          "
         >
           <option value="">Seleccione...</option>
           <option value="M">Masculino</option>
@@ -126,13 +136,16 @@
           id="fecha_nacimiento"
           type="date"
           formControlName="fecha_nacimiento"
-          [class.invalid]="perfilForm.get('fecha_nacimiento')?.invalid && perfilForm.get('fecha_nacimiento')?.touched"
+          [class.invalid]="
+            perfilForm.get('fecha_nacimiento')?.invalid &&
+            perfilForm.get('fecha_nacimiento')?.touched
+          "
         />
       </div>
 
       <div class="modal__acciones">
         <button type="submit" [disabled]="perfilForm.invalid || loading">
-          {{ loading ? 'Guardando...' : 'Guardar' }}
+          {{ loading ? "Guardando..." : "Guardar" }}
         </button>
         <button type="button" (click)="cerrarModal()">Cancelar</button>
       </div>

@@ -26,7 +26,7 @@ export interface ProgresoDiario {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HabitosService {
   private apiProgresos = 'http://localhost:8000/api/progresoschecklist/';
@@ -37,10 +37,13 @@ export class HabitosService {
 
   /**
    * Obtener checklist para un usuario.
-   * @param usuarioId 
-   * @param fecha 
+   * @param usuarioId
+   * @param fecha
    */
-  obtenerChecklist(usuarioId: number | string, fecha?: string): Observable<ProgresoDiario[]> {
+  obtenerChecklist(
+    usuarioId: number | string,
+    fecha?: string
+  ): Observable<ProgresoDiario[]> {
     let params = new HttpParams().set('usuario_id', String(usuarioId));
     if (fecha) {
       params = params.set('fecha', fecha);
@@ -56,18 +59,22 @@ export class HabitosService {
     return this.http.post(`${this.apiProgresos}${id}/toggle/`, {});
   }
 
-  obtenerEjercicios(): Observable<Ejercicio[]> {
-    return this.http.get<Ejercicio[]>(this.apiEjercicios);
+  obtenerEjercicios(): Observable<{ results: Ejercicio[] }> {
+    return this.http.get<{ results: Ejercicio[] }>(this.apiEjercicios);
   }
 
   agregarEjercicioAChecklist(ejercicioId: number) {
-    return this.http.post<ProgresoDiario>(`${this.baseUrl}/progresoschecklist/`, { ejercicio_id: ejercicioId });
-  }
-  
-  quitarProgreso(progresoId: number) {
-    return this.http.delete(`${this.baseUrl}/progresoschecklist/${progresoId}/`);
+    return this.http.post<ProgresoDiario>(
+      `${this.baseUrl}/progresoschecklist/`,
+      { ejercicio_id: ejercicioId }
+    );
   }
 
+  quitarProgreso(progresoId: number) {
+    return this.http.delete(
+      `${this.baseUrl}/progresoschecklist/${progresoId}/`
+    );
+  }
 
   toggleCompletado(id: number): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/${id}/toggle/`, {});
