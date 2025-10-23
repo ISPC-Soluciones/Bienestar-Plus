@@ -18,7 +18,7 @@
     }
   ],
 
-  "buildCommand": "cd backend && python manage.py collectstatic --noinput",
+  "buildCommand": "npm run build --prefix frontend && python backend/manage.py collectstatic --noinput",
 
   "routes": [
     {
