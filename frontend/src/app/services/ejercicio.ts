@@ -3,16 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ejercicio } from '../models/ejercicio';
 
+interface PaginacionResponse {
+    results: Ejercicio[];
+    count: number;
+    next: string | null;
+    previous: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class EjercicioService {
   private apiUrl = 'http://localhost:8000/api/ejercicios/';
 
   constructor(private http: HttpClient) {}
 
-  obtenerEjercicios(): Observable<{ results: Ejercicio[] }> {
-    return this.http.get<{ results: Ejercicio[] }>(this.apiUrl);
-  }
 
+  obtenerEjercicios(): Observable<PaginacionResponse> { 
+    return this.http.get<PaginacionResponse>(this.apiUrl);
+  }
+  
   crearEjercicio(ejercicio: Ejercicio): Observable<Ejercicio> {
     return this.http.post<Ejercicio>(this.apiUrl, ejercicio);
   }

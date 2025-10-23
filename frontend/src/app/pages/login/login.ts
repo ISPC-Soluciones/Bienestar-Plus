@@ -78,7 +78,6 @@ export class LoginComponent {
           return;
         }
 
-        // 🔹 Obtener el perfil completo y guardarlo en localStorage
         this.perfilService.getUsuarioConHabitos(usuarioBasico.id).subscribe({
           next: (usuarioCompleto) => {
             localStorage.setItem('usuario', JSON.stringify(usuarioCompleto));

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
+import { EstadisticasService } from '../../../services/estadisticas.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,7 @@ export class Dashboard implements OnInit {
 
   totalUsuarios = 0;
   totalRutinas = 0;
+  progresosCompletados = 0;
 
   barChartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -44,31 +46,55 @@ export class Dashboard implements OnInit {
     ],
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private estadisticasService: EstadisticasService
+  ) {}
 
   ngOnInit() {
     this.cargarEstadisticas();
+    this.estadisticasService.refrescar.subscribe(() => {
+      this.cargarEstadisticas();
+    });
   }
 
   cargarEstadisticas() {
-    this.http.get<any>('http://localhost:8000/api/estadisticas/').subscribe({
+    this.loading = true;
+    this.error = '';
+
+    const usuarioId = localStorage.getItem('usuario_id');
+
+    let url = 'http://localhost:8000/api/estadisticas/';
+
+    if (usuarioId && usuarioId !== 'null') {
+      url = `${url}?usuario_id=${usuarioId}`;
+    }
+
+    this.http.get<any>(url).subscribe({
       next: (data) => {
         this.totalUsuarios = data.total_usuarios || 0;
         this.totalRutinas = data.total_rutinas_registradas || 0;
+        this.progresosCompletados = data.progresos_diarios_completados || 0;
 
         const ejercicios = data.ejercicios_mas_populares || [];
 
-        // ✅ Mapear correctamente los nombres de las propiedades
-        this.barChartData.labels = ejercicios.map((e: any) => e.nombre);
-        this.barChartData.datasets[0].data = ejercicios.map(
-          (e: any) => e.conteo_rutinas
-        );
+        this.barChartData = {
+          ...this.barChartData,
+          labels: ejercicios.map((e: any) => e.nombre),
+          datasets: [
+            {
+              ...this.barChartData.datasets[0],
+              data: ejercicios.map((e: any) => e.conteo_rutinas),
+            },
+          ],
+        };
 
         this.loading = false;
       },
       error: (err) => {
         console.error('Error al cargar estadísticas:', err);
-        this.error = 'No se pudieron cargar las estadísticas.';
+        this.error =
+          'No se pudieron cargar las estadísticas. Verifica la conexión o el ID de usuario.';
         this.loading = false;
       },
     });

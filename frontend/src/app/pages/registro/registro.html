@@ -1,6 +1,7 @@
 <div class="registro-body">
   <main class="registro-contenedor-main">
     <h1 class="registro-h1">BienestarPlus</h1>
+
     <div class="container__logo">
       <img
         src="/Bienestar_Plus_favicon.ico"
@@ -8,6 +9,7 @@
         class="logo__img"
       />
     </div>
+
     <h2 class="registro-h2">Registro</h2>
 
     <form
@@ -15,7 +17,7 @@
       (ngSubmit)="EnviarFormulario()"
       class="registro-form"
     >
-      <label for="nombre" class="formulario--label">Nombre :</label>
+      <label for="nombre" class="formulario--label">Nombre :</label>      
       <input
         class="formulario--input"
         id="nombre"
@@ -36,6 +38,7 @@
       <div class="formulario--error">El nombre no debe contener números</div>
       }
       <label for="email" class="formulario--label">Correo electrónico:</label>
+
       <input
         class="formulario--input"
         id="email"
@@ -50,8 +53,8 @@
       registroForm.get('email')?.hasError('email')) {
       <div class="formulario--error">El formato del correo es inválido</div>
       }
-
       <label for="telefono" class="formulario--label">Numero telefonico:</label>
+
       <input
         class="formulario--input"
         id="telefono"
@@ -62,8 +65,8 @@
       @if (registroForm.get('telefono')?.touched &&
       registroForm.get('telefono')?.invalid) {
       <div class="formulario--error">El telefono es obligatorio</div>
-      }
-      <label for="edad" class="formulario--label">edad:</label>
+      } <label for="edad" class="formulario--label">edad:</label>
+
       <input
         class="formulario--input"
         id="edad"
@@ -78,14 +81,55 @@
       <label for="genero" class="formulario--label">Género:</label>
       <select class="formulario--input" id="genero" formControlName="genero">
         <option value="" disabled selected>Selecciona una opción</option>
+
         <option value="masculino">Masculino</option>
+
         <option value="femenino">Femenino</option>
       </select>
       @if (registroForm.get('genero')?.touched &&
       registroForm.get('genero')?.invalid) {
       <div class="formulario--error">El género es obligatorio</div>
       }
-      <label for="password" class="formulario--label">Contraseña:</label>
+      <div formGroupName="perfil_salud">
+        <label for="peso" class="formulario--label">Peso (kg):</label>
+
+        <input
+          class="formulario--input"
+          id="peso"
+          type="number"
+          step="0.1"
+          formControlName="peso"
+          placeholder="Ej: 75.5"
+          min="10"
+          max="300"
+        />
+        @if (registroForm.get('perfil_salud.peso')?.touched &&
+        registroForm.get('perfil_salud.peso')?.errors) {
+        <div class="formulario--error">
+          El peso debe ser un valor numérico entre 10 y 300 kg.
+        </div>
+        }
+        <label for="altura" class="formulario--label">Altura (m):</label>
+
+        <input
+          class="formulario--input"
+          id="altura"
+          type="number"
+          step="0.01"
+          formControlName="altura"
+          placeholder="Ej: 1.75 (metros)"
+          min="0.5"
+          max="2.5"
+        />
+        @if (registroForm.get('perfil_salud.altura')?.touched &&
+        registroForm.get('perfil_salud.altura')?.errors) {
+        <div class="formulario--error">
+          La altura debe estar en metros (0.50m - 2.50m).
+        </div>
+        }
+      </div>
+
+      <label for="password" class="formulario--label">Contraseña:</label>      
       <input
         class="formulario--input"
         id="password"
@@ -105,6 +149,7 @@
       <label for="confirmar" class="formulario--label"
         >Confirmar contraseña:</label
       >
+
       <input
         id="confirmar"
         class="formulario--input"
@@ -116,6 +161,7 @@
       registroForm.get('confirmar')?.invalid) {
       <div class="formulario--error">Debe confirmar la contraseña</div>
       } @if (registroForm.touched && registroForm.hasError('mismatch')) {
+
       <div class="formulario--error">Las contraseñas no coinciden</div>
       }
       <button
@@ -126,10 +172,17 @@
         Registrarse
       </button>
     </form>
+
     <div class="container__volver__inicio">
       <a href="./index.html" class="btn__volver__inicio"
         >Volver al Inicio <i class="fa-solid fa-rotate-left"></i
       ></a>
     </div>
   </main>
+  @if (mostrarModalRecomendacion) {  
+  <app-modal-bienvenida
+    [recomendacion]="recomendacionUsuario"
+    (cerrar)="cerrarModal()"
+  />
+  }
 </div>

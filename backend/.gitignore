@@ -5,5 +5,11 @@
 
 # Entorno de Python
 venv/
-__pycache__/
+
+# Python bytecode files
 *.pyc
+__pycache__/
+*cpython*
+
+# Django Migrations Caches
+*/migrations/__pycache__/
