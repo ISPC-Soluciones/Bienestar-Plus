@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import dj_database_url
 
 # Carga las variables del archivo .env
 load_dotenv()
@@ -25,12 +26,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wkd(h%y!0(^ue(1ml(z+$k663^)8_69tjry9xgwv*1=lmoh-lt'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY', 
+    'django-insecure-wkd(h%y!0(^ue(1ml(z+$k663^)8_69tjry9xgwv*1=lmoh-lt' # Valor de fallback para desarrollo local
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('VERCEL_ENV') == 'development'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '.vercel.app',
+    'localhost',
+    '127.0.0.1',
+    'bienestar-plus.vercel.app'
+]
 
 
 # Application definition
@@ -79,17 +88,20 @@ WSGI_APPLICATION = 'bienestar_plus_api.wsgi.application'
 
 
 # Database
+
+# --- Base de Datos CORREGIDA ---
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# 1. Crea la URL de la DB a partir del .env (Solo para desarrollo local)
+DB_URL_LOCAL = f"postgres://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
+
+# 2. Configura la base de datos, priorizando la variable DATABASE_URL de Vercel
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '8KPj4yCw4W@PUBA',
-        'HOST': 'db.oqmqmmfhbnzwrzobiaeh.supabase.co',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(
+        # Vercel buscará 'DATABASE_URL'. Si no existe (en local), usará DB_URL_LOCAL.
+        default=os.environ.get('DATABASE_URL', DB_URL_LOCAL),
+        conn_max_age=600  # Reutiliza conexiones a la DB
+    )
 }
 
 
@@ -127,6 +139,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STATIC_URL = 'static/'
 
 # Default primary key field type
@@ -152,11 +167,29 @@ REST_FRAMEWORK = {
 
 # CORS CONFIGURATION (para permitir peticiones desde Angular)
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    "http://127.0.0.1:4200",
-]
+CORS_ALLOWED_ORIGINS = list(filter(None, [
+     "http://localhost:4200",
+     "http://127.0.0.1:4200",
+     os.environ.get('CORS_FRONTEND_URL')
+ ]))
+
 # MEDIA FILES CONFIGURATION (para fotos de perfil)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+DEBUG = os.environ.get('VERCEL_ENV') == 'development'
+
+# En producción, obliga a usar HTTPS
+if not DEBUG:
+    # Agrega tu llave secreta como variable de entorno en Vercel
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key-local-only') 
+    
+    # Configuración de seguridad recomendada
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # Solo si Vercel NO maneja la redirección HTTPS automáticamente:
+    # SECURE_SSL_REDIRECT = True
