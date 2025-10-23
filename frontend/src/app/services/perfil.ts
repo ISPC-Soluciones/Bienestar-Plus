@@ -6,7 +6,7 @@ import { switchMap, map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  private base = 'https://bienestar-plus-backend.vercel.app/api';
+  private base = 'http://127.0.0.1:8000/api/perfil-salud/<user_id>/';
 
   constructor(private http: HttpClient) {}
 
