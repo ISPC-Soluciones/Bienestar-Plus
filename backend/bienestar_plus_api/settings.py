@@ -15,12 +15,12 @@ from dotenv import load_dotenv
 import os
 import dj_database_url
 
+
 # Carga las variables del archivo .env
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -31,8 +31,6 @@ SECRET_KEY = os.environ.get(
     'django-insecure-wkd(h%y!0(^ue(1ml(z+$k663^)8_69tjry9xgwv*1=lmoh-lt' # Valor de fallback para desarrollo local
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('VERCEL_ENV') == 'development'
 
 ALLOWED_HOSTS = [
     '.vercel.app',
@@ -58,6 +56,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -139,10 +138,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static_src'),
+]   
 
-STATIC_URL = 'static/'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+
+# En producción, obliga a usar HTTPS
+if not DEBUG:
+    # Agrega tu llave secreta como variable de entorno en Vercel
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key-local-only') 
+    
+    # Configuración de seguridad recomendada
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # Solo si Vercel NO maneja la redirección HTTPS automáticamente:
+    # SECURE_SSL_REDIRECT = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -176,20 +193,6 @@ CORS_ALLOWED_ORIGINS = list(filter(None, [
 # MEDIA FILES CONFIGURATION (para fotos de perfil)
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'backend', 'media')
 
-DEBUG = os.environ.get('VERCEL_ENV') == 'development'
-
-# En producción, obliga a usar HTTPS
-if not DEBUG:
-    # Agrega tu llave secreta como variable de entorno en Vercel
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key-local-only') 
-    
-    # Configuración de seguridad recomendada
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    # Solo si Vercel NO maneja la redirección HTTPS automáticamente:
-    # SECURE_SSL_REDIRECT = True
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

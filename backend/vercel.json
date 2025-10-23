@@ -2,19 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/bienestar_plus_api/wsgi.py",
+      "src": "wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.11" }
+      "config": {
+        "runtime": "python3.11"
+      }
     }
   ],
+  "buildCommand": "python manage.py collectstatic --noinput",
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "backend/staticfiles/$1"
+      "dest": "staticfiles/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "backend/bienestar_plus_api/wsgi.py"
+      "dest": "wsgi.py"
     }
   ]
 }

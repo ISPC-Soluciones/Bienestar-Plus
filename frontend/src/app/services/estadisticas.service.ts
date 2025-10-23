@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from './../../environments/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class EstadisticasService {
   private refrescar$ = new Subject<void>();
-  private baseUrl = 'http://localhost:8000/api/estadisticas/';
+  private baseUrl = `${environment.backendUrl}/api/estadisticas/`;
 
   constructor(private http: HttpClient) {}
 

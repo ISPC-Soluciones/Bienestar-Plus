@@ -160,75 +160,70 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from .models import Usuario, PerfilSalud
+from .serializers import PerfilSaludSerializer
+
 class PerfilSaludView(APIView):
-    """
-    Gestiona el perfil de salud (relación 1:1 con Usuario).
-    Endpoint: /api/perfil-salud/<user_id>/
-    """
-    # permission_classes = [IsAuthenticated] # Asumimos autenticación para producción
-    
+ 
+
+    def get_usuario(self, user_id):
+        """Valida user_id y retorna el usuario o None"""
+        if not user_id or user_id in ['null', 'undefined']:
+            return None, Response({"error": "ID de usuario inválido"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            usuario = get_object_or_404(Usuario, pk=int(user_id))
+            return usuario, None
+        except ValueError:
+            return None, Response({"error": "ID de usuario debe ser un número"}, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request, user_id):
-        """Obtiene el perfil de salud para un usuario dado."""
-        # Nota: En un sistema real, user_id debería venir de request.user.id
-        usuario = get_object_or_404(Usuario, pk=user_id)
-        
+        usuario, error_response = self.get_usuario(user_id)
+        if error_response:
+            return error_response
+
         try:
             perfil = usuario.perfilsalud
             serializer = PerfilSaludSerializer(perfil)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
         except PerfilSalud.DoesNotExist:
-            return Response(
-                {"message": "Perfil de salud no encontrado. Use PUT para crearlo."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"success": False, "message": "Perfil de salud no encontrado. Use PUT para crearlo."}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, user_id):
-        """
-        Crea un nuevo perfil o actualiza uno existente (actualización completa).
-        Endpoint: /api/perfil-salud/<user_id>/
-        """
-        usuario = get_object_or_404(Usuario, pk=user_id)
-        
-        try:
-            perfil = usuario.perfilsalud # Obtener si existe
-        except PerfilSalud.DoesNotExist:
-            perfil = None # Si no existe, se creará
-            
-        data = request.data.copy()
-        # Se requiere asignar el usuario, aunque el serializador lo maneja al guardar
-        # data['usuario'] = usuario.pk 
+        usuario, error_response = self.get_usuario(user_id)
+        if error_response:
+            return error_response
 
-        serializer = PerfilSaludSerializer(perfil, data=data)
-        
+        try:
+            perfil = usuario.perfilsalud
+            serializer = PerfilSaludSerializer(perfil, data=request.data)
+        except PerfilSalud.DoesNotExist:
+            serializer = PerfilSaludSerializer(data=request.data)
+
         if serializer.is_valid():
-            # Al guardar, aseguramos la asignación del usuario para la relación 1:1
-            instance = serializer.save(usuario=usuario) 
-            return Response(
-                PerfilSaludSerializer(instance).data, 
-                status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
-            )
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            instance = serializer.save(usuario=usuario)
+            status_code = status.HTTP_201_CREATED if not hasattr(usuario, 'perfilsalud') else status.HTTP_200_OK
+            return Response({"success": True, "data": PerfilSaludSerializer(instance).data}, status=status_code)
+        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, user_id):
-        """Actualización parcial del perfil de salud (PATCH)."""
-        usuario = get_object_or_404(Usuario, pk=user_id)
-        
+        usuario, error_response = self.get_usuario(user_id)
+        if error_response:
+            return error_response
+
         try:
             perfil = usuario.perfilsalud
         except PerfilSalud.DoesNotExist:
-            return Response(
-                {"error": "El perfil de salud no existe para actualizar. Use PUT para crearlo primero."},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"success": False, "error": "El perfil de salud no existe. Use PUT para crearlo primero."}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True)
-        
         if serializer.is_valid():
-            serializer.save()
-            return Response(PerfilSaludSerializer(perfil).data, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            instance = serializer.save()
+            return Response({"success": True, "data": PerfilSaludSerializer(instance).data}, status=status.HTTP_200_OK)
+        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EstadisticasView(APIView):

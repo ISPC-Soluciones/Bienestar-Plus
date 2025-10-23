@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { EstadisticasService } from '../../../services/estadisticas.service';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../../environments/enviroment';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
