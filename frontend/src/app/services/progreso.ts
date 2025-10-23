@@ -22,7 +22,7 @@ export interface ProgresoDiario {
   providedIn: 'root',
 })
 export class ProgresoService {
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = 'https://bienestar-plus-backend.vercel.app/api';
 
   constructor(private http: HttpClient) {}
 
@@ -42,13 +42,13 @@ export class ProgresoService {
       completado: completado,
     });
   }
- 
+
   obtenerChecklist(fecha?: string): Observable<ProgresoDiario[]> {
     let params = new HttpParams();
     if (fecha) {
       params = params.set('fecha', fecha);
     }
-    return this.http.get<ProgresoDiario[]>(`${this.baseUrl}/checklist/`, { 
+    return this.http.get<ProgresoDiario[]>(`${this.baseUrl}/checklist/`, {
       params,
     });
   }
@@ -58,7 +58,7 @@ export class ProgresoService {
     completado: boolean
   ): Observable<ProgresoDiario> {
     return this.http.patch<ProgresoDiario>(
-      `${this.baseUrl}/progreso/${progresoId}/toggle/`, 
+      `${this.baseUrl}/progreso/${progresoId}/toggle/`,
       { completado }
     );
   }
