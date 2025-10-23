@@ -138,14 +138,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-import rest_framework
 
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(os.path.dirname(rest_framework.__file__), 'static'),
     os.path.join(BASE_DIR, 'bienestar', 'static'),
 ]
 

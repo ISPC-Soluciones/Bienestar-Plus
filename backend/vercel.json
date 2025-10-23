@@ -7,7 +7,7 @@
       "config": { "maxLambdaSize": "15mb", "runtime": "python3.11" }
     }
   ],
-  "buildCommand": "python manage.py collectstatic --noinput",
+  "buildCommand": "python -c \"import shutil, os, rest_framework; src=os.path.join(os.path.dirname(rest_framework.__file__), 'static', 'rest_framework'); dest=os.path.join(os.getcwd(), 'staticfiles', 'rest_framework'); os.makedirs(dest, exist_ok=True); shutil.copytree(src, dest, dirs_exist_ok=True)\" && python manage.py collectstatic --noinput",
   "routes": [
     {
       "src": "/static/(.*)",
