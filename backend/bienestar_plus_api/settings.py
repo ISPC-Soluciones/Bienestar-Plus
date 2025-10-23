@@ -187,7 +187,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = list(filter(None, [
      "http://localhost:4200",
      "http://127.0.0.1:4200",
-     os.environ.get('CORS_FRONTEND_URL')
+     "https://bienestar-plus.vercel.app", 
  ]))
 
 # MEDIA FILES CONFIGURATION (para fotos de perfil)
