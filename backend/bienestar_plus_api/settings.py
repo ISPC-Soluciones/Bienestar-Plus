@@ -151,11 +151,6 @@ STATICFILES_DIRS = [
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'bienestar', 'static'),
-    ]
-
 # En producción, obliga a usar HTTPS
 if not DEBUG:
     # Agrega tu llave secreta como variable de entorno en Vercel
