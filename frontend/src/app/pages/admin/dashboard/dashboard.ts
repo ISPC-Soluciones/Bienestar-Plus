@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { EstadisticasService } from '../../../services/estadisticas.service';
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -64,7 +64,7 @@ export class Dashboard implements OnInit {
 
     const usuarioId = localStorage.getItem('usuario_id');
 
-    let url = 'http://localhost:8000/api/estadisticas/';
+    let url = `${environment.backendUrl}/api/rutinas-ejercicio/`;
 
     if (usuarioId && usuarioId !== 'null') {
       url = `${url}?usuario_id=${usuarioId}`;

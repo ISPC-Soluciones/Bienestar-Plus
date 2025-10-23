@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RutinaEjercicio } from '../models/ejercicio';
+import { environment } from './../../environments/environment';
 
 interface RutinaUpdate {
   meta_cantidad?: number;
@@ -12,7 +13,7 @@ interface RutinaUpdate {
   providedIn: 'root',
 })
 export class RutinaEjercicioService {
-  private apiUrl = 'http://localhost:8000/api/rutinas-ejercicio/';
+  private apiUrl = `${environment.backendUrl}/api/rutinas-ejercicio/`;
 
   constructor(private http: HttpClient) {}
 
