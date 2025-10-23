@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  backendUrl: 'https://bienestar-plus-backend.vercel.app/api/',
+  backendUrl: 'https://bienestar-plus-backend.vercel.app',
 };

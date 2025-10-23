@@ -12,19 +12,29 @@ from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, ProgresoDiario, PerfilSalud
 
 
-from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles 
+from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Notificacion 
 from .serializers import (
     UsuarioSerializer, 
     UsuarioUpdateSerializer,
     ProgresoDiarioSerializer,
     PerfilSaludSerializer,
     EjercicioSerializer, 
-    RutinaEjercicioSerializer 
+    RutinaEjercicioSerializer,
+    NotificacionSerializer
 )
+
+class NotificacionesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    A viewset for viewing and editing Notificacion instances.
+    """
+    queryset = Notificacion.objects.all()
+    serializer_class = NotificacionSerializer
+    # You will later need to filter this queryset by the 'usuario' query parameter
+
 class RegistroUsuarioView(APIView):
     def post(self, request):
         nombre = request.data.get('nombre')
-        mail = request.data.get('email')
+        email = request.data.get('email')
         password = request.data.get('password')
         telefono = request.data.get('telefono', '')
          # Campos del perfil salud
@@ -32,14 +42,14 @@ class RegistroUsuarioView(APIView):
         fecha_nacimiento = request.data.get('fecha_nacimiento')
 
 
-        if not nombre or not mail or not password:
+        if not nombre or not email or not password:
             return Response({"error": "Faltan campos obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
-        if Usuario.objects.filter(mail=mail).exists():
+        if Usuario.objects.filter(email=email).exists():
             return Response({"error": "Correo ya registrado"}, status=status.HTTP_400_BAD_REQUEST)
 
         usuario = Usuario.objects.create(
             nombre=nombre,
-            mail=mail,
+            email=email,
             password=make_password(password),
             telefono=telefono
         )
@@ -56,13 +66,13 @@ class RegistroUsuarioView(APIView):
 
 class LoginUsuarioView(APIView):
     def post(self, request):
-        mail = request.data.get('email')
+        email = request.data.get('email')
         password = request.data.get('password')
-        if not mail or not password:
+        if not email or not password:
             return Response({"error": "Faltan email o password"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            usuario = Usuario.objects.get(mail=mail)
+            usuario = Usuario.objects.get(email=email)
         except Usuario.DoesNotExist:
             return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
 

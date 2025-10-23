@@ -19,7 +19,7 @@ interface LoginApiResponse {
   data: {
     id: number;
     nombre: string;
-    mail: string;
+    email: string;
     rol: string;
   };
   success: boolean;
@@ -30,7 +30,7 @@ interface LoginApiResponse {
 })
 export class LoginService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.backendUrl}/login/`;
+  private apiUrl = `${environment.backendUrl}/api/login/`;
 
   login(loginData: LoginData): Observable<Usuario | null> {
     return this.http.post<LoginApiResponse>(this.apiUrl, loginData).pipe(
@@ -38,7 +38,7 @@ export class LoginService {
         if (response?.success && response?.data?.id != null) {
           const usuarioConformado: Usuario = {
             id: response.data.id,
-            email: response.data.mail,
+            email: response.data.email,
             nombre: response.data.nombre,
           };
           return usuarioConformado;

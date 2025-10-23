@@ -8,8 +8,8 @@ import { environment } from './../../environments/enviroment';
   providedIn: 'root',
 })
 export class RegistroServicio {
-  private apiUrl = `${environment.backendUrl}/registro/`;
-  private notificacionesUrl = `${environment.backendUrl}/notificaciones/`;
+  private apiUrl = `${environment.backendUrl}/api/registro/`;
+  private notificacionesUrl = `${environment.backendUrl}/api/notificaciones/`;
 
   constructor(private http: HttpClient) {}
 
