@@ -4,7 +4,9 @@
     {
       "src": "wsgi.py",
       "use": "@vercel/python",
-      "config": { "runtime": "python3.11" }
+      "config": {
+        "runtime": "python3.11"
+      }
     }
   ],
   "buildCommand": "python manage.py collectstatic --noinput",
