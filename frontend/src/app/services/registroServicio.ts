@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UsuarioCreateDTO } from '../models/perfil.model';
+import { environment } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistroServicio {
-  private apiUrl = 'http://127.0.0.1:8000/registro/';
-  private notificacionesUrl = 'http://127.0.0.1:8000/notificaciones/'; 
+  private apiUrl = `${environment.backendUrl}/registro/`;
+  private notificacionesUrl = `${environment.backendUrl}/notificaciones/`;
 
   constructor(private http: HttpClient) {}
 
@@ -16,6 +17,4 @@ export class RegistroServicio {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(this.apiUrl, usuario, { headers });
   }
-
-
 }
