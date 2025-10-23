@@ -10,3 +10,5 @@ if path not in sys.path:
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bienestar_plus_api.settings')
 
 application = get_wsgi_application()
+
+app = application
