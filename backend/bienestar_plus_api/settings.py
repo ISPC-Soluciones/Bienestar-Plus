@@ -57,13 +57,18 @@ WSGI_APPLICATION = 'bienestar_plus_api.wsgi.application'
 
 # Database con dj_database_url para producción
 import dj_database_url
-DATABASE_URL_RAW = os.getenv('DATABASE_URL') or os.getenv('POSTGRES_URL')
+db_url_env = os.getenv('DATABASE_URL')
 
 DATABASE_URL_FINAL = DATABASE_URL_RAW if DATABASE_URL_RAW else 'sqlite:///local_db.sqlite3'
+if not db_url_env:
+    if 'DATABASE_URL' in os.environ:
+        del os.environ['DATABASE_URL']
+    if 'POSTGRES_URL' in os.environ:
+        del os.environ['POSTGRES_URL']
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=DATABASE_URL_FINAL,
+        default='sqlite:///local_db.sqlite3', # Se usa el fallback de SQLite aquí
         conn_max_age=600
     )
 }
