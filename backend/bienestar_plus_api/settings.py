@@ -57,13 +57,18 @@ WSGI_APPLICATION = 'bienestar_plus_api.wsgi.application'
 
 # Database con dj_database_url para producción
 import dj_database_url
-DB_URL_LOCAL = f"postgresql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
+DB_NAME = os.environ.get('DB_NAME')
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', DB_URL_LOCAL),
+        # Vercel buscará 'DATABASE_URL'. Si no existe, usa la local.
+        # Añade 'ssl_require=True' para resolver el problema de producción (Cannot assign requested address)
+        default=os.environ.get(
+            'DATABASE_URL',
+            f"postgresql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{DB_NAME}"
+        ),
         conn_max_age=600,
-        ssl_require=True   # obligatorio para Supabase
+        ssl_require=True # Esto es crucial para Vercel/Supabase
     )
 }
 
