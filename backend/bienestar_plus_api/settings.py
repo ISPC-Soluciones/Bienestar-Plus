@@ -57,11 +57,13 @@ WSGI_APPLICATION = 'bienestar_plus_api.wsgi.application'
 
 # Database con dj_database_url para producción
 import dj_database_url
-DB_URL_LOCAL = f"postgres://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
+DB_URL_LOCAL = f"postgresql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
+
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL', DB_URL_LOCAL),
-        conn_max_age=600
+        conn_max_age=600,
+        ssl_require=True   # obligatorio para Supabase
     )
 }
 
