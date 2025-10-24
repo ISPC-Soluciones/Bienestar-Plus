@@ -61,7 +61,7 @@ DB_NAME = os.environ.get('DB_NAME')
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
+        default=os.environ.get('POSTGRES_URL'),
         conn_max_age=600,
     )
 }
