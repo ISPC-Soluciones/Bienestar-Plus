@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ejercicio } from '../models/ejercicio';
-import { environment } from './../../environments/enviroment';
+import { environment } from '../../environments/environment';
 
 interface PaginacionResponse {
   results: Ejercicio[];
