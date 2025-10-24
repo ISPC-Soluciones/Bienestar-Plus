@@ -10,10 +10,6 @@
   "buildCommand": "python manage.py collectstatic --noinput",
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "staticfiles/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "bienestar_plus_api/wsgi.py"
     }

@@ -141,9 +141,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static_src'),
-]   
+STATICFILES_DIRS = []
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
@@ -195,4 +195,3 @@ CORS_ALLOWED_ORIGINS = list(filter(None, [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'backend', 'media')
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
