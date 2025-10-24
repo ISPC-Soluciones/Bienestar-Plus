@@ -61,12 +61,7 @@ DB_NAME = os.environ.get('DB_NAME')
 
 DATABASES = {
     'default': dj_database_url.config(
-        # Vercel buscará 'DATABASE_URL'. Si no existe, usa la local.
-        # Añade 'ssl_require=True' para resolver el problema de producción (Cannot assign requested address)
-        default=os.environ.get(
-            'DATABASE_URL',
-            f"postgresql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{DB_NAME}"
-        ),
+        default=os.environ.get('DATABASE_URL'),
         conn_max_age=600,
     )
 }
