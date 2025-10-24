@@ -32,7 +32,7 @@ class Estado(models.TextChoices):
 
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
-    mail = models.EmailField(max_length=150, unique=True)
+    email = models.EmailField(max_length=150, unique=True)
     password = models.CharField(max_length=255)  # hash
     rol = models.CharField(max_length=50, choices=Roles.choices, default=Roles.ESTANDAR)
     fecha_registro = models.DateTimeField(auto_now_add=True)

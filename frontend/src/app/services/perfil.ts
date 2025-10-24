@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Usuario, Habito, ID, PerfilSalud } from '../models/perfil.model';
 import { Observable, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  private base = 'http://127.0.0.1:8000/api/perfil-salud/<user_id>/';
+  private base = `${environment.backendUrl}/api`;
 
   constructor(private http: HttpClient) {}
 

@@ -64,7 +64,7 @@ export class Dashboard implements OnInit {
 
     const usuarioId = localStorage.getItem('usuario_id');
 
-    let url = `${environment.backendUrl}/api/rutinas-ejercicio/`;
+    let url = `${environment.backendUrl}api/rutinas-ejercicio/`;
 
     if (usuarioId && usuarioId !== 'null') {
       url = `${url}?usuario_id=${usuarioId}`;

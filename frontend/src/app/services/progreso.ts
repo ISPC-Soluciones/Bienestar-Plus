@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from '../../environments/enviroment';
 export interface Habito {
   id: number;
   nombre: string;
@@ -22,7 +22,7 @@ export interface ProgresoDiario {
   providedIn: 'root',
 })
 export class ProgresoService {
-  private baseUrl = 'https://bienestar-plus-backend.vercel.app/api';
+  private baseUrl = `${environment.backendUrl}api/progreso/`;
 
   constructor(private http: HttpClient) {}
 

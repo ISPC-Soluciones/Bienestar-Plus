@@ -30,7 +30,7 @@ interface LoginApiResponse {
 })
 export class LoginService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.backendUrl}/login/`;
+  private apiUrl = `${environment.backendUrl}api/login/`;
 
   login(loginData: LoginData): Observable<Usuario | null> {
     return this.http.post<LoginApiResponse>(this.apiUrl, loginData).pipe(

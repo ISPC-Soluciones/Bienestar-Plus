@@ -30,11 +30,11 @@ export interface ProgresoDiario {
   providedIn: 'root',
 })
 export class HabitosService {
-  private apiProgresos = `${environment.backendUrl}/api/progresoschecklist/`;
-  private apiEjercicios = `${environment.backendUrl}/api/ejercicios/`;
+  private apiProgresos = `${environment.backendUrl}api/progresoschecklist/`;
+  private apiEjercicios = `${environment.backendUrl}api/ejercicios/`;
 
   constructor(private http: HttpClient) {}
-  private baseUrl = `${environment.backendUrl}/api/habitos`;
+  private baseUrl = `${environment.backendUrl}api/habitos`;
 
   /**
    * Obtener checklist para un usuario.

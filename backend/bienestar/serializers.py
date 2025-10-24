@@ -52,7 +52,7 @@ class PerfilSaludSerializer(serializers.ModelSerializer):
 # =========================================================
 
 class RegistroUsuarioSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source='mail')
+    email = serializers.EmailField(source='email')
     perfil_salud = PerfilSaludSerializer(required=False)
 
     class Meta:
@@ -85,7 +85,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = [
-            'id', 'nombre', 'mail', 'rol', 'fecha_registro', 'telefono',
+            'id', 'nombre', 'email', 'rol', 'fecha_registro', 'telefono',
             'foto_perfil', 'foto_perfil_url', 'perfil_salud'
         ]
         read_only_fields = ['id', 'fecha_registro', 'rol']
@@ -103,11 +103,11 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ['nombre', 'mail', 'foto_perfil', 'telefono']
+        fields = ['nombre', 'email', 'foto_perfil', 'telefono']
 
-    def validate_mail(self, value):
+    def validate_email(self, value):
         usuario = self.instance
-        if Usuario.objects.exclude(pk=usuario.pk).filter(mail=value).exists():
+        if Usuario.objects.exclude(pk=usuario.pk).filter(email=value).exists():
             raise serializers.ValidationError("Este correo electrónico ya está en uso.")
         return value
 

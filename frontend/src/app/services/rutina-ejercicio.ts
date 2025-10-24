@@ -13,7 +13,7 @@ interface RutinaUpdate {
   providedIn: 'root',
 })
 export class RutinaEjercicioService {
-  private apiUrl = `${environment.backendUrl}/api/rutinas-ejercicio/`;
+  private apiUrl = `${environment.backendUrl}api/rutinas-ejercicio/`;
 
   constructor(private http: HttpClient) {}
 
