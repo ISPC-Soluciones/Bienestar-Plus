@@ -2,16 +2,16 @@
   "version": 2,
   "builds": [
     {
-      "src": "bienestar_plus_api/wsgi.py",
+      "src": "backend/bienestar_plus_api/wsgi.py",
       "use": "@vercel/python",
       "config": { "runtime": "python3.11" }
     }
   ],
-  "buildCommand": "python manage.py collectstatic --noinput",
+  "buildCommand": "python backend/manage.py collectstatic --noinput",
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "bienestar_plus_api/wsgi.py"
+      "dest": "backend/bienestar_plus_api/wsgi.py"
     }
   ]
 }
