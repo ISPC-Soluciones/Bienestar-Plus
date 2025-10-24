@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -26,7 +27,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # <--- WhiteNoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,23 +56,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bienestar_plus_api.wsgi.application'
 
-# Database con dj_database_url para producción
-import dj_database_url
+# -----------------------------------------------
+# Database Configuration (Robusta para Vercel)
+# -----------------------------------------------
+
+# Obtener la URL de la base de datos.
 db_url_env = os.getenv('DATABASE_URL')
 
-DATABASE_URL_FINAL = DATABASE_URL_RAW if DATABASE_URL_RAW else 'sqlite:///local_db.sqlite3'
+# Si la variable está vacía o None (como ocurre en Vercel con valores nulos), 
+# la eliminamos del entorno de Python. Esto fuerza a dj_database_url a usar 'default'.
 if not db_url_env:
+    # Elimina DATABASE_URL del entorno de Python si existe
     if 'DATABASE_URL' in os.environ:
         del os.environ['DATABASE_URL']
+    
+    # Elimina POSTGRES_URL por limpieza (aunque no debería estar en Vercel)
     if 'POSTGRES_URL' in os.environ:
         del os.environ['POSTGRES_URL']
 
+# Llama a dj_database_url.config():
+# - Si DATABASE_URL tiene un valor (Supabase), lo usa.
+# - Si no está en el entorno (porque lo eliminamos arriba), usa el 'default' (SQLite).
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:///local_db.sqlite3', # Se usa el fallback de SQLite aquí
+        default='sqlite:///local_db.sqlite3',
         conn_max_age=600
     )
 }
+
+# -----------------------------------------------
 
 # Static files
 STATIC_URL = '/static/'
