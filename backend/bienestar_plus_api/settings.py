@@ -68,7 +68,6 @@ DATABASES = {
             f"postgresql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{DB_NAME}"
         ),
         conn_max_age=600,
-        ssl_require=True # Esto es crucial para Vercel/Supabase
     )
 }
 
