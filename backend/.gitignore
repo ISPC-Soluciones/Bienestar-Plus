@@ -3,6 +3,8 @@
 .env.local
 .env.*
 
+## IDE files
+
 # Entorno de Python
 venv/
 
