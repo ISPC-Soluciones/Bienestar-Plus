@@ -265,18 +265,15 @@ class EstadisticasView(APIView):
 
         
         # --- Lógica de Rutinas ---
-        rutinas_del_mes = RutinaEjercicio.objects.all()
+        rutinas_del_mes = RutinaEjercicio.objects.filter(
+            fecha_registro__gte=fecha_hace_30_dias
+        )
         
         # Aplica el filtro solo si usuario_id es un entero válido
         if usuario_id is not None:
             # Ahora usuario_id es un entero, por lo que el filtro es seguro.
             rutinas_del_mes = rutinas_del_mes.filter(usuario_id=usuario_id)
-                # ---------------- DEBUG AÑADIDO -------------------
-        # ¡IMPORTANTE! Vuelve a ejecutar esto y dime qué imprime.
-        print(f"DEBUG: Fecha hace 30 días: {fecha_hace_30_dias}")
-        print(f"DEBUG: Rutinas del mes (Count): {rutinas_del_mes.count()}")
-        # --------------------------------------------------
-
+          
         # --- Lógica de Usuarios (siempre global) ---
         # Si esta API se usa para el panel de usuario individual,
         # 'total_usuarios' debería ser 1 si hay filtro, o total si no lo hay.
