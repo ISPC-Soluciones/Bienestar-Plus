@@ -37,15 +37,30 @@ class RegistroUsuarioView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         telefono = request.data.get('telefono', '')
-         # Campos del perfil salud
-        genero = request.data.get('genero')
-        fecha_nacimiento = request.data.get('fecha_nacimiento')
-
 
         if not nombre or not email or not password:
-            return Response({"error": "Faltan campos obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Faltan campos obligatorios"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         if Usuario.objects.filter(email=email).exists():
-            return Response({"error": "Correo ya registrado"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Correo ya registrado"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Datos del perfil de salud enviados desde Angular
+        perfil_data = request.data.get('perfil_salud', {}) or {}
+
+        # Permitimos también el formato viejo por compatibilidad
+        genero = perfil_data.get('genero', request.data.get('genero'))
+        fecha_nacimiento = perfil_data.get(
+            'fecha_nacimiento',
+            request.data.get('fecha_nacimiento')
+        )
+        peso = perfil_data.get('peso')
+        altura = perfil_data.get('altura')
 
         usuario = Usuario.objects.create(
             nombre=nombre,
@@ -53,16 +68,27 @@ class RegistroUsuarioView(APIView):
             password=make_password(password),
             telefono=telefono
         )
-        
 
         PerfilSalud.objects.create(
             usuario=usuario,
             genero=genero,
-            fecha_nacimiento=fecha_nacimiento
+            fecha_nacimiento=fecha_nacimiento,
+            peso=peso,
+            altura=altura
         )
 
-        serializer = UsuarioSerializer(usuario)
-        return Response({"success": True, "data": serializer.data}, status=status.HTTP_201_CREATED)
+        serializer = UsuarioSerializer(
+            usuario,
+            context={'request': request}
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            },
+            status=status.HTTP_201_CREATED
+        )
 
 class LoginUsuarioView(APIView):
     def post(self, request):
