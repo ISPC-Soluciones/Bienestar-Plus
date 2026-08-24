@@ -80,7 +80,8 @@ if not db_url_env:
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///local_db.sqlite3',
-        conn_max_age=600
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 
