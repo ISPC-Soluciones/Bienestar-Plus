@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { PerfilService } from '../../services/perfil';
-import { ProgresoService } from '../../services/progreso';
+import { RutinaEjercicioService } from '../../services/rutina-ejercicio';
 import { Notificacion } from '../../models/notificacion';
 import { NotificacionesService } from '../../services/notificaciones'; 
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
@@ -32,7 +32,7 @@ export class PerfilComponent implements OnInit {
 
   constructor(
     private perfilService: PerfilService,
-    private progresoService: ProgresoService,
+    private rutinaEjercicioService: RutinaEjercicioService,
     private route: ActivatedRoute,
     private notificacionesService: NotificacionesService,
     private fb: FormBuilder,
@@ -72,7 +72,7 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  private cargarPerfil(id: number): void {
+    private cargarPerfil(id: number): void {
     this.perfilService.getUsuarioConHabitos(id).subscribe({
       next: (res) => {
         const usuarioData: Usuario = (res as any)?.data
@@ -94,6 +94,7 @@ export class PerfilComponent implements OnInit {
 
         localStorage.setItem('usuario', JSON.stringify(this.usuario));
         this.loading = false;
+        this.cargarProgreso(id);
 
       },
       error: (err) => {
@@ -169,10 +170,18 @@ export class PerfilComponent implements OnInit {
       });
   }
 
-  cargarProgreso(usuarioId: number): void {
-    this.progresoService.getProgresoDiario(usuarioId).subscribe({
-      next: (res) => (this.rutina = res),
-      error: (err) => console.error('Error al obtener progreso diario', err),
+    cargarProgreso(usuarioId: number): void {
+    this.rutinaEjercicioService.obtenerRutinaDelUsuario(usuarioId).subscribe({
+      next: (res) => {
+        if (Array.isArray(res)) {
+          this.rutina = res;
+        } else if (res && 'results' in res) {
+          this.rutina = res.results;
+        } else {
+          this.rutina = [];
+        }
+      },
+      error: (err) => console.error('Error al obtener la rutina de ejercicios', err),
     });
   }
 
@@ -195,10 +204,14 @@ export class PerfilComponent implements OnInit {
     this.marcarHabito(id, target.checked);
   }
 
-  marcarHabito(id: number, completado: boolean): void {
-    this.progresoService.marcarCompletado(id, completado).subscribe({
-      next: () => console.log('✅ Hábito actualizado'),
-      error: (err) => console.error('Error al actualizar hábito', err),
+    marcarHabito(id: number, completado: boolean): void {
+    this.rutinaEjercicioService.actualizarRutina(id, { completado }).subscribe({
+      next: (rutinaActualizada) => {
+        const item = this.rutina.find((r) => r.id === id);
+        if (item) item.completado = rutinaActualizada.completado;
+        console.log('✅ Ejercicio actualizado');
+      },
+      error: (err) => console.error('Error al actualizar el ejercicio', err),
     });
   }
 

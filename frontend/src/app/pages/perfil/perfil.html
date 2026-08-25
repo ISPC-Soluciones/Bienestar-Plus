@@ -42,13 +42,14 @@
     </div>
   </section>
 
-  <section class="perfil__rutina">
+    <section class="perfil__rutina">
     <h2>Mi rutina de hoy</h2>
 
+    <h3>Ejercicio</h3>
     <div class="progreso__detalle" *ngIf="totalHabitos > 0">
       <p>
         <strong>{{ habitosCompletados }}</strong> de
-        <strong>{{ totalHabitos }}</strong> hábitos completados hoy.
+        <strong>{{ totalHabitos }}</strong> ejercicios completados hoy.
       </p>
       <div class="barra__progreso">
         <div
@@ -67,15 +68,27 @@
             (change)="onCheckboxChange($event, h.id)"
           />
           <span [class.completado]="h.completado">
-            {{ h.habito_nombre || h.habito?.nombre }}
+            {{ h.ejercicio_nombre }} (Cant. {{ h.meta_cantidad }})
           </span>
         </label>
       </li>
     </ul>
 
     <ng-template #sinRutina>
-      <p>No hay hábitos cargados para hoy.</p>
+      <p>
+        Todavía no armaste tu rutina de ejercicios. Andá a la sección
+        "Hábitos" para agregar ejercicios.
+      </p>
     </ng-template>
+
+    <h3>Hidratación</h3>
+    <p>Todavía no configuraste tus hábitos de Hidratación.</p>
+
+    <h3>Alimentación</h3>
+    <p>Todavía no configuraste tus hábitos de Alimentación.</p>
+
+    <h3>Sueño</h3>
+    <p>Todavía no configuraste tus hábitos de Sueño.</p>
   </section>
 </div>
 

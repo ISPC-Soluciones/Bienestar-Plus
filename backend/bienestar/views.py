@@ -85,19 +85,20 @@ class LoginUsuarioView(APIView):
 
 class ProgresoDiarioView(APIView):
     """
-    Vista para obtener el checklist del usuario.
-    GET /progreso/?usuario_id=<id>
+    Vista para obtener y actualizar el checklist del usuario.
+    GET   /api/progreso/?usuario_id=<id>
+    PATCH /api/progreso/<id>/           -> marcarCompletado(id, completado)
+    PATCH /api/progreso/                -> actualizarProgreso(progreso_id, completado)
     """
-    # Nota: Aquí falta la autenticación, pero por ahora usamos el query_param
-    def get(self, request):
+    def get(self, request, pk=None):
         usuario_id = request.query_params.get("usuario_id")
-        
+
         if not usuario_id:
             return Response(
                 {"error": "Falta el parámetro 'usuario_id'"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         try:
             usuario = Usuario.objects.get(pk=usuario_id)
         except Usuario.DoesNotExist:
@@ -105,10 +106,33 @@ class ProgresoDiarioView(APIView):
                 {"error": "Usuario no encontrado"},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
+
         fecha = timezone.localdate()
         progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
         serializer = ProgresoDiarioSerializer(progresos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, pk=None):
+        progreso_id = pk or request.data.get("progreso_id")
+        completado = request.data.get("completado")
+
+        if progreso_id is None or completado is None:
+            return Response(
+                {"error": "Faltan datos: se necesita el id del progreso y 'completado'"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            progreso = ProgresoDiario.objects.get(pk=progreso_id)
+        except ProgresoDiario.DoesNotExist:
+            return Response(
+                {"error": "Progreso no encontrado"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        progreso.completado = completado
+        progreso.save()
+        serializer = ProgresoDiarioSerializer(progreso)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -327,6 +351,13 @@ class RutinaEjercicioViewSet(viewsets.ModelViewSet):
     """
     queryset = RutinaEjercicio.objects.all()
     serializer_class = RutinaEjercicioSerializer
+
+    def get_queryset(self):
+        queryset = RutinaEjercicio.objects.all()
+        usuario_id = self.request.query_params.get('usuario_id')
+        if usuario_id is not None:
+            queryset = queryset.filter(usuario_id=usuario_id)
+        return queryset
 
     def perform_create(self, serializer):
         """

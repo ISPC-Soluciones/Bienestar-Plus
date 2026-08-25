@@ -12,6 +12,7 @@ export interface Usuario {
   id: number;
   email: string;
   nombre: string;
+  rol?: string;
   password?: string;
 }
 
@@ -40,6 +41,7 @@ export class LoginService {
             id: response.data.id,
             email: response.data.email,
             nombre: response.data.nombre,
+            rol: response.data.rol,
           };
           return usuarioConformado;
         }

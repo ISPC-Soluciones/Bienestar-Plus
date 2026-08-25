@@ -9,7 +9,8 @@ from .views import (
     EstadisticasView, 
     EjercicioViewSet, 
     RutinaEjercicioViewSet,
-    NotificacionesViewSet  # <--- NEW IMPORT: You MUST ensure this view class exists
+    NotificacionesViewSet,
+    ProgresoDiarioView
 )
 
 router = DefaultRouter()
@@ -20,7 +21,8 @@ router.register(r'notificaciones', NotificacionesViewSet, basename='notificacion
 
 urlpatterns = [
     path('', include(router.urls)), 
-    
     path('perfil-salud/<int:user_id>/', PerfilSaludView.as_view(), name='perfil-salud'), 
     path('estadisticas/', EstadisticasView.as_view(), name='estadisticas'),
+    path('progreso/', ProgresoDiarioView.as_view(), name='progreso-lista'),
+    path('progreso/<int:pk>/', ProgresoDiarioView.as_view(), name='progreso-detalle'),
 ]

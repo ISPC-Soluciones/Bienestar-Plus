@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Usuario, Habito, ID, PerfilSalud } from '../models/perfil.model';
 import { Observable, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  private base = 'https://bienestar-plus-backend.vercel.app/api';
+    private base = `${environment.backendUrl}/api`;
 
   constructor(private http: HttpClient) {}
 

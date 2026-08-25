@@ -16,3 +16,6 @@ __pycache__/
 # Django Migrations Caches
 */migrations/__pycache__/
 .vercel
+
+
+*.sqlite3
