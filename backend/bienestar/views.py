@@ -23,13 +23,17 @@ from .serializers import (
     NotificacionSerializer
 )
 
-class NotificacionesViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    A viewset for viewing and editing Notificacion instances.
-    """
-    queryset = Notificacion.objects.all()
+class NotificacionesViewSet(viewsets.ModelViewSet):
     serializer_class = NotificacionSerializer
-    # You will later need to filter this queryset by the 'usuario' query parameter
+
+    def get_queryset(self):
+        queryset = Notificacion.objects.all()
+        usuario_id = self.request.query_params.get('usuario_id')
+
+        if usuario_id:
+            queryset = queryset.filter(usuario_id=usuario_id)
+
+        return queryset
 
 class RegistroUsuarioView(APIView):
     def post(self, request):

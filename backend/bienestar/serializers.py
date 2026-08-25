@@ -171,8 +171,19 @@ class ProgresoChecklistSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class NotificacionSerializer(serializers.ModelSerializer):
-    estado = serializers.CharField(source='get_estado_display', read_only=True)
+    estado_display = serializers.CharField(
+        source='get_estado_display',
+        read_only=True
+    )
 
     class Meta:
         model = Notificacion
-        fields = ['id', 'usuario', 'mensaje', 'estado', 'enviado', 'leido']
+        fields = [
+            'id',
+            'usuario',
+            'mensaje',
+            'estado',
+            'estado_display',
+            'enviado',
+            'leido',
+        ]
