@@ -24,8 +24,8 @@ export class Habitos implements OnInit {
 
   cantidadEnEdicion: number | undefined;
 
-  usuarioNombre: string = 'Cosme';
-  usuarioIdAutenticado: number = 1;
+  usuarioNombre: string = '';
+  usuarioIdAutenticado: number = 0;
 
   constructor(
     private ejercicioService: EjercicioService,
@@ -34,6 +34,13 @@ export class Habitos implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      const usuario = JSON.parse(usuarioGuardado);
+      this.usuarioNombre = usuario?.nombre ?? '';
+      this.usuarioIdAutenticado = usuario?.id ?? 0;
+    }
+
     this.cargarEjerciciosDisponibles();
     this.cargarRutinaDelUsuario();
   }
@@ -42,10 +49,7 @@ export class Habitos implements OnInit {
     this.activeTab = tabName;
   }
 
-  obtenerRutaImagen(nombre: string): string {
-    const nombreLimpio = nombre.toLowerCase().replace(/ /g, '');
-    return `assets/${nombreLimpio}.jpg`;
-  }
+  
 
   cargarEjerciciosDisponibles(): void {
     this.ejercicioService.obtenerEjercicios().subscribe({

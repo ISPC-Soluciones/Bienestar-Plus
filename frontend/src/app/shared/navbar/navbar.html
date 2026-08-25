@@ -17,7 +17,7 @@
         <li><a routerLink="/login" class="nav-registrarse">Iniciar Sesión</a></li>
       }
 
-      @if (userId$ | async; as userId) {
+            @if (userId$ | async; as userId) {
         <li><a [routerLink]="['/perfil', userId]" class="nav-registrarse">Perfil</a></li>
         <li><a routerLink="/habitos" class="nav-registrarse">Hábitos</a></li>
         <li>
@@ -27,6 +27,9 @@
               <span class="notification-badge">{{ notificacionesSinLeer }}</span>
             }
           </button>
+        </li>
+        <li>
+          <button class="nav-registrarse" (click)="cerrarSesion()">Cerrar sesión</button>
         </li>
       }
     </ul>

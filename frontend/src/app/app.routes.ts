@@ -23,6 +23,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: Admin,
+    canActivate: [AdminGuard],
     children: [
       {
         path: 'dashboard',

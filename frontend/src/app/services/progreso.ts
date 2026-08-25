@@ -23,7 +23,7 @@ export interface ProgresoDiario {
   providedIn: 'root',
 })
 export class ProgresoService {
-  private baseUrl = `${environment.backendUrl}/api`;
+  private baseUrl = 'https://bienestar-plus-backend.vercel.app/api';
 
   constructor(private http: HttpClient) {}
 

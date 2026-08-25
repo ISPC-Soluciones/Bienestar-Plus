@@ -69,13 +69,9 @@ export class Registro {
     );
   }
 
-  cerrarModal(): void {
+    cerrarModal(): void {
     this.mostrarModalRecomendacion = false;
-    if (this.ultimoUsuarioId) {
-      this.router.navigate(['/perfil', this.ultimoUsuarioId]);
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.router.navigate(['/home']);
   }
 
   EnviarFormulario(): void {
@@ -133,7 +129,7 @@ export class Registro {
           this.recomendacionUsuario = recomendacion || 'GENERAL';
           this.mostrarModalRecomendacion = true;
         } else {
-          this.router.navigate(['/perfil', usuarioId]);
+          this.router.navigate(['/home']);
         }
       },
       (error: any) => {

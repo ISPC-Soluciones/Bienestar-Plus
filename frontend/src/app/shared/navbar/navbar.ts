@@ -6,6 +6,7 @@ import { ModalNotificacionesComponent } from '../../pages/modal-notificaciones/m
 import { Notificacion } from '../../models/notificacion';
 import { NotificacionesService } from '../../services/notificaciones';
 import { AuthService } from '../../services/auth';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -25,7 +26,8 @@ export class Navbar implements OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private notificacionesService: NotificacionesService
+    private notificacionesService: NotificacionesService,
+    private router: Router
   ) {
     this.userId$ = this.authService.currentUserId$;
 
@@ -65,5 +67,10 @@ export class Navbar implements OnDestroy {
     if (userId) {
       this.cargarNotificaciones(userId);
     }
+  }
+
+  cerrarSesion(): void {
+    this.authService.logout();
+    this.router.navigate(['/home']);
   }
 }
