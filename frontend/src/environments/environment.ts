@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  backendUrl: 'https://bienestar-plus-backend.vercel.app',
+  backendUrl: 'http://127.0.0.1:8000',
 };

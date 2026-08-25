@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
+RUN npx ng build --configuration development
 
 
 FROM nginx:alpine

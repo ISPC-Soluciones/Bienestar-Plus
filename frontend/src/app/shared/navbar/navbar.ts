@@ -69,8 +69,19 @@ export class Navbar implements OnDestroy {
     }
   }
 
-  cerrarSesion(): void {
+    cerrarSesion(): void {
     this.authService.logout();
     this.router.navigate(['/home']);
+  }
+
+  esAdmin(): boolean {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (!usuarioGuardado) return false;
+    try {
+      const usuario = JSON.parse(usuarioGuardado);
+      return usuario?.rol === 'admin';
+    } catch {
+      return false;
+    }
   }
 }

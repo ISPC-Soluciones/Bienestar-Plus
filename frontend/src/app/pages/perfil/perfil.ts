@@ -94,6 +94,7 @@ export class PerfilComponent implements OnInit {
 
         localStorage.setItem('usuario', JSON.stringify(this.usuario));
         this.loading = false;
+        this.cargarProgreso(id);
       },
       error: (err) => {
         console.error('❌ Error cargando perfil:', err);
