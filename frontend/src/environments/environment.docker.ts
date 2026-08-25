@@ -1,4 +1,4 @@
 export const environment = {
-    production: true,
-    backendUrl: 'http://localhost:8000',
-  };
+  production: true,
+  backendUrl: 'https://bienestar-plus-backend.vercel.app',
+};
