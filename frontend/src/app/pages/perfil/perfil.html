@@ -14,7 +14,8 @@
     <div class="usuario__detalles">
       <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
       <p>
-        <strong>Altura:</strong> {{ usuario.perfil_salud?.altura || "-" }} cm
+        <strong>Altura:</strong>
+        {{ alturaEnCm() !== null ? (alturaEnCm() | number : "1.0-0") : "-" }} cm
       </p>
       <p>
         <strong>Género:</strong>
@@ -126,7 +127,7 @@
           <option value="">Seleccione...</option>
           <option value="M">Masculino</option>
           <option value="F">Femenino</option>
-          <option value="O">Otro</option>
+          <option value="Otro">Otro</option>
         </select>
       </div>
 

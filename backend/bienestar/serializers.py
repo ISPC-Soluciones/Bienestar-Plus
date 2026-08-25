@@ -43,8 +43,18 @@ class PerfilSaludSerializer(serializers.ModelSerializer):
         return value
 
     def validate_altura(self, value):
-        if value is not None and value <= Decimal(0):
-            raise serializers.ValidationError("La altura debe ser un valor positivo.")
+        if value is None:
+            return value
+
+        if value <= Decimal(0):
+            raise serializers.ValidationError(
+                "La altura debe ser un valor positivo."
+            )
+
+    # Si llega en centímetros (ej. 180), convertir a metros (1.80)
+        if value > Decimal('3'):
+            value = value / Decimal('100')
+
         return value
 
 # =========================================================

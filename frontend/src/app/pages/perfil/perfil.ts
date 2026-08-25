@@ -10,7 +10,7 @@ import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { PerfilService } from '../../services/perfil';
 import { ProgresoService } from '../../services/progreso';
 import { Notificacion } from '../../models/notificacion';
-import { NotificacionesService } from '../../services/notificaciones'; 
+import { NotificacionesService } from '../../services/notificaciones';
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
 import { switchMap } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ export class PerfilComponent implements OnInit {
   loading = false;
   error = '';
   listaDeNotificaciones: Notificacion[] = [];
-  modalAbierto = false; 
+  modalAbierto = false;
   perfilForm: FormGroup;
   rutina: any[] = [];
 
@@ -53,7 +53,7 @@ export class PerfilComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loading = true; 
+    this.loading = true;
 
     this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
@@ -84,7 +84,7 @@ export class PerfilComponent implements OnInit {
         if (salud) {
           this.perfilForm.setValue({
             peso: salud.peso ?? '',
-            altura: salud.altura ?? '',
+            altura: salud.altura ? Number(salud.altura) * 100 : '',
             genero: salud.genero ?? '',
             fecha_nacimiento: salud.fecha_nacimiento
               ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
@@ -94,7 +94,6 @@ export class PerfilComponent implements OnInit {
 
         localStorage.setItem('usuario', JSON.stringify(this.usuario));
         this.loading = false;
-
       },
       error: (err) => {
         console.error('❌ Error cargando perfil:', err);
@@ -110,7 +109,7 @@ export class PerfilComponent implements OnInit {
     const salud = this.usuario.perfil_salud;
     this.perfilForm.setValue({
       peso: salud?.peso ?? '',
-      altura: salud?.altura ?? '',
+      altura: salud?.altura ? Number(salud.altura) * 100 : '',
       genero: salud?.genero ?? '',
       fecha_nacimiento: salud?.fecha_nacimiento
         ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
@@ -132,7 +131,9 @@ export class PerfilComponent implements OnInit {
     const datos = { ...this.perfilForm.value };
 
     if (datos.peso) datos.peso = Number(datos.peso);
-    if (datos.altura) datos.altura = Number(datos.altura);
+    if (datos.altura) {
+      datos.altura = Number(datos.altura) / 100;
+    }
     if (datos.fecha_nacimiento) {
       datos.fecha_nacimiento = new Date(datos.fecha_nacimiento)
         .toISOString()
@@ -168,6 +169,15 @@ export class PerfilComponent implements OnInit {
         },
       });
   }
+  alturaEnCm(): number | null {
+    const altura = this.usuario?.perfil_salud?.altura;
+  
+    if (altura === null || altura === undefined) {
+      return null;
+    }
+  
+    return Number(altura) * 100;
+  }
 
   cargarProgreso(usuarioId: number): void {
     this.progresoService.getProgresoDiario(usuarioId).subscribe({
@@ -201,6 +211,4 @@ export class PerfilComponent implements OnInit {
       error: (err) => console.error('Error al actualizar hábito', err),
     });
   }
-
- 
 }

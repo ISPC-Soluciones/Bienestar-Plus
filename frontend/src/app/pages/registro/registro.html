@@ -65,26 +65,29 @@
       @if (registroForm.get('telefono')?.touched &&
       registroForm.get('telefono')?.invalid) {
       <div class="formulario--error">El telefono es obligatorio</div>
-      } <label for="edad" class="formulario--label">edad:</label>
+      }
+      <label for="fecha_nacimiento" class="formulario--label">
+        Fecha de nacimiento:
+      </label>
 
       <input
         class="formulario--input"
-        id="edad"
+        id="fecha_nacimiento"
         type="date"
-        formControlName="edad"
-        placeholder="Ej: mm/aa/dd"
+        formControlName="fecha_nacimiento"
       />
-      @if (registroForm.get('edad')?.touched &&
-      registroForm.get('edad')?.invalid) {
-      <div class="formulario--error">la edad es obligatoria</div>
+
+      @if ( registroForm.get('fecha_nacimiento')?.touched &&
+      registroForm.get('fecha_nacimiento')?.invalid ) {
+      <div class="formulario--error">La fecha de nacimiento es obligatoria</div>
+
       }
       <label for="genero" class="formulario--label">Género:</label>
       <select class="formulario--input" id="genero" formControlName="genero">
-        <option value="" disabled selected>Selecciona una opción</option>
-
-        <option value="masculino">Masculino</option>
-
-        <option value="femenino">Femenino</option>
+        <option value="" disabled>Selecciona una opción</option>
+        <option value="M">Masculino</option>
+        <option value="F">Femenino</option>
+        <option value="Otro">Otro</option>
       </select>
       @if (registroForm.get('genero')?.touched &&
       registroForm.get('genero')?.invalid) {
@@ -109,17 +112,17 @@
           El peso debe ser un valor numérico entre 10 y 300 kg.
         </div>
         }
-        <label for="altura" class="formulario--label">Altura (m):</label>
+        <label for="altura" class="formulario--label">Altura (cm):</label>
 
         <input
           class="formulario--input"
           id="altura"
           type="number"
-          step="0.01"
+          step="1"
           formControlName="altura"
-          placeholder="Ej: 1.75 (metros)"
-          min="0.5"
-          max="2.5"
+          placeholder="Ej: 175"
+          min="50"
+          max="250"
         />
         @if (registroForm.get('perfil_salud.altura')?.touched &&
         registroForm.get('perfil_salud.altura')?.errors) {
