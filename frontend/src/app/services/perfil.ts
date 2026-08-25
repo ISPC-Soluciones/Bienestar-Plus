@@ -4,7 +4,7 @@ import { Usuario, Habito, ID, PerfilSalud } from '../models/perfil.model';
 import { Observable, of } from 'rxjs';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { environment } from '../../environments/environment';
+
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
