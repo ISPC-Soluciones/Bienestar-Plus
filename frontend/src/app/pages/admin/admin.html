@@ -1,10 +1,24 @@
 <section class="admin-layout">
   <nav class="sidebar">
-    <h2>Bienestar Plus Admin</h2>
+    <div class="sidebar__marca">
+      <h2>Panel de Control <span>Admin</span></h2>
+    </div>
     <ul>
-      <li><a routerLink="/admin/dashboard">Dashboard</a></li>
-      <li><a routerLink="/admin/ejercicios">Ejercicios</a></li>
-      <li><a routerLink="/admin/perfil">Mi Perfil</a></li>
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="activo">
+          <i class="fa-solid fa-chart-line"></i> Dashboard
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/ejercicios" routerLinkActive="activo">
+          <i class="fa-solid fa-dumbbell"></i> Ejercicios
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/perfil" routerLinkActive="activo">
+          <i class="fa-solid fa-user"></i> Mi Perfil
+        </a>
+      </li>
     </ul>
   </nav>
 
