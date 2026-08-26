@@ -39,6 +39,8 @@ export interface Usuario {
   peso?: number;         
   altura?: number;   
   perfil_salud?: PerfilSalud;
+  foto_perfil?: string | null; // El campo de archivo original (puede ser null)
+  foto_perfil_url?: string | null;
 
 }
 

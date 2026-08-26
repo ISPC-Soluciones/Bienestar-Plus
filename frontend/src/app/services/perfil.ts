@@ -1,55 +1,81 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Usuario, Habito, ID, PerfilSalud } from '../models/perfil.model';
-import { Observable, of } from 'rxjs';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { Observable, of, forkJoin } from 'rxjs';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class PerfilService {
-  private base = `${environment.backendUrl}/api`;
+  private base = `${environment.backendUrl}api`;
 
   constructor(private http: HttpClient) {}
 
-  getUsuario(id: ID): Observable<Usuario> {
+  // Obtener un usuario, retorna undefined si no existe
+  getUsuario(id: ID): Observable<Usuario | undefined> {
     return this.http
       .get<{ success: boolean; data: Usuario }>(`${this.base}/usuarios/${id}/`)
-      .pipe(map((res) => res.data ?? (res as any)));
+      .pipe(
+        map(res => res.data ?? undefined),
+        catchError(err => {
+          console.error('Error obteniendo usuario:', err);
+          return of(undefined);
+        })
+      );
   }
 
+  // Obtener hábitos por IDs
   getHabitosByIds(ids: ID[]): Observable<Habito[]> {
     if (!ids?.length) return of([]);
-    const qs = ids
-      .map((id) => `id=${encodeURIComponent(String(id))}`)
-      .join('&');
-    return this.http.get<Habito[]>(`${this.base}/habitos?${qs}`);
+    const qs = ids.map(id => `id=${encodeURIComponent(String(id))}`).join('&');
+    return this.http.get<Habito[]>(`${this.base}/habitos?${qs}`).pipe(
+      catchError(err => {
+        console.error('Error obteniendo hábitos:', err);
+        return of([]);
+      })
+    );
   }
 
-  updateUsuario(id: number, data: FormData | any): Observable<Usuario> {
+  // Actualizar usuario
+  updateUsuario(id: number, data: FormData | any): Observable<Usuario | undefined> {
     return this.http
-      .patch<{ success: boolean; data: Usuario }>(
-        `${this.base}/usuarios/${id}/`,
-        data
-      )
-      .pipe(map((res) => res.data ?? res));
+      .patch<{ success: boolean; data: Usuario }>(`${this.base}/usuarios/${id}/`, data)
+      .pipe(
+        map(res => res.data ?? undefined),
+        catchError(err => {
+          console.error('Error actualizando usuario:', err);
+          return of(undefined);
+        })
+      );
   }
 
-  getPerfilSalud(id: number): Observable<PerfilSalud> {
-    return this.http.get<PerfilSalud>(`${this.base}/perfil-salud/${id}/`);
+  // Obtener perfil de salud, retorna undefined si no existe
+  getPerfilSalud(id: number): Observable<PerfilSalud | undefined> {
+    return this.http.get<PerfilSalud>(`${this.base}/perfil-salud/${id}/`).pipe(
+      catchError(err => {
+        console.error('Error obteniendo perfil de salud:', err);
+        return of(undefined);
+      })
+    );
   }
 
-  updatePerfilSalud(
-    id: number,
-    data: Partial<PerfilSalud>
-  ): Observable<PerfilSalud> {
-    return this.http
-      .put<PerfilSalud>(`${this.base}/perfil-salud/${id}/`, data)
-      .pipe(tap((resp) => console.log('Perfil de salud actualizado:', resp)));
+  // Actualizar perfil de salud
+  updatePerfilSalud(id: number, data: Partial<PerfilSalud>): Observable<PerfilSalud | undefined> {
+    return this.http.put<PerfilSalud>(`${this.base}/perfil-salud/${id}/`, data).pipe(
+      catchError(err => {
+        console.error('Error actualizando perfil de salud:', err);
+        return of(undefined);
+      })
+    );
   }
 
-  getUsuarioConHabitos(id: ID): Observable<Usuario> {
+  // Obtener usuario con hábitos y perfil de salud
+  getUsuarioConHabitos(id: ID): Observable<Usuario | undefined> {
     return this.getUsuario(id).pipe(
-      switchMap((user) => {
+      switchMap(user => {
+        if (!user) return of(undefined);
+
+        // Obtener hábitos
         const habitos$ =
           Array.isArray(user.habitos) && user.habitos.length
             ? of(user.habitos)
@@ -57,16 +83,16 @@ export class PerfilService {
             ? this.getHabitosByIds(user.habitosIds)
             : of([]);
 
-        return habitos$.pipe(
-          switchMap((habitos) => {
-            return this.getPerfilSalud(Number(id)).pipe(
-              map((perfilSalud) => ({
-                ...user,
-                habitos,
-                perfil_salud: perfilSalud,
-              }))
-            );
-          })
+        // Combinar hábitos y perfil de salud
+        return forkJoin({
+          perfil_salud: this.getPerfilSalud(Number(id)),
+          habitos: habitos$
+        }).pipe(
+          map(res => ({
+            ...user,
+            perfil_salud: res.perfil_salud, // PerfilSalud | undefined
+            habitos: res.habitos
+          }))
         );
       })
     );

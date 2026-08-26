@@ -1,8 +1,9 @@
 <div class="perfil__container" *ngIf="usuario; else loadingTpl">
   <aside class="perfil__sidebar">
     <div class="usuario__info">
+      <!-- Muestra la foto de perfil o un default -->
       <img
-        src="assets/user-default.png"
+        [src]="usuario.foto_perfil_url || 'assets/user-default.png'"
         alt="Foto de perfil"
         class="usuario__foto"
       />
@@ -12,6 +13,7 @@
     </div>
 
     <div class="usuario__detalles">
+      <h3>Datos de salud</h3>
       <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
       <p>
         <strong>Altura:</strong> {{ usuario.perfil_salud?.altura || "-" }} cm
@@ -31,9 +33,9 @@
     </div>
   </aside>
 
+  <!-- Sección de progreso (se usaría para el gráfico, aquí se mantiene la imagen) -->
   <section class="perfil__progreso">
     <h2>Tu progreso mensual y semanal</h2>
-
     <div class="progreso__imagen">
       <img
         src="assets/grafico_usuario_metricas.jpg"
@@ -42,6 +44,7 @@
     </div>
   </section>
 
+  <!-- Sección de rutina de hábitos -->
   <section class="perfil__rutina">
     <h2>Mi rutina de hoy</h2>
 
@@ -58,7 +61,7 @@
       </div>
     </div>
 
-    <ul *ngIf="rutina?.length; else sinRutina">
+    <ul *ngIf="rutina?.length; else sinRutina" class="rutina__lista">
       <li *ngFor="let h of rutina">
         <label class="rutina__item">
           <input
@@ -74,20 +77,64 @@
     </ul>
 
     <ng-template #sinRutina>
-      <p>No hay hábitos cargados para hoy.</p>
+      <p class="mt-4">No hay hábitos cargados para hoy.</p>
     </ng-template>
   </section>
 </div>
 
+<!-- Template de carga -->
 <ng-template #loadingTpl>
   <p class="loading">Cargando perfil...</p>
 </ng-template>
 
+<!-- Modal de edición de perfil -->
 <div class="modal__overlay" *ngIf="modalAbierto">
   <div class="modal__content">
-    <h2>Editar perfil de salud</h2>
+    <h2>Editar perfil</h2>
 
     <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
+      <!-- Campos de Usuario -->
+      <div class="form__group">
+        <label for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          [class.invalid]="perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched"
+        />
+      </div>
+
+      <div class="form__group">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          [class.invalid]="perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched"
+        />
+      </div>
+
+      <!-- Campo de Foto de Perfil -->
+      <div class="form__group">
+        <label for="foto_perfil">Foto de perfil</label>
+        <input
+          id="foto_perfil"
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+        />
+        <small class="hint" *ngIf="usuario?.foto_perfil_url && !fotoPerfilFile">
+          Actual: <a [href]="usuario?.foto_perfil_url" target="_blank" class="text-blue-500 hover:underline">Ver imagen</a>
+        </small>
+        <small class="hint" *ngIf="fotoPerfilFile">
+          Archivo seleccionado: {{ fotoPerfilFile.name }}
+        </small>
+      </div>
+
+      <hr class="my-4"/>
+      <h3>Datos de salud</h3>
+
+      <!-- Campos de PerfilSalud -->
       <div class="form__group">
         <label for="peso">Peso (kg)</label>
         <input
@@ -144,11 +191,12 @@
       </div>
 
       <div class="modal__acciones">
-        <button type="submit" [disabled]="perfilForm.invalid || loading">
+        <button type="submit" [disabled]="perfilForm.invalid || loading" class="button__primary">
           {{ loading ? "Guardando..." : "Guardar" }}
         </button>
-        <button type="button" (click)="cerrarModal()">Cancelar</button>
+        <button type="button" (click)="cerrarModal()" class="button__secondary">Cancelar</button>
       </div>
+      <p *ngIf="error" class="error-message">{{ error }}</p>
     </form>
   </div>
 </div>
