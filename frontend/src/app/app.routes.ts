@@ -23,6 +23,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: Admin,
+    canActivate: [AdminGuard],
     children: [
       {
         path: 'dashboard',
@@ -34,6 +35,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/admin/ejercicios/ejercicios').then(
             (m) => m.Ejercicios
+          ),
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('./pages/admin/usuarios/usuarios').then(
+            (m) => m.AdminUsuarios
           ),
       },
       {

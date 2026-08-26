@@ -23,13 +23,21 @@ export class ModalNotificacionesComponent {
   }
 
   toggleLeida(noti: Notificacion) {
-    const nuevoEstado = noti.estado === 'leido' ? 'pendiente' : 'leido';
-    this.notiService.marcarComoLeida(noti.id).subscribe({
-      next: updated => {
-        noti.estado = nuevoEstado;
-        this.notificacionesCambiaron.emit();
-      },
-      error: err => console.error('Error al actualizar notificación', err)
-    });
+    const nuevoEstado =
+      noti.estado === 'leido' ? 'pendiente' : 'leido';
+  
+    this.notiService
+      .actualizarEstado(noti.id, nuevoEstado)
+      .subscribe({
+        next: (updated) => {
+          noti.estado = updated.estado;
+          this.notificacionesCambiaron.emit();
+        },
+        error: (err) =>
+          console.error(
+            'Error al actualizar notificación',
+            err
+          ),
+      });
   }
 }

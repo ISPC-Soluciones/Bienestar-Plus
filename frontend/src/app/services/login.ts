@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from './../../environments/enviroment';
+import { environment } from '../../environments/environment';
 export interface LoginData {
   email: string;
   password: string;
@@ -12,6 +12,7 @@ export interface Usuario {
   id: number;
   email: string;
   nombre: string;
+  rol?: string;
   password?: string;
 }
 
@@ -19,7 +20,7 @@ interface LoginApiResponse {
   data: {
     id: number;
     nombre: string;
-    mail: string;
+    email: string;
     rol: string;
   };
   success: boolean;
@@ -30,7 +31,7 @@ interface LoginApiResponse {
 })
 export class LoginService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.backendUrl}api/login/`;
+  private apiUrl = `${environment.backendUrl}/api/login/`;
 
   login(loginData: LoginData): Observable<Usuario | null> {
     return this.http.post<LoginApiResponse>(this.apiUrl, loginData).pipe(
@@ -38,8 +39,9 @@ export class LoginService {
         if (response?.success && response?.data?.id != null) {
           const usuarioConformado: Usuario = {
             id: response.data.id,
-            email: response.data.mail,
+            email: response.data.email,
             nombre: response.data.nombre,
+            rol: response.data.rol,
           };
           return usuarioConformado;
         }

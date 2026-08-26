@@ -4,16 +4,14 @@
     {
       "src": "bienestar_plus_api/wsgi.py",
       "use": "@vercel/python",
-      "config": {
-        "runtime": "python3.11"
-      }
+      "config": { "runtime": "python3.11" }
     }
   ],
   "buildCommand": "python manage.py collectstatic --noinput",
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "staticfiles/$1"
+      "src": "/api/(.*)",
+      "dest": "bienestar_plus_api/wsgi.py"
     },
     {
       "src": "/(.*)",

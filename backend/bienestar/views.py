@@ -23,13 +23,17 @@ from .serializers import (
     NotificacionSerializer
 )
 
-class NotificacionesViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    A viewset for viewing and editing Notificacion instances.
-    """
-    queryset = Notificacion.objects.all()
+class NotificacionesViewSet(viewsets.ModelViewSet):
     serializer_class = NotificacionSerializer
-    # You will later need to filter this queryset by the 'usuario' query parameter
+
+    def get_queryset(self):
+        queryset = Notificacion.objects.all()
+        usuario_id = self.request.query_params.get('usuario_id')
+
+        if usuario_id:
+            queryset = queryset.filter(usuario_id=usuario_id)
+
+        return queryset
 
 class RegistroUsuarioView(APIView):
     def post(self, request):
@@ -37,15 +41,30 @@ class RegistroUsuarioView(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         telefono = request.data.get('telefono', '')
-         # Campos del perfil salud
-        genero = request.data.get('genero')
-        fecha_nacimiento = request.data.get('fecha_nacimiento')
-
 
         if not nombre or not email or not password:
-            return Response({"error": "Faltan campos obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Faltan campos obligatorios"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         if Usuario.objects.filter(email=email).exists():
-            return Response({"error": "Correo ya registrado"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Correo ya registrado"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Datos del perfil de salud enviados desde Angular
+        perfil_data = request.data.get('perfil_salud', {}) or {}
+
+        # Permitimos también el formato viejo por compatibilidad
+        genero = perfil_data.get('genero', request.data.get('genero'))
+        fecha_nacimiento = perfil_data.get(
+            'fecha_nacimiento',
+            request.data.get('fecha_nacimiento')
+        )
+        peso = perfil_data.get('peso')
+        altura = perfil_data.get('altura')
 
         usuario = Usuario.objects.create(
             nombre=nombre,
@@ -53,16 +72,30 @@ class RegistroUsuarioView(APIView):
             password=make_password(password),
             telefono=telefono
         )
-        
 
-        PerfilSalud.objects.create(
-            usuario=usuario,
-            genero=genero,
-            fecha_nacimiento=fecha_nacimiento
+        perfil_salud = PerfilSalud.objects.create(
+        usuario=usuario,
+        genero=genero,
+        fecha_nacimiento=fecha_nacimiento,
+        peso=peso,
+        altura=altura
+            )
+
+        perfil_salud.actualizar_recomendacion()
+        perfil_salud.save()
+
+        serializer = UsuarioSerializer(
+            usuario,
+            context={'request': request}
         )
 
-        serializer = UsuarioSerializer(usuario)
-        return Response({"success": True, "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            },
+            status=status.HTTP_201_CREATED
+        )
 
 class LoginUsuarioView(APIView):
     def post(self, request):
@@ -85,19 +118,20 @@ class LoginUsuarioView(APIView):
 
 class ProgresoDiarioView(APIView):
     """
-    Vista para obtener el checklist del usuario.
-    GET /progreso/?usuario_id=<id>
+    Vista para obtener y actualizar el checklist del usuario.
+    GET   /api/progreso/?usuario_id=<id>
+    PATCH /api/progreso/<id>/           -> marcarCompletado(id, completado)
+    PATCH /api/progreso/                -> actualizarProgreso(progreso_id, completado)
     """
-    # Nota: Aquí falta la autenticación, pero por ahora usamos el query_param
-    def get(self, request):
+    def get(self, request, pk=None):
         usuario_id = request.query_params.get("usuario_id")
-        
+
         if not usuario_id:
             return Response(
                 {"error": "Falta el parámetro 'usuario_id'"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         try:
             usuario = Usuario.objects.get(pk=usuario_id)
         except Usuario.DoesNotExist:
@@ -105,10 +139,33 @@ class ProgresoDiarioView(APIView):
                 {"error": "Usuario no encontrado"},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
+
         fecha = timezone.localdate()
         progresos = ProgresoDiario.objects.obtener_checklist_para_usuario(usuario, fecha)
         serializer = ProgresoDiarioSerializer(progresos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, pk=None):
+        progreso_id = pk or request.data.get("progreso_id")
+        completado = request.data.get("completado")
+
+        if progreso_id is None or completado is None:
+            return Response(
+                {"error": "Faltan datos: se necesita el id del progreso y 'completado'"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            progreso = ProgresoDiario.objects.get(pk=progreso_id)
+        except ProgresoDiario.DoesNotExist:
+            return Response(
+                {"error": "Progreso no encontrado"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        progreso.completado = completado
+        progreso.save()
+        serializer = ProgresoDiarioSerializer(progreso)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -170,70 +227,75 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
-from .models import Usuario, PerfilSalud
-from .serializers import PerfilSaludSerializer
-
 class PerfilSaludView(APIView):
- 
-
-    def get_usuario(self, user_id):
-        """Valida user_id y retorna el usuario o None"""
-        if not user_id or user_id in ['null', 'undefined']:
-            return None, Response({"error": "ID de usuario inválido"}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            usuario = get_object_or_404(Usuario, pk=int(user_id))
-            return usuario, None
-        except ValueError:
-            return None, Response({"error": "ID de usuario debe ser un número"}, status=status.HTTP_400_BAD_REQUEST)
-
+    """
+    Gestiona el perfil de salud (relación 1:1 con Usuario).
+    Endpoint: /api/perfil-salud/<user_id>/
+    """
+    # permission_classes = [IsAuthenticated] # Asumimos autenticación para producción
+    
     def get(self, request, user_id):
-        usuario, error_response = self.get_usuario(user_id)
-        if error_response:
-            return error_response
-
+        """Obtiene el perfil de salud para un usuario dado."""
+        # Nota: En un sistema real, user_id debería venir de request.user.id
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        
         try:
             perfil = usuario.perfilsalud
             serializer = PerfilSaludSerializer(perfil)
-            return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except PerfilSalud.DoesNotExist:
-            return Response({"success": False, "message": "Perfil de salud no encontrado. Use PUT para crearlo."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"message": "Perfil de salud no encontrado. Use PUT para crearlo."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
     def put(self, request, user_id):
-        usuario, error_response = self.get_usuario(user_id)
-        if error_response:
-            return error_response
-
+        """
+        Crea un nuevo perfil o actualiza uno existente (actualización completa).
+        Endpoint: /api/perfil-salud/<user_id>/
+        """
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        
         try:
-            perfil = usuario.perfilsalud
-            serializer = PerfilSaludSerializer(perfil, data=request.data)
+            perfil = usuario.perfilsalud # Obtener si existe
         except PerfilSalud.DoesNotExist:
-            serializer = PerfilSaludSerializer(data=request.data)
+            perfil = None # Si no existe, se creará
+            
+        data = request.data.copy()
+        # Se requiere asignar el usuario, aunque el serializador lo maneja al guardar
+        # data['usuario'] = usuario.pk 
 
+        serializer = PerfilSaludSerializer(perfil, data=data)
+        
         if serializer.is_valid():
-            instance = serializer.save(usuario=usuario)
-            status_code = status.HTTP_201_CREATED if not hasattr(usuario, 'perfilsalud') else status.HTTP_200_OK
-            return Response({"success": True, "data": PerfilSaludSerializer(instance).data}, status=status_code)
-        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            # Al guardar, aseguramos la asignación del usuario para la relación 1:1
+            instance = serializer.save(usuario=usuario) 
+            return Response(
+                PerfilSaludSerializer(instance).data, 
+                status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
+            )
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, user_id):
-        usuario, error_response = self.get_usuario(user_id)
-        if error_response:
-            return error_response
-
+        """Actualización parcial del perfil de salud (PATCH)."""
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        
         try:
             perfil = usuario.perfilsalud
         except PerfilSalud.DoesNotExist:
-            return Response({"success": False, "error": "El perfil de salud no existe. Use PUT para crearlo primero."}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {"error": "El perfil de salud no existe para actualizar. Use PUT para crearlo primero."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True)
+        
         if serializer.is_valid():
-            instance = serializer.save()
-            return Response({"success": True, "data": PerfilSaludSerializer(instance).data}, status=status.HTTP_200_OK)
-        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(PerfilSaludSerializer(perfil).data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EstadisticasView(APIView):
@@ -268,8 +330,7 @@ class EstadisticasView(APIView):
         if usuario_id is not None:
             # Ahora usuario_id es un entero, por lo que el filtro es seguro.
             rutinas_del_mes = rutinas_del_mes.filter(usuario_id=usuario_id)
-
-
+          
         # --- Lógica de Usuarios (siempre global) ---
         # Si esta API se usa para el panel de usuario individual,
         # 'total_usuarios' debería ser 1 si hay filtro, o total si no lo hay.
@@ -323,6 +384,13 @@ class RutinaEjercicioViewSet(viewsets.ModelViewSet):
     """
     queryset = RutinaEjercicio.objects.all()
     serializer_class = RutinaEjercicioSerializer
+
+    def get_queryset(self):
+        queryset = RutinaEjercicio.objects.all()
+        usuario_id = self.request.query_params.get('usuario_id')
+        if usuario_id is not None:
+            queryset = queryset.filter(usuario_id=usuario_id)
+        return queryset
 
     def perform_create(self, serializer):
         """

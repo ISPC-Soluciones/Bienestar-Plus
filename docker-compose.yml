@@ -1,0 +1,37 @@
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: bienestar_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bienestar
+      POSTGRES_USER: bienestar_user
+      POSTGRES_PASSWORD: bienestar_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: bienestar_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://bienestar_user:bienestar_password@db:5432/bienestar
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: bienestar_frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
