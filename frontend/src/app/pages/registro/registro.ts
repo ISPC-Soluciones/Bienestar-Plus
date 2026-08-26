@@ -69,9 +69,15 @@ export class Registro {
     );
   }
 
-    cerrarModal(): void {
+  cerrarModal(): void {
     this.mostrarModalRecomendacion = false;
-    this.router.navigate(['/home']);
+  
+  
+    if (this.ultimoUsuarioId) {
+      this.router.navigate(['/perfil', this.ultimoUsuarioId]);
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
 
   EnviarFormulario(): void {

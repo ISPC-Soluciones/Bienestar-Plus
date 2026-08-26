@@ -73,13 +73,16 @@ class RegistroUsuarioView(APIView):
             telefono=telefono
         )
 
-        PerfilSalud.objects.create(
-            usuario=usuario,
-            genero=genero,
-            fecha_nacimiento=fecha_nacimiento,
-            peso=peso,
-            altura=altura
-        )
+        perfil_salud = PerfilSalud.objects.create(
+        usuario=usuario,
+        genero=genero,
+        fecha_nacimiento=fecha_nacimiento,
+        peso=peso,
+        altura=altura
+            )
+
+        perfil_salud.actualizar_recomendacion()
+        perfil_salud.save()
 
         serializer = UsuarioSerializer(
             usuario,

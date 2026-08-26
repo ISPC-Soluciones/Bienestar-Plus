@@ -90,7 +90,11 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
 
 class UsuarioSerializer(serializers.ModelSerializer):
     foto_perfil_url = serializers.SerializerMethodField()
-    perfil_salud = PerfilSaludSerializer(read_only=True)
+
+    perfil_salud = PerfilSaludSerializer(
+        source='perfilsalud',
+        read_only=True
+    )
 
     class Meta:
         model = Usuario
