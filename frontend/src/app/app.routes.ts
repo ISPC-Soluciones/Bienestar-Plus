@@ -38,6 +38,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('./pages/admin/usuarios/usuarios').then(
+            (m) => m.AdminUsuarios
+          ),
+      },
+      {
         path: 'perfil',
         loadComponent: () =>
           import('./pages/admin/admin-perfil/admin-perfil').then(
