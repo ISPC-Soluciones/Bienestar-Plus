@@ -83,6 +83,9 @@ class RegistroUsuarioView(APIView):
 
         perfil_salud.actualizar_recomendacion()
         perfil_salud.save()
+        Notificacion.objects.create(
+            usuario=usuario,mensaje=f"Tu recomendación inicial: {perfil_salud.recomendacion_enfoque}",estado= "pendiente",
+        )
 
         serializer = UsuarioSerializer(
             usuario,
