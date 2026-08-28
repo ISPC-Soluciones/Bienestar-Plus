@@ -1,18 +1,11 @@
-.login-body {
+/* ===== BODY / FONDO ===== */
+.login-container {
   font-family: var(--fuente-base);
   background-image: url("/assets/healthy-llifestyle-elements-frame-background-free-vector.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 2rem;
   background-color: rgba(245, 247, 248, 0.9);
-}
-
-.login-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,7 +13,8 @@
   padding: 2rem;
 }
 
-.login-form {
+/* ===== CARD DEL FORMULARIO ===== */
+.login-container form {
   background-color: var(--bg-fondo);
   padding: 2rem 2.5rem;
   border-radius: 12px;
@@ -28,11 +22,15 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fuente-base);
 }
 
-.login-h1 {
+/* ===== TÍTULO h2 ===== */
+.login-container h2 {
   margin-bottom: 1.5rem;
-  font-size: 2rem;
+  font-size: 1.9rem;
   font-family: var(--fuente-titulo);
   font-style: italic;
   font-weight: 700;
@@ -40,103 +38,108 @@
   text-align: center;
 }
 
-.login-h2 {
-  margin-bottom: 1rem;
-  font-size: 1.9rem;
-  font-family: var(--fuente-titulo);
-  font-style: italic;
-  color: var(--bg-y-fuentes);
-  text-align: center;
-}
-
-.container__logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.container__logo img {
-  width: 100%;
-  height: auto;
-  max-width: 60px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-}
-
-.login-form-container {
+/* ===== GRUPOS label + input ===== */
+.login-container form > div {
   display: flex;
   flex-direction: column;
-  font-family: var(--fuente-base);
+  gap: 6px;
+  margin-bottom: 1.1rem;
 }
 
-.register-link {
-  display: block;
-  text-align: center;
-  margin-top: 1rem;
-  color: var(--ternario);
-  font-weight: bold;
-  text-decoration: none;
-  font-family: var(--fuente-base);
-}
-
-.register-link:hover {
+.login-container label {
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--bg-y-fuentes);
-  text-decoration: none;
+  font-family: var(--fuente-base);
 }
 
-/* DISEÑO RESPONSIVE (MEDIA QUERIES) PAG LOGIN */
+/* ===== INPUTS ===== */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  font-family: var(--fuente-base);
+  border: 1.5px solid var(--ternario);
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  background: #fff;
+  color: var(--bg-y-fuentes);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
 
-/* tamaño Mobile */
+.login-container input:focus {
+  border-color: var(--cuaternario);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== BOTÓN SUBMIT ===== */
+.login-container button[type="submit"] {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--fuente-base);
+  background-color: var(--ternario);
+  color: var(--bg-fondo);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.login-container button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--cuaternario);
+}
+
+.login-container button[type="submit"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
-  .formulario--form {
-    padding: 1.2rem;
+  .login-container {
+    padding: 1rem;
   }
 
-  .login-h1,
-  .login-h2 {
+  .login-container h2 {
     font-size: 1.5rem;
   }
 
-  .formulario--input {
+  .login-container input[type="text"],
+  .login-container input[type="password"] {
     font-size: 0.95rem;
     padding: 0.6rem;
   }
 
-  .formulario--btn {
+  .login-container button[type="submit"] {
     font-size: 0.95rem;
     padding: 0.65rem;
   }
-
-  .login-body {
-    padding: 1rem;
-  }
 }
 
-/* tamaño tablets */
 @media (max-width: 768px) {
-  .formulario--form {
-    padding: 2rem;
-  }
-
-  .login-h1,
-  .login-h2 {
+  .login-container h2 {
     font-size: 1.7rem;
   }
 
-  .formulario--input {
+  .login-container input[type="text"],
+  .login-container input[type="password"] {
     font-size: 1rem;
     padding: 0.7rem;
   }
 
-  .formulario--btn {
+  .login-container button[type="submit"] {
     font-size: 1rem;
     padding: 0.7rem;
   }
 }
 
-/* tamaño Desktop */
 @media (max-width: 1024px) {
-  .formulario--form {
+  .login-container form {
     max-width: 380px;
   }
 }
