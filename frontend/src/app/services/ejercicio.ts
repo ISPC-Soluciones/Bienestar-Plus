@@ -13,7 +13,7 @@ interface PaginacionResponse {
 
 @Injectable({ providedIn: 'root' })
 export class EjercicioService {
-  private apiUrl = `${environment.backendUrl}/api/rutinas-ejercicio/`;
+  private apiUrl = `${environment.backendUrl}/api/ejercicios/`;
 
   constructor(private http: HttpClient) {}
 

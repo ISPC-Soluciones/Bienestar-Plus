@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class EstadisticasService {
   private refrescar$ = new Subject<void>();
-  private baseUrl = `${environment.backendUrl}/api/estadisticas/`;
+  private baseUrl = `${environment.backendUrl}api/estadisticas/`;
 
   constructor(private http: HttpClient) {}
 
