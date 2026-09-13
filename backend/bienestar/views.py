@@ -1,18 +1,27 @@
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from datetime import timedelta
+from functools import partial
+
+from django.contrib.auth.hashers import make_password, check_password
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError, transaction
+from django.db.models import Count, Sum, F
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Sum, F 
-from datetime import timedelta 
-from django.contrib.auth.hashers import make_password, check_password
-from .models import Usuario, ProgresoDiario, PerfilSalud
+from rest_framework import viewsets, status
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-
-from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Notificacion 
+from .models import (
+    Usuario,
+    ProgresoDiario,
+    PerfilSalud,
+    Ejercicio,
+    RutinaEjercicio,
+    Roles,
+    Notificacion,
+)
 from .serializers import (
     UsuarioSerializer, 
     UsuarioUpdateSerializer,
@@ -20,9 +29,10 @@ from .serializers import (
     PerfilSaludSerializer,
     EjercicioSerializer, 
     RutinaEjercicioSerializer,
-    NotificacionSerializer
+    NotificacionSerializer,
 )
 from .services.news import get_news_payload
+from .services.email import send_welcome_email_safely
 
 
 class NoticiasView(APIView):
@@ -30,6 +40,7 @@ class NoticiasView(APIView):
 
     def get(self, request):
         return Response(get_news_payload(), status=status.HTTP_200_OK)
+
 
 class NotificacionesViewSet(viewsets.ModelViewSet):
     serializer_class = NotificacionSerializer
@@ -46,7 +57,7 @@ class NotificacionesViewSet(viewsets.ModelViewSet):
 class RegistroUsuarioView(APIView):
     def post(self, request):
         nombre = request.data.get('nombre')
-        email = request.data.get('email')
+        email = (request.data.get('email') or '').strip().lower()
         password = request.data.get('password')
         telefono = request.data.get('telefono', '')
 
@@ -56,7 +67,7 @@ class RegistroUsuarioView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if Usuario.objects.filter(email=email).exists():
+        if Usuario.objects.filter(email__iexact=email).exists():
             return Response(
                 {"error": "Correo ya registrado"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -74,26 +85,41 @@ class RegistroUsuarioView(APIView):
         peso = perfil_data.get('peso')
         altura = perfil_data.get('altura')
 
-        usuario = Usuario.objects.create(
-            nombre=nombre,
-            email=email,
-            password=make_password(password),
-            telefono=telefono
-        )
+        try:
+            with transaction.atomic():
+                usuario = Usuario.objects.create(
+                    nombre=nombre,
+                    email=email,
+                    password=make_password(password),
+                    telefono=telefono,
+                )
 
-        perfil_salud = PerfilSalud.objects.create(
-        usuario=usuario,
-        genero=genero,
-        fecha_nacimiento=fecha_nacimiento,
-        peso=peso,
-        altura=altura
+                perfil_salud = PerfilSalud.objects.create(
+                    usuario=usuario,
+                    genero=genero,
+                    fecha_nacimiento=fecha_nacimiento,
+                    peso=peso,
+                    altura=altura,
+                )
+                perfil_salud.actualizar_recomendacion()
+                perfil_salud.save()
+
+                Notificacion.objects.create(
+                    usuario=usuario,
+                    mensaje=(
+                        'Tu recomendación inicial: '
+                        f'{perfil_salud.recomendacion_enfoque}'
+                    ),
+                    estado='pendiente',
+                )
+                transaction.on_commit(
+                    partial(send_welcome_email_safely, usuario.pk)
+                )
+        except IntegrityError:
+            return Response(
+                {"error": "Correo ya registrado"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-
-        perfil_salud.actualizar_recomendacion()
-        perfil_salud.save()
-        Notificacion.objects.create(
-            usuario=usuario,mensaje=f"Tu recomendación inicial: {perfil_salud.recomendacion_enfoque}",estado= "pendiente",
-        )
 
         serializer = UsuarioSerializer(
             usuario,
