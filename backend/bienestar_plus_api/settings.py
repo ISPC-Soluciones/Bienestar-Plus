@@ -81,7 +81,9 @@ DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///local_db.sqlite3',
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=bool(
+            db_url_env and db_url_env.startswith(('postgres://', 'postgresql://'))
+        ),
     )
 }
 
@@ -118,7 +120,21 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_THROTTLE_RATES': {
+        'password_reset': '5/hour',
+    },
 }
 
 # Trailing slash
 APPEND_SLASH = True
+
+# Transactional email
+EMAIL_PROVIDER = os.getenv('EMAIL_PROVIDER', 'console' if DEBUG else 'brevo').lower()
+BREVO_API_KEY = os.getenv('BREVO_API_KEY', '')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'no-reply@bienestar-plus.app')
+DEFAULT_FROM_NAME = os.getenv('DEFAULT_FROM_NAME', 'Bienestar Plus')
+FRONTEND_URL = os.getenv(
+    'FRONTEND_URL',
+    'http://localhost:4200' if DEBUG else 'https://bienestar-plus.vercel.app'
+).rstrip('/')
+EMAIL_REQUEST_TIMEOUT = int(os.getenv('EMAIL_REQUEST_TIMEOUT', '8'))
