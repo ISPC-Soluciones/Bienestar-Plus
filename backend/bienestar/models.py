@@ -46,6 +46,27 @@ class Usuario(models.Model):
         verbose_name_plural = "Usuarios"
 
 
+class TokenRecuperacionPassword(models.Model):
+    usuario = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='tokens_recuperacion_password'
+    )
+    token_hash = models.CharField(max_length=64, unique=True)
+    creado = models.DateTimeField(auto_now_add=True)
+    expira = models.DateTimeField(db_index=True)
+    utilizado = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Token de recuperación de contraseña"
+        verbose_name_plural = "Tokens de recuperación de contraseña"
+        ordering = ['-creado']
+
+    @property
+    def esta_vigente(self):
+        return self.utilizado is None and self.expira > timezone.now()
+
+
 RECOMENDACION_CHOICES = [
     ('FUERZA_CARDIO', 'Fuerza y Cardio'),
     ('FLEXIBILIDAD_MANTENIMIENTO', 'Flexibilidad y Mantenimiento'),

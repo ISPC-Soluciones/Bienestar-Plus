@@ -84,6 +84,33 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
         usuario.perfil_salud = perfil_salud
         return usuario
 
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=150)
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    token = serializers.CharField(min_length=20, max_length=255, trim_whitespace=True)
+    password = serializers.CharField(
+        min_length=8,
+        max_length=128,
+        write_only=True,
+        trim_whitespace=False,
+    )
+    confirmar_password = serializers.CharField(
+        min_length=8,
+        max_length=128,
+        write_only=True,
+        trim_whitespace=False,
+    )
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['confirmar_password']:
+            raise serializers.ValidationError(
+                {'confirmar_password': 'Las contraseñas no coinciden.'}
+            )
+        return attrs
+
 # =========================================================
 # SERIALIZADORES DE USUARIO
 # =========================================================
