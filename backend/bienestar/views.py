@@ -22,6 +22,14 @@ from .serializers import (
     RutinaEjercicioSerializer,
     NotificacionSerializer
 )
+from .services.news import get_news_payload
+
+
+class NoticiasView(APIView):
+    """Noticias de bienestar obtenidas de fuentes oficiales y normalizadas."""
+
+    def get(self, request):
+        return Response(get_news_payload(), status=status.HTTP_200_OK)
 
 class NotificacionesViewSet(viewsets.ModelViewSet):
     serializer_class = NotificacionSerializer

@@ -10,7 +10,8 @@ from .views import (
     EjercicioViewSet, 
     RutinaEjercicioViewSet,
     NotificacionesViewSet,
-    ProgresoDiarioView
+    ProgresoDiarioView,
+    NoticiasView,
 )
 
 router = DefaultRouter()
@@ -25,4 +26,5 @@ urlpatterns = [
     path('estadisticas/', EstadisticasView.as_view(), name='estadisticas'),
     path('progreso/', ProgresoDiarioView.as_view(), name='progreso-lista'),
     path('progreso/<int:pk>/', ProgresoDiarioView.as_view(), name='progreso-detalle'),
+    path('noticias/', NoticiasView.as_view(), name='noticias'),
 ]
