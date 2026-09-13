@@ -99,6 +99,14 @@
   cursor: not-allowed;
 }
 
+.forgot-password-link {
+  margin: 1rem auto 0.35rem;
+  display: block;
+  color: #317a98;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .login-container {
