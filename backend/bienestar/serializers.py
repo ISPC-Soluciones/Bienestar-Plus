@@ -105,10 +105,11 @@ class UsuarioSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'fecha_registro', 'rol']
 
     def get_foto_perfil_url(self, obj):
-        if obj.foto_perfil:
+        if obj.foto_perfil_id:
             request = self.context.get('request')
+            url = f'/api/usuarios/{obj.id}/foto-perfil/'
             if request:
-                return request.build_absolute_uri(obj.foto_perfil.url)
+                return request.build_absolute_uri(url)
             return obj.foto_perfil.url
         return None
 
@@ -117,7 +118,7 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ['nombre', 'email', 'foto_perfil', 'telefono']
+        fields = ['nombre', 'email', 'telefono']
 
     def validate_email(self, value):
         usuario = self.instance

@@ -1,6 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterModule, Router, ParamMap } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  ActivatedRoute,
+  RouterModule,
+  Router,
+  ParamMap,
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { Observable, Subject, of } from 'rxjs';
@@ -12,15 +22,21 @@ import { Notificacion } from '../../models/notificacion';
 import { NotificacionesService } from '../../services/notificaciones';
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
 
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
+
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    ImageCropperComponent,
+  ],
   templateUrl: './perfil.html',
-  styleUrls: ['./perfil.css']
+  styleUrls: ['./perfil.css'],
 })
 export class PerfilComponent implements OnInit, OnDestroy {
-
   usuario?: Usuario;
   loading = false;
   error = '';
@@ -34,6 +50,13 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
   fotoPerfilFile: File | null = null;
 
+  // Recorte de la foto de perfil
+  imagenParaRecortar: Event | null = null;
+  fotoRecortadaBlob: Blob | null = null;
+  previewRecorte: string | null = null;
+  subiendoFoto = false;
+  errorFoto = '';
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -42,7 +65,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private notificacionesService: NotificacionesService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
   ) {
     this.perfilForm = this.fb.group({
       peso: ['', [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
@@ -51,7 +74,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
       fecha_nacimiento: [''],
 
       nombre: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]],
     });
   }
 
@@ -82,18 +105,14 @@ export class PerfilComponent implements OnInit, OnDestroy {
           this.loading = false;
 
           return of(undefined);
-        })
+        }),
       )
       .subscribe({
-        next: usuario => {
-
+        next: (usuario) => {
           if (usuario) {
             this.usuario = usuario;
 
-            localStorage.setItem(
-              'usuario',
-              JSON.stringify(usuario)
-            );
+            localStorage.setItem('usuario', JSON.stringify(usuario));
 
             this.cargarProgreso(Number(usuario.id));
           }
@@ -101,24 +120,18 @@ export class PerfilComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
 
-        error: err => {
-          console.error(
-            '[PerfilComponent] Error al cargar usuario:',
-            err
-          );
+        error: (err) => {
+          console.error('[PerfilComponent] Error al cargar usuario:', err);
 
           this.error = 'Error al cargar usuario';
           this.loading = false;
-        }
+        },
       });
   }
 
   private cargarPerfil(id: number): void {
-
     this.perfilService.getUsuarioConHabitos(id).subscribe({
-
-      next: usuarioData => {
-
+      next: (usuarioData) => {
         if (!usuarioData) {
           this.error = 'No se pudo cargar el perfil.';
           this.loading = false;
@@ -130,52 +143,38 @@ export class PerfilComponent implements OnInit, OnDestroy {
         const salud = usuarioData.perfil_salud;
 
         if (salud) {
-
           this.perfilForm.patchValue({
             peso: salud.peso ?? '',
-            altura: salud.altura
-              ? Number(salud.altura) * 100
-              : '',
+            altura: salud.altura ? Number(salud.altura) * 100 : '',
             genero: salud.genero ?? '',
             fecha_nacimiento: salud.fecha_nacimiento
-              ? new Date(salud.fecha_nacimiento)
-                  .toISOString()
-                  .substring(0, 10)
-              : ''
+              ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
+              : '',
           });
-
         }
 
         this.perfilForm.patchValue({
           nombre: usuarioData.nombre ?? '',
-          email: usuarioData.email ?? ''
+          email: usuarioData.email ?? '',
         });
 
-        localStorage.setItem(
-          'usuario',
-          JSON.stringify(this.usuario)
-        );
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
 
         this.loading = false;
 
         this.cargarProgreso(id);
       },
 
-      error: err => {
-
-        console.error(
-          '❌ Error cargando perfil:',
-          err
-        );
+      error: (err) => {
+        console.error('❌ Error cargando perfil:', err);
 
         this.error = 'No se pudo cargar el perfil.';
         this.loading = false;
-      }
+      },
     });
   }
 
   abrirModal(): void {
-
     if (!this.usuario) {
       return;
     }
@@ -183,24 +182,19 @@ export class PerfilComponent implements OnInit, OnDestroy {
     const salud = this.usuario.perfil_salud;
 
     this.perfilForm.patchValue({
-
       peso: salud?.peso ?? '',
 
-      altura: salud?.altura
-        ? Number(salud.altura) * 100
-        : '',
+      altura: salud?.altura ? Number(salud.altura) * 100 : '',
 
       genero: salud?.genero ?? '',
 
       fecha_nacimiento: salud?.fecha_nacimiento
-        ? new Date(salud.fecha_nacimiento)
-            .toISOString()
-            .substring(0, 10)
+        ? new Date(salud.fecha_nacimiento).toISOString().substring(0, 10)
         : '',
 
       nombre: this.usuario.nombre ?? '',
 
-      email: this.usuario.email ?? ''
+      email: this.usuario.email ?? '',
     });
 
     this.modalAbierto = true;
@@ -208,33 +202,88 @@ export class PerfilComponent implements OnInit, OnDestroy {
   }
 
   cerrarModal(): void {
-
     this.modalAbierto = false;
 
     this.perfilForm.reset();
 
     this.fotoPerfilFile = null;
+    this.imagenParaRecortar = null;
+    this.fotoRecortadaBlob = null;
+    this.previewRecorte = null;
+    this.errorFoto = '';
 
     this.error = '';
   }
 
   onFileSelected(event: Event): void {
-
     const input = event.target as HTMLInputElement;
 
     if (input.files && input.files.length > 0) {
       this.fotoPerfilFile = input.files[0];
+      this.imagenParaRecortar = event;
+      this.fotoRecortadaBlob = null;
+      this.previewRecorte = null;
+      this.errorFoto = '';
     } else {
       this.fotoPerfilFile = null;
+      this.imagenParaRecortar = null;
     }
   }
 
+  onImagenRecortada(evento: ImageCroppedEvent): void {
+    if (evento.blob) {
+      this.fotoRecortadaBlob = evento.blob;
+      this.previewRecorte = evento.objectUrl ?? null;
+    }
+  }
+
+  cancelarRecorte(): void {
+    this.imagenParaRecortar = null;
+    this.fotoRecortadaBlob = null;
+    this.previewRecorte = null;
+    this.fotoPerfilFile = null;
+  }
+
+  guardarFotoPerfil(): void {
+    if (!this.usuario || !this.fotoRecortadaBlob) {
+      return;
+    }
+
+    const confirmar = confirm('¿Confirmás guardar esta foto de perfil?');
+    if (!confirmar) return;
+
+    this.subiendoFoto = true;
+    this.errorFoto = '';
+
+    this.perfilService
+      .subirFotoPerfil(Number(this.usuario.id), this.fotoRecortadaBlob)
+      .subscribe({
+        next: (respuesta) => {
+          this.subiendoFoto = false;
+
+          if (respuesta?.success && this.usuario) {
+            // Se le agrega un parámetro con la hora actual para forzar
+            // que el navegador pida la imagen de nuevo (evita que se
+            // quede mostrando la foto vieja en caché).
+            const urlActualizada = `${respuesta.foto_perfil_url}?t=${Date.now()}`;
+            this.usuario = { ...this.usuario, foto_perfil_url: urlActualizada };
+            localStorage.setItem('usuario', JSON.stringify(this.usuario));
+            this.cancelarRecorte();
+          } else {
+            this.errorFoto = 'No se pudo guardar la foto. Intentá de nuevo.';
+          }
+        },
+        error: () => {
+          this.errorFoto = 'No se pudo guardar la foto. Intentá de nuevo.';
+          this.subiendoFoto = false;
+        },
+      });
+  }
+
   guardarPerfil(): void {
-
     if (!this.usuario || this.perfilForm.invalid) {
-
       console.warn(
-        '[PerfilComponent] guardarPerfil: Formulario o usuario inválido.'
+        '[PerfilComponent] guardarPerfil: Formulario o usuario inválido.',
       );
 
       this.perfilForm.markAllAsTouched();
@@ -268,14 +317,10 @@ export class PerfilComponent implements OnInit, OnDestroy {
     ) {
       // El formulario recibe centímetros.
       // El backend guarda metros.
-      perfilSaludData.altura =
-        Number(formValues.altura) / 100;
+      perfilSaludData.altura = Number(formValues.altura) / 100;
     }
 
-    if (
-      formValues.genero !== null &&
-      formValues.genero !== undefined
-    ) {
+    if (formValues.genero !== null && formValues.genero !== undefined) {
       perfilSaludData.genero = formValues.genero;
     }
 
@@ -284,106 +329,69 @@ export class PerfilComponent implements OnInit, OnDestroy {
       formValues.fecha_nacimiento !== undefined &&
       formValues.fecha_nacimiento !== ''
     ) {
-      perfilSaludData.fecha_nacimiento =
-        new Date(formValues.fecha_nacimiento)
-          .toISOString()
-          .substring(0, 10);
+      perfilSaludData.fecha_nacimiento = new Date(formValues.fecha_nacimiento)
+        .toISOString()
+        .substring(0, 10);
     }
 
-    // Datos del usuario
+    // Datos del usuario (la foto ya no viaja acá, tiene su propio flujo)
     const usuarioFormData = new FormData();
 
-    usuarioFormData.append(
-      'nombre',
-      formValues.nombre
-    );
+    usuarioFormData.append('nombre', formValues.nombre);
 
-    usuarioFormData.append(
-      'email',
-      formValues.email
-    );
-
-    if (this.fotoPerfilFile) {
-
-      usuarioFormData.append(
-        'foto_perfil',
-        this.fotoPerfilFile,
-        this.fotoPerfilFile.name
-      );
-    }
+    usuarioFormData.append('email', formValues.email);
 
     // Actualizar perfil de salud
     // -> actualizar usuario
     // -> volver a cargar información completa
 
     this.perfilService
-      .updatePerfilSalud(
-        Number(this.usuario.id),
-        perfilSaludData
-      )
+      .updatePerfilSalud(Number(this.usuario.id), perfilSaludData)
       .pipe(
-
         switchMap(() =>
           this.perfilService.updateUsuario(
             Number(this.usuario!.id),
-            usuarioFormData
-          )
+            usuarioFormData,
+          ),
         ),
 
         switchMap(() =>
-          this.perfilService.getUsuarioConHabitos(
-            Number(this.usuario!.id)
-          )
+          this.perfilService.getUsuarioConHabitos(Number(this.usuario!.id)),
         ),
 
-        takeUntil(this.destroy$)
-
+        takeUntil(this.destroy$),
       )
       .subscribe({
-
-        next: usuarioActualizado => {
-
+        next: (usuarioActualizado) => {
           if (usuarioActualizado) {
-
             this.usuario = usuarioActualizado;
 
-            localStorage.setItem(
-              'usuario',
-              JSON.stringify(this.usuario)
-            );
+            localStorage.setItem('usuario', JSON.stringify(this.usuario));
 
             this.cerrarModal();
-
-            this.fotoPerfilFile = null;
           }
 
           this.loading = false;
         },
 
-        error: err => {
-
+        error: (err) => {
           console.error(
             '[PerfilComponent] Error actualizando perfil o usuario:',
-            err
+            err,
           );
 
           this.error =
             'Hubo un error al actualizar el perfil. Por favor, revisa los datos y la imagen.';
 
           this.loading = false;
-        }
+        },
       });
   }
 
   alturaEnCm(): number | null {
+    const altura = this.usuario?.perfil_salud?.altura;
 
-    const altura =
-      this.usuario?.perfil_salud?.altura;
-
-    if (
-      altura === null ||
-      altura === undefined
-    ) {
+    if (altura === null || altura === undefined) {
       return null;
     }
 
@@ -391,36 +399,20 @@ export class PerfilComponent implements OnInit, OnDestroy {
   }
 
   cargarProgreso(usuarioId: number): void {
+    this.rutinaEjercicioService.obtenerRutinaDelUsuario(usuarioId).subscribe({
+      next: (res) => {
+        if (Array.isArray(res)) {
+          this.rutina = res;
+        } else if (res && 'results' in res) {
+          this.rutina = res.results;
+        } else {
+          this.rutina = [];
+        }
+      },
 
-    this.rutinaEjercicioService
-      .obtenerRutinaDelUsuario(usuarioId)
-      .subscribe({
-
-        next: res => {
-
-          if (Array.isArray(res)) {
-
-            this.rutina = res;
-
-          } else if (
-            res &&
-            'results' in res
-          ) {
-
-            this.rutina = res.results;
-
-          } else {
-
-            this.rutina = [];
-          }
-        },
-
-        error: err =>
-          console.error(
-            'Error al obtener la rutina de ejercicios',
-            err
-          )
-      });
+      error: (err) =>
+        console.error('Error al obtener la rutina de ejercicios', err),
+    });
   }
 
   get totalHabitos(): number {
@@ -428,74 +420,41 @@ export class PerfilComponent implements OnInit, OnDestroy {
   }
 
   get habitosCompletados(): number {
-
-    return this.rutina?.reduce(
-      (acc, r) =>
-        acc + (r.completado ? 1 : 0),
-      0
-    ) ?? 0;
+    return (
+      this.rutina?.reduce((acc, r) => acc + (r.completado ? 1 : 0), 0) ?? 0
+    );
   }
 
   get porcentajeCompletado(): number {
-
     return this.totalHabitos
       ? (this.habitosCompletados / this.totalHabitos) * 100
       : 0;
   }
 
-  onCheckboxChange(
-    event: Event,
-    id: number
-  ): void {
-
-    const target =
-      event.target as HTMLInputElement;
+  onCheckboxChange(event: Event, id: number): void {
+    const target = event.target as HTMLInputElement;
 
     if (!target) {
       return;
     }
 
-    this.marcarHabito(
-      id,
-      target.checked
-    );
+    this.marcarHabito(id, target.checked);
   }
 
-  marcarHabito(
-    id: number,
-    completado: boolean
-  ): void {
+  marcarHabito(id: number, completado: boolean): void {
+    this.rutinaEjercicioService.actualizarRutina(id, { completado }).subscribe({
+      next: (rutinaActualizada) => {
+        const item = this.rutina.find((r) => r.id === id);
 
-    this.rutinaEjercicioService
-      .actualizarRutina(
-        id,
-        { completado }
-      )
-      .subscribe({
+        if (item) {
+          item.completado = rutinaActualizada.completado;
+        }
 
-        next: rutinaActualizada => {
+        console.log('✅ Ejercicio actualizado');
+      },
 
-          const item =
-            this.rutina.find(
-              r => r.id === id
-            );
-
-          if (item) {
-            item.completado =
-              rutinaActualizada.completado;
-          }
-
-          console.log(
-            '✅ Ejercicio actualizado'
-          );
-        },
-
-        error: err =>
-          console.error(
-            'Error al actualizar el ejercicio',
-            err
-          )
-      });
+      error: (err) => console.error('Error al actualizar el ejercicio', err),
+    });
   }
 
   ngOnDestroy(): void {
