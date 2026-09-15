@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../services/auth';
 import { LoginService, LoginData } from '../../services/login';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -97,7 +98,7 @@ export class Login {
 
   loginConGoogle(): void {
     window.location.href =
-      'http://localhost:8000/api/auth/google/';
+      `${environment.backendUrl}/api/auth/google/`;
   }
 
 

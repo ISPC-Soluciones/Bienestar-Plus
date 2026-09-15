@@ -54,6 +54,7 @@ export class LoginService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.backendUrl}/api/login/`;
   private authMeUrl = `${environment.backendUrl}/api/auth/me/`;
+  private authLogoutUrl = `${environment.backendUrl}/api/auth/logout/`;
 
   login(loginData: LoginData): Observable<Usuario | null> {
     return this.http.post<LoginApiResponse>(
@@ -113,6 +114,13 @@ export class LoginService {
         console.error('Error obteniendo sesión OAuth:', error);
         return of(null);
       })
+    );
+  }
+  cerrarSesion(): Observable<void> {
+    return this.http.post<void>(
+      this.authLogoutUrl,
+      {},
+      { withCredentials: true }
     );
   }
 }
