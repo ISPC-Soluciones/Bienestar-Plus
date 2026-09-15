@@ -11,6 +11,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  mongo:
+    image: mongo:7
+    container_name: bienestar_mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
   backend:
     build:
       context: ./backend
@@ -18,10 +25,13 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://bienestar_user:bienestar_password@db:5432/bienestar
+      DJANGO_DEBUG: "true"
+      MONGO_URI: mongodb://mongo:27017/bienestar_archivos
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - mongo
 
   frontend:
     build:
@@ -35,3 +45,4 @@ services:
 
 volumes:
   postgres_data:
+  mongo_data:

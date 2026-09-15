@@ -10,6 +10,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum, F 
 from datetime import timedelta 
 from django.contrib.auth.hashers import make_password, check_password
+from bson import ObjectId
+from django.http import HttpResponse, Http404
+from .mongo import obtener_gridfs
 from .models import Usuario, ProgresoDiario, PerfilSalud
 
 
@@ -249,6 +252,66 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             'success': False,
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get', 'post'], url_path='foto-perfil')
+    def foto_perfil(self, request, pk=None):
+        """
+        GET: devuelve la imagen guardada en MongoDB.
+        POST: sube/reemplaza la foto de perfil del usuario.
+        """
+        usuario = get_object_or_404(Usuario, pk=pk)
+        fs = obtener_gridfs()
+
+        if request.method == 'POST':
+            archivo = request.FILES.get('foto_perfil')
+
+            if not archivo:
+                return Response({
+                    'success': False,
+                    'errors': {'foto_perfil': ['No se recibió ningún archivo.']}
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            if not archivo.content_type.startswith('image/'):
+                return Response({
+                    'success': False,
+                    'errors': {'foto_perfil': ['El archivo debe ser una imagen.']}
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Si ya tenía una foto anterior en Mongo, la borramos para no acumular basura
+            if usuario.foto_perfil_id:
+                try:
+                    fs.delete(ObjectId(usuario.foto_perfil_id))
+                except Exception:
+                    pass
+
+            nuevo_id = fs.put(
+                archivo.read(),
+                filename=archivo.name,
+                content_type=archivo.content_type,
+                usuario_id=usuario.id,
+            )
+
+            usuario.foto_perfil_id = str(nuevo_id)
+            usuario.save(update_fields=['foto_perfil_id'])
+
+            return Response({
+                'success': True,
+                'message': 'Foto de perfil actualizada correctamente',
+                'foto_perfil_url': request.build_absolute_uri(
+                    f'/api/usuarios/{usuario.id}/foto-perfil/'
+                ),
+            })
+
+        # GET: devolver la imagen guardada
+        if not usuario.foto_perfil_id:
+            raise Http404('Este usuario no tiene foto de perfil.')
+
+        try:
+            archivo_mongo = fs.get(ObjectId(usuario.foto_perfil_id))
+        except Exception:
+            raise Http404('La foto de perfil no se encontró.')
+
+        return HttpResponse(archivo_mongo.read(), content_type=archivo_mongo.content_type)
 
 
 class PerfilSaludView(APIView):
