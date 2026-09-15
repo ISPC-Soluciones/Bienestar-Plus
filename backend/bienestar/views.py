@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -16,6 +17,7 @@ from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjerc
 from .serializers import (
     UsuarioSerializer, 
     UsuarioUpdateSerializer,
+    UsuarioAdminSerializer,
     ProgresoDiarioSerializer,
     PerfilSaludSerializer,
     EjercicioSerializer, 
@@ -222,6 +224,25 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             return Response({
                 'success': True,
                 'message': 'Perfil actualizado exitosamente',
+                'data': response_serializer.data
+            })
+        return Response({
+            'success': False,
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    
+    @action(detail=True, methods=['patch'], url_path='admin-editar')
+    def admin_editar(self, request, pk=None):
+        """Edición completa de un usuario, exclusiva del panel de admin."""
+        usuario = get_object_or_404(Usuario, pk=pk)
+        serializer = UsuarioAdminSerializer(usuario, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            response_serializer = UsuarioSerializer(usuario, context={'request': request})
+            return Response({
+                'success': True,
+                'message': 'Usuario actualizado correctamente',
                 'data': response_serializer.data
             })
         return Response({

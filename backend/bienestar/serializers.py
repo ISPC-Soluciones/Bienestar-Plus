@@ -130,6 +130,33 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("El nombre debe tener al menos 2 caracteres.")
         return value.strip()
 
+class UsuarioAdminSerializer(serializers.ModelSerializer):
+
+    perfil_salud = PerfilSaludSerializer(source='perfilsalud', required=False)
+
+    class Meta:
+        model = Usuario
+        fields = ['nombre', 'email', 'telefono', 'rol', 'perfil_salud']
+
+    def validate_email(self, value):
+        usuario = self.instance
+        if Usuario.objects.exclude(pk=usuario.pk).filter(email=value).exists():
+            raise serializers.ValidationError("Este correo electrónico ya está en uso.")
+        return value
+
+    def update(self, instance, validated_data):
+        perfil_data = validated_data.pop('perfilsalud', None)
+        instance = super().update(instance, validated_data)
+
+        if perfil_data is not None:
+            perfil, _ = PerfilSalud.objects.get_or_create(usuario=instance)
+            for campo, valor in perfil_data.items():
+                setattr(perfil, campo, valor)
+            perfil.actualizar_recomendacion()
+            perfil.save()
+
+        return instance
+
 # =========================================================
 # SERIALIZADORES DE EJERCICIOS Y RUTINA
 # =========================================================
