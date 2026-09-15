@@ -14,6 +14,16 @@ export interface Usuario {
   nombre: string;
   rol?: string;
   password?: string;
+
+  perfil_salud?: {
+    peso: number | null;
+    altura: number | null;
+    genero: string | null;
+    fecha_nacimiento: string | null;
+    imc: number | null;
+    recomendacion_enfoque: string | null;
+    mostrar_modal_imc: boolean;
+  };
 }
 
 interface LoginApiResponse {
@@ -22,7 +32,18 @@ interface LoginApiResponse {
     nombre: string;
     email: string;
     rol: string;
+
+    perfil_salud?: {
+      peso: number | null;
+      altura: number | null;
+      genero: string | null;
+      fecha_nacimiento: string | null;
+      imc: number | null;
+      recomendacion_enfoque: string | null;
+      mostrar_modal_imc: boolean;
+    };
   };
+
   success: boolean;
 }
 
@@ -32,9 +53,14 @@ interface LoginApiResponse {
 export class LoginService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.backendUrl}/api/login/`;
+  private authMeUrl = `${environment.backendUrl}/api/auth/me/`;
 
   login(loginData: LoginData): Observable<Usuario | null> {
-    return this.http.post<LoginApiResponse>(this.apiUrl, loginData).pipe(
+    return this.http.post<LoginApiResponse>(
+      this.apiUrl,
+      loginData,
+      { withCredentials: true }
+    ).pipe(
       map((response) => {
         if (response?.success && response?.data?.id != null) {
           const usuarioConformado: Usuario = {
@@ -60,6 +86,32 @@ export class LoginService {
           error
         );
         return throwError(() => error);
+      })
+    );
+
+    
+  }
+  obtenerSesion(): Observable<Usuario | null> {
+    return this.http.get<LoginApiResponse>(
+      this.authMeUrl,
+      { withCredentials: true }
+    ).pipe(
+      map((response) => {
+        if (response?.success && response?.data?.id != null) {
+          return {
+            id: response.data.id,
+            email: response.data.email,
+            nombre: response.data.nombre,
+            rol: response.data.rol,
+            perfil_salud: response.data.perfil_salud,
+          };
+        }
+  
+        return null;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error obteniendo sesión OAuth:', error);
+        return of(null);
       })
     );
   }

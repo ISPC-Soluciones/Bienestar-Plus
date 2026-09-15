@@ -3,13 +3,15 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum, F 
 from datetime import timedelta 
 from django.contrib.auth.hashers import make_password, check_password
 from .models import Usuario, ProgresoDiario, PerfilSalud
+from django.conf import settings
+from authlib.integrations.django_client import OAuth
 
 
 from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Notificacion 
@@ -22,6 +24,132 @@ from .serializers import (
     RutinaEjercicioSerializer,
     NotificacionSerializer
 )
+
+oauth = OAuth()
+
+oauth.register(
+    name="google",
+    client_id=settings.GOOGLE_CLIENT_ID,
+    client_secret=settings.GOOGLE_CLIENT_SECRET,
+    server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+    client_kwargs={
+        "scope": "openid email profile"
+    },
+)
+
+class GoogleLoginView(APIView):
+    def get(self, request):
+        return oauth.google.authorize_redirect(
+            request,
+            settings.GOOGLE_REDIRECT_URI
+        )
+
+
+class GoogleCallbackView(APIView):
+    def get(self, request):
+        token = oauth.google.authorize_access_token(request)
+
+        userinfo = token.get("userinfo")
+
+        if not userinfo:
+            return Response(
+                {"error": "Google no devolvió información del usuario"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        email = (userinfo.get("email") or "").strip().lower()
+
+        if not email:
+            return Response(
+                {"error": "Google no devolvió un email"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Solo aceptamos el correo si Google confirmó su propiedad
+        if not userinfo.get("email_verified"):
+            return Response(
+                {"error": "El correo de Google no está verificado"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        usuario = Usuario.objects.filter(
+            email__iexact=email
+        ).first()
+
+        if not usuario:
+            nombre = (
+                userinfo.get("name")
+                or userinfo.get("given_name")
+                or email.split("@")[0]
+            )
+
+            usuario = Usuario.objects.create(
+                nombre=nombre,
+                email=email,
+                password=make_password(None)
+            )
+
+        PerfilSalud.objects.get_or_create(usuario=usuario)
+
+        request.session.cycle_key()
+        request.session["usuario_id"] = usuario.id
+
+        return redirect(
+            f"{settings.FRONTEND_URL}/login?oauth=success"
+        )
+
+
+class SesionUsuarioView(APIView):
+    def get(self, request):
+        usuario_id = request.session.get("usuario_id")
+
+        if not usuario_id:
+            return Response(
+                {
+                    "success": False,
+                    "error": "No hay una sesión activa"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        try:
+            usuario = Usuario.objects.get(pk=usuario_id)
+        except Usuario.DoesNotExist:
+            request.session.flush()
+
+            return Response(
+                {
+                    "success": False,
+                    "error": "Usuario no encontrado"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        serializer = UsuarioSerializer(
+            usuario,
+            context={"request": request}
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+class LogoutUsuarioView(APIView):
+    def post(self, request):
+        request.session.flush()
+
+        return Response(
+            {
+                "success": True,
+                "message": "Sesión cerrada correctamente"
+            },
+            status=status.HTTP_200_OK
+        )
 
 class NotificacionesViewSet(viewsets.ModelViewSet):
     serializer_class = NotificacionSerializer
@@ -114,9 +242,14 @@ class LoginUsuarioView(APIView):
 
         if not check_password(password, usuario.password):
             return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        request.session.cycle_key()
+        request.session["usuario_id"] = usuario.id
 
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
+    
+    
 
 
 class ProgresoDiarioView(APIView):

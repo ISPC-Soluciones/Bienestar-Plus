@@ -89,15 +89,22 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
           if (usuario) {
             this.usuario = usuario;
-
+        
             localStorage.setItem(
               'usuario',
               JSON.stringify(usuario)
             );
-
+        
             this.cargarProgreso(Number(usuario.id));
+        
+            const completarPerfil =
+              this.route.snapshot.queryParamMap.get('completarPerfil');
+        
+            if (completarPerfil === 'true') {
+              this.abrirModal();
+            }
           }
-
+        
           this.loading = false;
         },
 
