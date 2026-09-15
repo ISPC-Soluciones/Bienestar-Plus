@@ -11,11 +11,12 @@ import { RutinaEjercicioService } from '../../services/rutina-ejercicio';
 import { Notificacion } from '../../models/notificacion';
 import { NotificacionesService } from '../../services/notificaciones';
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
+import { ModalBienvenida } from '../registro/modal-bienvenida/modal-bienvenida';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ModalBienvenida],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css']
 })
@@ -27,6 +28,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
   listaDeNotificaciones: Notificacion[] = [];
   modalAbierto = false;
+  mostrarModalRecomendacion = false;
+  recomendacionUsuario: string | null = null;
 
   perfilForm: FormGroup;
 
@@ -224,6 +227,14 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
     this.error = '';
   }
+  cerrarModalRecomendacion(): void {
+    this.mostrarModalRecomendacion = false;
+  
+    this.router.navigate(
+      ['/perfil', this.usuario?.id],
+      { replaceUrl: true }
+    );
+  }
 
   onFileSelected(event: Event): void {
 
@@ -273,8 +284,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
       formValues.altura !== undefined &&
       formValues.altura !== ''
     ) {
-      // El formulario recibe centímetros.
-      // El backend guarda metros.
+
       perfilSaludData.altura =
         Number(formValues.altura) / 100;
     }
@@ -319,10 +329,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Actualizar perfil de salud
-    // -> actualizar usuario
-    // -> volver a cargar información completa
-
     this.perfilService
       .updatePerfilSalud(
         Number(this.usuario.id),
@@ -351,19 +357,34 @@ export class PerfilComponent implements OnInit, OnDestroy {
         next: usuarioActualizado => {
 
           if (usuarioActualizado) {
-
+        
             this.usuario = usuarioActualizado;
-
+        
             localStorage.setItem(
               'usuario',
               JSON.stringify(this.usuario)
             );
-
+        
             this.cerrarModal();
-
+        
             this.fotoPerfilFile = null;
-          }
 
+            const completarPerfil =
+              this.route.snapshot.queryParamMap.get('completarPerfil');
+        
+            const perfilSalud = usuarioActualizado.perfil_salud;
+        
+            if (
+              completarPerfil === 'true' &&
+              perfilSalud?.mostrar_modal_imc === true
+            ) {
+              this.recomendacionUsuario =
+                perfilSalud.recomendacion_enfoque || 'GENERAL';
+        
+              this.mostrarModalRecomendacion = true;
+            }
+          }
+        
           this.loading = false;
         },
 

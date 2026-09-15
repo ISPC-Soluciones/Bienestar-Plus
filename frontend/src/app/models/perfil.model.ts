@@ -19,6 +19,8 @@ export interface PerfilSalud {
   genero?: string;
   fecha_nacimiento?: string;
   imc?: number;
+  recomendacion_enfoque?: string | null;
+  mostrar_modal_imc?: boolean;
 }
 export interface Usuario {
   id: ID;

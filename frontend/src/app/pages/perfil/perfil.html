@@ -213,3 +213,9 @@
     </form>
   </div>
 </div>
+
+<app-modal-bienvenida
+  *ngIf="mostrarModalRecomendacion"
+  [recomendacion]="recomendacionUsuario"
+  (cerrar)="cerrarModalRecomendacion()"
+></app-modal-bienvenida>
