@@ -1,41 +1,181 @@
 <section class="usuarios-admin">
-    <h1>Usuarios</h1>
-  
-    @if (cargando) {
-      <p>Cargando usuarios...</p>
-    } @else {
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Teléfono</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-  
-        <tbody>
-          @for (usuario of usuarios; track usuario.id) {
-            <tr>
-              <td>{{ usuario.id }}</td>
-              <td>{{ usuario.nombre }}</td>
-              <td>{{ usuario.email }}</td>
-              <td>{{ usuario.rol }}</td>
-              <td>{{ usuario.telefono || "-" }}</td>
-  
-              <td>
-                <button
-                  type="button"
-                  (click)="eliminarUsuario(usuario)"
-                >
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+  <h1>Usuarios</h1>
+
+  <div class="filtros-admin">
+    <input
+      type="text"
+      placeholder="Buscar por nombre o email"
+      [value]="filtroTexto()"
+      (input)="onFiltroTextoChange($any($event.target).value)"
+    />
+
+    <select [value]="filtroMes() ?? ''" (change)="onFiltroMesChange($any($event.target).value)">
+      <option value="">Todos los meses</option>
+      @for (mes of meses; track mes.valor) {
+        <option [value]="mes.valor">{{ mes.nombre }}</option>
+      }
+    </select>
+
+    <select [value]="filtroAnio() ?? ''" (change)="onFiltroAnioChange($any($event.target).value)">
+      <option value="">Todos los años</option>
+      @for (anio of aniosDisponibles(); track anio) {
+        <option [value]="anio">{{ anio }}</option>
+      }
+    </select>
+
+    <select [value]="filtroRol()" (change)="onFiltroRolChange($any($event.target).value)">
+      <option value="">Todos los roles</option>
+      <option value="estandar">Estándar</option>
+      <option value="admin">Administrador</option>
+    </select>
+
+    @if (hayFiltrosActivos()) {
+      <button type="button" class="btn-custom btn-custom--rojo" (click)="limpiarFiltros()">
+        Limpiar filtros
+      </button>
     }
-  </section>
+  </div>
+
+  @if (cargando()) {
+    <p>Cargando usuarios...</p>
+  } @else {
+    <table class="tabla-admin">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (usuario of usuariosFiltrados(); track usuario.id) {
+          <tr>
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.nombre }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td>{{ usuario.telefono || "-" }}</td>
+
+            <td>
+              <button class="btn__icono editar" (click)="abrirEdicion(usuario)" title="Editar">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="btn__icono eliminar" (click)="eliminarUsuario(usuario)" title="Eliminar">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        }
+        @if (usuariosFiltrados().length === 0) {
+          <tr>
+            <td colspan="6" class="texto-centrado">No se encontraron usuarios con esos filtros.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (modalAbierto()) {
+    <div class="modal-fondo">
+      <div class="modal-contenido formulario-admin">
+        <h3>Editar usuario</h3>
+
+        @if (errorEdicion()) {
+          <p class="error-texto">{{ errorEdicion() }}</p>
+        }
+
+        <form (submit)="$event.preventDefault(); guardarEdicion()">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input
+              type="text"
+              [value]="edicionNombre()"
+              (input)="edicionNombre.set($any($event.target).value)"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              [value]="edicionEmail()"
+              (input)="edicionEmail.set($any($event.target).value)"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input
+              type="text"
+              [value]="edicionTelefono()"
+              (input)="edicionTelefono.set($any($event.target).value)"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Rol</label>
+            <select [value]="edicionRol()" (change)="edicionRol.set($any($event.target).value)">
+              <option value="estandar">Estándar</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+
+          <hr />
+
+          <div class="form-group">
+            <label>Peso (kg)</label>
+            <input
+              type="number"
+              step="0.1"
+              [value]="edicionPeso()"
+              (input)="edicionPeso.set(aNumeroONull($any($event.target).value))"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Altura (cm)</label>
+            <input
+              type="number"
+              [value]="edicionAltura()"
+              (input)="edicionAltura.set(aNumeroONull($any($event.target).value))"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Género</label>
+            <select [value]="edicionGenero()" (change)="edicionGenero.set($any($event.target).value)">
+              <option value="">Sin especificar</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de nacimiento</label>
+            <input
+              type="date"
+              [value]="edicionFechaNacimiento()"
+              (input)="edicionFechaNacimiento.set($any($event.target).value)"
+            />
+          </div>
+
+          <div class="acciones-form">
+            <button type="submit" class="btn-custom btn-custom--primario" [disabled]="guardando()">
+              {{ guardando() ? "Guardando..." : "Guardar cambios" }}
+            </button>
+            <button type="button" class="btn-custom btn-custom--rojo" (click)="cerrarEdicion()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</section>
