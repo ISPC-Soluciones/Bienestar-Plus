@@ -133,4 +133,25 @@ export class PerfilService {
       })
     );
   }
+
+  // Subir/reemplazar la foto de perfil (se guarda en MongoDB vía GridFS)
+  subirFotoPerfil(
+    id: number,
+    foto: Blob
+  ): Observable<{ success: boolean; message: string; foto_perfil_url: string } | undefined> {
+    const formData = new FormData();
+    formData.append('foto_perfil', foto, 'foto_perfil.jpg');
+
+    return this.http
+      .post<{ success: boolean; message: string; foto_perfil_url: string }>(
+        `${this.base}/usuarios/${id}/foto-perfil/`,
+        formData
+      )
+      .pipe(
+        catchError(err => {
+          console.error('Error subiendo la foto de perfil:', err);
+          return of(undefined);
+        })
+      );
+  }
 }

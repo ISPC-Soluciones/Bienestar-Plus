@@ -1,218 +1,266 @@
-<div class="perfil__container" *ngIf="usuario; else loadingTpl">
-  <aside class="perfil__sidebar">
-    <div class="usuario__info">
-      <!-- Muestra la foto de perfil o un default -->
-      <img
-        [src]="usuario.foto_perfil_url || 'assets/user-default.png'"
-        alt="Foto de perfil"
-        class="usuario__foto"
-      />
-      <h2>Hola, {{ usuario.nombre }}. ¡Bienvenido!</h2>
-      <p>{{ usuario.email }}</p>
-      <button (click)="abrirModal()">Editar perfil</button>
-    </div>
+@if (usuario) {
+  <div class="perfil__container">
+    <aside class="perfil__sidebar">
+      <div class="usuario__info">
+        <!-- Muestra la foto de perfil o un default -->
+        <img
+          [src]="usuario.foto_perfil_url || 'assets/user-default.png'"
+          alt="Foto de perfil"
+          class="usuario__foto"
+        />
+        <h2>Hola, {{ usuario.nombre }}. ¡Bienvenido!</h2>
+        <p>{{ usuario.email }}</p>
+        <button (click)="abrirModal()">Editar perfil</button>
+      </div>
 
-    <div class="usuario__detalles">
-      <h3>Datos de salud</h3>
-      <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
-      <p>
-        <strong>Altura:</strong>
-        {{ alturaEnCm() !== null ? (alturaEnCm() | number : "1.0-0") : "-" }} cm
-      </p>
-      <p>
-        <strong>Género:</strong>
-        {{ usuario.perfil_salud?.genero || "Sin especificar" }}
-      </p>
-      <p>
-        <strong>Fecha de Nacimiento:</strong>
-        {{ usuario.perfil_salud?.fecha_nacimiento | date }}
-      </p>
-      <p *ngIf="usuario.perfil_salud?.imc">
-        <strong>IMC:</strong>
-        {{ usuario.perfil_salud?.imc | number : "1.1-2" }}
-      </p>
-    </div>
-  </aside>
+      <div class="usuario__detalles">
+        <h3>Datos de salud</h3>
+        <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
+        <p>
+          <strong>Altura:</strong>
+          {{ alturaEnCm() !== null ? (alturaEnCm() | number : "1.0-0") : "-" }} cm
+        </p>
+        <p>
+          <strong>Género:</strong>
+          {{ usuario.perfil_salud?.genero || "Sin especificar" }}
+        </p>
+        <p>
+          <strong>Fecha de Nacimiento:</strong>
+          {{ usuario.perfil_salud?.fecha_nacimiento | date }}
+        </p>
+        @if (usuario.perfil_salud?.imc) {
+          <p>
+            <strong>IMC:</strong>
+            {{ usuario.perfil_salud?.imc | number : "1.1-2" }}
+          </p>
+        }
+      </div>
+    </aside>
 
-  <!-- Sección de progreso (se usaría para el gráfico, aquí se mantiene la imagen) -->
-  <section class="perfil__progreso">
-    <h2>Tu progreso mensual y semanal</h2>
-    <div class="progreso__imagen">
-      <img
-        src="assets/grafico_usuario_metricas.jpg"
-        alt="Gráfico de progreso"
-      />
-    </div>
-  </section>
+    <!-- Sección de progreso (se usaría para el gráfico, aquí se mantiene la imagen) -->
+    <section class="perfil__progreso">
+      <h2>Tu progreso mensual y semanal</h2>
+      <div class="progreso__imagen">
+        <img
+          src="assets/grafico_usuario_metricas.jpg"
+          alt="Gráfico de progreso"
+        />
+      </div>
+    </section>
 
     <section class="perfil__rutina">
-    <h2>Mi rutina de hoy</h2>
+      <h2>Mi rutina de hoy</h2>
 
-    <h3>Ejercicio</h3>
-    <div class="progreso__detalle" *ngIf="totalHabitos > 0">
-      <p>
-        <strong>{{ habitosCompletados }}</strong> de
-        <strong>{{ totalHabitos }}</strong> ejercicios completados hoy.
-      </p>
-      <div class="barra__progreso">
-        <div
-          class="barra__relleno"
-          [style.width.%]="porcentajeCompletado"
-        ></div>
-      </div>
-    </div>
+      <h3>Ejercicio</h3>
+      @if (totalHabitos > 0) {
+        <div class="progreso__detalle">
+          <p>
+            <strong>{{ habitosCompletados }}</strong> de
+            <strong>{{ totalHabitos }}</strong> ejercicios completados hoy.
+          </p>
+          <div class="barra__progreso">
+            <div
+              class="barra__relleno"
+              [style.width.%]="porcentajeCompletado"
+            ></div>
+          </div>
+        </div>
+      }
 
-    <ul *ngIf="rutina?.length; else sinRutina" class="rutina__lista">
-      <li *ngFor="let h of rutina">
-        <label class="rutina__item">
-          <input
-            type="checkbox"
-            [checked]="h.completado"
-            (change)="onCheckboxChange($event, h.id)"
-          />
-          <span [class.completado]="h.completado">
-            {{ h.ejercicio_nombre }} (Cant. {{ h.meta_cantidad }})
-          </span>
-        </label>
-      </li>
-    </ul>
+      @if (rutina?.length) {
+        <ul class="rutina__lista">
+          @for (h of rutina; track h.id) {
+            <li>
+              <label class="rutina__item">
+                <input
+                  type="checkbox"
+                  [checked]="h.completado"
+                  (change)="onCheckboxChange($event, h.id)"
+                />
+                <span [class.completado]="h.completado">
+                  {{ h.ejercicio_nombre }} (Cant. {{ h.meta_cantidad }})
+                </span>
+              </label>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p>
+          Todavía no armaste tu rutina de ejercicios. Andá a la sección
+          "Hábitos" para agregar ejercicios.
+        </p>
+      }
 
-    <ng-template #sinRutina>
-      <p>
-        Todavía no armaste tu rutina de ejercicios. Andá a la sección
-        "Hábitos" para agregar ejercicios.
-      </p>
-    </ng-template>
+      <h3>Hidratación</h3>
+      <p>Todavía no configuraste tus hábitos de Hidratación.</p>
 
-    <h3>Hidratación</h3>
-    <p>Todavía no configuraste tus hábitos de Hidratación.</p>
+      <h3>Alimentación</h3>
+      <p>Todavía no configuraste tus hábitos de Alimentación.</p>
 
-    <h3>Alimentación</h3>
-    <p>Todavía no configuraste tus hábitos de Alimentación.</p>
-
-    <h3>Sueño</h3>
-    <p>Todavía no configuraste tus hábitos de Sueño.</p>
-  </section>
-</div>
-
-<!-- Template de carga -->
-<ng-template #loadingTpl>
+      <h3>Sueño</h3>
+      <p>Todavía no configuraste tus hábitos de Sueño.</p>
+    </section>
+  </div>
+} @else {
   <p class="loading">Cargando perfil...</p>
-</ng-template>
+}
 
 <!-- Modal de edición de perfil -->
-<div class="modal__overlay" *ngIf="modalAbierto">
-  <div class="modal__content">
-    <h2>Editar perfil</h2>
+@if (modalAbierto) {
+  <div class="modal__overlay">
+    <div class="modal__content">
+      <h2>Editar perfil</h2>
 
-    <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
-      <!-- Campos de Usuario -->
-      <div class="form__group">
-        <label for="nombre">Nombre</label>
-        <input
-          id="nombre"
-          type="text"
-          formControlName="nombre"
-          [class.invalid]="perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched"
-        />
-      </div>
+      <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
+        <!-- Campos de Usuario -->
+        <div class="form__group">
+          <label for="nombre">Nombre</label>
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            [class.invalid]="perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched"
+          />
+        </div>
 
-      <div class="form__group">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          [class.invalid]="perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched"
-        />
-      </div>
+        <div class="form__group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            [class.invalid]="perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched"
+          />
+        </div>
 
-      <!-- Campo de Foto de Perfil -->
-      <div class="form__group">
-        <label for="foto_perfil">Foto de perfil</label>
-        <input
-          id="foto_perfil"
-          type="file"
-          accept="image/*"
-          (change)="onFileSelected($event)"
-        />
-        <small class="hint" *ngIf="usuario?.foto_perfil_url && !fotoPerfilFile">
-          Actual: <a [href]="usuario?.foto_perfil_url" target="_blank" class="text-blue-500 hover:underline">Ver imagen</a>
-        </small>
-        <small class="hint" *ngIf="fotoPerfilFile">
-          Archivo seleccionado: {{ fotoPerfilFile.name }}
-        </small>
-      </div>
+        <!-- Campo de Foto de Perfil -->
+        <div class="form__group">
+          <label for="foto_perfil">Foto de perfil</label>
+          <input
+            id="foto_perfil"
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event)"
+          />
+          @if (usuario?.foto_perfil_url && !imagenParaRecortar) {
+            <small class="hint">
+              Actual: <a [href]="usuario?.foto_perfil_url" target="_blank" class="text-blue-500 hover:underline">Ver imagen</a>
+            </small>
+          }
 
-      <hr class="my-4"/>
-      <h3>Datos de salud</h3>
+          <!-- Recorte circular de la foto elegida -->
+          @if (imagenParaRecortar) {
+            <div class="recorte__contenedor">
+              <image-cropper
+                [imageChangedEvent]="imagenParaRecortar"
+                [maintainAspectRatio]="true"
+                [aspectRatio]="1 / 1"
+                [roundCropper]="true"
+                [output]="'blob'"
+                format="png"
+                (imageCropped)="onImagenRecortada($event)"
+              ></image-cropper>
 
-      <!-- Campos de PerfilSalud -->
-      <div class="form__group">
-        <label for="peso">Peso (kg)</label>
-        <input
-          id="peso"
-          type="number"
-          formControlName="peso"
-          [class.invalid]="
-            perfilForm.get('peso')?.invalid && perfilForm.get('peso')?.touched
-          "
-        />
-      </div>
+              @if (previewRecorte) {
+                <div class="recorte__preview">
+                  <p>Vista previa:</p>
+                  <img [src]="previewRecorte" alt="Vista previa de la foto recortada" class="recorte__preview-img" />
+                </div>
+              }
 
-      <div class="form__group">
-        <label for="altura">Altura (cm)</label>
-        <input
-          id="altura"
-          type="number"
-          formControlName="altura"
-          [class.invalid]="
-            perfilForm.get('altura')?.invalid &&
-            perfilForm.get('altura')?.touched
-          "
-        />
-      </div>
+              @if (errorFoto) {
+                <p class="error-message">{{ errorFoto }}</p>
+              }
 
-      <div class="form__group">
-        <label for="genero">Género</label>
-        <select
-          id="genero"
-          formControlName="genero"
-          [class.invalid]="
-            perfilForm.get('genero')?.invalid &&
-            perfilForm.get('genero')?.touched
-          "
-        >
-          <option value="">Seleccione...</option>
-          <option value="M">Masculino</option>
-          <option value="F">Femenino</option>
-          <option value="Otro">Otro</option>
-        </select>
-      </div>
+              <div class="recorte__acciones">
+                <button
+                  type="button"
+                  (click)="guardarFotoPerfil()"
+                  [disabled]="!fotoRecortadaBlob || subiendoFoto"
+                  class="button__primary"
+                >
+                  {{ subiendoFoto ? "Guardando..." : "Guardar foto" }}
+                </button>
+                <button type="button" (click)="cancelarRecorte()" class="button__secondary">
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          }
+        </div>
 
-      <div class="form__group">
-        <label for="fecha_nacimiento">Fecha de nacimiento</label>
-        <input
-          id="fecha_nacimiento"
-          type="date"
-          formControlName="fecha_nacimiento"
-          [class.invalid]="
-            perfilForm.get('fecha_nacimiento')?.invalid &&
-            perfilForm.get('fecha_nacimiento')?.touched
-          "
-        />
-      </div>
+        <hr class="my-4"/>
+        <h3>Datos de salud</h3>
 
-      <div class="modal__acciones">
-        <button type="submit" [disabled]="perfilForm.invalid || loading" class="button__primary">
-          {{ loading ? "Guardando..." : "Guardar" }}
-        </button>
-        <button type="button" (click)="cerrarModal()" class="button__secondary">Cancelar</button>
-      </div>
-      <p *ngIf="error" class="error-message">{{ error }}</p>
-    </form>
+        <!-- Campos de PerfilSalud -->
+        <div class="form__group">
+          <label for="peso">Peso (kg)</label>
+          <input
+            id="peso"
+            type="number"
+            formControlName="peso"
+            [class.invalid]="
+              perfilForm.get('peso')?.invalid && perfilForm.get('peso')?.touched
+            "
+          />
+        </div>
+
+        <div class="form__group">
+          <label for="altura">Altura (cm)</label>
+          <input
+            id="altura"
+            type="number"
+            formControlName="altura"
+            [class.invalid]="
+              perfilForm.get('altura')?.invalid &&
+              perfilForm.get('altura')?.touched
+            "
+          />
+        </div>
+
+        <div class="form__group">
+          <label for="genero">Género</label>
+          <select
+            id="genero"
+            formControlName="genero"
+            [class.invalid]="
+              perfilForm.get('genero')?.invalid &&
+              perfilForm.get('genero')?.touched
+            "
+          >
+            <option value="">Seleccione...</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="form__group">
+          <label for="fecha_nacimiento">Fecha de nacimiento</label>
+          <input
+            id="fecha_nacimiento"
+            type="date"
+            formControlName="fecha_nacimiento"
+            [class.invalid]="
+              perfilForm.get('fecha_nacimiento')?.invalid &&
+              perfilForm.get('fecha_nacimiento')?.touched
+            "
+          />
+        </div>
+
+        <div class="modal__acciones">
+          <button type="submit" [disabled]="perfilForm.invalid || loading" class="button__primary">
+            {{ loading ? "Guardando..." : "Guardar" }}
+          </button>
+          <button type="button" (click)="cerrarModal()" class="button__secondary">Cancelar</button>
+        </div>
+        @if (error) {
+          <p class="error-message">{{ error }}</p>
+        }
+      </form>
+    </div>
   </div>
-</div>
+}
 
 <app-modal-bienvenida
   *ngIf="mostrarModalRecomendacion"

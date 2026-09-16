@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
@@ -9,6 +10,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count, Sum, F 
 from datetime import timedelta 
 from django.contrib.auth.hashers import make_password, check_password
+from bson import ObjectId
+from django.http import HttpResponse, Http404
+from .mongo import obtener_gridfs
 from .models import Usuario, ProgresoDiario, PerfilSalud
 from django.conf import settings
 from authlib.integrations.django_client import OAuth
@@ -18,6 +22,7 @@ from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjerc
 from .serializers import (
     UsuarioSerializer, 
     UsuarioUpdateSerializer,
+    UsuarioAdminSerializer,
     ProgresoDiarioSerializer,
     PerfilSaludSerializer,
     EjercicioSerializer, 
@@ -372,6 +377,85 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             'success': False,
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+    
+    @action(detail=True, methods=['patch'], url_path='admin-editar')
+    def admin_editar(self, request, pk=None):
+        """Edición completa de un usuario, exclusiva del panel de admin."""
+        usuario = get_object_or_404(Usuario, pk=pk)
+        serializer = UsuarioAdminSerializer(usuario, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            response_serializer = UsuarioSerializer(usuario, context={'request': request})
+            return Response({
+                'success': True,
+                'message': 'Usuario actualizado correctamente',
+                'data': response_serializer.data
+            })
+        return Response({
+            'success': False,
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get', 'post'], url_path='foto-perfil')
+    def foto_perfil(self, request, pk=None):
+        """
+        GET: devuelve la imagen guardada en MongoDB.
+        POST: sube/reemplaza la foto de perfil del usuario.
+        """
+        usuario = get_object_or_404(Usuario, pk=pk)
+        fs = obtener_gridfs()
+
+        if request.method == 'POST':
+            archivo = request.FILES.get('foto_perfil')
+
+            if not archivo:
+                return Response({
+                    'success': False,
+                    'errors': {'foto_perfil': ['No se recibió ningún archivo.']}
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            if not archivo.content_type.startswith('image/'):
+                return Response({
+                    'success': False,
+                    'errors': {'foto_perfil': ['El archivo debe ser una imagen.']}
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Si ya tenía una foto anterior en Mongo, la borramos para no acumular basura
+            if usuario.foto_perfil_id:
+                try:
+                    fs.delete(ObjectId(usuario.foto_perfil_id))
+                except Exception:
+                    pass
+
+            nuevo_id = fs.put(
+                archivo.read(),
+                filename=archivo.name,
+                content_type=archivo.content_type,
+                usuario_id=usuario.id,
+            )
+
+            usuario.foto_perfil_id = str(nuevo_id)
+            usuario.save(update_fields=['foto_perfil_id'])
+
+            return Response({
+                'success': True,
+                'message': 'Foto de perfil actualizada correctamente',
+                'foto_perfil_url': request.build_absolute_uri(
+                    f'/api/usuarios/{usuario.id}/foto-perfil/'
+                ),
+            })
+
+        # GET: devolver la imagen guardada
+        if not usuario.foto_perfil_id:
+            raise Http404('Este usuario no tiene foto de perfil.')
+
+        try:
+            archivo_mongo = fs.get(ObjectId(usuario.foto_perfil_id))
+        except Exception:
+            raise Http404('La foto de perfil no se encontró.')
+
+        return HttpResponse(archivo_mongo.read(), content_type=archivo_mongo.content_type)
 
 
 class PerfilSaludView(APIView):
