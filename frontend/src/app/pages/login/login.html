@@ -63,7 +63,11 @@
           </button>
         </div>
       </form>
-
+      @if (errorMessage) {
+        <div class="formulario--error">
+          {{ errorMessage }}
+        </div>
+      }
       <a routerLink="/registro" class="register-link">
         ¿No tenés cuenta? REGISTRARTE
       </a>

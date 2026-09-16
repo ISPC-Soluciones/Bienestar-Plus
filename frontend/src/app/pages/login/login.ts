@@ -33,9 +33,14 @@ export class Login {
 
   ngOnInit(): void {
     const oauth = this.route.snapshot.queryParamMap.get('oauth');
-
+  
     if (oauth === 'success') {
       this.recuperarSesionGoogle();
+    }
+  
+    if (oauth === 'error') {
+      this.errorMessage =
+        'No se pudo iniciar sesión con Google. Inténtalo nuevamente.';
     }
   }
 

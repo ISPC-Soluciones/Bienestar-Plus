@@ -47,7 +47,18 @@ class GoogleLoginView(APIView):
 
 class GoogleCallbackView(APIView):
     def get(self, request):
-        token = oauth.google.authorize_access_token(request)
+        if request.GET.get("error"):
+            return redirect(
+                f"{settings.FRONTEND_URL}/login?oauth=error"
+            )
+
+        try:
+            token = oauth.google.authorize_access_token(request)
+        except Exception as error:
+            print(f"Error OAuth Google: {error}")
+            return redirect(
+                f"{settings.FRONTEND_URL}/login?oauth=error"
+            )
 
         userinfo = token.get("userinfo")
 
