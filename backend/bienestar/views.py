@@ -601,12 +601,40 @@ class EstadisticasView(APIView):
 
 class EjercicioViewSet(viewsets.ModelViewSet):
     """
-    ViewSet para el CRUD de Ejercicios base (gestionado por el Administrador).
-    Ruta generada: /api/ejercicios/
+    ViewSet para el CRUD de Ejercicios base.
+    Los ejercicios son gestionados por el Administrador.
     """
+
     queryset = Ejercicio.objects.all()
     serializer_class = EjercicioSerializer
-    # Se recomienda añadir permisos: permission_classes = [IsAdminUser]
+
+    def perform_create(self, serializer):
+        ejercicio = serializer.save()
+
+        usuarios = Usuario.objects.filter(rol=Roles.ESTANDAR)
+
+        Notificacion.objects.bulk_create([
+            Notificacion(
+                usuario=usuario,
+                mensaje=f"Se agregó un nuevo ejercicio: {ejercicio.nombre}",
+                estado="pendiente",
+            )
+            for usuario in usuarios
+        ])
+
+    def perform_update(self, serializer):
+        ejercicio = serializer.save()
+
+        usuarios = Usuario.objects.filter(rol=Roles.ESTANDAR)
+
+        Notificacion.objects.bulk_create([
+            Notificacion(
+                usuario=usuario,
+                mensaje=f"Se actualizó el ejercicio: {ejercicio.nombre}",
+                estado="pendiente",
+            )
+            for usuario in usuarios
+        ])
 
 class RutinaEjercicioViewSet(viewsets.ModelViewSet):
     """
