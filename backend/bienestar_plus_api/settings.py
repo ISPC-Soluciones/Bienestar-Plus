@@ -11,6 +11,30 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'default-key-local-only')
 
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+GOOGLE_REDIRECT_URI = os.getenv(
+    "GOOGLE_REDIRECT_URI",
+    "http://localhost:8000/api/auth/google/callback/"
+)
+
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "http://localhost:4200"
+)
+
+CORS_ALLOW_CREDENTIALS = True
+
+# Cookies de sesión
+# En producción frontend y backend están en dominios distintos,
+# por lo que la cookie debe permitirse en solicitudes cross-site.
+if DEBUG:
+    SESSION_COOKIE_SECURE = False
+    SESSION_COOKIE_SAMESITE = "Lax"
+else:
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "None"
+
 ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1', 'bienestar-plus-backend.vercel.app']
 
 INSTALLED_APPS = [
@@ -107,6 +131,12 @@ CORS_ALLOWED_ORIGINS = [
     "https://bienestar-plus-git-main-chris-projects-be539ae8.vercel.app",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200",
+    "https://bienestar-plus.vercel.app",
+    "https://bienestar-plus-git-main-chris-projects-be539ae8.vercel.app",
+]
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [

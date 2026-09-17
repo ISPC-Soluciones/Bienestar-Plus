@@ -8,6 +8,7 @@ import { NotificacionesService } from '../../services/notificaciones';
 import { AuthService } from '../../services/auth';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { LoginService } from '../../services/login';
 
 @Component({
   selector: 'app-navbar',
@@ -27,7 +28,8 @@ export class Navbar implements OnDestroy {
   constructor(
     private authService: AuthService,
     private notificacionesService: NotificacionesService,
-    private router: Router
+    private router: Router,
+    private loginService: LoginService
   ) {
     this.userId$ = this.authService.currentUserId$;
 
@@ -69,9 +71,20 @@ export class Navbar implements OnDestroy {
     }
   }
 
-    cerrarSesion(): void {
-    this.authService.logout();
-    this.router.navigate(['/home']);
+  cerrarSesion(): void {
+    this.loginService.cerrarSesion().subscribe({
+      next: () => {
+        this.authService.logout();
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error('Error al cerrar la sesión en el backend:', err);
+
+        // Aunque falle el backend, limpiamos el estado local.
+        this.authService.logout();
+        this.router.navigate(['/home']);
+      },
+    });
   }
 
   esAdmin(): boolean {

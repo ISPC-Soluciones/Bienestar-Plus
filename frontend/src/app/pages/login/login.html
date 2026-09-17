@@ -1,52 +1,60 @@
 <div class="login-body">
   <main class="login-container">
-    <section class="login-form">
-      <h1 class="login-h1">BienestarPlus</h1>
-      <div class="container__logo">
+    <section class="login-page">
+      <header class="login-header">
+        <h1 class="login-h1">BienestarPlus</h1>
+
         <img
           src="/Bienestar_Plus_favicon.ico"
           alt="Logo BienestarPlus"
-          class="logo__img"
+          class="login-logo"
         />
-      </div>
-      <h2 class="login-h2">Iniciar Sesión</h2>
 
-      <form
-        [formGroup]="loginForm"
-        (ngSubmit)="onSubmit()"
-        class="login-form-container"
-      >
-        <label for="email" class="login-label">Correo electrónico:</label>
-        <input
-          class="formulario--input"
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="Correo electrónico"
-          autocomplete="username" 
-        />
-        @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid)
-        {
-        <div class="formulario--error">
-          El correo electrónico es obligatorio
-        </div>
-        }
+        <h2 class="login-h2">Iniciar Sesión</h2>
+      </header>
 
-        <label for="password" class="login-label">Contraseña:</label> 
-        <input
-          class="formulario--input"
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Contraseña"
-          autocomplete="current-password" 
-        />
-        @if (loginForm.get('password')?.touched &&
-        loginForm.get('password')?.invalid) {
-        <div class="formulario--error">La contraseña es obligatoria</div>
-        }
+      <div class="login-card">
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="onSubmit()"
+          class="login-form-container"
+        >
+          <div class="form-group">
+            <label for="email" class="login-label"> Correo electrónico: </label>
 
-        <div class="container_bt_login">
+            <input
+              class="formulario--input"
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Correo electrónico"
+              autocomplete="username"
+            />
+
+            @if ( loginForm.get('email')?.touched &&
+            loginForm.get('email')?.invalid ) {
+            <div class="field-error">El correo electrónico es obligatorio</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="login-label"> Contraseña: </label>
+
+            <input
+              class="formulario--input"
+              id="password"
+              type="password"
+              formControlName="password"
+              placeholder="Contraseña"
+              autocomplete="current-password"
+            />
+
+            @if ( loginForm.get('password')?.touched &&
+            loginForm.get('password')?.invalid ) {
+            <div class="field-error">La contraseña es obligatoria</div>
+            }
+          </div>
+
           <button
             class="formulario--btn"
             type="submit"
@@ -54,20 +62,63 @@
           >
             Iniciar Sesión
           </button>
+        </form>
+
+        <div class="login-divider">
+          <span>o</span>
         </div>
-      </form>
 
-      <a routerLink="/recuperar-contrasena" class="forgot-password-link">
-        ¿Olvidaste tu contraseña?
-      </a>
+        <button
+          type="button"
+          class="google-login-button"
+          (click)="loginConGoogle()"
+        >
+          <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="#4285F4"
+              d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 22c2.7 0 4.97-.9 6.63-2.43l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.05v2.62A10 10 0 0 0 12 22z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M6.39 13.86A6.01 6.01 0 0 1 6.08 12c0-.65.11-1.28.31-1.86V7.52H3.05A10 10 0 0 0 2 12c0 1.61.38 3.14 1.05 4.48l3.34-2.62z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 6.01c1.47 0 2.79.51 3.83 1.5l2.87-2.87A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.95 5.52l3.34 2.62C7.18 7.77 9.39 6.01 12 6.01z"
+            />
+          </svg>
 
-      <a routerLink="/registro" class="register-link">
-        ¿No tenés cuenta? REGISTRARTE
-      </a>
+          <span>Continuar con Google</span>
+        </button>
 
-      <div class="container__volver__inicio">
+        @if (errorMessage) {
+        <div class="oauth-error" role="alert">
+          <span class="oauth-error-icon">!</span>
+
+          <span>
+            {{ errorMessage }}
+          </span>
+        </div>
+        }
+      </div>
+
+      <div class="login-footer">
+        <a routerLink="/recuperar-contrasena" class="forgot-password-link">
+          ¿Olvidaste tu contraseña?
+        </a>
+
+        <p>
+          ¿No tenés una cuenta?
+          <a routerLink="/registro" class="register-link"> Registrate </a>
+        </p>
+
         <a routerLink="/" class="btn__volver__inicio">
-          Volver al Inicio <i class="fa-solid fa-rotate-left"></i>
+          Volver al Inicio
+          <i class="fa-solid fa-rotate-left"></i>
         </a>
       </div>
     </section>

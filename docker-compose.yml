@@ -1,25 +1,48 @@
 services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: bienestar_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bienestar
+      POSTGRES_USER: bienestar_user
+      POSTGRES_PASSWORD: bienestar_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:7
+    container_name: bienestar_mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    container_name: bienestar_django_backend
+    container_name: bienestar_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://bienestar_user:bienestar_password@db:5432/bienestar
+      DJANGO_DEBUG: "true"
+      MONGO_URI: mongodb://mongo:27017/bienestar_archivos
     ports:
       - "8000:8000"
-    env_file:
-      - ./backend/.env
-    volumes:
-      - ./backend:/app
+    depends_on:
+      - db
+      - mongo
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    container_name: bienestar_angular_frontend
+    container_name: bienestar_frontend
+    restart: unless-stopped
     ports:
-      - "4200:4200"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - "4200:80"
     depends_on:
       - backend
+
+volumes:
+  postgres_data:
+  mongo_data:

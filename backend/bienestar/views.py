@@ -1,17 +1,24 @@
 from datetime import timedelta
 from functools import partial
 
+from authlib.integrations.django_client import OAuth
+from bson import ObjectId
+from django.conf import settings
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Sum, F
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from .mongo import obtener_gridfs
 
 from .models import (
     Usuario,
@@ -23,11 +30,12 @@ from .models import (
     Notificacion,
 )
 from .serializers import (
-    UsuarioSerializer, 
+    UsuarioSerializer,
     UsuarioUpdateSerializer,
+    UsuarioAdminSerializer,
     ProgresoDiarioSerializer,
     PerfilSaludSerializer,
-    EjercicioSerializer, 
+    EjercicioSerializer,
     RutinaEjercicioSerializer,
     NotificacionSerializer,
 )
@@ -41,6 +49,143 @@ class NoticiasView(APIView):
     def get(self, request):
         return Response(get_news_payload(), status=status.HTTP_200_OK)
 
+
+oauth = OAuth()
+
+oauth.register(
+    name="google",
+    client_id=settings.GOOGLE_CLIENT_ID,
+    client_secret=settings.GOOGLE_CLIENT_SECRET,
+    server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+    client_kwargs={
+        "scope": "openid email profile"
+    },
+)
+
+class GoogleLoginView(APIView):
+    def get(self, request):
+        return oauth.google.authorize_redirect(
+            request,
+            settings.GOOGLE_REDIRECT_URI
+        )
+
+
+class GoogleCallbackView(APIView):
+    def get(self, request):
+        if request.GET.get("error"):
+            return redirect(
+                f"{settings.FRONTEND_URL}/login?oauth=error"
+            )
+
+        try:
+            token = oauth.google.authorize_access_token(request)
+        except Exception as error:
+            print(f"Error OAuth Google: {error}")
+            return redirect(
+                f"{settings.FRONTEND_URL}/login?oauth=error"
+            )
+
+        userinfo = token.get("userinfo")
+
+        if not userinfo:
+            return Response(
+                {"error": "Google no devolvió información del usuario"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        email = (userinfo.get("email") or "").strip().lower()
+
+        if not email:
+            return Response(
+                {"error": "Google no devolvió un email"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Solo aceptamos el correo si Google confirmó su propiedad
+        if not userinfo.get("email_verified"):
+            return Response(
+                {"error": "El correo de Google no está verificado"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        usuario = Usuario.objects.filter(
+            email__iexact=email
+        ).first()
+
+        if not usuario:
+            nombre = (
+                userinfo.get("name")
+                or userinfo.get("given_name")
+                or email.split("@")[0]
+            )
+
+            usuario = Usuario.objects.create(
+                nombre=nombre,
+                email=email,
+                password=make_password(None)
+            )
+
+        PerfilSalud.objects.get_or_create(usuario=usuario)
+
+        request.session.cycle_key()
+        request.session["usuario_id"] = usuario.id
+
+        return redirect(
+            f"{settings.FRONTEND_URL}/login?oauth=success"
+        )
+
+
+class SesionUsuarioView(APIView):
+    def get(self, request):
+        usuario_id = request.session.get("usuario_id")
+
+        if not usuario_id:
+            return Response(
+                {
+                    "success": False,
+                    "error": "No hay una sesión activa"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        try:
+            usuario = Usuario.objects.get(pk=usuario_id)
+        except Usuario.DoesNotExist:
+            request.session.flush()
+
+            return Response(
+                {
+                    "success": False,
+                    "error": "Usuario no encontrado"
+                },
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        serializer = UsuarioSerializer(
+            usuario,
+            context={"request": request}
+        )
+
+        return Response(
+            {
+                "success": True,
+                "data": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
+
+
+class LogoutUsuarioView(APIView):
+    def post(self, request):
+        request.session.flush()
+
+        return Response(
+            {
+                "success": True,
+                "message": "Sesión cerrada correctamente"
+            },
+            status=status.HTTP_200_OK
+        )
 
 class NotificacionesViewSet(viewsets.ModelViewSet):
     serializer_class = NotificacionSerializer
@@ -149,8 +294,13 @@ class LoginUsuarioView(APIView):
         if not check_password(password, usuario.password):
             return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
 
+        request.session.cycle_key()
+        request.session["usuario_id"] = usuario.id
+
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
+
+
 
 
 class ProgresoDiarioView(APIView):
@@ -246,8 +396,8 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None):
         usuario = get_object_or_404(Usuario, pk=pk)
         serializer = UsuarioUpdateSerializer(
-            usuario, 
-            data=request.data, 
+            usuario,
+            data=request.data,
             partial=True
         )
         if serializer.is_valid():
@@ -264,18 +414,97 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
+    @action(detail=True, methods=['patch'], url_path='admin-editar')
+    def admin_editar(self, request, pk=None):
+        """Edición completa de un usuario, exclusiva del panel de admin."""
+        usuario = get_object_or_404(Usuario, pk=pk)
+        serializer = UsuarioAdminSerializer(usuario, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            response_serializer = UsuarioSerializer(usuario, context={'request': request})
+            return Response({
+                'success': True,
+                'message': 'Usuario actualizado correctamente',
+                'data': response_serializer.data
+            })
+        return Response({
+            'success': False,
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get', 'post'], url_path='foto-perfil')
+    def foto_perfil(self, request, pk=None):
+        """
+        GET: devuelve la imagen guardada en MongoDB.
+        POST: sube/reemplaza la foto de perfil del usuario.
+        """
+        usuario = get_object_or_404(Usuario, pk=pk)
+        fs = obtener_gridfs()
+
+        if request.method == 'POST':
+            archivo = request.FILES.get('foto_perfil')
+
+            if not archivo:
+                return Response({
+                    'success': False,
+                    'errors': {'foto_perfil': ['No se recibió ningún archivo.']}
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            if not archivo.content_type.startswith('image/'):
+                return Response({
+                    'success': False,
+                    'errors': {'foto_perfil': ['El archivo debe ser una imagen.']}
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Si ya tenía una foto anterior en Mongo, la borramos para no acumular basura
+            if usuario.foto_perfil_id:
+                try:
+                    fs.delete(ObjectId(usuario.foto_perfil_id))
+                except Exception:
+                    pass
+
+            nuevo_id = fs.put(
+                archivo.read(),
+                filename=archivo.name,
+                content_type=archivo.content_type,
+                usuario_id=usuario.id,
+            )
+
+            usuario.foto_perfil_id = str(nuevo_id)
+            usuario.save(update_fields=['foto_perfil_id'])
+
+            return Response({
+                'success': True,
+                'message': 'Foto de perfil actualizada correctamente',
+                'foto_perfil_url': request.build_absolute_uri(
+                    f'/api/usuarios/{usuario.id}/foto-perfil/'
+                ),
+            })
+
+        # GET: devolver la imagen guardada
+        if not usuario.foto_perfil_id:
+            raise Http404('Este usuario no tiene foto de perfil.')
+
+        try:
+            archivo_mongo = fs.get(ObjectId(usuario.foto_perfil_id))
+        except Exception:
+            raise Http404('La foto de perfil no se encontró.')
+
+        return HttpResponse(archivo_mongo.read(), content_type=archivo_mongo.content_type)
+
+
 class PerfilSaludView(APIView):
     """
     Gestiona el perfil de salud (relación 1:1 con Usuario).
     Endpoint: /api/perfil-salud/<user_id>/
     """
     # permission_classes = [IsAuthenticated] # Asumimos autenticación para producción
-    
+
     def get(self, request, user_id):
         """Obtiene el perfil de salud para un usuario dado."""
         # Nota: En un sistema real, user_id debería venir de request.user.id
         usuario = get_object_or_404(Usuario, pk=user_id)
-        
+
         try:
             perfil = usuario.perfilsalud
             serializer = PerfilSaludSerializer(perfil)
@@ -292,32 +521,32 @@ class PerfilSaludView(APIView):
         Endpoint: /api/perfil-salud/<user_id>/
         """
         usuario = get_object_or_404(Usuario, pk=user_id)
-        
+
         try:
             perfil = usuario.perfilsalud # Obtener si existe
         except PerfilSalud.DoesNotExist:
             perfil = None # Si no existe, se creará
-            
+
         data = request.data.copy()
         # Se requiere asignar el usuario, aunque el serializador lo maneja al guardar
-        # data['usuario'] = usuario.pk 
+        # data['usuario'] = usuario.pk
 
         serializer = PerfilSaludSerializer(perfil, data=data)
-        
+
         if serializer.is_valid():
             # Al guardar, aseguramos la asignación del usuario para la relación 1:1
-            instance = serializer.save(usuario=usuario) 
+            instance = serializer.save(usuario=usuario)
             return Response(
-                PerfilSaludSerializer(instance).data, 
+                PerfilSaludSerializer(instance).data,
                 status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
             )
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, user_id):
         """Actualización parcial del perfil de salud (PATCH)."""
         usuario = get_object_or_404(Usuario, pk=user_id)
-        
+
         try:
             perfil = usuario.perfilsalud
         except PerfilSalud.DoesNotExist:
@@ -327,11 +556,11 @@ class PerfilSaludView(APIView):
             )
 
         serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True)
-        
+
         if serializer.is_valid():
             serializer.save()
             return Response(PerfilSaludSerializer(perfil).data, status=status.HTTP_200_OK)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -345,8 +574,8 @@ class EstadisticasView(APIView):
         fecha_hace_30_dias = hoy - timedelta(days=30)
 
         # 1. Obtener y limpiar el usuario_id
-        usuario_id_str = request.query_params.get('usuario_id') 
-        
+        usuario_id_str = request.query_params.get('usuario_id')
+
         # Convierte 'null' (string) a None, y se asegura de que sea un valor válido
         usuario_id = None
         if usuario_id_str and usuario_id_str not in ['null', 'undefined']:
@@ -357,17 +586,17 @@ class EstadisticasView(APIView):
                 # Si no es un entero válido, puedes devolver un 400 o ignorar el filtro
                 pass # Ignoramos el filtro si el valor es inválido
 
-        
+
         # --- Lógica de Rutinas ---
         rutinas_del_mes = RutinaEjercicio.objects.filter(
             fecha_registro__gte=fecha_hace_30_dias
         )
-        
+
         # Aplica el filtro solo si usuario_id es un entero válido
         if usuario_id is not None:
             # Ahora usuario_id es un entero, por lo que el filtro es seguro.
             rutinas_del_mes = rutinas_del_mes.filter(usuario_id=usuario_id)
-          
+
         # --- Lógica de Usuarios (siempre global) ---
         # Si esta API se usa para el panel de usuario individual,
         # 'total_usuarios' debería ser 1 si hay filtro, o total si no lo hay.
@@ -376,13 +605,13 @@ class EstadisticasView(APIView):
         total_rutinas_registradas = rutinas_del_mes.count()
 
         ejercicios_populares = rutinas_del_mes.values(
-            'ejercicio__nombre', 
+            'ejercicio__nombre',
             'ejercicio__tipo'
         ).annotate(
             conteo_rutinas=Count('ejercicio__nombre')
         ).order_by('-conteo_rutinas')[:5].values(
-            nombre=F('ejercicio__nombre'), 
-            tipo=F('ejercicio__tipo'), 
+            nombre=F('ejercicio__nombre'),
+            tipo=F('ejercicio__tipo'),
             conteo_rutinas=F('conteo_rutinas')
         )
 
@@ -391,7 +620,7 @@ class EstadisticasView(APIView):
             completado=True,
             fecha__gte=fecha_hace_30_dias
         )
-        
+
         # Aplica el filtro solo si usuario_id es un entero válido
         if usuario_id is not None:
             progresos_completados = progresos_completados.filter(usuario_id=usuario_id)

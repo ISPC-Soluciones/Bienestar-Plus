@@ -1,9 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { LoginService, LoginData } from '../../services/login';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +19,7 @@ import { LoginService, LoginData } from '../../services/login';
 export class Login {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private loginService = inject(LoginService);
 
@@ -24,46 +30,136 @@ export class Login {
 
   errorMessage = '';
 
-  onSubmit() {
+  ngOnInit(): void {
+    const oauth = this.route.snapshot.queryParamMap.get('oauth');
+
+    if (oauth === 'success') {
+      this.recuperarSesionGoogle();
+    }
+
+    if (oauth === 'error') {
+      this.errorMessage =
+        'No se pudo iniciar sesión con Google. Inténtalo nuevamente.';
+    }
+  }
+  private recuperarSesionGoogle(): void {
     this.errorMessage = '';
 
-    if (this.loginForm.valid) {
-      const loginData: LoginData = {
-        email: this.loginForm.value.email!,
-        password: this.loginForm.value.password!,
-      };
-
-      this.loginService.login(loginData).subscribe({
-        next: (usuario) => {
-          if (usuario && typeof usuario.id === 'number') {
-            localStorage.setItem('usuario', JSON.stringify(usuario));
-
-            this.authService.login(usuario.id);
-
-            if (usuario.rol === 'admin') {
-              console.log(
-                'Login exitoso. Es admin, navegando a /admin/dashboard',
-              );
-              this.router.navigate(['/admin/dashboard']);
-            } else {
-              console.log(
-                'Login exitoso. Navegando a /perfil con ID:',
-                usuario.id,
-              );
-              this.router.navigate(['/perfil', usuario.id]);
-            }
-          } else {
-            this.errorMessage = 'Email o contraseña incorrectos.';
-          }
-        },
-        error: (err) => {
-          console.error('Error de conexión o servidor:', err);
+    this.loginService.obtenerSesion().subscribe({
+      next: (usuario) => {
+        if (!usuario) {
           this.errorMessage =
-            'Error de conexión con el servidor. Intente más tarde.';
-        },
-      });
-    } else {
+            'No se pudo recuperar la sesión de Google.';
+          return;
+        }
+
+        localStorage.setItem(
+          'usuario',
+          JSON.stringify(usuario)
+        );
+
+        this.authService.login(usuario.id);
+
+
+        if (usuario.rol === 'admin') {
+          this.router.navigate(['/admin/dashboard']);
+          return;
+        }
+
+        const perfilIncompleto =
+          usuario.perfil_salud?.peso == null ||
+          usuario.perfil_salud?.altura == null;
+
+        if (perfilIncompleto) {
+          this.router.navigate(
+            ['/perfil', usuario.id],
+            {
+              queryParams: {
+                completarPerfil: 'true',
+              },
+            }
+          );
+
+          return;
+        }
+
+        this.router.navigate(['/perfil', usuario.id]);
+      },
+
+      error: (err) => {
+        console.error(
+          'Error recuperando sesión OAuth:',
+          err
+        );
+
+        this.errorMessage =
+          'No se pudo completar el inicio de sesión con Google.';
+      },
+    });
+  }
+
+
+  loginConGoogle(): void {
+    window.location.href =
+      `${environment.backendUrl}/api/auth/google/`;
+  }
+
+
+  onSubmit(): void {
+    this.errorMessage = '';
+
+    if (!this.loginForm.valid) {
       this.loginForm.markAllAsTouched();
+      return;
     }
+
+    const loginData: LoginData = {
+      email: this.loginForm.value.email!,
+      password: this.loginForm.value.password!,
+    };
+
+    this.loginService.login(loginData).subscribe({
+      next: (usuario) => {
+        if (usuario && typeof usuario.id === 'number') {
+          localStorage.setItem(
+            'usuario',
+            JSON.stringify(usuario)
+          );
+
+          this.authService.login(usuario.id);
+
+          if (usuario.rol === 'admin') {
+            console.log(
+              'Login exitoso. Es admin, navegando a /admin/dashboard'
+            );
+
+            this.router.navigate(['/admin/dashboard']);
+          } else {
+            console.log(
+              'Login exitoso. Navegando a /perfil con ID:',
+              usuario.id
+            );
+
+            this.router.navigate([
+              '/perfil',
+              usuario.id,
+            ]);
+          }
+        } else {
+          this.errorMessage =
+            'Email o contraseña incorrectos.';
+        }
+      },
+
+      error: (err) => {
+        console.error(
+          'Error de conexión o servidor:',
+          err
+        );
+
+        this.errorMessage =
+          'Error de conexión con el servidor. Intente más tarde.';
+      },
+    });
   }
 }
