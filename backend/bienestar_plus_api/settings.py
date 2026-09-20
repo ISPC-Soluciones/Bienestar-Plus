@@ -38,6 +38,7 @@ else:
 ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1', 'bienestar-plus-backend.vercel.app']
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'channels',
     'bienestar'
 ]
 
@@ -79,6 +81,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bienestar_plus_api.wsgi.application'
+
+ASGI_APPLICATION = 'bienestar_plus_api.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # -----------------------------------------------
 # Database Configuration (Robusta para Vercel)
