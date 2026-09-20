@@ -15,4 +15,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["gunicorn", "bienestar_plus_api.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "bienestar_plus_api.asgi:application"]
