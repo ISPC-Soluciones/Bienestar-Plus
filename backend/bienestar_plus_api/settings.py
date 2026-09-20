@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'channels',
     'bienestar'
 ]
 
@@ -79,6 +80,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bienestar_plus_api.wsgi.application'
+
+ASGI_APPLICATION = 'bienestar_plus_api.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # -----------------------------------------------
 # Database Configuration (Robusta para Vercel)
