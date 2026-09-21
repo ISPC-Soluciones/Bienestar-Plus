@@ -6,437 +6,450 @@
     min-height: 100vh;
     font-family: var(--fuente-base);
   }
-  
+
   .login-container {
     min-height: 100vh;
     box-sizing: border-box;
-  
+
     display: flex;
     justify-content: center;
     align-items: center;
-  
+
     padding: 2rem 1rem;
-  
+
     background-image:
       url("/assets/healthy-llifestyle-elements-frame-background-free-vector.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
   }
-  
-  
+
+
   /* ==================================================
      CONTENEDOR GENERAL
      ================================================== */
-  
+
   .login-page {
     width: 100%;
     max-width: 450px;
-  
+
     box-sizing: border-box;
-  
+
     display: flex;
     flex-direction: column;
     align-items: center;
-  
+
     padding: 2rem 3.1rem 2.2rem;
-  
+
     background-color: var(--bg-fondo);
-  
+
     border: 2px solid var(--ternario);
     border-radius: 14px;
-  
+
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
-  
-  
+
+
   /* ==================================================
      ENCABEZADO
      ================================================== */
-  
+
   .login-header {
     width: 100%;
     text-align: center;
   }
-  
+
   .login-h1 {
     margin: 0 0 1.5rem;
-  
+
     font-family: var(--fuente-titulo);
     font-size: 2rem;
     font-style: italic;
     font-weight: 700;
-  
+
     color: var(--cuaternario);
   }
-  
+
   .login-logo {
     display: block;
-  
+
     width: 74px;
     height: 74px;
-  
+
     object-fit: contain;
-  
+
     margin: 0 auto 1.7rem;
   }
-  
+
   .login-h2 {
     margin: 0 0 1.8rem;
-  
+
     font-family: var(--fuente-titulo);
     font-size: 1.9rem;
     font-style: italic;
     font-weight: 500;
-  
+
     color: var(--bg-y-fuentes);
   }
-  
-  
+
+
   /* ==================================================
      CARD
      Ahora no dibujamos una segunda tarjeta.
      login-page YA ES la tarjeta.
      ================================================== */
-  
+
   .login-card {
     width: 100%;
     box-sizing: border-box;
-  
+
     display: flex;
     flex-direction: column;
-  
+
     padding: 0;
-  
+
     background: transparent;
     border: none;
     box-shadow: none;
   }
-  
-  
+
+
   /* ==================================================
      FORMULARIO
      ================================================== */
-  
+
   .login-form-container {
     width: 100%;
-  
+
     display: flex;
     flex-direction: column;
   }
-  
+
   .form-group {
     width: 100%;
-  
+
     display: flex;
     flex-direction: column;
-  
+
     margin-bottom: 1.45rem;
   }
-  
+
   .login-label {
     margin-bottom: 0.35rem;
-  
+
     font-family: var(--fuente-base);
     font-size: 1rem;
     font-weight: 400;
-  
+
     color: var(--bg-y-fuentes);
   }
-  
+
   .formulario--input {
     width: 100%;
     height: 62px;
-  
+
     box-sizing: border-box;
-  
+
     padding: 0 1rem;
-  
+
     background-color: #fff;
     color: var(--bg-y-fuentes);
-  
+
     border: 1.5px solid var(--primario);
     border-radius: 8px;
-  
+
     outline: none;
-  
+
     font-family: var(--fuente-base);
     font-size: 1rem;
-  
+
     transition:
       border-color 0.2s,
       box-shadow 0.2s;
   }
-  
+
   .formulario--input:focus {
     border-color: var(--cuaternario);
-  
+
     box-shadow:
       0 0 0 3px rgba(0, 0, 0, 0.05);
   }
-  
+
   .field-error {
     margin-top: 0.35rem;
-  
+
     color: #b3261e;
-  
+
     font-size: 0.8rem;
   }
-  
-  
+
+
   /* ==================================================
      BOTÓN LOGIN
      ================================================== */
-  
+
   .formulario--btn {
     width: 100%;
     height: 61px;
-  
+
     margin-top: 1rem;
-  
+
     border: none;
     border-radius: 7px;
-  
+
     background-color: var(--ternario);
     color: var(--bg-fondo);
-  
+
     font-family: var(--fuente-base);
     font-size: 1rem;
     font-weight: 700;
-  
+
     cursor: pointer;
-  
+
     transition:
       background-color 0.2s,
       opacity 0.2s;
   }
-  
+
   .formulario--btn:hover:not(:disabled) {
     background-color: var(--cuaternario);
   }
-  
+
   .formulario--btn:disabled {
     opacity: 0.45;
     cursor: not-allowed;
   }
-  
-  
+
+
   /* ==================================================
      SEPARADOR GOOGLE
      ================================================== */
-  
+
   .login-divider {
     width: 100%;
-  
+
     display: flex;
     align-items: center;
-  
+
     gap: 0.8rem;
-  
+
     margin: 1.2rem 0;
-  
+
     color: #777;
     font-size: 0.85rem;
   }
-  
+
   .login-divider::before,
   .login-divider::after {
     content: "";
-  
+
     flex: 1;
     height: 1px;
-  
+
     background-color: #d6d6d6;
   }
-  
-  
+
+
   /* ==================================================
      GOOGLE
      ================================================== */
-  
+
   .google-login-button {
     width: 100%;
     height: 54px;
-  
+
     display: flex;
     justify-content: center;
     align-items: center;
-  
+
     gap: 0.75rem;
-  
+
     padding: 0 1rem;
-  
+
     background-color: #fff;
     color: var(--bg-y-fuentes);
-  
+
     border: 1px solid #dadce0;
     border-radius: 7px;
-  
+
     font-family: var(--fuente-base);
     font-size: 0.95rem;
     font-weight: 600;
-  
+
     cursor: pointer;
-  
+
     transition:
       background-color 0.2s,
       border-color 0.2s,
       box-shadow 0.2s;
   }
-  
+
   .google-login-button:hover {
     background-color: #f8f9fa;
     border-color: #b8b8b8;
-  
+
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
   }
-  
+
   .google-login-button:focus-visible {
     outline: 3px solid rgba(66, 133, 244, 0.2);
     outline-offset: 2px;
   }
-  
+
   .google-icon {
     width: 20px;
     height: 20px;
-  
+
     flex-shrink: 0;
   }
-  
-  
+
+
   /* ==================================================
      ERROR OAUTH
      ================================================== */
-  
+
   .oauth-error {
     width: 100%;
     box-sizing: border-box;
-  
+
     display: flex;
     align-items: center;
-  
+
     gap: 0.65rem;
-  
+
     margin-top: 1rem;
     padding: 0.7rem 0.8rem;
-  
+
     background-color: #fff1f1;
     color: #b3261e;
-  
+
     border: 1px solid #efaaaa;
     border-radius: 7px;
-  
+
     font-size: 0.82rem;
     line-height: 1.3;
   }
-  
+
   .oauth-error-icon {
     width: 20px;
     height: 20px;
-  
+
     flex-shrink: 0;
-  
+
     display: flex;
     justify-content: center;
     align-items: center;
-  
+
     background-color: #d64545;
     color: #fff;
-  
+
     border-radius: 50%;
-  
+
     font-size: 0.75rem;
     font-weight: 700;
   }
-  
-  
+
+
   /* ==================================================
      FOOTER
      ================================================== */
-  
+
   .login-footer {
     width: 100%;
-  
+
     margin-top: 1.25rem;
-  
+
     text-align: center;
   }
-  
+
   .login-footer p {
     margin: 0 0 1.1rem;
-  
+
     font-size: 0.95rem;
     font-weight: 600;
-  
+
     color: var(--ternario);
   }
-  
+
   .register-link {
     color: var(--ternario);
-  
+
     font-weight: 700;
     text-decoration: none;
   }
-  
+
   .register-link:hover {
     color: var(--cuaternario);
     text-decoration: underline;
   }
-  
+
   .btn__volver__inicio {
     color: #1268ff;
-  
+
     font-size: 0.95rem;
     text-decoration: none;
   }
-  
+
   .btn__volver__inicio:hover {
     text-decoration: underline;
   }
-  
-  
+
+
   /* ==================================================
      RESPONSIVE
      ================================================== */
-  
+
   @media (max-width: 520px) {
-  
+
     .login-container {
       padding: 1rem;
       align-items: flex-start;
     }
-  
+
     .login-page {
       max-width: 100%;
-  
+
       padding:
         1.7rem
         1.5rem
         2rem;
     }
-  
+
     .login-h1 {
       font-size: 1.8rem;
     }
-  
+
     .login-h2 {
       font-size: 1.65rem;
     }
-  
+
     .login-logo {
       width: 62px;
       height: 62px;
     }
-  
+
     .formulario--input {
       height: 56px;
     }
-  
+
     .formulario--btn {
       height: 56px;
     }
-  
+
     .google-login-button {
       height: 52px;
     }
   }
+
+.forgot-password-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #317a98;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.forgot-password-link:hover {
+  color: var(--cuaternario);
+  text-decoration: underline;
+}

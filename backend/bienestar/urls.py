@@ -10,8 +10,10 @@ from .views import (
     EjercicioViewSet, 
     RutinaEjercicioViewSet,
     NotificacionesViewSet,
-    ProgresoDiarioView
+    ProgresoDiarioView,
+    NoticiasView,
 )
+from .password_reset_views import PasswordResetConfirmView, PasswordResetRequestView
 
 router = DefaultRouter()
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
@@ -25,4 +27,15 @@ urlpatterns = [
     path('estadisticas/', EstadisticasView.as_view(), name='estadisticas'),
     path('progreso/', ProgresoDiarioView.as_view(), name='progreso-lista'),
     path('progreso/<int:pk>/', ProgresoDiarioView.as_view(), name='progreso-detalle'),
+    path('noticias/', NoticiasView.as_view(), name='noticias'),
+    path(
+        'password-reset/request/',
+        PasswordResetRequestView.as_view(),
+        name='password-reset-request',
+    ),
+    path(
+        'password-reset/confirm/',
+        PasswordResetConfirmView.as_view(),
+        name='password-reset-confirm',
+    ),
 ]

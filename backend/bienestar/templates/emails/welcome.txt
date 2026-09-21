@@ -1,0 +1,12 @@
+Hola {{ nombre }},
+
+¡Te damos la bienvenida a Bienestar Plus!
+
+Para comenzar:
+1. Completá tu perfil de salud.
+2. Registrá tus hábitos diarios.
+3. Revisá tu progreso y las recomendaciones disponibles.
+
+Ingresá a la plataforma: {{ login_url }}
+
+Equipo de Bienestar Plus

@@ -117,15 +117,15 @@ export class PerfilComponent implements OnInit, OnDestroy {
             this.usuario = usuario;
             localStorage.setItem('usuario', JSON.stringify(usuario));
             this.cargarProgreso(Number(usuario.id));
-        
+
             const completarPerfil =
               this.route.snapshot.queryParamMap.get('completarPerfil');
-        
+
             if (completarPerfil === 'true') {
               this.abrirModal();
             }
           }
-        
+
           this.loading = false;
         },
 
@@ -225,7 +225,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
   }
   cerrarModalRecomendacion(): void {
     this.mostrarModalRecomendacion = false;
-  
+
     this.router.navigate(
       ['/perfil', this.usuario?.id],
       { replaceUrl: true }
@@ -387,20 +387,20 @@ perfilSaludData.altura = Number(formValues.altura) / 100;
 
             const completarPerfil =
               this.route.snapshot.queryParamMap.get('completarPerfil');
-        
+
             const perfilSalud = usuarioActualizado.perfil_salud;
-        
+
             if (
               completarPerfil === 'true' &&
               perfilSalud?.mostrar_modal_imc === true
             ) {
               this.recomendacionUsuario =
                 perfilSalud.recomendacion_enfoque || 'GENERAL';
-        
+
               this.mostrarModalRecomendacion = true;
             }
           }
-        
+
           this.loading = false;
         },
 

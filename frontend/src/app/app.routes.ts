@@ -21,6 +21,20 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'login', component: Login },
   {
+    path: 'recuperar-contrasena',
+    loadComponent: () =>
+      import('./pages/password-reset/request-password-reset').then(
+        (module) => module.RequestPasswordReset,
+      ),
+  },
+  {
+    path: 'restablecer-contrasena',
+    loadComponent: () =>
+      import('./pages/password-reset/confirm-password-reset').then(
+        (module) => module.ConfirmPasswordReset,
+      ),
+  },
+  {
     path: 'admin',
     component: Admin,
     canActivate: [AdminGuard],
