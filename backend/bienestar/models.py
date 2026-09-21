@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.db import IntegrityError, transaction
 
 # =========================================================
-# ENUMS
+# ENUMS hola q tal
 # =========================================================
 
 class Roles(models.TextChoices):

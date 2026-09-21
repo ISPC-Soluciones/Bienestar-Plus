@@ -1,8 +1,10 @@
 from datetime import timedelta
 from functools import partial
 
+from asgiref.sync import async_to_sync
 from authlib.integrations.django_client import OAuth
 from bson import ObjectId
+from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
@@ -636,13 +638,58 @@ class EstadisticasView(APIView):
 
 class EjercicioViewSet(viewsets.ModelViewSet):
     """
-    ViewSet para el CRUD de Ejercicios base (gestionado por el Administrador).
-    Ruta generada: /api/ejercicios/
+    ViewSet para el CRUD de Ejercicios base.
+    Los ejercicios son gestionados por el Administrador.
     """
+
     queryset = Ejercicio.objects.all()
     serializer_class = EjercicioSerializer
-    # Se recomienda añadir permisos: permission_classes = [IsAdminUser]
 
+    def perform_create(self, serializer):
+        ejercicio = serializer.save()
+
+        usuarios = Usuario.objects.filter(rol=Roles.ESTANDAR)
+
+        channel_layer = get_channel_layer()
+
+        for usuario in usuarios:
+            notificacion = Notificacion.objects.create(
+                usuario=usuario,
+                mensaje=f"Se agregó un nuevo ejercicio: {ejercicio.nombre}",
+                estado="pendiente",
+            )
+
+            async_to_sync(channel_layer.group_send)(
+                f'notificaciones_{usuario.id}',
+                {
+                    'type': 'enviar_notificacion',
+                    'mensaje': notificacion.mensaje,
+                    'notificacion_id': notificacion.id,
+                }
+            )
+
+    def perform_update(self, serializer):
+        ejercicio = serializer.save()
+
+        usuarios = Usuario.objects.filter(rol=Roles.ESTANDAR)
+
+        channel_layer = get_channel_layer()
+
+        for usuario in usuarios:
+            notificacion = Notificacion.objects.create(
+                usuario=usuario,
+                mensaje=f"Se actualizó el ejercicio: {ejercicio.nombre}",
+                estado="pendiente",
+            )
+
+            async_to_sync(channel_layer.group_send)(
+                f'notificaciones_{usuario.id}',
+                {
+                    'type': 'enviar_notificacion',
+                    'mensaje': notificacion.mensaje,
+                    'notificacion_id': notificacion.id,
+                }
+            )
 class RutinaEjercicioViewSet(viewsets.ModelViewSet):
     """
     ViewSet para el CRUD de RutinaEjercicio (registro de actividad de los usuarios).
