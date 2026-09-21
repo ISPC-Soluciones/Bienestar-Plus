@@ -1,36 +1,56 @@
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from rest_framework.views import APIView
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from datetime import timedelta
+from functools import partial
+
+from asgiref.sync import async_to_sync
+from authlib.integrations.django_client import OAuth
+from bson import ObjectId
+from channels.layers import get_channel_layer
+from django.conf import settings
+from django.contrib.auth.hashers import make_password, check_password
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError, transaction
+from django.db.models import Count, Sum, F
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Count, Sum, F 
-from datetime import timedelta 
-from django.contrib.auth.hashers import make_password, check_password
-from bson import ObjectId
-from django.http import HttpResponse, Http404
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .mongo import obtener_gridfs
-from .models import Usuario, ProgresoDiario, PerfilSalud
-from django.conf import settings
-from authlib.integrations.django_client import OAuth
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 
-
-from .models import Usuario, ProgresoDiario, PerfilSalud, Ejercicio, RutinaEjercicio, Roles, Notificacion 
+from .models import (
+    Usuario,
+    ProgresoDiario,
+    PerfilSalud,
+    Ejercicio,
+    RutinaEjercicio,
+    Roles,
+    Notificacion,
+)
 from .serializers import (
-    UsuarioSerializer, 
+    UsuarioSerializer,
     UsuarioUpdateSerializer,
     UsuarioAdminSerializer,
     ProgresoDiarioSerializer,
     PerfilSaludSerializer,
-    EjercicioSerializer, 
+    EjercicioSerializer,
     RutinaEjercicioSerializer,
-    NotificacionSerializer
+    NotificacionSerializer,
 )
+from .services.news import get_news_payload
+from .services.email import send_welcome_email_safely
+
+
+class NoticiasView(APIView):
+    """Noticias de bienestar obtenidas de fuentes oficiales y normalizadas."""
+
+    def get(self, request):
+        return Response(get_news_payload(), status=status.HTTP_200_OK)
+
 
 oauth = OAuth()
 
@@ -184,7 +204,7 @@ class NotificacionesViewSet(viewsets.ModelViewSet):
 class RegistroUsuarioView(APIView):
     def post(self, request):
         nombre = request.data.get('nombre')
-        email = request.data.get('email')
+        email = (request.data.get('email') or '').strip().lower()
         password = request.data.get('password')
         telefono = request.data.get('telefono', '')
 
@@ -194,7 +214,7 @@ class RegistroUsuarioView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if Usuario.objects.filter(email=email).exists():
+        if Usuario.objects.filter(email__iexact=email).exists():
             return Response(
                 {"error": "Correo ya registrado"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -212,26 +232,41 @@ class RegistroUsuarioView(APIView):
         peso = perfil_data.get('peso')
         altura = perfil_data.get('altura')
 
-        usuario = Usuario.objects.create(
-            nombre=nombre,
-            email=email,
-            password=make_password(password),
-            telefono=telefono
-        )
+        try:
+            with transaction.atomic():
+                usuario = Usuario.objects.create(
+                    nombre=nombre,
+                    email=email,
+                    password=make_password(password),
+                    telefono=telefono,
+                )
 
-        perfil_salud = PerfilSalud.objects.create(
-        usuario=usuario,
-        genero=genero,
-        fecha_nacimiento=fecha_nacimiento,
-        peso=peso,
-        altura=altura
+                perfil_salud = PerfilSalud.objects.create(
+                    usuario=usuario,
+                    genero=genero,
+                    fecha_nacimiento=fecha_nacimiento,
+                    peso=peso,
+                    altura=altura,
+                )
+                perfil_salud.actualizar_recomendacion()
+                perfil_salud.save()
+
+                Notificacion.objects.create(
+                    usuario=usuario,
+                    mensaje=(
+                        'Tu recomendación inicial: '
+                        f'{perfil_salud.recomendacion_enfoque}'
+                    ),
+                    estado='pendiente',
+                )
+                transaction.on_commit(
+                    partial(send_welcome_email_safely, usuario.pk)
+                )
+        except IntegrityError:
+            return Response(
+                {"error": "Correo ya registrado"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-
-        perfil_salud.actualizar_recomendacion()
-        perfil_salud.save()
-        Notificacion.objects.create(
-            usuario=usuario,mensaje=f"Tu recomendación inicial: {perfil_salud.recomendacion_enfoque}",estado= "pendiente",
-        )
 
         serializer = UsuarioSerializer(
             usuario,
@@ -260,14 +295,14 @@ class LoginUsuarioView(APIView):
 
         if not check_password(password, usuario.password):
             return Response({"error": "Usuario o contraseña incorrectos"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+
         request.session.cycle_key()
         request.session["usuario_id"] = usuario.id
 
         serializer = UsuarioSerializer(usuario)
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
-    
-    
+
+
 
 
 class ProgresoDiarioView(APIView):
@@ -363,8 +398,8 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None):
         usuario = get_object_or_404(Usuario, pk=pk)
         serializer = UsuarioUpdateSerializer(
-            usuario, 
-            data=request.data, 
+            usuario,
+            data=request.data,
             partial=True
         )
         if serializer.is_valid():
@@ -380,7 +415,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
-    
+
     @action(detail=True, methods=['patch'], url_path='admin-editar')
     def admin_editar(self, request, pk=None):
         """Edición completa de un usuario, exclusiva del panel de admin."""
@@ -466,12 +501,12 @@ class PerfilSaludView(APIView):
     Endpoint: /api/perfil-salud/<user_id>/
     """
     # permission_classes = [IsAuthenticated] # Asumimos autenticación para producción
-    
+
     def get(self, request, user_id):
         """Obtiene el perfil de salud para un usuario dado."""
         # Nota: En un sistema real, user_id debería venir de request.user.id
         usuario = get_object_or_404(Usuario, pk=user_id)
-        
+
         try:
             perfil = usuario.perfilsalud
             serializer = PerfilSaludSerializer(perfil)
@@ -488,32 +523,32 @@ class PerfilSaludView(APIView):
         Endpoint: /api/perfil-salud/<user_id>/
         """
         usuario = get_object_or_404(Usuario, pk=user_id)
-        
+
         try:
             perfil = usuario.perfilsalud # Obtener si existe
         except PerfilSalud.DoesNotExist:
             perfil = None # Si no existe, se creará
-            
+
         data = request.data.copy()
         # Se requiere asignar el usuario, aunque el serializador lo maneja al guardar
-        # data['usuario'] = usuario.pk 
+        # data['usuario'] = usuario.pk
 
         serializer = PerfilSaludSerializer(perfil, data=data)
-        
+
         if serializer.is_valid():
             # Al guardar, aseguramos la asignación del usuario para la relación 1:1
-            instance = serializer.save(usuario=usuario) 
+            instance = serializer.save(usuario=usuario)
             return Response(
-                PerfilSaludSerializer(instance).data, 
+                PerfilSaludSerializer(instance).data,
                 status=status.HTTP_201_CREATED if perfil is None else status.HTTP_200_OK
             )
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, user_id):
         """Actualización parcial del perfil de salud (PATCH)."""
         usuario = get_object_or_404(Usuario, pk=user_id)
-        
+
         try:
             perfil = usuario.perfilsalud
         except PerfilSalud.DoesNotExist:
@@ -523,11 +558,11 @@ class PerfilSaludView(APIView):
             )
 
         serializer = PerfilSaludSerializer(perfil, data=request.data, partial=True)
-        
+
         if serializer.is_valid():
             serializer.save()
             return Response(PerfilSaludSerializer(perfil).data, status=status.HTTP_200_OK)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -541,8 +576,8 @@ class EstadisticasView(APIView):
         fecha_hace_30_dias = hoy - timedelta(days=30)
 
         # 1. Obtener y limpiar el usuario_id
-        usuario_id_str = request.query_params.get('usuario_id') 
-        
+        usuario_id_str = request.query_params.get('usuario_id')
+
         # Convierte 'null' (string) a None, y se asegura de que sea un valor válido
         usuario_id = None
         if usuario_id_str and usuario_id_str not in ['null', 'undefined']:
@@ -553,17 +588,17 @@ class EstadisticasView(APIView):
                 # Si no es un entero válido, puedes devolver un 400 o ignorar el filtro
                 pass # Ignoramos el filtro si el valor es inválido
 
-        
+
         # --- Lógica de Rutinas ---
         rutinas_del_mes = RutinaEjercicio.objects.filter(
             fecha_registro__gte=fecha_hace_30_dias
         )
-        
+
         # Aplica el filtro solo si usuario_id es un entero válido
         if usuario_id is not None:
             # Ahora usuario_id es un entero, por lo que el filtro es seguro.
             rutinas_del_mes = rutinas_del_mes.filter(usuario_id=usuario_id)
-          
+
         # --- Lógica de Usuarios (siempre global) ---
         # Si esta API se usa para el panel de usuario individual,
         # 'total_usuarios' debería ser 1 si hay filtro, o total si no lo hay.
@@ -572,13 +607,13 @@ class EstadisticasView(APIView):
         total_rutinas_registradas = rutinas_del_mes.count()
 
         ejercicios_populares = rutinas_del_mes.values(
-            'ejercicio__nombre', 
+            'ejercicio__nombre',
             'ejercicio__tipo'
         ).annotate(
             conteo_rutinas=Count('ejercicio__nombre')
         ).order_by('-conteo_rutinas')[:5].values(
-            nombre=F('ejercicio__nombre'), 
-            tipo=F('ejercicio__tipo'), 
+            nombre=F('ejercicio__nombre'),
+            tipo=F('ejercicio__tipo'),
             conteo_rutinas=F('conteo_rutinas')
         )
 
@@ -587,7 +622,7 @@ class EstadisticasView(APIView):
             completado=True,
             fecha__gte=fecha_hace_30_dias
         )
-        
+
         # Aplica el filtro solo si usuario_id es un entero válido
         if usuario_id is not None:
             progresos_completados = progresos_completados.filter(usuario_id=usuario_id)

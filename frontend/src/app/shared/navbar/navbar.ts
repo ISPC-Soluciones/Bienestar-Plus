@@ -69,7 +69,7 @@ export class Navbar implements OnDestroy {
     });
   }
 
- 
+
   // DESTRUCCIÓN DEL COMPONENTE
 
 
@@ -211,16 +211,10 @@ export class Navbar implements OnDestroy {
       },
 
       error: (err) => {
+        console.error('Error al cerrar la sesión en el backend:', err);
 
-        console.error(
-          'Error al cerrar la sesión en el backend:',
-          err
-        );
-
-        // 
-        // limpiamos el estado local asi falle el back.
+        // Aunque falle el backend, limpiamos el estado local.
         this.notificacionesWebSocketService.desconectar();
-
         this.authService.logout();
 
         this.router.navigate(['/home']);

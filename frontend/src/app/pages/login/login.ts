@@ -5,15 +5,14 @@ import {
   FormBuilder,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { LoginService, LoginData } from '../../services/login';
 import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
@@ -33,17 +32,16 @@ export class Login {
 
   ngOnInit(): void {
     const oauth = this.route.snapshot.queryParamMap.get('oauth');
-  
+
     if (oauth === 'success') {
       this.recuperarSesionGoogle();
     }
-  
+
     if (oauth === 'error') {
       this.errorMessage =
         'No se pudo iniciar sesión con Google. Inténtalo nuevamente.';
     }
   }
-
   private recuperarSesionGoogle(): void {
     this.errorMessage = '';
 

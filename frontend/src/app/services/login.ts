@@ -90,7 +90,7 @@ export class LoginService {
       })
     );
 
-    
+
   }
   obtenerSesion(): Observable<Usuario | null> {
     return this.http.get<LoginApiResponse>(
@@ -107,7 +107,7 @@ export class LoginService {
             perfil_salud: response.data.perfil_salud,
           };
         }
-  
+
         return null;
       }),
       catchError((error: HttpErrorResponse) => {
