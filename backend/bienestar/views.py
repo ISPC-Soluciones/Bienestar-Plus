@@ -714,12 +714,6 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        """
-        Si ya existe un registro con el mismo usuario,
-        ejercicio y fecha_registro,
-        se actualiza la cantidad en lugar de crear un
-        duplicado.
-        """
         usuario = serializer.validated_data.get('usuario')
         ejercicio = serializer.validated_data.get('ejercicio')
         fecha_registro = serializer.validated_data.get('fecha_registro', timezone.localdate())
@@ -735,3 +729,121 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
             existente.save()
         else:
             serializer.save()
+
+    @action(detail=True, methods=['get'], url_path='descargar-pdf')
+    def descargar_pdf(self, request, pk=None):
+        """
+        Acción personalizada para generar y descargar un registro de rutina específico en PDF.
+        Endpoint generado: GET /api/rutinas-ejercicio/{id}/descargar-pdf/
+        """
+        rutina = self.get_object()
+        
+        # 1. Crear un buffer de bytes en memoria
+        buffer = BytesIO()
+
+        # 2. Configurar el documento PDF
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            rightMargin=36,
+            leftMargin=36,
+            topMargin=36,
+            bottomMargin=36
+        )
+
+        elements = []
+        styles = getSampleStyleSheet()
+
+        # Estilos personalizados
+        title_style = ParagraphStyle(
+            'TitleStyle',
+            parent=styles['Heading1'],
+            fontSize=20,
+            textColor=colors.HexColor('#1f2937'),
+            spaceAfter=4,
+            alignment=1
+        )
+        
+        subtitle_style = ParagraphStyle(
+            'SubtitleStyle',
+            parent=styles['Normal'],
+            fontSize=11,
+            textColor=colors.HexColor('#4b5563'),
+            spaceAfter=15,
+            alignment=1
+        )
+
+        section_heading = ParagraphStyle(
+            'SectionHeading',
+            parent=styles['Heading2'],
+            fontSize=13,
+            textColor=colors.HexColor('#2563eb'),
+            spaceBefore=10,
+            spaceAfter=6
+        )
+
+        body_style = ParagraphStyle(
+            'BodyStyle',
+            parent=styles['Normal'],
+            fontSize=10,
+            textColor=colors.HexColor('#374151')
+        )
+
+        # 3. Construir el contenido del documento
+        elements.append(Paragraph("Bienestar Plus - Detalle de Registro de Rutina", title_style))
+        elements.append(Paragraph(f"Fecha de registro: {rutina.fecha_registro}", subtitle_style))
+        elements.append(Spacer(1, 5))
+
+        elements.append(Paragraph("Información del Usuario", section_heading))
+        elements.append(Paragraph(f"<b>Nombre:</b> {rutina.usuario.nombre}", body_style))
+        elements.append(Paragraph(f"<b>Correo:</b> {rutina.usuario.email}", body_style))
+        elements.append(Spacer(1, 10))
+
+        elements.append(Paragraph("Detalle del Ejercicio Asignado", section_heading))
+
+        ejercicio_nombre = rutina.ejercicio.nombre if rutina.ejercicio else "N/A"
+        ejercicio_desc = rutina.ejercicio.descripcion if (rutina.ejercicio and rutina.ejercicio.descripcion) else "Sin descripción detallada"
+        ejercicio_tipo = rutina.ejercicio.get_tipo_display() if rutina.ejercicio else "N/A"
+        estado_texto = "Completado" if rutina.completado else "Pendiente"
+
+        table_data = [
+            ['Campo', 'Detalle'],
+            ['Ejercicio', str(ejercicio_nombre)],
+            ['Tipo', str(ejercicio_tipo)],
+            ['Descripción', str(ejercicio_desc)],
+            ['Meta / Cantidad', str(rutina.meta_cantidad)],
+            ['Estado', str(estado_texto)]
+        ]
+
+        t = Table(table_data, colWidths=[130, 410])
+        t.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f3f4f6')),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#d1d5db')),
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -1), 9),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 1), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
+        ]))
+        
+        elements.append(t)
+
+        # 4. Compilar el documento PDF
+        doc.build(elements)
+
+        # 5. Retornar la respuesta HTTP binaria
+        buffer.seek(0)
+        filename = f"rutina_{rutina.id}.pdf"
+        
+        return FileResponse(
+            buffer,
+            as_attachment=True,
+            filename=filename,
+            content_type='application/pdf'
+        )
