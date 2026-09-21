@@ -729,102 +729,102 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
             existente.save()
         else:
             serializer.save()
+    @action(detail=False, methods=['get'], url_path='descargar-pdf')
+    def descargar_pdf(self, request):
+        """
+        Genera el PDF con toda la rutina del usuario aplicando la paleta de colores de la app.
+        Endpoint: /api/rutinas-ejercicio/descargar-pdf/?usuario_id=54&fecha=2026-09-21
+        """
+        usuario_id = request.query_params.get('usuario_id')
+        fecha = request.query_params.get('fecha', timezone.localdate())
 
-    @action(detail=True, methods=['get'], url_path='descargar-pdf')
-    def descargar_pdf(self, request, pk=None):
-        """
-        Acción personalizada para generar y descargar un registro de rutina específico en PDF.
-        Endpoint generado: GET /api/rutinas-ejercicio/{id}/descargar-pdf/
-        """
-        rutina = self.get_object()
-        
-        # 1. Crear un buffer de bytes en memoria
+        if not usuario_id:
+            return Response({'error': 'Se requiere el parámetro usuario_id'}, status=400)
+
+        queryset = RutinaEjercicio.objects.filter(usuario_id=usuario_id, fecha_registro=fecha)
+
+        if not queryset.exists():
+            return Response({'error': 'No hay ejercicios registrados para esta fecha.'}, status=404)
+
+        usuario = queryset.first().usuario
+
         buffer = BytesIO()
-
-        # 2. Configurar el documento PDF
         doc = SimpleDocTemplate(
             buffer,
             pagesize=letter,
-            rightMargin=36,
-            leftMargin=36,
-            topMargin=36,
-            bottomMargin=36
+            rightMargin=36, leftMargin=36,
+            topMargin=36, bottomMargin=36
         )
 
         elements = []
         styles = getSampleStyleSheet()
 
-        # Estilos personalizados
+        # Aplicando tu paleta de colores (--bg-y-fuentes y --ternario)
         title_style = ParagraphStyle(
-            'TitleStyle',
-            parent=styles['Heading1'],
-            fontSize=20,
-            textColor=colors.HexColor('#1f2937'),
-            spaceAfter=4,
+            'Title', 
+            parent=styles['Heading1'], 
+            fontSize=18, 
+            textColor=colors.HexColor('#333b3e'), # --bg-y-fuentes
             alignment=1
         )
-        
         subtitle_style = ParagraphStyle(
-            'SubtitleStyle',
-            parent=styles['Normal'],
-            fontSize=11,
-            textColor=colors.HexColor('#4b5563'),
-            spaceAfter=15,
-            alignment=1
+            'Sub', 
+            parent=styles['Normal'], 
+            fontSize=11, 
+            textColor=colors.HexColor('#333b3e'), 
+            alignment=1, 
+            spaceAfter=15
         )
-
         section_heading = ParagraphStyle(
-            'SectionHeading',
-            parent=styles['Heading2'],
-            fontSize=13,
-            textColor=colors.HexColor('#2563eb'),
-            spaceBefore=10,
+            'Sec', 
+            parent=styles['Heading2'], 
+            fontSize=12, 
+            textColor=colors.HexColor('#6ec1e4'), # --ternario
+            spaceBefore=10, 
             spaceAfter=6
         )
-
         body_style = ParagraphStyle(
-            'BodyStyle',
-            parent=styles['Normal'],
-            fontSize=10,
-            textColor=colors.HexColor('#374151')
+            'Body', 
+            parent=styles['Normal'], 
+            fontSize=10, 
+            textColor=colors.HexColor('#333b3e') # --bg-y-fuentes
         )
 
-        # 3. Construir el contenido del documento
-        elements.append(Paragraph("Bienestar Plus - Detalle de Registro de Rutina", title_style))
-        elements.append(Paragraph(f"Fecha de registro: {rutina.fecha_registro}", subtitle_style))
-        elements.append(Spacer(1, 5))
-
+        elements.append(Paragraph("Bienestar Plus - Mi Rutina de Ejercicios", title_style))
+        elements.append(Paragraph(f"Fecha: {fecha}", subtitle_style))
+        
         elements.append(Paragraph("Información del Usuario", section_heading))
-        elements.append(Paragraph(f"<b>Nombre:</b> {rutina.usuario.nombre}", body_style))
-        elements.append(Paragraph(f"<b>Correo:</b> {rutina.usuario.email}", body_style))
+        elements.append(Paragraph(f"<b>Nombre:</b> {usuario.nombre}", body_style))
+        elements.append(Paragraph(f"<b>Correo:</b> {usuario.email}", body_style))
         elements.append(Spacer(1, 10))
 
-        elements.append(Paragraph("Detalle del Ejercicio Asignado", section_heading))
+        elements.append(Paragraph("Ejercicios de la Rutina", section_heading))
 
-        ejercicio_nombre = rutina.ejercicio.nombre if rutina.ejercicio else "N/A"
-        ejercicio_desc = rutina.ejercicio.descripcion if (rutina.ejercicio and rutina.ejercicio.descripcion) else "Sin descripción detallada"
-        ejercicio_tipo = rutina.ejercicio.get_tipo_display() if rutina.ejercicio else "N/A"
-        estado_texto = "Completado" if rutina.completado else "Pendiente"
+        table_data = [['Ejercicio', 'Cantidad / Meta', 'Estado']]
 
-        table_data = [
-            ['Campo', 'Detalle'],
-            ['Ejercicio', str(ejercicio_nombre)],
-            ['Tipo', str(ejercicio_tipo)],
-            ['Descripción', str(ejercicio_desc)],
-            ['Meta / Cantidad', str(rutina.meta_cantidad)],
-            ['Estado', str(estado_texto)]
-        ]
+        for item in queryset:
+            nombre_ejercicio = item.ejercicio.nombre if item.ejercicio else "N/A"
+            estado_texto = "Completado" if item.completado else "Pendiente"
+            
+            table_data.append([
+                str(nombre_ejercicio),
+                str(item.meta_cantidad),
+                str(estado_texto)
+            ])
 
-        t = Table(table_data, colWidths=[130, 410])
+        t = Table(table_data, colWidths=[220, 150, 140])
         t.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#2563eb')),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            # Cabecera de la tabla con el color --ternario (#6ec1e4) y texto oscuro (--bg-y-fuentes)
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#6ec1e4')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#333b3e')),
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
             ('FONTSIZE', (0, 0), (-1, 0), 10),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f3f4f6')),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#d1d5db')),
+            # Fondo de las filas con --bg-fondo (#f5f7f8)
+            ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f5f7f8')),
+            # Líneas de la grilla con un toque de --primario (#7fffd4) o gris sutil
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#7fffd4')),
             ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
             ('FONTSIZE', (0, 1), (-1, -1), 9),
             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -834,16 +834,9 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         
         elements.append(t)
 
-        # 4. Compilar el documento PDF
         doc.build(elements)
 
-        # 5. Retornar la respuesta HTTP binaria
         buffer.seek(0)
-        filename = f"rutina_{rutina.id}.pdf"
+        filename = f"rutina_{usuario_id}_{fecha}.pdf"
         
-        return FileResponse(
-            buffer,
-            as_attachment=True,
-            filename=filename,
-            content_type='application/pdf'
-        )
+        return FileResponse(buffer, as_attachment=True, filename=filename, content_type='application/pdf')

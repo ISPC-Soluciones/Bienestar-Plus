@@ -18,19 +18,19 @@ export class RutinaEjercicioService {
   constructor(private http: HttpClient) {}
 
   obtenerRutinaDelUsuario(
-    usuarioId: number
+    usuarioId: number,
   ): Observable<RutinaEjercicio[] | { results: RutinaEjercicio[] }> {
     const params = new HttpParams().set('usuario_id', usuarioId.toString());
     return this.http.get<RutinaEjercicio[] | { results: RutinaEjercicio[] }>(
       this.apiUrl,
-      { params }
+      { params },
     );
   }
 
   agregarARutina(
     usuarioId: number,
     ejercicioId: number,
-    metaCantidad: number
+    metaCantidad: number,
   ): Observable<any> {
     const data = {
       usuario: usuarioId,
@@ -46,7 +46,7 @@ export class RutinaEjercicioService {
    */
   actualizarRutina(
     id: number,
-    data: RutinaUpdate
+    data: RutinaUpdate,
   ): Observable<RutinaEjercicio> {
     return this.http.patch<RutinaEjercicio>(`${this.apiUrl}${id}/`, data);
   }
@@ -56,5 +56,15 @@ export class RutinaEjercicioService {
    */
   eliminarRutina(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
+  }
+
+  /**
+   * Descarga el registro de rutina específico en formato PDF
+   * @param id ID del registro de rutina (RutinaEjercicio.id)
+   */
+  descargarPdfRutina(id: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}${id}/descargar-pdf/`, {
+      responseType: 'blob',
+    });
   }
 }

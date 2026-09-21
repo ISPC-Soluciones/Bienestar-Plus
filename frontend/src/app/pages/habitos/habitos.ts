@@ -30,7 +30,7 @@ export class Habitos implements OnInit {
   constructor(
     private ejercicioService: EjercicioService,
     private rutinaService: RutinaEjercicioService,
-    private estadisticasService: EstadisticasService
+    private estadisticasService: EstadisticasService,
   ) {}
 
   ngOnInit(): void {
@@ -48,8 +48,6 @@ export class Habitos implements OnInit {
   setActiveTab(tabName: string): void {
     this.activeTab = tabName;
   }
-
-  
 
   cargarEjerciciosDisponibles(): void {
     this.ejercicioService.obtenerEjercicios().subscribe({
@@ -159,7 +157,7 @@ export class Habitos implements OnInit {
     this.rutinaService.eliminarRutina(id).subscribe({
       next: () => {
         this.rutinaDelUsuario = this.rutinaDelUsuario.filter(
-          (r) => r.id !== id
+          (r) => r.id !== id,
         );
       },
       error: (err) => console.error('Error al eliminar el ejercicio:', err),
@@ -180,5 +178,25 @@ export class Habitos implements OnInit {
         },
         error: (err) => console.error('Error al marcar como completado:', err),
       });
+  }
+
+  // MÉTODO PARA DESCARGAR EL PDF DE LA RUTINA GENERAL DEL USUARIO
+  descargarPdf(idRutina?: number): void {
+    if (!idRutina) return;
+
+    this.rutinaService.descargarPdfRutina(idRutina).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `rutina_${idRutina}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error al descargar el PDF:', err);
+        alert('No se pudo generar el PDF de la rutina.');
+      },
+    });
   }
 }
