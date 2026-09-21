@@ -115,12 +115,12 @@ DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///local_db.sqlite3',
         conn_max_age=600,
-        ssl_require=bool(
-            db_url_env and db_url_env.startswith(('postgres://', 'postgresql://'))
-        ),
     )
 }
 
+# Forzar sslmode=disable localmente si DEBUG=True para evitar el choque con Supabase/Docker
+if DEBUG and 'default' in DATABASES and 'postgresql' in DATABASES['default'].get('ENGINE', ''):
+    DATABASES['default'].setdefault('OPTIONS', {})['sslmode'] = 'disable'
 # -----------------------------------------------
 
 # Static files

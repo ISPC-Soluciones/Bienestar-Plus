@@ -1,5 +1,12 @@
+from io import BytesIO
+
 from datetime import timedelta
 from functools import partial
+from rest_framework.decorators import action
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from asgiref.sync import async_to_sync
 from authlib.integrations.django_client import OAuth
@@ -10,7 +17,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Sum, F
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, FileResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from rest_framework import viewsets, status
@@ -690,9 +697,10 @@ class EjercicioViewSet(viewsets.ModelViewSet):
                     'notificacion_id': notificacion.id,
                 }
             )
-class RutinaEjercicioViewSet(viewsets.ModelViewSet):
+class RutinaEjercicioViewSet (viewsets.ModelViewSet):
     """
-    ViewSet para el CRUD de RutinaEjercicio (registro de actividad de los usuarios).
+    ViewSet para el CRUD de RutinaEjercicio (registro
+    de actividad de los usuarios).
     Ruta generada: /api/rutinas-ejercicio/
     """
     queryset = RutinaEjercicio.objects.all()
@@ -707,19 +715,21 @@ class RutinaEjercicioViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """
-        Si ya existe un registro con el mismo usuario, ejercicio y fecha_registro,
-        se actualiza la cantidad en lugar de crear un duplicado.
+        Si ya existe un registro con el mismo usuario,
+        ejercicio y fecha_registro,
+        se actualiza la cantidad en lugar de crear un
+        duplicado.
         """
         usuario = serializer.validated_data.get('usuario')
         ejercicio = serializer.validated_data.get('ejercicio')
         fecha_registro = serializer.validated_data.get('fecha_registro', timezone.localdate())
-
+        
         existente = RutinaEjercicio.objects.filter(
             usuario=usuario,
             ejercicio=ejercicio,
             fecha_registro=fecha_registro
         ).first()
-
+        
         if existente:
             existente.meta_cantidad += serializer.validated_data.get('meta_cantidad', 1)
             existente.save()
