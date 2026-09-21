@@ -59,11 +59,19 @@ export class RutinaEjercicioService {
   }
 
   /**
-   * Descarga el registro de rutina específico en formato PDF
-   * @param id ID del registro de rutina (RutinaEjercicio.id)
+   * Descarga la rutina completa del usuario en formato PDF
+   * @param usuarioId ID del usuario
+   * @param fecha Fecha opcional en formato YYYY-MM-DD
    */
-  descargarPdfRutina(id: number): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}${id}/descargar-pdf/`, {
+  descargarPdfRutina(usuarioId: number, fecha?: string): Observable<Blob> {
+    let params = new HttpParams().set('usuario_id', usuarioId.toString());
+
+    if (fecha) {
+      params = params.set('fecha', fecha);
+    }
+
+    return this.http.get(`${this.apiUrl}descargar-pdf/`, {
+      params: params,
       responseType: 'blob',
     });
   }

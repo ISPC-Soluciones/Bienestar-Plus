@@ -180,16 +180,19 @@ export class Habitos implements OnInit {
       });
   }
 
-  // MÉTODO PARA DESCARGAR EL PDF DE LA RUTINA GENERAL DEL USUARIO
-  descargarPdf(idRutina?: number): void {
-    if (!idRutina) return;
+  // MÉTODO PARA DESCARGAR EL PDF DE LA RUTINA COMPLETA DEL USUARIO
+  descargarPdf(): void {
+    if (!this.usuarioIdAutenticado) {
+      console.error('No hay un usuario autenticado para descargar la rutina.');
+      return;
+    }
 
-    this.rutinaService.descargarPdfRutina(idRutina).subscribe({
+    this.rutinaService.descargarPdfRutina(this.usuarioIdAutenticado).subscribe({
       next: (blob: Blob) => {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `rutina_${idRutina}.pdf`;
+        link.download = `rutina_completa_${this.usuarioIdAutenticado}.pdf`;
         link.click();
         window.URL.revokeObjectURL(url);
       },

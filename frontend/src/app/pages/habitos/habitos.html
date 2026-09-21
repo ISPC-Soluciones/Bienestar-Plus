@@ -149,15 +149,14 @@
                     </ul>
                     @if (rutinaDelUsuario.length > 0) {
                       <div
-                        class="acciones__rutina__pdf"
+                        class="acciones-rutina-pdf"
                         style="margin-top: 1.5rem; text-align: right"
                       >
                         <button
                           class="btn-custom btn-custom--primario"
-                          (click)="descargarPdf(rutina.id)"
-                          title="Descargar reporte en PDF"
+                          (click)="descargarPdf()"
                         >
-                          Descargar Rutina en PDF
+                          Descargar Rutina (PDF)
                           <i class="fa-solid fa-file-pdf"></i>
                         </button>
                       </div>
