@@ -1,3 +1,5 @@
+from collections.abc import Mapping
+
 from django.db import transaction
 from rest_framework import serializers
 
@@ -6,6 +8,8 @@ from .models import ComidaPlan, PlanNutricional
 
 class StrictFieldsMixin:
     def to_internal_value(self, data):
+        if not isinstance(data, Mapping):
+            return super().to_internal_value(data)
         unknown = set(data) - set(self.fields)
         forbidden = {key for key in data if key in self.fields and self.fields[key].read_only}
         if unknown or forbidden:

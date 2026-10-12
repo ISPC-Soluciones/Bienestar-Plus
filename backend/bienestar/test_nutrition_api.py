@@ -104,6 +104,7 @@ class NutritionApiTests(TestCase):
             {'comidas': [{'tipo': 'cena', 'descripcion': 'x' * 501}]},
             {'comidas': [{'tipo': 'cena', 'descripcion': 'Algo', 'horario': '25:00'}]},
             {'id': 123}, {'usuario_id': self.otro.pk}, {'comidas': None},
+            {'comidas': ['invalid']}, {'comidas': [123]},
         ]
         for data in cases:
             with self.subTest(data=data):
@@ -111,6 +112,24 @@ class NutritionApiTests(TestCase):
                 self.assertEqual(response.status_code, 400)
                 self.assertEqual(PlanNutricional.objects.get(usuario=self.usuario).nombre, 'Mi plan')
                 self.assertEqual(ComidaPlan.objects.get().tipo, 'desayuno')
+
+    def test_two_users_can_manage_only_their_own_plans(self):
+        self.create()
+        token = self.login(self.otro)
+        payload = dict(self.payload, nombre='Plan dos')
+        self.assertEqual(self.client.post(self.url, payload, format='json', HTTP_X_CSRFTOKEN=token).status_code, 201)
+        self.assertEqual(self.client.get(self.url).data['plan']['nombre'], 'Plan dos')
+        response = self.client.patch(self.url + f'?usuario_id={self.usuario.pk}', {'nombre': 'Dos editado'}, format='json', HTTP_X_CSRFTOKEN=token)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(PlanNutricional.objects.get(usuario=self.otro).nombre, 'Dos editado')
+        self.assertEqual(PlanNutricional.objects.get(usuario=self.usuario).nombre, 'Mi plan')
+        self.assertEqual(self.client.patch(self.url, {'usuario': self.usuario.pk}, format='json', HTTP_X_CSRFTOKEN=token).status_code, 400)
+
+    def test_non_object_payload_returns_validation_error(self):
+        token = self.login()
+        for payload in [[{'nombre': 'Plan'}], 'invalid', 42]:
+            with self.subTest(payload=payload):
+                self.assertEqual(self.client.post(self.url, payload, format='json', HTTP_X_CSRFTOKEN=token).status_code, 400)
 
     def test_creation_requires_complete_plan(self):
         token = self.login()
