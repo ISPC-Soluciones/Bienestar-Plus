@@ -163,15 +163,9 @@
               </div>
 
               <div class="tab-content" [class.active]="activeTab === 'alimentacion'" id="alimentacion">
-                <article class="card__presentacion__habito construccion">
-                  <h3 class="card__presentacion__titulo-small">
-                    <i class="fa-solid fa-screwdriver-wrench"></i> Próximamente disponible...
-                  </h3>
-                  <p class="card__presentacion__descripcion" style="margin-top: 2rem;">
-                    Estamos trabajando en la sección de Alimentación para ofrecerte las mejores herramientas de
-                    seguimiento. ¡Vuelve pronto!
-                  </p>
-                </article>
+                @if (activeTab === 'alimentacion') {
+                  <app-plan-nutricional />
+                }
               </div>
 
               <div class="tab-content" [class.active]="activeTab === 'sueno'" id="sueno">

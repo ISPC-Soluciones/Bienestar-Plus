@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { PlanNutricionalComponent } from '../plan-nutricional/plan-nutricional';
 import { EjercicioService } from '../../services/ejercicio';
 import { RutinaEjercicioService } from '../../services/rutina-ejercicio';
 import { Ejercicio, RutinaEjercicio } from '../../models/ejercicio';
@@ -10,7 +11,7 @@ import { EstadisticasService } from '../../services/estadisticas.service';
 @Component({
   selector: 'app-habitos',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, PlanNutricionalComponent],
   templateUrl: './habitos.html',
   styleUrls: ['./habitos.css'],
   providers: [EjercicioService, RutinaEjercicioService],
@@ -30,10 +31,14 @@ export class Habitos implements OnInit {
   constructor(
     private ejercicioService: EjercicioService,
     private rutinaService: RutinaEjercicioService,
-    private estadisticasService: EstadisticasService
+    private estadisticasService: EstadisticasService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    if (this.route.snapshot.queryParamMap.get('tab') === 'alimentacion') {
+      this.activeTab = 'alimentacion';
+    }
     const usuarioGuardado = localStorage.getItem('usuario');
     if (usuarioGuardado) {
       const usuario = JSON.parse(usuarioGuardado);
