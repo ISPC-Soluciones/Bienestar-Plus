@@ -343,26 +343,83 @@ class ProgresoDiarioView(APIView):
 
     def patch(self, request, pk=None):
         progreso_id = pk or request.data.get("progreso_id")
-        completado = request.data.get("completado")
 
-        if progreso_id is None or completado is None:
+        if progreso_id is None:
             return Response(
-                {"error": "Faltan datos: se necesita el id del progreso y 'completado'"},
+            {"error": "Se requiere el ID del progreso."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+        try:
+            progreso = ProgresoDiario.objects.select_related("habito").get(
+            pk=progreso_id
+        )
+        except ProgresoDiario.DoesNotExist:
+            return Response(
+            {"error": "Progreso no encontrado."},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    # Los registros históricos no deben modificarse.
+        if progreso.fecha != timezone.localdate():
+            return Response(
+            {"error": "Solo se puede modificar el progreso del día actual."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # -----------------------------------------------------
+    # Hábito cuantificable: horas de sueño
+    # -----------------------------------------------------
+        if progreso.habito.nombre == "Horas de sueño":
+            valor = request.data.get("valor")
+
+            if valor is None:
+                return Response(
+                {"error": "Se deben indicar las horas de sueño."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        try:
-            progreso = ProgresoDiario.objects.get(pk=progreso_id)
-        except ProgresoDiario.DoesNotExist:
-            return Response(
-                {"error": "Progreso no encontrado"},
-                status=status.HTTP_404_NOT_FOUND
+            try:
+                valor = float(valor)
+            except (TypeError, ValueError):
+                return Response(
+                {"error": "Las horas de sueño deben ser un valor numérico."},
+                status=status.HTTP_400_BAD_REQUEST
             )
 
-        progreso.completado = completado
+            if valor < 0 or valor > 24:
+                return Response(
+                {"error": "Las horas de sueño deben estar entre 0 y 24."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+            progreso.valor = valor
+
+        # Objetivo diario de sueño.
+            progreso.completado = 7 <= valor <= 9
+
+    # -----------------------------------------------------
+    # Hábitos booleanos tradicionales
+    # -----------------------------------------------------
+        else:
+            completado = request.data.get("completado")
+
+            if completado is None:
+                return Response(
+                {"error": "Se requiere indicar el estado del hábito."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+            progreso.completado = completado
+
         progreso.save()
+
         serializer = ProgresoDiarioSerializer(progreso)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(
+        serializer.data,
+        status=status.HTTP_200_OK
+    )
 
 
 class UsuarioViewSet(viewsets.ModelViewSet):
