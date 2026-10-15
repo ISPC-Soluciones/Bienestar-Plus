@@ -1,5 +1,12 @@
+from io import BytesIO
+
 from datetime import timedelta
 from functools import partial
+from rest_framework.decorators import action
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from asgiref.sync import async_to_sync
 from authlib.integrations.django_client import OAuth
@@ -10,7 +17,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError, transaction
 from django.db.models import Count, Sum, F
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, FileResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from rest_framework import viewsets, status
@@ -690,9 +697,10 @@ class EjercicioViewSet(viewsets.ModelViewSet):
                     'notificacion_id': notificacion.id,
                 }
             )
-class RutinaEjercicioViewSet(viewsets.ModelViewSet):
+class RutinaEjercicioViewSet (viewsets.ModelViewSet):
     """
-    ViewSet para el CRUD de RutinaEjercicio (registro de actividad de los usuarios).
+    ViewSet para el CRUD de RutinaEjercicio (registro
+    de actividad de los usuarios).
     Ruta generada: /api/rutinas-ejercicio/
     """
     queryset = RutinaEjercicio.objects.all()
@@ -706,10 +714,6 @@ class RutinaEjercicioViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        """
-        Si ya existe un registro con el mismo usuario, ejercicio y fecha_registro,
-        se actualiza la cantidad en lugar de crear un duplicado.
-        """
         usuario = serializer.validated_data.get('usuario')
         ejercicio = serializer.validated_data.get('ejercicio')
         fecha_registro = serializer.validated_data.get('fecha_registro', timezone.localdate())
@@ -725,3 +729,114 @@ class RutinaEjercicioViewSet(viewsets.ModelViewSet):
             existente.save()
         else:
             serializer.save()
+    @action(detail=False, methods=['get'], url_path='descargar-pdf')
+    def descargar_pdf(self, request):
+        """
+        Genera el PDF con toda la rutina del usuario aplicando la paleta de colores de la app.
+        Endpoint: /api/rutinas-ejercicio/descargar-pdf/?usuario_id=54&fecha=2026-09-21
+        """
+        usuario_id = request.query_params.get('usuario_id')
+        fecha = request.query_params.get('fecha', timezone.localdate())
+
+        if not usuario_id:
+            return Response({'error': 'Se requiere el parámetro usuario_id'}, status=400)
+
+        queryset = RutinaEjercicio.objects.filter(usuario_id=usuario_id, fecha_registro=fecha)
+
+        if not queryset.exists():
+            return Response({'error': 'No hay ejercicios registrados para esta fecha.'}, status=404)
+
+        usuario = queryset.first().usuario
+
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            rightMargin=36, leftMargin=36,
+            topMargin=36, bottomMargin=36
+        )
+
+        elements = []
+        styles = getSampleStyleSheet()
+
+        # Aplicando tu paleta de colores (--bg-y-fuentes y --ternario)
+        title_style = ParagraphStyle(
+            'Title',
+            parent=styles['Heading1'],
+            fontSize=18,
+            textColor=colors.HexColor('#333b3e'), # --bg-y-fuentes
+            alignment=1
+        )
+        subtitle_style = ParagraphStyle(
+            'Sub',
+            parent=styles['Normal'],
+            fontSize=11,
+            textColor=colors.HexColor('#333b3e'),
+            alignment=1,
+            spaceAfter=15
+        )
+        section_heading = ParagraphStyle(
+            'Sec',
+            parent=styles['Heading2'],
+            fontSize=12,
+            textColor=colors.HexColor('#6ec1e4'), # --ternario
+            spaceBefore=10,
+            spaceAfter=6
+        )
+        body_style = ParagraphStyle(
+            'Body',
+            parent=styles['Normal'],
+            fontSize=10,
+            textColor=colors.HexColor('#333b3e') # --bg-y-fuentes
+        )
+
+        elements.append(Paragraph("Bienestar Plus - Mi Rutina de Ejercicios", title_style))
+        elements.append(Paragraph(f"Fecha: {fecha}", subtitle_style))
+
+        elements.append(Paragraph("Información del Usuario", section_heading))
+        elements.append(Paragraph(f"<b>Nombre:</b> {usuario.nombre}", body_style))
+        elements.append(Paragraph(f"<b>Correo:</b> {usuario.email}", body_style))
+        elements.append(Spacer(1, 10))
+
+        elements.append(Paragraph("Ejercicios de la Rutina", section_heading))
+
+        table_data = [['Ejercicio', 'Cantidad / Meta', 'Estado']]
+
+        for item in queryset:
+            nombre_ejercicio = item.ejercicio.nombre if item.ejercicio else "N/A"
+            estado_texto = "Completado" if item.completado else "Pendiente"
+
+            table_data.append([
+                str(nombre_ejercicio),
+                str(item.meta_cantidad),
+                str(estado_texto)
+            ])
+
+        t = Table(table_data, colWidths=[220, 150, 140])
+        t.setStyle(TableStyle([
+            # Cabecera de la tabla con el color --ternario (#6ec1e4) y texto oscuro (--bg-y-fuentes)
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#6ec1e4')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#333b3e')),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
+            # Fondo de las filas con --bg-fondo (#f5f7f8)
+            ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f5f7f8')),
+            # Líneas de la grilla con un toque de --primario (#7fffd4) o gris sutil
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#7fffd4')),
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 1), (-1, -1), 9),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TOPPADDING', (0, 1), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
+        ]))
+
+        elements.append(t)
+
+        doc.build(elements)
+
+        buffer.seek(0)
+        filename = f"rutina_{usuario_id}_{fecha}.pdf"
+
+        return FileResponse(buffer, as_attachment=True, filename=filename, content_type='application/pdf')
