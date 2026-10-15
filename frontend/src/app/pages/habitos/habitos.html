@@ -65,101 +65,101 @@
                     </p>
                     <ul>
                       @for (rutina of rutinaDelUsuario; track rutina.id) {
-                        <li class="rutina__item">
-                          <div
-                            class="habito__display"
-                            [class.completado]="rutina.completado"
-                          >
-                            @if (rutina.id === rutinaIdEnEdicion) {
-                              <div class="edicion__container">
-                                <p class="habito__texto">
-                                  {{ rutina.ejercicio_nombre }} - Cant.
-                                </p>
-                                <input
-                                  type="number"
-                                  [(ngModel)]="cantidadEnEdicion"
-                                  placeholder="20"
-                                  class="input-edicion-cantidad"
-                                  min="1"
-                                />
-                                <p class="habito__texto">repeticiones/km</p>
-                              </div>
-                              <div class="crud__acciones">
-                                <button
-                                  class="btn__icono aceptar"
-                                  (click)="guardarEdicion(rutina)"
-                                  title="Guardar Cambios"
-                                >
-                                  <i class="fa-solid fa-save"></i>
-                                </button>
-                                <button
-                                  class="btn__icono cancelar"
-                                  (click)="cancelarEdicion()"
-                                  title="Cancelar"
-                                >
-                                  <i class="fa-solid fa-times"></i>
-                                </button>
-                              </div>
+                      <li class="rutina__item">
+                        <div
+                          class="habito__display"
+                          [class.completado]="rutina.completado"
+                        >
+                          @if (rutina.id === rutinaIdEnEdicion) {
+                          <div class="edicion__container">
+                            <p class="habito__texto">
+                              {{ rutina.ejercicio_nombre }} - Cant.
+                            </p>
+                            <input
+                              type="number"
+                              [(ngModel)]="cantidadEnEdicion"
+                              placeholder="20"
+                              class="input-edicion-cantidad"
+                              min="1"
+                            />
+                            <p class="habito__texto">repeticiones/km</p>
+                          </div>
+                          <div class="crud__acciones">
+                            <button
+                              class="btn__icono aceptar"
+                              (click)="guardarEdicion(rutina)"
+                              title="Guardar Cambios"
+                            >
+                              <i class="fa-solid fa-save"></i>
+                            </button>
+                            <button
+                              class="btn__icono cancelar"
+                              (click)="cancelarEdicion()"
+                              title="Cancelar"
+                            >
+                              <i class="fa-solid fa-times"></i>
+                            </button>
+                          </div>
+                          } @else {
+                          <p class="habito__texto">
+                            {{ rutina.ejercicio_nombre }} - Cant.
+                            {{ rutina.meta_cantidad }} repeticiones/km
+                          </p>
+
+                          <div class="crud__acciones">
+                            <button
+                              class="btn__icono eliminar"
+                              (click)="eliminarRutina(rutina.id)"
+                              title="Eliminar Ejercicio"
+                            >
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+
+                            @if (!rutina.completado) {
+                            <button
+                              class="btn__icono editar"
+                              (click)="entrarEnModoEdicion(rutina)"
+                              title="Editar Cantidad"
+                            >
+                              <i class="fa-solid fa-pencil"></i>
+                            </button>
+
+                            <button
+                              class="btn__icono completado-inactivo"
+                              (click)="marcarCompletado(rutina)"
+                              title="Marcar como completado"
+                            >
+                              <i class="fa-solid fa-check-circle"></i>
+                            </button>
                             } @else {
-                              <p class="habito__texto">
-                                {{ rutina.ejercicio_nombre }} - Cant.
-                                {{ rutina.meta_cantidad }} repeticiones/km
-                              </p>
-
-                              <div class="crud__acciones">
-                                <button
-                                  class="btn__icono eliminar"
-                                  (click)="eliminarRutina(rutina.id)"
-                                  title="Eliminar Ejercicio"
-                                >
-                                  <i class="fa-solid fa-trash"></i>
-                                </button>
-
-                                @if (!rutina.completado) {
-                                  <button
-                                    class="btn__icono editar"
-                                    (click)="entrarEnModoEdicion(rutina)"
-                                    title="Editar Cantidad"
-                                  >
-                                    <i class="fa-solid fa-pencil"></i>
-                                  </button>
-
-                                  <button
-                                    class="btn__icono completado-inactivo"
-                                    (click)="marcarCompletado(rutina)"
-                                    title="Marcar como completado"
-                                  >
-                                    <i class="fa-solid fa-check-circle"></i>
-                                  </button>
-                                } @else {
-                                  <i
-                                    class="fa-solid fa-check-circle completado-activo"
-                                    title="Completado"
-                                  ></i>
-                                }
-                              </div>
+                            <i
+                              class="fa-solid fa-check-circle completado-activo"
+                              title="Completado"
+                            ></i>
                             }
                           </div>
-                        </li>
+                          }
+                        </div>
+                      </li>
                       } @empty {
-                        <li class="lista-vacia">
-                          No has agregado ningún ejercicio a tu rutina de hoy.
-                        </li>
+                      <li class="lista-vacia">
+                        No has agregado ningún ejercicio a tu rutina de hoy.
+                      </li>
                       }
                     </ul>
                     @if (rutinaDelUsuario.length > 0) {
-                      <div
-                        class="acciones-rutina-pdf"
-                        style="margin-top: 1.5rem; text-align: right"
+                    <div
+                      class="acciones-rutina-pdf"
+                      style="margin-top: 1.5rem; text-align: right"
+                    >
+                      <button
+                        class="btn-custom btn-custom--primario"
+                        (click)="descargarPdf()"
                       >
-                        <button
-                          class="btn-custom btn-custom--primario"
-                          (click)="descargarPdf()"
-                        >
-                          Descargar Rutina (PDF)
-                          <i class="fa-solid fa-file-pdf"></i>
-                        </button>
-                      </div>
+                        Descargar Rutina (PDF)
+                        <i class="fa-solid fa-file-pdf"></i>
+                      </button>
+                    </div>
                     }
                   </div>
                 </article>
@@ -171,53 +171,44 @@
                 </h3>
 
                 <div class="contenido__ejercicios grid-3-cols">
-                  @for (
-                    ejercicio of ejerciciosDisponibles;
-                    track ejercicio.id
-                  ) {
-                    @if (ejercicio.id) {
-                      @if (estaEnRutina(ejercicio)) {
-                        <article class="card__habito">
-                          <h4 class="card__habito__titulo">
-                            {{ ejercicio.nombre }}
-                          </h4>
-                          <p class="card__habito__descripcion">
-                            {{ ejercicio.descripcion }} (Tipo:
-                            {{ ejercicio.tipo | titlecase }})
-                          </p>
-                          <div class="card__habito__acciones">
-                            <button
-                              class="btn-custom btn-custom--gris"
-                              disabled
-                            >
-                              Agregado <i class="fa-solid fa-check"></i>
-                            </button>
-                          </div>
-                        </article>
-                      } @else {
-                        <article class="card__habito">
-                          <h4 class="card__habito__titulo">
-                            {{ ejercicio.nombre }}
-                          </h4>
-                          <p class="card__habito__descripcion">
-                            {{ ejercicio.descripcion }} (Tipo:
-                            {{ ejercicio.tipo | titlecase }})
-                          </p>
-                          <div class="card__habito__acciones">
-                            <button
-                              class="btn-custom btn-custom--primario"
-                              (click)="agregarEjercicioARutina(ejercicio)"
-                            >
-                              Agregar <i class="fa-solid fa-plus"></i>
-                            </button>
-                          </div>
-                        </article>
-                      }
-                    }
-                  } @empty {
-                    <p class="lista-vacia">
-                      No hay ejercicios disponibles para mostrar.
+                  @for ( ejercicio of ejerciciosDisponibles; track ejercicio.id
+                  ) { @if (ejercicio.id) { @if (estaEnRutina(ejercicio)) {
+                  <article class="card__habito">
+                    <h4 class="card__habito__titulo">
+                      {{ ejercicio.nombre }}
+                    </h4>
+                    <p class="card__habito__descripcion">
+                      {{ ejercicio.descripcion }} (Tipo:
+                      {{ ejercicio.tipo | titlecase }})
                     </p>
+                    <div class="card__habito__acciones">
+                      <button class="btn-custom btn-custom--gris" disabled>
+                        Agregado <i class="fa-solid fa-check"></i>
+                      </button>
+                    </div>
+                  </article>
+                  } @else {
+                  <article class="card__habito">
+                    <h4 class="card__habito__titulo">
+                      {{ ejercicio.nombre }}
+                    </h4>
+                    <p class="card__habito__descripcion">
+                      {{ ejercicio.descripcion }} (Tipo:
+                      {{ ejercicio.tipo | titlecase }})
+                    </p>
+                    <div class="card__habito__acciones">
+                      <button
+                        class="btn-custom btn-custom--primario"
+                        (click)="agregarEjercicioARutina(ejercicio)"
+                      >
+                        Agregar <i class="fa-solid fa-plus"></i>
+                      </button>
+                    </div>
+                  </article>
+                  } } } @empty {
+                  <p class="lista-vacia">
+                    No hay ejercicios disponibles para mostrar.
+                  </p>
                   }
                 </div>
               </div>
@@ -269,18 +260,63 @@
                 [class.active]="activeTab === 'sueno'"
                 id="sueno"
               >
-                <article class="card__presentacion__habito construccion">
-                  <h3 class="card__presentacion__titulo-small">
-                    <i class="fa-solid fa-screwdriver-wrench"></i> Próximamente
-                    disponible...
+                <article class="card__presentacion__habito">
+                  <h3 class="card__presentacion__titulo">
+                    <i class="fa-solid fa-bed"></i>
+                    Seguimiento de sueño
                   </h3>
-                  <p
-                    class="card__presentacion__descripcion"
-                    style="margin-top: 2rem"
-                  >
-                    Estamos trabajando en la sección de Sueño para ofrecerte las
-                    mejores herramientas de seguimiento. ¡Vuelve pronto!
+
+                  <p class="card__presentacion__descripcion">
+                    Registrá cuántas horas dormiste hoy.
                   </p>
+
+                  @if (cargandoSueno) {
+                  <p class="card__presentacion__descripcion">
+                    Cargando seguimiento...
+                  </p>
+                  } @else if (progresoSueno) {
+                  <div class="habito__display">
+                    <label class="habito__texto" for="horas-sueno">
+                      Horas dormidas:
+                    </label>
+
+                    <input
+                      id="horas-sueno"
+                      type="number"
+                      min="0"
+                      max="24"
+                      step="0.5"
+                      [(ngModel)]="horasSueno"
+                      class="input-edicion-cantidad"
+                    />
+
+                    <button
+                      class="btn-custom btn-custom--primario"
+                      (click)="guardarHorasSueno()"
+                      [disabled]="horasSueno === null || cargandoSueno"
+                    >
+                      Guardar
+                    </button>
+                  </div>
+                  @if (progresoSueno.valor !== null) {
+                  <p class="card__presentacion__descripcion">
+                    Registraste {{ progresoSueno.valor }} horas de sueño.
+                  </p>
+
+                  @if (progresoSueno.completado) {
+                  <p class="card__presentacion__descripcion">
+                    <i class="fa-solid fa-check-circle completado-activo"></i>
+                    Objetivo de sueño completado.
+                  </p>
+                  } @else {
+                  <p class="card__presentacion__descripcion">
+                    Tu objetivo de sueño es dormir entre 7 y 9 horas.
+                  </p>
+                  } } } @if (errorSueno) {
+                  <p class="card__presentacion__descripcion">
+                    {{ errorSueno }}
+                  </p>
+                  }
                 </article>
               </div>
             </div>

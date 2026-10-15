@@ -6,7 +6,7 @@ import { EjercicioService } from '../../services/ejercicio';
 import { RutinaEjercicioService } from '../../services/rutina-ejercicio';
 import { Ejercicio, RutinaEjercicio } from '../../models/ejercicio';
 import { EstadisticasService } from '../../services/estadisticas.service';
-
+import { ProgresoService,ProgresoDiario,} from '../../services/progreso';
 @Component({
   selector: 'app-habitos',
   standalone: true,
@@ -19,6 +19,10 @@ export class Habitos implements OnInit {
   activeTab: string = 'ejercicio';
   ejerciciosDisponibles: Ejercicio[] = [];
   rutinaDelUsuario: RutinaEjercicio[] = [];
+  progresoSueno: ProgresoDiario | null = null;
+  horasSueno: number | null = null;
+  cargandoSueno = false;
+  errorSueno = '';  
 
   rutinaIdEnEdicion: number | null = null;
 
@@ -31,6 +35,7 @@ export class Habitos implements OnInit {
     private ejercicioService: EjercicioService,
     private rutinaService: RutinaEjercicioService,
     private estadisticasService: EstadisticasService,
+    private progresoService: ProgresoService,
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +48,7 @@ export class Habitos implements OnInit {
 
     this.cargarEjerciciosDisponibles();
     this.cargarRutinaDelUsuario();
+    this.cargarProgresoSueno();
   }
 
   setActiveTab(tabName: string): void {
@@ -109,6 +115,80 @@ export class Habitos implements OnInit {
         },
         error: (err) => {
           console.error('Error agregando ejercicio a la rutina:', err);
+        },
+      });
+  }
+
+  cargarProgresoSueno(): void {
+    if (!this.usuarioIdAutenticado) {
+      this.errorSueno = 'No se pudo identificar al usuario.';
+      return;
+    }
+  
+    this.cargandoSueno = true;
+    this.errorSueno = '';
+  
+    this.progresoService
+      .getProgresoDiario(this.usuarioIdAutenticado)
+      .subscribe({
+        next: (progresos) => {
+          this.progresoSueno =
+            progresos.find(
+              (progreso) =>
+                progreso.habito.nombre.toLowerCase() === 'horas de sueño',
+            ) ?? null;
+            if (this.progresoSueno && this.progresoSueno.valor !== null) {
+              this.horasSueno = Number(this.progresoSueno.valor);
+            } else {
+              this.horasSueno = null;
+            } 
+  
+          if (!this.progresoSueno) {
+            this.errorSueno =
+              'No se encontró el hábito de sueño para el día de hoy.';
+          }
+  
+          this.cargandoSueno = false;
+        },
+        error: (err) => {
+          console.error('Error cargando progreso de sueño:', err);
+          this.errorSueno = 'No se pudo cargar el seguimiento de sueño.';
+          this.cargandoSueno = false;
+        },
+      });
+  }
+  
+  guardarHorasSueno(): void {
+    if (!this.progresoSueno || this.horasSueno === null) {
+      return;
+    }
+  
+    this.cargandoSueno = true;
+    this.errorSueno = '';
+  
+    this.progresoService
+      .actualizarValor(this.progresoSueno.id, this.horasSueno)
+      .subscribe({
+        next: (progresoActualizado) => {
+          this.progresoSueno = progresoActualizado;
+  
+          this.horasSueno =
+            progresoActualizado.valor !== null
+              ? Number(progresoActualizado.valor)
+              : null;
+  
+          this.cargandoSueno = false;
+  
+          this.estadisticasService.emitirRefresco();
+        },
+        error: (err) => {
+          console.error('Error guardando horas de sueño:', err);
+  
+          this.errorSueno =
+            err?.error?.error ??
+            'No se pudieron guardar las horas de sueño. Intentá nuevamente.';
+  
+          this.cargandoSueno = false;
         },
       });
   }

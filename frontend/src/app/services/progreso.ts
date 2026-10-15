@@ -14,6 +14,7 @@ export interface ProgresoDiario {
   habito: Habito;
   completado: boolean;
   fecha: string;
+  valor: string | null;
 }
 
 @Injectable({
@@ -37,6 +38,13 @@ export class ProgresoService {
     return this.http.patch<ProgresoDiario>(
       `${this.baseUrl}/progreso/${id}/`,
       { completado }
+    );
+  }
+
+  actualizarValor(id: number, valor: number): Observable<ProgresoDiario> {
+    return this.http.patch<ProgresoDiario>(
+      `${this.baseUrl}/progreso/${id}/`,
+      { valor }
     );
   }
 
