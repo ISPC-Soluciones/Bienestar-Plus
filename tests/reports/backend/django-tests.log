@@ -1,0 +1,112 @@
+python.exe : Creating test database for alias 'default'...
+En línea: 2 Carácter: 288
++ ... .coverage'; & '.\venv\Scripts\python.exe' -m coverage run manage.py t ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Creating test d...as 'default'...:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+..F........FFFFF.......F....No se pudieron obtener noticias externas: <urlopen error offline>
+.
+======================================================================
+FAIL: test_aut_be_05_logout_rejects_a_session_mutation_without_csrf (bienestar.tests.test_authentication_api.Authentica
+tionApiTests.test_aut_be_05_logout_rejects_a_session_mutation_without_csrf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "%LOCAL_WORKSPACE%\backend\bienestar\tests\test_authentication_api.py", line 109, in
+test_aut_be_05_logout_rejects_a_session_mutation_without_csrf
+    self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 200 != 403
+
+======================================================================
+FAIL: test_aut_be_05_anonymous_client_cannot_create_a_routine
+(bienestar.tests.test_habits_api.ExerciseRoutineApiTests.test_aut_be_05_anonymous_client_cannot_create_a_routine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "%LOCAL_WORKSPACE%\backend\bienestar\tests\test_habits_api.py", line 138, in
+test_aut_be_05_anonymous_client_cannot_create_a_routine
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 201 != 401
+
+======================================================================
+FAIL: test_aut_be_05_completed_routine_cannot_be_edited
+(bienestar.tests.test_habits_api.ExerciseRoutineApiTests.test_aut_be_05_completed_routine_cannot_be_edited)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "%LOCAL_WORKSPACE%\backend\bienestar\tests\test_habits_api.py", line 186, in
+test_aut_be_05_completed_routine_cannot_be_edited
+    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 200 != 400
+
+======================================================================
+FAIL: test_aut_be_05_user_cannot_read_update_or_delete_another_users_routine (bienestar.tests.test_habits_api.ExerciseR
+outineApiTests.test_aut_be_05_user_cannot_read_update_or_delete_another_users_routine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "%LOCAL_WORKSPACE%\backend\bienestar\tests\test_habits_api.py", line 161, in
+test_aut_be_05_user_cannot_read_update_or_delete_another_users_routine
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        [response.status_code for response in responses],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        [status.HTTP_403_FORBIDDEN] * 3,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: Lists differ: [200, 200, 204] != [403, 403, 403]
+
+First differing element 0:
+200
+403
+
+- [200, 200, 204]
++ [403, 403, 403]
+
+======================================================================
+FAIL: test_aut_be_06_duplicate_user_exercise_day_is_rejected
+(bienestar.tests.test_habits_api.ExerciseRoutineApiTests.test_aut_be_06_duplicate_user_exercise_day_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "%LOCAL_WORKSPACE%\backend\bienestar\tests\test_habits_api.py", line 112, in
+test_aut_be_06_duplicate_user_exercise_day_is_rejected
+    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 201 != 400
+
+======================================================================
+FAIL: test_aut_be_06_non_positive_target_is_rejected_by_the_api
+(bienestar.tests.test_habits_api.ExerciseRoutineApiTests.test_aut_be_06_non_positive_target_is_rejected_by_the_api)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "%LOCAL_WORKSPACE%\backend\bienestar\tests\test_habits_api.py", line 125, in
+test_aut_be_06_non_positive_target_is_rejected_by_the_api
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        all(response.status_code == status.HTTP_400_BAD_REQUEST for response in responses)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_aut_be_05_pdf_export_requires_an_authenticated_session
+(bienestar.tests.test_routine_pdf_api.RoutinePdfApiTests.test_aut_be_05_pdf_export_requires_an_authenticated_session)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "%LOCAL_WORKSPACE%\backend\bienestar\tests\test_routine_pdf_api.py", line 100, in
+test_aut_be_05_pdf_export_requires_an_authenticated_session
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 200 != 401
+
+----------------------------------------------------------------------
+Ran 29 tests in 11.648s
+
+FAILED (failures=7)
+Destroying test database for alias 'default'...
+
+Found 29 test(s).
+System check identified no issues (0 silenced).

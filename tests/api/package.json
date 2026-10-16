@@ -1,0 +1,12 @@
+{
+  "name": "bienestar-plus-sprint4-api-tests",
+  "private": true,
+  "description": "Coleccion Postman/Newman aislada de las dependencias de produccion.",
+  "scripts": {
+    "test": "newman run bienestar-plus-sprint4.postman_collection.json -e local.postman_environment.json --reporters cli,htmlextra,junit --reporter-htmlextra-export reports/newman-report.html --reporter-junit-export reports/newman-junit.xml"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}

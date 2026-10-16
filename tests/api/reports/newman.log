@@ -1,0 +1,90 @@
+newman
+
+Bienestar Plus - Sprint 4 API
+
+□ Ejercicios - CRUD y validación
+└ POST crear ejercicio de prueba (AUT-API-02)
+  POST http://127.0.0.1:8000/api/ejercicios/ [201 Created, 401B, 46ms]
+  √  AUT-API-02 responde 201
+  √  AUT-API-03 devuelve id y nombre
+
+└ GET consultar ejercicio creado (AUT-API-02)
+  GET http://127.0.0.1:8000/api/ejercicios/3/ [200 OK, 410B, 25ms]
+  √  AUT-API-03 responde 200
+  √  el contrato expone id y nombre
+
+└ PATCH editar ejercicio (AUT-API-02)
+  PATCH http://127.0.0.1:8000/api/ejercicios/3/ [200 OK, 418B, 29ms]
+  √  AUT-API-02 responde 200
+  √  el nombre fue actualizado
+
+└ POST payload incompleto (AUT-API-04)
+  POST http://127.0.0.1:8000/api/ejercicios/ [400 Bad Request, 324B, 5ms]
+  √  AUT-API-04 rechaza payload inválido con 400
+  √  AUT-API-03 entrega errores estructurados
+
+□ Rutinas de ejercicio - CRUD y seguridad
+└ POST crear rutina (AUT-API-02)
+  POST http://127.0.0.1:8000/api/rutinas-ejercicio/ [201 Created, 414B, 30ms]
+  √  AUT-API-02 responde 201
+  √  AUT-API-03 devuelve la descripción del ejercicio
+
+└ GET propagar id desde el listado (AUT-API-02)
+  GET http://127.0.0.1:8000/api/rutinas-ejercicio/?usuario_id=1 [200 OK, 461B, 28ms]
+  √  AUT-API-03 responde 200
+  √  la rutina creada aparece en la colección
+
+└ PATCH actualizar meta (AUT-API-02)
+  PATCH http://127.0.0.1:8000/api/rutinas-ejercicio/2/ [200 OK, 423B, 27ms]
+  √  AUT-API-02 responde 200
+  √  meta_cantidad es numérica
+
+└ DELETE eliminar rutina temporal (AUT-API-02)
+  DELETE http://127.0.0.1:8000/api/rutinas-ejercicio/2/ [204 No Content, 266B, 30ms]
+  √  AUT-API-02 responde 204
+
+└ POST meta no positiva (AUT-API-04)
+  POST http://127.0.0.1:8000/api/rutinas-ejercicio/ [201 Created, 413B, 35ms]
+  1. AUT-API-04 rechaza meta no positiva con 400
+  √  el error es estructurado
+
+└ GET sin sesión (AUT-API-05)
+  GET http://127.0.0.1:8000/api/rutinas-ejercicio/ [200 OK, 460B, 27ms]
+  2. AUT-API-05 exige sesión y responde 401
+
+□ Limpieza de recurso temporal
+└ DELETE eliminar ejercicio temporal (AUT-API-02)
+  DELETE http://127.0.0.1:8000/api/ejercicios/3/ [204 No Content, 266B, 30ms]
+  √  AUT-API-02 responde 204
+
+┌─────────────────────────┬──────────────────┬─────────────────┐
+│                         │         executed │          failed │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│              iterations │                1 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│                requests │               11 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│            test-scripts │               11 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│      prerequest-scripts │                1 │               0 │
+├─────────────────────────┼──────────────────┼─────────────────┤
+│              assertions │               19 │               2 │
+├─────────────────────────┴──────────────────┴─────────────────┤
+│ total run duration: 1159ms                                   │
+├──────────────────────────────────────────────────────────────┤
+│ total data received: 1.16kB (approx)                         │
+├──────────────────────────────────────────────────────────────┤
+│ average response time: 28ms [min: 5ms, max: 46ms, s.d.: 9ms] │
+└──────────────────────────────────────────────────────────────┘
+
+[31m  # [39m[31m failure        [39m[31m detail                                                                                [39m
+[90m    [39m[90m                [39m[90m                                                                                       [39m
+ 1.  AssertionError  AUT-API-04 rechaza meta no positiva con 400
+                     expected response to have status code 400 but got 201
+                     at assertion:0 in test-script
+                     inside "Rutinas de ejercicio - CRUD y seguridad / POST meta no positiva (AUT-API-04)"
+[90m    [39m[90m                [39m[90m                                                                                       [39m
+ 2.  AssertionError  AUT-API-05 exige sesión y responde 401
+                     expected response to have status code 401 but got 200
+                     at assertion:0 in test-script
+                     inside "Rutinas de ejercicio - CRUD y seguridad / GET sin sesión (AUT-API-05)"

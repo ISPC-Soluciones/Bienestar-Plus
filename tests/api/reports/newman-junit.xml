@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Bienestar Plus - Sprint 4 API" tests="11" time="0.312">
+  <testsuite name="Ejercicios - CRUD y validación / POST crear ejercicio de prueba (AUT-API-02)" id="86434d3c-5561-48bd-bccd-51e5bfbf91f0" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="0" errors="0" time="0.046">
+    <testcase name="AUT-API-02 responde 201" time="0.046" classname="EjerciciosCrudYValidacionPostCrearEjercicioDePruebaAutApi02"/>
+    <testcase name="AUT-API-03 devuelve id y nombre" time="0.046" classname="EjerciciosCrudYValidacionPostCrearEjercicioDePruebaAutApi02"/>
+  </testsuite>
+  <testsuite name="Ejercicios - CRUD y validación / GET consultar ejercicio creado (AUT-API-02)" id="2e928f16-750a-4323-9d8a-72c76c26707c" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="0" errors="0" time="0.025">
+    <testcase name="AUT-API-03 responde 200" time="0.025" classname="EjerciciosCrudYValidacionGetConsultarEjercicioCreadoAutApi02"/>
+    <testcase name="el contrato expone id y nombre" time="0.025" classname="EjerciciosCrudYValidacionGetConsultarEjercicioCreadoAutApi02"/>
+  </testsuite>
+  <testsuite name="Ejercicios - CRUD y validación / PATCH editar ejercicio (AUT-API-02)" id="460d2090-a285-454d-a89e-654c419fc6b6" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="0" errors="0" time="0.029">
+    <testcase name="AUT-API-02 responde 200" time="0.029" classname="EjerciciosCrudYValidacionPatchEditarEjercicioAutApi02"/>
+    <testcase name="el nombre fue actualizado" time="0.029" classname="EjerciciosCrudYValidacionPatchEditarEjercicioAutApi02"/>
+  </testsuite>
+  <testsuite name="Ejercicios - CRUD y validación / POST payload incompleto (AUT-API-04)" id="8f557e69-be45-4b37-a69c-57a2a8521bbf" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="0" errors="0" time="0.005">
+    <testcase name="AUT-API-04 rechaza payload inválido con 400" time="0.005" classname="EjerciciosCrudYValidacionPostPayloadIncompletoAutApi04"/>
+    <testcase name="AUT-API-03 entrega errores estructurados" time="0.005" classname="EjerciciosCrudYValidacionPostPayloadIncompletoAutApi04"/>
+  </testsuite>
+  <testsuite name="Rutinas de ejercicio - CRUD y seguridad / POST crear rutina (AUT-API-02)" id="c3a43a4c-4275-4101-b5bd-cc30539ac118" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="0" errors="0" time="0.030">
+    <testcase name="AUT-API-02 responde 201" time="0.030" classname="RutinasDeEjercicioCrudYSeguridadPostCrearRutinaAutApi02"/>
+    <testcase name="AUT-API-03 devuelve la descripción del ejercicio" time="0.030" classname="RutinasDeEjercicioCrudYSeguridadPostCrearRutinaAutApi02"/>
+  </testsuite>
+  <testsuite name="Rutinas de ejercicio - CRUD y seguridad / GET propagar id desde el listado (AUT-API-02)" id="3379f208-d3d6-4e02-99d1-7ffa6c71a56a" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="0" errors="0" time="0.028">
+    <testcase name="AUT-API-03 responde 200" time="0.028" classname="RutinasDeEjercicioCrudYSeguridadGetPropagarIdDesdeElListadoAutApi02"/>
+    <testcase name="la rutina creada aparece en la colección" time="0.028" classname="RutinasDeEjercicioCrudYSeguridadGetPropagarIdDesdeElListadoAutApi02"/>
+  </testsuite>
+  <testsuite name="Rutinas de ejercicio - CRUD y seguridad / PATCH actualizar meta (AUT-API-02)" id="3ce55c35-e172-4d3a-99c6-0549087484b9" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="0" errors="0" time="0.027">
+    <testcase name="AUT-API-02 responde 200" time="0.027" classname="RutinasDeEjercicioCrudYSeguridadPatchActualizarMetaAutApi02"/>
+    <testcase name="meta_cantidad es numérica" time="0.027" classname="RutinasDeEjercicioCrudYSeguridadPatchActualizarMetaAutApi02"/>
+  </testsuite>
+  <testsuite name="Rutinas de ejercicio - CRUD y seguridad / DELETE eliminar rutina temporal (AUT-API-02)" id="5a9f8a04-5cd6-486e-875b-f58e1cc3ae6f" timestamp="2026-10-15T23:53:09.031Z" tests="1" failures="0" errors="0" time="0.030">
+    <testcase name="AUT-API-02 responde 204" time="0.030" classname="RutinasDeEjercicioCrudYSeguridadDeleteEliminarRutinaTemporalAutApi02"/>
+  </testsuite>
+  <testsuite name="Rutinas de ejercicio - CRUD y seguridad / POST meta no positiva (AUT-API-04)" id="60fb8c28-27d4-41ef-a777-dfc936147cfc" timestamp="2026-10-15T23:53:09.031Z" tests="2" failures="1" errors="0" time="0.035">
+    <testcase name="AUT-API-04 rechaza meta no positiva con 400" time="0.035" classname="RutinasDeEjercicioCrudYSeguridadPostMetaNoPositivaAutApi04">
+      <failure type="AssertionFailure" message="expected response to have status code 400 but got 201">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 34d81c67-1128-4bea-912f-d63c5e0f006c.]]>
+        <![CDATA[Collection name: Bienestar Plus - Sprint 4 API.]]>
+        <![CDATA[Request name: Rutinas de ejercicio - CRUD y seguridad / POST meta no positiva (AUT-API-04).]]>
+        <![CDATA[Test description: AUT-API-04 rechaza meta no positiva con 400.]]>
+        <![CDATA[Error message: expected response to have status code 400 but got 201.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 400 but got 201
+   at Object.eval sandbox-script.js:1:9).]]>
+      </failure>
+    </testcase>
+    <testcase name="el error es estructurado" time="0.035" classname="RutinasDeEjercicioCrudYSeguridadPostMetaNoPositivaAutApi04"/>
+  </testsuite>
+  <testsuite name="Rutinas de ejercicio - CRUD y seguridad / GET sin sesión (AUT-API-05)" id="492b88af-3b2c-46f8-8410-efce405535df" timestamp="2026-10-15T23:53:09.031Z" tests="1" failures="1" errors="0" time="0.027">
+    <testcase name="AUT-API-05 exige sesión y responde 401" time="0.027" classname="RutinasDeEjercicioCrudYSeguridadGetSinSesionAutApi05">
+      <failure type="AssertionFailure" message="expected response to have status code 401 but got 200">
+        <![CDATA[Failed 1 times.]]>
+        <![CDATA[Collection JSON ID: 34d81c67-1128-4bea-912f-d63c5e0f006c.]]>
+        <![CDATA[Collection name: Bienestar Plus - Sprint 4 API.]]>
+        <![CDATA[Request name: Rutinas de ejercicio - CRUD y seguridad / GET sin sesión (AUT-API-05).]]>
+        <![CDATA[Test description: AUT-API-05 exige sesión y responde 401.]]>
+        <![CDATA[Error message: expected response to have status code 401 but got 200.]]>
+        <![CDATA[Stacktrace: AssertionError: expected response to have status code 401 but got 200
+   at Object.eval sandbox-script.js:1:10).]]>
+      </failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Limpieza de recurso temporal / DELETE eliminar ejercicio temporal (AUT-API-02)" id="55ba14ee-2fde-43a0-832a-3d3f33d18f3c" timestamp="2026-10-15T23:53:09.031Z" tests="1" failures="0" errors="0" time="0.030">
+    <testcase name="AUT-API-02 responde 204" time="0.030" classname="LimpiezaDeRecursoTemporalDeleteEliminarEjercicioTemporalAutApi02"/>
+  </testsuite>
+</testsuites>

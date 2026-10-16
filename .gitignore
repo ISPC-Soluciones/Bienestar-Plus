@@ -1,0 +1,19 @@
+# Local AI workspace
+# These files contain machine-specific context, plans, notes, and Codex settings.
+/.ai/
+/.codex/
+/AGENTS.override.md
+/.worktreeinclude
+/.codex-log/
+/CLAUDE.md
+/DIAGNOSTICO_PROYECTO.md
+
+# Local reference documents
+/*.md
+/*.pdf
+/entregas-sprint4/
+
+# Local test-run internals and duplicate logs
+/tests/reports/backend/.coverage
+/tests/reports/e2e/playwright.log
+/tests/reports/e2e/playwright-rerun.log

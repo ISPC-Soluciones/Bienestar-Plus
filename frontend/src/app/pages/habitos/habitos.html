@@ -65,7 +65,7 @@
                     </p>
                     <ul>
                       @for (rutina of rutinaDelUsuario; track rutina.id) {
-                        <li class="rutina__item">
+                        <li class="rutina__item" [attr.data-testid]="'routine-item-' + rutina.id">
                           <div
                             class="habito__display"
                             [class.completado]="rutina.completado"
@@ -77,6 +77,7 @@
                                 </p>
                                 <input
                                   type="number"
+                                  data-testid="routine-quantity"
                                   [(ngModel)]="cantidadEnEdicion"
                                   placeholder="20"
                                   class="input-edicion-cantidad"
@@ -87,6 +88,7 @@
                               <div class="crud__acciones">
                                 <button
                                   class="btn__icono aceptar"
+                                  data-testid="routine-save"
                                   (click)="guardarEdicion(rutina)"
                                   title="Guardar Cambios"
                                 >
@@ -94,6 +96,7 @@
                                 </button>
                                 <button
                                   class="btn__icono cancelar"
+                                  data-testid="routine-cancel"
                                   (click)="cancelarEdicion()"
                                   title="Cancelar"
                                 >
@@ -109,6 +112,7 @@
                               <div class="crud__acciones">
                                 <button
                                   class="btn__icono eliminar"
+                                  data-testid="routine-delete"
                                   (click)="eliminarRutina(rutina.id)"
                                   title="Eliminar Ejercicio"
                                 >
@@ -118,6 +122,7 @@
                                 @if (!rutina.completado) {
                                   <button
                                     class="btn__icono editar"
+                                    data-testid="routine-edit"
                                     (click)="entrarEnModoEdicion(rutina)"
                                     title="Editar Cantidad"
                                   >
@@ -126,6 +131,7 @@
 
                                   <button
                                     class="btn__icono completado-inactivo"
+                                    data-testid="routine-complete"
                                     (click)="marcarCompletado(rutina)"
                                     title="Marcar como completado"
                                   >
@@ -134,6 +140,7 @@
                                 } @else {
                                   <i
                                     class="fa-solid fa-check-circle completado-activo"
+                                    data-testid="routine-completed"
                                     title="Completado"
                                   ></i>
                                 }
@@ -154,6 +161,7 @@
                       >
                         <button
                           class="btn-custom btn-custom--primario"
+                          data-testid="routine-download-pdf"
                           (click)="descargarPdf()"
                         >
                           Descargar Rutina (PDF)
@@ -177,7 +185,7 @@
                   ) {
                     @if (ejercicio.id) {
                       @if (estaEnRutina(ejercicio)) {
-                        <article class="card__habito">
+                        <article class="card__habito" [attr.data-testid]="'exercise-card-' + ejercicio.id">
                           <h4 class="card__habito__titulo">
                             {{ ejercicio.nombre }}
                           </h4>
@@ -188,6 +196,7 @@
                           <div class="card__habito__acciones">
                             <button
                               class="btn-custom btn-custom--gris"
+                              data-testid="exercise-added"
                               disabled
                             >
                               Agregado <i class="fa-solid fa-check"></i>
@@ -195,7 +204,7 @@
                           </div>
                         </article>
                       } @else {
-                        <article class="card__habito">
+                        <article class="card__habito" [attr.data-testid]="'exercise-card-' + ejercicio.id">
                           <h4 class="card__habito__titulo">
                             {{ ejercicio.nombre }}
                           </h4>
@@ -206,6 +215,7 @@
                           <div class="card__habito__acciones">
                             <button
                               class="btn-custom btn-custom--primario"
+                              data-testid="exercise-add"
                               (click)="agregarEjercicioARutina(ejercicio)"
                             >
                               Agregar <i class="fa-solid fa-plus"></i>
