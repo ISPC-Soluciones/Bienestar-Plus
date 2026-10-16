@@ -9,26 +9,26 @@ Paquete de trabajo para las actividades indicadas desde “Sprint 4 - Gestión �
 - `CHECKLIST_PROFESORA_SPRINT4.md`: revisión requisito por requisito con estado real y pendientes.
 - `APORTES_INTEGRANTES.md`: archivos concretos y comandos de stage/commit propuestos para cada integrante.
 - `github/`: borradores de milestone, Issues y organización del tablero Kanban; requieren carga en GitHub.
-- `REPORTE_BUGS_SPRINT4.md` y `checklist-accesibilidad.md`: candidatos de revisión y checklist manual; los hallazgos estáticos siguen pendientes de confirmar en navegador.
+- `REPORTE_BUGS_SPRINT4.md` y `checklist-accesibilidad.md`: hallazgos reproducidos y checklist manual; la revisión de accesibilidad quedó parcial y conserva pendientes.
 - `../../backend/bienestar/tests/`: pruebas Django REST Framework con `APITestCase`.
 - `../../tests/api/`: colección Postman v2.1, entorno local sin credenciales y configuración Newman.
-- `../../tests/e2e/`: Playwright, Page Objects, flujos de negocio y evaluación axe-core.
+- `../../e2e/`: Playwright, Page Objects, flujos de negocio y evaluación axe-core.
 
-La rama `develop` contiene rutinas y exportación PDF. El alcance automatizado se basa en esas funciones disponibles. Los resultados se mantienen como pendientes hasta ejecutar las suites contra un entorno QA aislado; no se inventaron reportes ni resultados.
+La rama `dev/SantiagoBustos` contiene las rutinas y la exportación PDF usadas para definir el alcance automatizado. Las suites se ejecutaron contra un entorno QA aislado; los resultados y fallos están documentados en `Testing.md` y en los reportes. No se inventaron resultados.
 
 ## Estructura solicitada
 
 ```text
 backend/bienestar/tests/                 # AUT-BE, APITestCase y reverse()
 tests/api/                               # AUT-API, Postman 2.1 y entorno parametrizado
-tests/e2e/pages/                         # Page Objects
-tests/e2e/flows/                         # AUT-E2E, autenticación y flujos críticos
-tests/e2e/accessibility/                 # axe-core y ACC-01..05
+e2e/pages/                               # Page Objects
+e2e/flows/                               # AUT-E2E, autenticación y flujos críticos
+e2e/accessibility/                       # axe-core y ACC-01..05
 docs/evidencia-3/                        # Wiki, trazabilidad, bugs y gestión del Sprint 4
 ```
 
 ## Aportes para cinco integrantes
 
-Cada integrante tiene asignados archivos de código o pruebas para revisar y subir. El detalle de archivos, su contenido y comandos de commit está en [APORTES_INTEGRANTES.md](APORTES_INTEGRANTES.md). Cada persona debe usar su propia cuenta; no se crearon commits por el equipo.
+Cada integrante tiene asignados archivos de código o pruebas para revisar y subir. El detalle de archivos, su contenido y comandos de commit está en [APORTES_INTEGRANTES.md](APORTES_INTEGRANTES.md). Cada persona debe usar su propia cuenta; no se atribuyen commits a los compañeros.
 
-En este checkout hay un `.gitignore` local no versionado que ignora `*.md`. Se conservaron sus reglas y se agregó `/entregas-sprint4/` para ignorar los paquetes locales. Para subir los Markdown de evidencia desde este árbol, un integrante debe agregarlos explícitamente con `git add -f docs/evidencia-3/*.md docs/evidencia-3/github/*.md`.
+El `.gitignore` conserva fuera del repositorio los paquetes locales de trabajo en `/entregas-sprint4/`. Los documentos de evidencia sí forman parte de la estructura publicada.

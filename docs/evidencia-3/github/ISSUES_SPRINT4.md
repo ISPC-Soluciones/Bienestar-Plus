@@ -1,4 +1,4 @@
-﻿# Borradores de Issues — Evidencia 3, Sprint 4
+# Borradores de Issues — Evidencia 3, Sprint 4
 
 Estado remoto: no se cargaron Issues. Estos borradores se actualizan con evidencia local del 15/10/2026 en dev/SantiagoBustos, commit base 417bab1f. Usar etiquetas automatizacion/accesibilidad y vincular reportes al crear los Issues.
 

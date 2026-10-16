@@ -1,6 +1,6 @@
 # Checklist de la consigna — Evidencia 3, Sprint 4
 
-Revisión de las actividades desde Sprint 4 — Gestión Ágil del Testing (página 4) hasta la página 8 del PDF. Ejecución local del 15/10/2026, rama dev/SantiagoBustos, commit base 417bab1f. No se hicieron commits ni pushes.
+Revisión de las actividades desde Sprint 4 — Gestión Ágil del Testing (página 4) hasta la página 8 del PDF. La ejecución registrada es del 15/10/2026, originalmente sobre 417bab1f. La evidencia y la reorganización de carpetas se publicaron en dev/SantiagoBustos.
 
 Estados: Cumplido local = artefacto o ejecución comprobable; Parcial = hay evidencia, pero quedan fallos o pasos de revisión; Pendiente = requiere acción externa o herramienta no ejecutada.
 
@@ -10,8 +10,7 @@ Estados: Cumplido local = artefacto o ejecución comprobable; Parcial = hay evid
 | --- | --- | --- |
 | Separar pruebas backend en backend/bienestar/tests/ | Cumplido local | Casos DRF y paquete de pruebas. |
 | Crear tests/api/ para Postman/Newman | Cumplido local | Colección, entorno de ejemplo, manifiestos y reportes Newman. |
-| Crear tests/e2e/ con pages, flows y accessibility | Cumplido local | Page Objects, flujos y auditorías axe. |
-| Mantener la estructura Test/ con carpetas vacías para cargas posteriores | Cumplido local, no publicable vacía | La carpeta local conserva la estructura. Git no registra carpetas vacías; se dejó sin archivos según lo acordado. |
+| Crear e2e/ con pages, flows y accessibility | Cumplido | Page Objects, flujos y auditorías axe. |
 | Preparar aportes de cinco integrantes sin rutas repetidas | Cumplido local | Paquetes e instrucciones en entregas-sprint4/, ignorada por Git. Los paquetes contienen código/configuración; los reportes quedan en tests/reports/. |
 
 ## Backend — AUT-BE
@@ -37,10 +36,10 @@ Estados: Cumplido local = artefacto o ejecución comprobable; Parcial = hay evid
 
 | Requisito | Estado | Evidencia |
 | --- | --- | --- |
-| Usar Page Object Model y selectores estables | Cumplido local | tests/e2e/pages/ y data-testid en las vistas cubiertas. |
+| Usar Page Object Model y selectores estables | Cumplido local | e2e/pages/ y data-testid en las vistas cubiertas. |
 | Automatizar login válido y cuatro combinaciones inválidas | Ejecutado, cumplido | Los cinco escenarios pasan. |
 | Cubrir CRUD de rutina y descarga PDF | Ejecutado, parcial | La edición, finalización, eliminación y descarga PDF pasan. El test registra un fallo soft: la tarjeta de ejercicio no cambia a Agregado. |
-| Guardar HTML/JUnit y adjuntos | Cumplido local | Playwright report, test-results/junit.xml, captura, video y trace del caso fallido. |
+| Guardar HTML/JUnit y adjuntos | Cumplido local | e2e/playwright-report, e2e/test-results/junit.xml, captura, video y trace del caso fallido. |
 | Resultado total E2E | Parcial | 9/10 pruebas pasan. El único fallo está identificado como BUG-HAB-05. |
 
 ## Accesibilidad — ACC
@@ -67,8 +66,8 @@ Estados: Cumplido local = artefacto o ejecución comprobable; Parcial = hay evid
 
 - Backend: tests/reports/backend/django-tests.log, coverage-summary.txt, coverage.xml y htmlcov/.
 - API: tests/api/reports/newman-report.html, newman-junit.xml y newman.log.
-- E2E: tests/e2e/playwright-report/index.html, test-results/junit.xml y tests/reports/e2e/playwright-final.log.
+- E2E: e2e/playwright-report/index.html, e2e/test-results/junit.xml y tests/reports/e2e/playwright-final.log.
 - Axe/manual: tests/reports/e2e/manual-accessibility-review.json.
 - Lighthouse y capturas: tests/reports/lighthouse/.
 
-Los DOCX y XLSX del Sprint anterior se usaron solo como contexto y no se actualizaron. Todo queda local; no se creó commit, merge nuevo ni push.
+Los DOCX y XLSX del Sprint anterior se usaron solo como contexto y no se actualizaron. La rama publicada es dev/SantiagoBustos; no se publicaron cambios en develop ni main.

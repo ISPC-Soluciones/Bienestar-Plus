@@ -19,7 +19,7 @@ if (!Number.isInteger(port) || port < 1024 || port > 65535) {
   throw new Error('LIGHTHOUSE_REMOTE_DEBUGGING_PORT must be an integer between 1024 and 65535.');
 }
 
-const evidenceDirectory = path.resolve(process.cwd(), '../reports/lighthouse');
+const evidenceDirectory = path.resolve(process.cwd(), '../tests/reports/lighthouse');
 await mkdir(evidenceDirectory, { recursive: true });
 
 const browser = await chromium.launch({
