@@ -1,4 +1,4 @@
-# Hallazgos verificados — Evidencia 3, Sprint 4
+﻿# Hallazgos verificados — Evidencia 3, Sprint 4
 
 Ejecución local del 15/10/2026 en dev/SantiagoBustos, commit base 417bab1f, con PostgreSQL de pruebas aislado, Newman y Chromium. Los resultados describen la rama probada; no se modificó la lógica funcional/backend para hacer pasar las pruebas.
 
@@ -23,7 +23,7 @@ Ejecución local del 15/10/2026 en dev/SantiagoBustos, commit base 417bab1f, con
 - **Estado:** reproducido por Playwright. El flujo crea la rutina y espera que aparezca en la lista; la aserción soft del botón Agregado falla. El resto del CRUD continúa y pasa: editar, completar y borrar.
 - **Severidad propuesta:** baja/media, confirmar con producto.
 - **Hipótesis técnica a verificar:** el serializer expone ejercicio_nombre pero no el ID usado por Habitos.estaEnRutina(). La hipótesis se apoya en el código, no implica que se haya corregido.
-- **Evidencia:** e2e/playwright-report/index.html, e2e/test-results/junit.xml y playwright-final.log.
+- **Evidencia:** tests/e2e/playwright-report/index.html, tests/e2e/test-results/junit.xml y playwright-final.log.
 
 ## BUG-ACC-03 — Los errores de campo del login no se asocian al input
 
@@ -51,4 +51,4 @@ Ejecución local del 15/10/2026 en dev/SantiagoBustos, commit base 417bab1f, con
 
 Las mediciones iniciales de Login y Registro eran 88 antes de los cambios visuales. Se preservan en tests/reports/lighthouse/baseline/. Las mediciones finales se guardan en los nombres principales de tests/reports/lighthouse/.
 
-Los hallazgos para GitHub permanecen como borradores en docs/evidencia-3/github/; no se crearon Issues remotos. La evidencia del Sprint 4 está versionada en dev/SantiagoBustos.
+Los hallazgos remotos permanecen como borradores en docs/evidencia-3/github/; no se crearon Issues ni se publicaron cambios.
