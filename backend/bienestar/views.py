@@ -37,6 +37,7 @@ from .models import (
     RutinaEjercicio,
     Roles,
     Notificacion,
+    Recurso,
 )
 from .serializers import (
     UsuarioSerializer,
@@ -47,6 +48,7 @@ from .serializers import (
     EjercicioSerializer,
     RutinaEjercicioSerializer,
     NotificacionSerializer,
+    RecursoSerializer,
 )
 from .services.news import get_news_payload
 from .services.email import send_welcome_email_safely
@@ -897,3 +899,24 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         filename = f"rutina_{usuario_id}_{fecha}.pdf"
 
         return FileResponse(buffer, as_attachment=True, filename=filename, content_type='application/pdf')
+
+
+class RecursoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para la consulta y gestión de Recursos de bienestar y apoyo psicológico.
+    Permite filtrar por tipo y/o usuario_id mediante parámetros de consulta.
+    """
+    queryset = Recurso.objects.all().order_by('id')
+    serializer_class = RecursoSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tipo = self.request.query_params.get('tipo')
+        usuario_id = self.request.query_params.get('usuario_id')
+
+        if tipo:
+            queryset = queryset.filter(tipo__iexact=tipo)
+        if usuario_id:
+            queryset = queryset.filter(usuario_id=usuario_id)
+
+        return queryset
