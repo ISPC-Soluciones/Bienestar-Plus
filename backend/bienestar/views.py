@@ -559,6 +559,63 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         return HttpResponse(archivo_mongo.read(), content_type=archivo_mongo.content_type)
 
 
+class ResumenRendimientoView(APIView):
+    """
+    Endpoint dedicado para el resumen general de rendimiento del usuario (US12).
+    GET /api/usuarios/<int:user_id>/resumen-rendimiento/
+    """
+    def get(self, request, user_id):
+        usuario = get_object_or_404(Usuario, pk=user_id)
+        
+        # Obtenemos el histórico de rutinas completadas del usuario
+        rutinas_completadas = RutinaEjercicio.objects.filter(
+            usuario=usuario,
+            completado=True
+        ).select_related('ejercicio')
+        
+        total_completadas = rutinas_completadas.count()
+        
+        # Conteo por tipo de ejercicio
+        tipos_conteo = {
+            'fuerza': 0,
+            'cardio': 0,
+            'flexibilidad': 0
+        }
+        
+        for rutina in rutinas_completadas:
+            if rutina.ejercicio and rutina.ejercicio.tipo:
+                t = rutina.ejercicio.tipo
+                if t in tipos_conteo:
+                    tipos_conteo[t] += 1
+
+        # Generar mensaje analítico y motivacional basado en la constancia
+        fuerza = tipos_conteo['fuerza']
+        cardio = tipos_conteo['cardio']
+        flexibilidad = tipos_conteo['flexibilidad']
+        
+        if total_completadas == 0:
+            mensaje = "Todavía no registraste actividad completada. ¡Comenzá a registrar tus ejercicios para ver tu evolución!"
+        elif fuerza >= cardio and fuerza >= flexibilidad:
+            mensaje = "Tu constancia en ejercicios de fuerza ya debe estar mostrando progresos notables en aumento de masa muscular y tonificación."
+        elif cardio > fuerza and cardio >= flexibilidad:
+            mensaje = "Tu constancia en ejercicios de cardio sugiere un excelente avance en resistencia y quema de calorías."
+        else:
+            mensaje = "Mantenés un excelente balance en tus rutinas. Tu constancia general beneficia tu bienestar integral y movilidad."
+
+        data_respuesta = {
+            "usuario_id": usuario.id,
+            "total_completadas": total_completadas,
+            "por_tipo": tipos_conteo,
+            "mensaje_recomendacion": mensaje,
+            "sin_actividad": total_completadas == 0
+        }
+        
+        return Response({
+            "success": True,
+            "data": data_respuesta
+        }, status=status.HTTP_200_OK)
+
+
 class PerfilSaludView(APIView):
     """
     Gestiona el perfil de salud (relación 1:1 con Usuario).
