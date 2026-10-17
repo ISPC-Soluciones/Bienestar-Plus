@@ -26,6 +26,12 @@ class RoutinePdfApiTests(APITestCase):
             tipo=Tipos.CARDIO,
         )
         self.url = reverse("rutina-ejercicio-descargar-pdf")
+        
+    def authenticate(self, usuario=None):
+        usuario = usuario or self.usuario
+        session = self.client.session
+        session["usuario_id"] = usuario.pk
+        session.save()
 
     def add_routine(self, usuario=None):
         return RutinaEjercicio.objects.create(
@@ -36,6 +42,7 @@ class RoutinePdfApiTests(APITestCase):
 
     def test_aut_be_03_pdf_export_returns_a_pdf_for_the_requested_user(self):
         # Arrange: create one routine entry for the QA user.
+        self.authenticate()
         self.add_routine()
 
         # Act: request the routine export for that user.
@@ -53,6 +60,7 @@ class RoutinePdfApiTests(APITestCase):
 
     def test_aut_be_06_pdf_export_requires_the_user_id_parameter(self):
         # Arrange: do not provide the user filter required by the endpoint.
+        self.authenticate()
 
         # Act: request the download without query parameters.
         response = self.client.get(self.url)
@@ -63,6 +71,7 @@ class RoutinePdfApiTests(APITestCase):
 
     def test_aut_be_03_pdf_export_returns_404_when_the_user_has_no_routine(self):
         # Arrange: keep the QA user without a routine entry.
+        self.authenticate()
 
         # Act: request the export for that user.
         response = self.client.get(self.url, {"usuario_id": self.usuario.pk})
@@ -72,6 +81,7 @@ class RoutinePdfApiTests(APITestCase):
 
     def test_aut_be_03_pdf_export_filters_entries_by_user(self):
         # Arrange: create a routine for another user only.
+        self.authenticate()
         self.add_routine(usuario=self.otro_usuario)
 
         # Act: request an export for the QA user.
@@ -82,6 +92,7 @@ class RoutinePdfApiTests(APITestCase):
 
     def test_aut_be_04_pdf_export_rejects_unsupported_methods(self):
         # Arrange: use the named read-only download action.
+        self.authenticate()
 
         # Act: submit a POST to the GET-only action.
         response = self.client.post(self.url, {"usuario_id": self.usuario.pk}, format="json")

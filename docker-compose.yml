@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: bienestar
       POSTGRES_USER: bienestar_user
       POSTGRES_PASSWORD: bienestar_password
+    ports:
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

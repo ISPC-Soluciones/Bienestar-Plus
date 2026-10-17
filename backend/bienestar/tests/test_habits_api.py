@@ -37,9 +37,16 @@ class ExerciseRoutineApiTests(APITestCase):
 
     def create_routine(self, **changes):
         return self.client.post(self.list_url, self.payload(**changes), format="json")
-
+    
+    def authenticate(self, usuario=None):
+        usuario = usuario or self.usuario
+        session = self.client.session
+        session["usuario_id"] = usuario.pk
+        session.save()
+    
     def test_aut_be_03_create_routine_persists_the_requested_exercise(self):
         # Arrange: use an existing user and exercise from this test database.
+        self.authenticate()
         payload = self.payload()
 
         # Act: create the routine through the named DRF route.
@@ -57,6 +64,7 @@ class ExerciseRoutineApiTests(APITestCase):
 
     def test_aut_be_03_list_can_filter_routines_by_user_id(self):
         # Arrange: create one routine for each user.
+        self.authenticate()
         first = RutinaEjercicio.objects.create(usuario=self.usuario, ejercicio=self.ejercicio)
         other_exercise = Ejercicio.objects.create(nombre="Flexiones QA", tipo=Tipos.FUERZA)
         RutinaEjercicio.objects.create(usuario=self.otro_usuario, ejercicio=other_exercise)
@@ -70,6 +78,7 @@ class ExerciseRoutineApiTests(APITestCase):
 
     def test_aut_be_03_update_pending_routine_accepts_a_positive_target(self):
         # Arrange: create a pending routine.
+        self.authenticate()
         routine = RutinaEjercicio.objects.create(usuario=self.usuario, ejercicio=self.ejercicio)
         detail_url = reverse("rutina-ejercicio-detail", args=[routine.pk])
 
@@ -87,6 +96,7 @@ class ExerciseRoutineApiTests(APITestCase):
 
     def test_aut_be_03_delete_routine_returns_no_content(self):
         # Arrange: create a routine for the test user.
+        self.authenticate()
         routine = RutinaEjercicio.objects.create(usuario=self.usuario, ejercicio=self.ejercicio)
         detail_url = reverse("rutina-ejercicio-detail", args=[routine.pk])
 
@@ -99,6 +109,7 @@ class ExerciseRoutineApiTests(APITestCase):
 
     def test_aut_be_06_duplicate_user_exercise_day_is_rejected(self):
         # Arrange: the user already has the exercise on the current date.
+        self.authenticate()
         existing = RutinaEjercicio.objects.create(
             usuario=self.usuario,
             ejercicio=self.ejercicio,
@@ -116,6 +127,7 @@ class ExerciseRoutineApiTests(APITestCase):
 
     def test_aut_be_06_non_positive_target_is_rejected_by_the_api(self):
         # Arrange: prepare invalid values that the server must reject.
+        self.authenticate()
         invalid_targets = (0, -5)
 
         # Act: submit each invalid target to the API.
@@ -167,7 +179,9 @@ class ExerciseRoutineApiTests(APITestCase):
         self.assertEqual(routine.meta_cantidad, 20)
 
     def test_aut_be_05_completed_routine_cannot_be_edited(self):
-        # Arrange: create a routine that is already complete.
+    # Arrange: authenticate and create a routine that is already complete.
+        self.authenticate()
+
         routine = RutinaEjercicio.objects.create(
             usuario=self.usuario,
             ejercicio=self.ejercicio,

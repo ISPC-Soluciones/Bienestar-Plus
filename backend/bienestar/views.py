@@ -26,6 +26,10 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import APIException, PermissionDenied
+from rest_framework import status, viewsets, serializers
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
 
 from .mongo import obtener_gridfs
 
@@ -51,6 +55,10 @@ from .serializers import (
 from .services.news import get_news_payload
 from .services.email import send_welcome_email_safely
 
+class SessionAuthenticationRequired(APIException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    default_detail = "Se requiere una sesión activa."
+    default_code = "not_authenticated"
 
 class NoticiasView(APIView):
     """Noticias de bienestar obtenidas de fuentes oficiales y normalizadas."""
@@ -183,7 +191,7 @@ class SesionUsuarioView(APIView):
             status=status.HTTP_200_OK
         )
 
-
+@method_decorator(csrf_protect, name="dispatch")
 class LogoutUsuarioView(APIView):
     def post(self, request):
         request.session.flush()
@@ -705,7 +713,33 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
     """
     queryset = RutinaEjercicio.objects.all()
     serializer_class = RutinaEjercicioSerializer
+    
+    def initial(self, request, *args, **kwargs):
+        super().initial(request, *args, **kwargs)
 
+        if not request.session.get("usuario_id"):
+            raise SessionAuthenticationRequired()
+    
+    def get_session_user_id(self):
+        return self.request.session.get("usuario_id")
+
+    def get_object(self):
+        obj = super().get_object()
+        usuario_id = self.get_session_user_id()
+
+        if obj.usuario_id != usuario_id:
+            raise PermissionDenied("No tenés permiso para acceder a esta rutina.")
+
+        return obj
+    
+    def perform_update(self, serializer):
+        if serializer.instance.completado:
+            raise serializers.ValidationError(
+                {"detail": "Una rutina completada no puede modificarse."}
+            )
+
+        serializer.save()
+    
     def get_queryset(self):
         queryset = RutinaEjercicio.objects.all()
         usuario_id = self.request.query_params.get('usuario_id')
@@ -717,6 +751,13 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         usuario = serializer.validated_data.get('usuario')
         ejercicio = serializer.validated_data.get('ejercicio')
         fecha_registro = serializer.validated_data.get('fecha_registro', timezone.localdate())
+        
+        usuario_id = self.get_session_user_id()
+
+        if usuario.id != usuario_id:
+            raise PermissionDenied(
+            "No tenés permiso para crear rutinas para otro usuario."
+            )
 
         existente = RutinaEjercicio.objects.filter(
             usuario=usuario,
@@ -725,10 +766,16 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         ).first()
 
         if existente:
-            existente.meta_cantidad += serializer.validated_data.get('meta_cantidad', 1)
-            existente.save()
-        else:
-            serializer.save()
+            raise serializers.ValidationError(
+            {
+                "detail": (
+                    "Ya existe una rutina para este usuario, "
+                    "ejercicio y fecha."
+                )
+            }
+        )
+
+        serializer.save()
     @action(detail=False, methods=['get'], url_path='descargar-pdf')
     def descargar_pdf(self, request):
         """
