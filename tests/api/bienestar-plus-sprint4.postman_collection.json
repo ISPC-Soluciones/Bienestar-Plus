@@ -94,7 +94,7 @@
         },
         {
           "name": "POST meta no positiva (AUT-API-04)",
-          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-04 rechaza meta no positiva con 400', () => pm.response.to.have.status(400));", "pm.test('el error es estructurado', () => pm.expect(pm.response.json()).to.be.an('object'));"] } }],
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-04 rechaza meta no positiva con 400', () => pm.response.to.have.status(400));", "pm.test('el error es estructurado', () => pm.expect(pm.response.json()).to.be.an('object'));","pm.test('la respuesta informa el campo inválido', () => { const body = pm.response.json(); pm.expect(Object.keys(body).length).to.be.above(0); });"] } }],
           "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"usuario\": {{usuarioId}},\n  \"ejercicio\": {{exerciseId}},\n  \"meta_cantidad\": 0\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/rutinas-ejercicio/" }
         },
         {
