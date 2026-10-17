@@ -41,6 +41,7 @@ test.describe('AUT-E2E critical business flows', () => {
     { label: 'malformed email', email: 'no-es-correo', password: 'Clave-invalida-123!', blocked: true },
     { label: 'unknown account', email: 'no-existe@example.test', password: 'Clave-invalida-123!', blocked: false },
     { label: 'known account with wrong password', email: 'qa-account', password: 'wrong-password', blocked: false },
+    { label: 'email without domain', email: 'usuario@', password: 'Clave-invalida-123!', blocked: true },
   ];
 
   for (const scenario of invalidCredentialCases) {
