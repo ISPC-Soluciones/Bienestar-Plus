@@ -95,7 +95,9 @@
       <p>Todavía no configuraste tus hábitos de Hidratación.</p>
 
       <h3>Alimentación</h3>
-      <p>Todavía no configuraste tus hábitos de Alimentación.</p>
+      @if ((usuarioSesion$ | async) === +usuario.id) {
+        <app-plan-nutricional [resumen]="true" />
+      }
 
       <h3>Sueño</h3>
       <p>Todavía no configuraste tus hábitos de Sueño.</p>

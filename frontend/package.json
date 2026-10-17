@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "test:nutrition": "ng test --watch=false --browsers=ChromeHeadless --ts-config=tsconfig.nutrition.spec.json --include=src/app/services/plan-nutricional.spec.ts --include=src/app/pages/plan-nutricional/plan-nutricional.spec.ts"
   },
   "prettier": {
     "overrides": [

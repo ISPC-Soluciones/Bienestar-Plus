@@ -1,4 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { AuthService } from '../../services/auth';
+import { PlanNutricionalComponent } from '../plan-nutricional/plan-nutricional';
 import {
   FormBuilder,
   FormGroup,
@@ -34,11 +36,13 @@ import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
     RouterModule,
     ImageCropperComponent,
     ModalBienvenida,
+    PlanNutricionalComponent,
   ],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css'],
 })
 export class PerfilComponent implements OnInit, OnDestroy {
+  readonly usuarioSesion$ = inject(AuthService).currentUserId$;
   usuario?: Usuario;
   loading = false;
   error = '';

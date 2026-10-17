@@ -1,0 +1,70 @@
+
+> test
+> playwright test
+
+
+Running 10 tests using 2 workers
+
+node.exe : (node:19812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+En línea: 1 Carácter: 1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:19812) Wa... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:19728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 flows\critical-flows.spec.ts:24:7 › AUT-E2E critical business flows › AUT-E2E-02 TC-AUTH-01: valid credentials open the user profile (815ms)
+  ok  2 accessibility\accessibility.spec.ts:41:9 › ACC-01: automated accessibility checks › login has no critical or serious axe violations (923ms)
+  ok  3 flows\critical-flows.spec.ts:47:9 › AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects both fields empty (321ms)
+  ok  5 flows\critical-flows.spec.ts:47:9 › AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects malformed email (327ms)
+  ok  4 accessibility\accessibility.spec.ts:41:9 › ACC-01: automated accessibility checks › registration has no critical or serious axe violations (829ms)
+  ok  6 flows\critical-flows.spec.ts:47:9 › AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects unknown account (447ms)
+  ok  7 accessibility\accessibility.spec.ts:51:7 › ACC-01: automated accessibility checks › exercise routine screen has no critical or serious axe violations (1.3s)
+  ok  8 flows\critical-flows.spec.ts:47:9 › AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects known account with wrong password (1.2s)
+  x   9 flows\critical-flows.spec.ts:70:7 › AUT-E2E critical business flows › AUT-E2E-04 TC-HAB-01..05: add, edit, complete and remove a routine exercise (1.3s)
+(node:6756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 10 flows\critical-flows.spec.ts:97:7 › AUT-E2E critical business flows › AUT-E2E-05: the routine PDF download produces a named PDF file (1.0s)
+
+
+  1) flows\critical-flows.spec.ts:70:7 › AUT-E2E critical business flows › AUT-E2E-04 TC-HAB-01..05: add, edit, complete and remove a routine exercise
+
+    Error: BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      84 |       await habits.exerciseIsMarkedAdded(exerciseId),
+      85 |       'BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine',
+    > 86 |     ).toBe(true);
+         |       ^
+      87 |     await habits.changeRoutineTarget(exerciseName, '35');
+      88 |     await habits.expectRoutineTarget(exerciseName, '35');
+      89 |     await habits.markRoutineCompleted(exerciseName);
+        at %LOCAL_WORKSPACE%\tests\e2e\flows\critical-flows.spec.ts:86:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    flows\critical-flows.spec.ts:70:7 › AUT-E2E critical business flows › AUT-E2E-04 TC-HAB-01..05: add, edit, complete and remove a routine exercise
+  9 passed (6.5s)

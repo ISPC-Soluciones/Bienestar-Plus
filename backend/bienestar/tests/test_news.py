@@ -5,8 +5,8 @@ from django.core.cache import cache
 from django.test import SimpleTestCase, TestCase
 from rest_framework.test import APIRequestFactory, APIClient
 
-from .services.news import FALLBACK_ARTICLES, get_news_payload, parse_news_response
-from .views import NoticiasView
+from bienestar.services.news import FALLBACK_ARTICLES, get_news_payload, parse_news_response
+from bienestar.views import NoticiasView
 
 from django.utils import timezone
 from datetime import timedelta
@@ -43,8 +43,13 @@ class NewsServiceTests(SimpleTestCase):
         cache.clear()
 
     def test_parse_response_normalizes_and_filters_articles(self):
-        articles = parse_news_response(NEWS_SAMPLE)
+        # Arrange: provide official and non-official news entries.
+        payload = NEWS_SAMPLE
 
+        # Act: normalize and filter the provider response.
+        articles = parse_news_response(payload)
+
+        # Assert: only the official health article remains in the public format.
         self.assertEqual(len(articles), 1)
         self.assertEqual(articles[0]["title"], "Actividad física y salud mental")
         self.assertEqual(
@@ -60,17 +65,25 @@ class NewsServiceTests(SimpleTestCase):
 
     @patch("bienestar.services.news._download_news", side_effect=URLError("offline"))
     def test_uses_official_fallback_when_providers_fail(self, download_news):
+        # Arrange: simulate the external provider being unavailable.
+
+        # Act: request the news payload.
         payload = get_news_payload()
 
+        # Assert: a safe official fallback is returned without retrying the provider.
         self.assertTrue(payload["isFallback"])
         self.assertEqual(payload["articles"], list(FALLBACK_ARTICLES))
         download_news.assert_called_once_with()
 
     @patch("bienestar.services.news._download_news", return_value=NEWS_SAMPLE)
     def test_caches_successful_response(self, download_news):
+        # Arrange: simulate a stable provider response.
+
+        # Act: request the same payload twice.
         first_payload = get_news_payload()
         second_payload = get_news_payload()
 
+        # Assert: the provider is called once and the cached payload is reused.
         self.assertFalse(first_payload["isFallback"])
         self.assertEqual(first_payload, second_payload)
         download_news.assert_called_once_with()
@@ -79,15 +92,18 @@ class NewsServiceTests(SimpleTestCase):
 class NewsEndpointTests(SimpleTestCase):
     @patch("bienestar.views.get_news_payload")
     def test_returns_normalized_news_payload(self, get_payload):
+        # Arrange: provide the normalized service contract.
         get_payload.return_value = {
             "articles": [dict(FALLBACK_ARTICLES[0])],
             "isFallback": False,
             "updatedAt": "2026-09-12T10:00:00Z",
         }
 
+        # Act: call the endpoint through its DRF view.
         request = APIRequestFactory().get("/api/noticias/")
         response = NoticiasView.as_view()(request)
 
+        # Assert: the response matches the service payload.
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, get_payload.return_value)
 

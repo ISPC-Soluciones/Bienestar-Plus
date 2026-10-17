@@ -774,13 +774,13 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         usuario = serializer.validated_data.get('usuario')
         ejercicio = serializer.validated_data.get('ejercicio')
         fecha_registro = serializer.validated_data.get('fecha_registro', timezone.localdate())
-        
+
         existente = RutinaEjercicio.objects.filter(
             usuario=usuario,
             ejercicio=ejercicio,
             fecha_registro=fecha_registro
         ).first()
-        
+
         if existente:
             existente.meta_cantidad += serializer.validated_data.get('meta_cantidad', 1)
             existente.save()
@@ -818,38 +818,38 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
 
         # Aplicando tu paleta de colores (--bg-y-fuentes y --ternario)
         title_style = ParagraphStyle(
-            'Title', 
-            parent=styles['Heading1'], 
-            fontSize=18, 
+            'Title',
+            parent=styles['Heading1'],
+            fontSize=18,
             textColor=colors.HexColor('#333b3e'), # --bg-y-fuentes
             alignment=1
         )
         subtitle_style = ParagraphStyle(
-            'Sub', 
-            parent=styles['Normal'], 
-            fontSize=11, 
-            textColor=colors.HexColor('#333b3e'), 
-            alignment=1, 
+            'Sub',
+            parent=styles['Normal'],
+            fontSize=11,
+            textColor=colors.HexColor('#333b3e'),
+            alignment=1,
             spaceAfter=15
         )
         section_heading = ParagraphStyle(
-            'Sec', 
-            parent=styles['Heading2'], 
-            fontSize=12, 
+            'Sec',
+            parent=styles['Heading2'],
+            fontSize=12,
             textColor=colors.HexColor('#6ec1e4'), # --ternario
-            spaceBefore=10, 
+            spaceBefore=10,
             spaceAfter=6
         )
         body_style = ParagraphStyle(
-            'Body', 
-            parent=styles['Normal'], 
-            fontSize=10, 
+            'Body',
+            parent=styles['Normal'],
+            fontSize=10,
             textColor=colors.HexColor('#333b3e') # --bg-y-fuentes
         )
 
         elements.append(Paragraph("Bienestar Plus - Mi Rutina de Ejercicios", title_style))
         elements.append(Paragraph(f"Fecha: {fecha}", subtitle_style))
-        
+
         elements.append(Paragraph("Información del Usuario", section_heading))
         elements.append(Paragraph(f"<b>Nombre:</b> {usuario.nombre}", body_style))
         elements.append(Paragraph(f"<b>Correo:</b> {usuario.email}", body_style))
@@ -862,7 +862,7 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         for item in queryset:
             nombre_ejercicio = item.ejercicio.nombre if item.ejercicio else "N/A"
             estado_texto = "Completado" if item.completado else "Pendiente"
-            
+
             table_data.append([
                 str(nombre_ejercicio),
                 str(item.meta_cantidad),
@@ -888,12 +888,12 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
             ('TOPPADDING', (0, 1), (-1, -1), 6),
             ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
         ]))
-        
+
         elements.append(t)
 
         doc.build(elements)
 
         buffer.seek(0)
         filename = f"rutina_{usuario_id}_{fecha}.pdf"
-        
+
         return FileResponse(buffer, as_attachment=True, filename=filename, content_type='application/pdf')

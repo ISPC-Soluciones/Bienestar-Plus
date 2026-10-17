@@ -1,6 +1,6 @@
 <div class="login-body">
   <main class="login-container">
-    <section class="login-page">
+    <section class="login-page" data-testid="login-page">
       <header class="login-header">
         <h1 class="login-h1">BienestarPlus</h1>
 
@@ -18,6 +18,7 @@
           [formGroup]="loginForm"
           (ngSubmit)="onSubmit()"
           class="login-form-container"
+          data-testid="login-form"
         >
           <div class="form-group">
             <label for="email" class="login-label"> Correo electrónico: </label>
@@ -25,6 +26,7 @@
             <input
               class="formulario--input"
               id="email"
+              data-testid="login-email"
               type="email"
               formControlName="email"
               placeholder="Correo electrónico"
@@ -43,6 +45,7 @@
             <input
               class="formulario--input"
               id="password"
+              data-testid="login-password"
               type="password"
               formControlName="password"
               placeholder="Contraseña"
@@ -58,6 +61,7 @@
           <button
             class="formulario--btn"
             type="submit"
+            data-testid="login-submit"
             [disabled]="loginForm.invalid"
           >
             Iniciar Sesión
@@ -70,6 +74,7 @@
 
         <button
           type="button"
+          data-testid="login-google"
           class="google-login-button"
           (click)="loginConGoogle()"
         >
@@ -96,7 +101,7 @@
         </button>
 
         @if (errorMessage) {
-        <div class="oauth-error" role="alert">
+        <div class="oauth-error" role="alert" data-testid="login-error">
           <span class="oauth-error-icon">!</span>
 
           <span>

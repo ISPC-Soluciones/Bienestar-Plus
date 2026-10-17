@@ -35,6 +35,10 @@ else:
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
 
+# The nutrition API uses the session and a CSRF token obtained from its GET.
+CSRF_COOKIE_SECURE = SESSION_COOKIE_SECURE
+CSRF_COOKIE_SAMESITE = SESSION_COOKIE_SAMESITE
+
 ALLOWED_HOSTS = ['.vercel.app', 'localhost', '127.0.0.1', 'bienestar-plus-backend.vercel.app']
 
 INSTALLED_APPS = [

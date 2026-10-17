@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.db import IntegrityError, transaction
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 # =========================================================
 # ENUMS hola q tal
@@ -66,6 +67,38 @@ class TokenRecuperacionPassword(models.Model):
     @property
     def esta_vigente(self):
         return self.utilizado is None and self.expira > timezone.now()
+
+
+class PlanNutricional(models.Model):
+    usuario = models.OneToOneField(
+        Usuario, on_delete=models.CASCADE, related_name='plan_nutricional'
+    )
+    nombre = models.CharField(max_length=100, validators=[MinLengthValidator(1)])
+    objetivo = models.CharField(max_length=300, validators=[MinLengthValidator(1)])
+    notas = models.TextField(blank=True, validators=[MaxLengthValidator(2000)])
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.nombre
+
+
+class ComidaPlan(models.Model):
+    class Tipo(models.TextChoices):
+        DESAYUNO = 'desayuno', 'Desayuno'
+        ALMUERZO = 'almuerzo', 'Almuerzo'
+        MERIENDA = 'merienda', 'Merienda'
+        CENA = 'cena', 'Cena'
+        COLACION = 'colacion', 'Colación'
+
+    plan = models.ForeignKey(PlanNutricional, on_delete=models.CASCADE, related_name='comidas')
+    tipo = models.CharField(max_length=20, choices=Tipo.choices)
+    descripcion = models.CharField(max_length=500, validators=[MinLengthValidator(1)])
+    horario = models.TimeField(null=True, blank=True)
+    orden = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ['orden', 'id']
 
 
 RECOMENDACION_CHOICES = [

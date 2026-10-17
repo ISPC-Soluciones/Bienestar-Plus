@@ -67,7 +67,7 @@
     font-style: italic;
     font-weight: 700;
 
-    color: var(--cuaternario);
+    color: #9f3e28;
   }
 
   .login-logo {
@@ -368,23 +368,23 @@
     font-size: 0.95rem;
     font-weight: 600;
 
-    color: var(--ternario);
+    color: #2d6e85;
   }
 
   .register-link {
-    color: var(--ternario);
+    color: #2d6e85;
 
     font-weight: 700;
     text-decoration: none;
   }
 
   .register-link:hover {
-    color: var(--cuaternario);
+    color: #9f3e28;
     text-decoration: underline;
   }
 
   .btn__volver__inicio {
-    color: #1268ff;
+    color: #0055c8;
 
     font-size: 0.95rem;
     text-decoration: none;
@@ -444,12 +444,12 @@
 .forgot-password-link {
   display: inline-block;
   margin-bottom: 1rem;
-  color: #317a98;
+  color: #2d6e85;
   font-weight: 600;
   text-decoration: none;
 }
 
 .forgot-password-link:hover {
-  color: var(--cuaternario);
+  color: #9f3e28;
   text-decoration: underline;
 }
