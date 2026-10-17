@@ -1,0 +1,75 @@
+<testsuites id="" name="" tests="10" failures="1" skipped="0" errors="0" time="6.483224">
+<testsuite name="accessibility\accessibility.spec.ts" timestamp="2026-10-15T23:58:39.514Z" hostname="" tests="3" failures="0" skipped="0" time="3.012" errors="0">
+<testcase name="ACC-01: automated accessibility checks › login has no critical or serious axe violations" classname="accessibility\accessibility.spec.ts" time="0.923">
+</testcase>
+<testcase name="ACC-01: automated accessibility checks › registration has no critical or serious axe violations" classname="accessibility\accessibility.spec.ts" time="0.829">
+</testcase>
+<testcase name="ACC-01: automated accessibility checks › exercise routine screen has no critical or serious axe violations" classname="accessibility\accessibility.spec.ts" time="1.26">
+</testcase>
+</testsuite>
+<testsuite name="flows\critical-flows.spec.ts" timestamp="2026-10-15T23:58:39.514Z" hostname="" tests="7" failures="1" skipped="0" time="5.408" errors="0">
+<testcase name="AUT-E2E critical business flows › AUT-E2E-02 TC-AUTH-01: valid credentials open the user profile" classname="flows\critical-flows.spec.ts" time="0.815">
+</testcase>
+<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects both fields empty" classname="flows\critical-flows.spec.ts" time="0.321">
+</testcase>
+<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects malformed email" classname="flows\critical-flows.spec.ts" time="0.327">
+</testcase>
+<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects unknown account" classname="flows\critical-flows.spec.ts" time="0.447">
+</testcase>
+<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects known account with wrong password" classname="flows\critical-flows.spec.ts" time="1.154">
+</testcase>
+<testcase name="AUT-E2E critical business flows › AUT-E2E-04 TC-HAB-01..05: add, edit, complete and remove a routine exercise" classname="flows\critical-flows.spec.ts" time="1.344">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\test-failed-1.png]]
+
+[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\video.webm]]
+
+[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\error-context.md]]
+
+[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip]]
+]]>
+</system-out>
+<failure message="BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine" type="expect.toBe">
+<![CDATA[  flows\critical-flows.spec.ts:70:7 › AUT-E2E critical business flows › AUT-E2E-04 TC-HAB-01..05: add, edit, complete and remove a routine exercise
+
+    Error: BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      84 |       await habits.exerciseIsMarkedAdded(exerciseId),
+      85 |       'BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine',
+    > 86 |     ).toBe(true);
+         |       ^
+      87 |     await habits.changeRoutineTarget(exerciseName, '35');
+      88 |     await habits.expectRoutineTarget(exerciseName, '35');
+      89 |     await habits.markRoutineCompleted(exerciseName);
+        at C:\Users\Santiago\Proyectos\Bienestar-Plus\tests\e2e\flows\critical-flows.spec.ts:86:7
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+</testcase>
+<testcase name="AUT-E2E critical business flows › AUT-E2E-05: the routine PDF download produces a named PDF file" classname="flows\critical-flows.spec.ts" time="1">
+</testcase>
+</testsuite>
+</testsuites>

@@ -1,0 +1,69 @@
+<section class="plan" aria-label="Plan nutricional" [attr.aria-busy]="cargando || guardando">
+  <h3>Mi plan nutricional</h3>
+  @if (cargando) {
+    <p role="status">Cargando tu plan...</p>
+  } @else {
+    @if (error) {
+      <div role="alert" class="mensaje error">
+        <p>{{ error }}</p>
+        @if (requiereSesion) { <a routerLink="/login">Iniciar sesión</a> }
+        @else { <button type="button" (click)="cargar()" [disabled]="guardando">Recargar plan</button> }
+      </div>
+    }
+    @if (exito) { <p role="status" class="mensaje exito">{{ exito }}</p> }
+    @if (!editando && !requiereSesion && (!error || plan)) {
+      @if (plan) {
+        <h4>{{ plan.nombre }}</h4>
+        <p class="texto">{{ plan.objetivo }}</p>
+        @if (plan.notas && !resumen) { <p class="texto">{{ plan.notas }}</p> }
+        <ul class="comidas">
+          @for (comida of plan.comidas; track $index) {
+            <li><strong>{{ etiqueta(comida.tipo) }}</strong>
+              @if (comida.horario) { <span> · {{ comida.horario.slice(0, 5) }}</span> }
+              <p class="texto">{{ comida.descripcion }}</p>
+            </li>
+          }
+        </ul>
+      } @else { <p>Todavía no creaste un plan nutricional.</p> }
+      @if (resumen) {
+        <a routerLink="/habitos" [queryParams]="{tab: 'alimentacion'}">{{ plan ? 'Gestionar mi plan' : 'Crear mi plan' }}</a>
+      } @else {
+        <button type="button" class="principal" (click)="iniciarEdicion()">{{ plan ? 'Editar plan' : 'Crear plan' }}</button>
+      }
+    }
+    @if (editando && !requiereSesion && !resumen) {
+      <form [formGroup]="form" (ngSubmit)="guardar()">
+        <fieldset [disabled]="guardando">
+          <legend>{{ plan ? 'Editar plan' : 'Crear plan' }}</legend>
+          <label>Nombre del plan <input formControlName="nombre" maxlength="100" required [attr.aria-invalid]="form.controls.nombre.touched && form.controls.nombre.invalid" /></label>
+          @if (form.controls.nombre.touched && form.controls.nombre.invalid) { <p class="error">Ingresá un nombre de hasta 100 caracteres.</p> }
+          <label>Objetivo <textarea formControlName="objetivo" maxlength="300" required [attr.aria-invalid]="form.controls.objetivo.touched && form.controls.objetivo.invalid"></textarea></label>
+          @if (form.controls.objetivo.touched && form.controls.objetivo.invalid) { <p class="error">Ingresá un objetivo de hasta 300 caracteres.</p> }
+          <label>Notas (opcional) <textarea formControlName="notas" maxlength="2000"></textarea></label>
+          @if (form.controls.notas.touched && form.controls.notas.invalid) { <p class="error">Las notas admiten hasta 2000 caracteres.</p> }
+          <div formArrayName="comidas">
+            @for (comida of comidas.controls; track comida; let i = $index) {
+              <fieldset [formGroupName]="i" class="comida-form">
+                <legend>Comida {{ i + 1 }}</legend>
+                <div class="fila">
+                  <label>Tipo <select formControlName="tipo">@for (tipo of tipos; track tipo.valor) { <option [value]="tipo.valor">{{ tipo.etiqueta }}</option> }</select></label>
+                  <label>Horario (opcional) <input type="time" formControlName="horario" /></label>
+                </div>
+                <label>Descripción <textarea formControlName="descripcion" maxlength="500" required [attr.aria-invalid]="comida.controls.descripcion.touched && comida.controls.descripcion.invalid"></textarea></label>
+                @if (comida.controls.descripcion.touched && comida.controls.descripcion.invalid) { <p class="error">Describí la comida usando hasta 500 caracteres.</p> }
+                @if (comida.controls.horario.touched && comida.controls.horario.invalid) { <p class="error">Ingresá un horario válido.</p> }
+                <button type="button" (click)="quitarComida(i)" [disabled]="comidas.length === 1 || guardando" [attr.aria-label]="'Quitar comida ' + (i + 1)">Quitar comida</button>
+              </fieldset>
+            }
+          </div>
+          <p>Incluí entre 1 y 20 comidas.</p>
+          <button type="button" (click)="agregarComida()" [disabled]="comidas.length >= 20 || guardando">Agregar comida</button>
+          <div class="acciones">
+            <button type="submit" class="principal" [disabled]="guardando">{{ guardando ? 'Guardando...' : 'Guardar plan' }}</button>
+            <button type="button" (click)="cancelar()" [disabled]="guardando">Cancelar</button>
+          </div>
+        </fieldset>
+      </form>
+    }
+  }
+</section>

@@ -1,0 +1,154 @@
+{
+  "reviewedAt": "2026-10-16T00:00:12.874Z",
+  "browser": "Chromium (Playwright installed build)",
+  "branch": "dev/SantiagoBustos",
+  "commit": "417bab1f",
+  "screens": {
+    "login": {
+      "320": {
+        "url": "/login",
+        "title": "Bienestar Plus",
+        "language": "es",
+        "h1Count": 1,
+        "mainCount": 1,
+        "navigationCount": 1,
+        "viewportWidth": 320,
+        "documentWidth": 320,
+        "horizontalOverflow": false
+      },
+      "640": {
+        "url": "/login",
+        "title": "Bienestar Plus",
+        "language": "es",
+        "h1Count": 1,
+        "mainCount": 1,
+        "navigationCount": 1,
+        "viewportWidth": 640,
+        "documentWidth": 640,
+        "horizontalOverflow": false
+      }
+    },
+    "registration": {
+      "320": {
+        "url": "/registro",
+        "title": "Bienestar Plus",
+        "language": "es",
+        "h1Count": 1,
+        "mainCount": 1,
+        "navigationCount": 1,
+        "viewportWidth": 320,
+        "documentWidth": 320,
+        "horizontalOverflow": false
+      },
+      "640": {
+        "url": "/registro",
+        "title": "Bienestar Plus",
+        "language": "es",
+        "h1Count": 1,
+        "mainCount": 1,
+        "navigationCount": 1,
+        "viewportWidth": 640,
+        "documentWidth": 640,
+        "horizontalOverflow": false
+      }
+    },
+    "habitos": {
+      "320": {
+        "url": "/habitos",
+        "title": "Bienestar Plus",
+        "language": "es",
+        "h1Count": 1,
+        "mainCount": 1,
+        "navigationCount": 1,
+        "viewportWidth": 320,
+        "documentWidth": 320,
+        "horizontalOverflow": false
+      },
+      "640": {
+        "url": "/habitos",
+        "title": "Bienestar Plus",
+        "language": "es",
+        "h1Count": 1,
+        "mainCount": 1,
+        "navigationCount": 1,
+        "viewportWidth": 640,
+        "documentWidth": 640,
+        "horizontalOverflow": false
+      }
+    }
+  },
+  "keyboard": {
+    "firstFocus": {
+      "tag": "A",
+      "name": "BienestarPlus",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    },
+    "secondFocus": {
+      "tag": "A",
+      "name": "Inicio",
+      "focusVisible": true,
+      "outlineStyle": "auto",
+      "outlineWidth": "1px",
+      "boxShadow": "none"
+    },
+    "shiftTabReturns": true,
+    "loginEmailError": {
+      "invalid": null,
+      "describedBy": null,
+      "describedByResolves": false,
+      "visibleInlineError": true
+    }
+  },
+  "registrationLabels": [
+    {
+      "label": "☰",
+      "targetExists": true
+    },
+    {
+      "label": "Nombre :",
+      "targetExists": true
+    },
+    {
+      "label": "Correo electrónico:",
+      "targetExists": true
+    },
+    {
+      "label": "Numero telefonico:",
+      "targetExists": true
+    },
+    {
+      "label": "Fecha de nacimiento:",
+      "targetExists": true
+    },
+    {
+      "label": "Género:",
+      "targetExists": true
+    },
+    {
+      "label": "Peso (kg):",
+      "targetExists": true
+    },
+    {
+      "label": "Altura (cm):",
+      "targetExists": true
+    },
+    {
+      "label": "Contraseña:",
+      "targetExists": true
+    },
+    {
+      "label": "Confirmar contraseña:",
+      "targetExists": true
+    }
+  ],
+  "registrationLabelsUnmatched": [],
+  "keyboardAdditional": {
+    "loginSubmitWithEnter": true,
+    "spaceActivatesHydration": true,
+    "enterActivatesSleep": true,
+    "escapeLeavesNoDialog": true
+  }
+}

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RutinaEjercicio } from '../models/ejercicio';
+import { environment } from '../../environments/environment';
 
 interface RutinaUpdate {
   meta_cantidad?: number;
@@ -12,24 +13,24 @@ interface RutinaUpdate {
   providedIn: 'root',
 })
 export class RutinaEjercicioService {
-  private apiUrl = 'http://localhost:8000/api/rutinas-ejercicio/';
+  private apiUrl = `${environment.backendUrl}/api/rutinas-ejercicio/`;
 
   constructor(private http: HttpClient) {}
 
   obtenerRutinaDelUsuario(
-    usuarioId: number
+    usuarioId: number,
   ): Observable<RutinaEjercicio[] | { results: RutinaEjercicio[] }> {
     const params = new HttpParams().set('usuario_id', usuarioId.toString());
     return this.http.get<RutinaEjercicio[] | { results: RutinaEjercicio[] }>(
       this.apiUrl,
-      { params }
+      { params },
     );
   }
 
   agregarARutina(
     usuarioId: number,
     ejercicioId: number,
-    metaCantidad: number
+    metaCantidad: number,
   ): Observable<any> {
     const data = {
       usuario: usuarioId,
@@ -45,7 +46,7 @@ export class RutinaEjercicioService {
    */
   actualizarRutina(
     id: number,
-    data: RutinaUpdate
+    data: RutinaUpdate,
   ): Observable<RutinaEjercicio> {
     return this.http.patch<RutinaEjercicio>(`${this.apiUrl}${id}/`, data);
   }
@@ -55,5 +56,23 @@ export class RutinaEjercicioService {
    */
   eliminarRutina(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
+  }
+
+  /**
+   * Descarga la rutina completa del usuario en formato PDF
+   * @param usuarioId ID del usuario
+   * @param fecha Fecha opcional en formato YYYY-MM-DD
+   */
+  descargarPdfRutina(usuarioId: number, fecha?: string): Observable<Blob> {
+    let params = new HttpParams().set('usuario_id', usuarioId.toString());
+
+    if (fecha) {
+      params = params.set('fecha', fecha);
+    }
+
+    return this.http.get(`${this.apiUrl}descargar-pdf/`, {
+      params: params,
+      responseType: 'blob',
+    });
   }
 }

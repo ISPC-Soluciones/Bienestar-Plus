@@ -1,0 +1,19 @@
+{
+  "name": "bienestar-plus-sprint4-e2e",
+  "private": true,
+  "description": "Herramientas de QA aisladas del build de produccion de Angular.",
+  "scripts": {
+    "test": "playwright test",
+    "test:critical": "playwright test flows/critical-flows.spec.ts",
+    "test:accessibility": "playwright test accessibility/accessibility.spec.ts",
+    "lighthouse:habits": "node accessibility/lighthouse-authenticated.mjs",
+    "report": "playwright show-report playwright-report"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^22.15.30",
+    "lighthouse": "^12.8.2",
+    "typescript": "~5.8.2"
+  }
+}

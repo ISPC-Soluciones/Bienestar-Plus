@@ -17,8 +17,10 @@ export interface PerfilSalud {
   peso?: number;
   altura?: number;
   genero?: string;
-  fecha_nacimiento?: number;
+  fecha_nacimiento?: string;
   imc?: number;
+  recomendacion_enfoque?: string | null;
+  mostrar_modal_imc?: boolean;
 }
 export interface Usuario {
   id: ID;
@@ -35,10 +37,12 @@ export interface Usuario {
   grafico?: string;
   createdAt?: string;
   updatedAt?: string;
-  fecha_nacimiento:number
+  fecha_nacimiento:number;
   peso?: number;         
   altura?: number;   
   perfil_salud?: PerfilSalud;
+  foto_perfil?: string | null; // El campo de archivo original (puede ser null)
+  foto_perfil_url?: string | null;
 
 }
 

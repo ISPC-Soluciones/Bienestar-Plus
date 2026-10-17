@@ -1,0 +1,24 @@
+:host { display: block; min-width: 0; }
+.plan { padding: 1.25rem; border: 1px solid #cbd9d0; border-radius: 1rem; background: #fff; color: #263c30; text-align: left; }
+h3, h4 { color: #205c3b; }
+fieldset { min-width: 0; border: 0; padding: 0; margin: 0; }
+legend { font-size: 1.1rem; font-weight: 600; }
+label { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; font-weight: 600; }
+input, textarea, select { box-sizing: border-box; width: 100%; min-width: 0; padding: .65rem; border: 1px solid #7a8f81; border-radius: .4rem; font: inherit; color: #263c30; background: #fff; }
+textarea { min-height: 5rem; resize: vertical; }
+button, a { font: inherit; }
+button { padding: .65rem 1rem; border: 1px solid #205c3b; border-radius: .5rem; background: #fff; color: #205c3b; cursor: pointer; }
+button.principal { background: #205c3b; color: #fff; }
+button:disabled { opacity: .6; cursor: default; }
+a { color: #205c3b; text-decoration: underline; }
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 3px solid #3674ad; outline-offset: 3px; }
+.fila { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.comida-form { border: 1px solid #cbd9d0; padding: 1rem; border-radius: .5rem; margin: 1rem 0; }
+.acciones { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+.error { color: #942c21; }
+.mensaje { padding: .75rem; border-radius: .5rem; background: #f7f0ec; }
+.exito { background: #e9f4ed; color: #205c3b; }
+.texto, .mensaje { white-space: pre-wrap; overflow-wrap: anywhere; }
+.comidas { padding-left: 1.25rem; }
+.comidas li { margin-bottom: .8rem; }
+@media (max-width: 600px) { .fila { grid-template-columns: 1fr; gap: 0; } .plan { padding: .85rem; } .acciones button { width: 100%; } }

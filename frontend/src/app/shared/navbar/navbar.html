@@ -8,18 +8,24 @@
     <input type="checkbox" id="menu-toggle" />
     <label for="menu-toggle" class="hamburger">&#9776;</label>
 
-    <ul class="nav-links">
+        <ul class="nav-links">
       <li><a routerLink="/" class="nav-registrarse">Inicio</a></li>
-      <li><a routerLink="/nosotros" class="nav-registrarse">Nosotros</a></li>
 
       @if (!(userId$ | async)) {
+        <li><a routerLink="/nosotros" class="nav-registrarse">Nosotros</a></li>
         <li><a routerLink="/registro" class="nav-registrarse">Registrarse</a></li>
         <li><a routerLink="/login" class="nav-registrarse">Iniciar Sesión</a></li>
       }
 
       @if (userId$ | async; as userId) {
-        <li><a [routerLink]="['/perfil', userId]" class="nav-registrarse">Perfil</a></li>
-        <li><a routerLink="/habitos" class="nav-registrarse">Hábitos</a></li>
+        @if (esAdmin()) {
+          <li><a routerLink="/admin/dashboard" class="nav-registrarse">Panel de Control</a></li>
+        } @else {
+          <li><a routerLink="/nosotros" class="nav-registrarse">Nosotros</a></li>
+          <li><a [routerLink]="['/perfil', userId]" class="nav-registrarse">Perfil</a></li>
+          <li><a routerLink="/habitos" class="nav-registrarse">Hábitos</a></li>
+        }
+
         <li>
           <button class="nav-registrarse nav-notifications-btn" (click)="abrirModalNotificaciones(userId)">
             🔔 Notificaciones
@@ -27,6 +33,9 @@
               <span class="notification-badge">{{ notificacionesSinLeer }}</span>
             }
           </button>
+        </li>
+        <li>
+          <button class="nav-registrarse" (click)="cerrarSesion()">Cerrar sesión</button>
         </li>
       }
     </ul>

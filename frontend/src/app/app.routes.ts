@@ -21,8 +21,23 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'login', component: Login },
   {
+    path: 'recuperar-contrasena',
+    loadComponent: () =>
+      import('./pages/password-reset/request-password-reset').then(
+        (module) => module.RequestPasswordReset,
+      ),
+  },
+  {
+    path: 'restablecer-contrasena',
+    loadComponent: () =>
+      import('./pages/password-reset/confirm-password-reset').then(
+        (module) => module.ConfirmPasswordReset,
+      ),
+  },
+  {
     path: 'admin',
     component: Admin,
+    canActivate: [AdminGuard],
     children: [
       {
         path: 'dashboard',
@@ -34,6 +49,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/admin/ejercicios/ejercicios').then(
             (m) => m.Ejercicios
+          ),
+      },
+      {
+        path: 'usuarios',
+        loadComponent: () =>
+          import('./pages/admin/usuarios/usuarios').then(
+            (m) => m.AdminUsuarios
           ),
       },
       {

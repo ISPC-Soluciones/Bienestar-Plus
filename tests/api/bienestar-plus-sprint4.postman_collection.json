@@ -1,0 +1,118 @@
+{
+  "info": {
+    "_postman_id": "34d81c67-1128-4bea-912f-d63c5e0f006c",
+    "name": "Bienestar Plus - Sprint 4 API",
+    "description": "AUT-API-01..05. CRUD de ejercicios y rutinas, contratos HTTP y escenarios negativos. Ejecutar solamente contra una base de pruebas aislada.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "" },
+    { "key": "usuarioId", "value": "" },
+    { "key": "exerciseId", "value": "" },
+    { "key": "exerciseName", "value": "" },
+    { "key": "routineId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Ejercicios - CRUD y validación",
+      "item": [
+        {
+          "name": "POST crear ejercicio de prueba (AUT-API-02)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.environment.set('exerciseName', 'QA Sprint 4 ' + Date.now());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('AUT-API-02 responde 201', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test('AUT-API-03 devuelve id y nombre', () => { pm.expect(body.id).to.be.a('number'); pm.expect(body.nombre).to.be.a('string'); });",
+                  "if (body.id) pm.environment.set('exerciseId', String(body.id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{exerciseName}}\",\n  \"descripcion\": \"Recurso temporal para las pruebas Newman\",\n  \"tipo\": \"fuerza\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/ejercicios/"
+          }
+        },
+        {
+          "name": "GET consultar ejercicio creado (AUT-API-02)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-03 responde 200', () => pm.response.to.have.status(200));", "const body = pm.response.json();", "pm.test('el contrato expone id y nombre', () => { pm.expect(body.id).to.be.a('number'); pm.expect(body.nombre).to.be.a('string'); });"] } }],
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/ejercicios/{{exerciseId}}/" }
+        },
+        {
+          "name": "PATCH editar ejercicio (AUT-API-02)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-02 responde 200', () => pm.response.to.have.status(200));", "pm.test('el nombre fue actualizado', () => pm.expect(pm.response.json().nombre).to.eql(pm.environment.get('exerciseName') + ' editado'));"] } }],
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"{{exerciseName}} editado\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/ejercicios/{{exerciseId}}/" }
+        },
+        {
+          "name": "POST payload incompleto (AUT-API-04)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-04 rechaza payload inválido con 400', () => pm.response.to.have.status(400));", "pm.test('AUT-API-03 entrega errores estructurados', () => pm.expect(pm.response.json()).to.be.an('object'));"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"descripcion\": \"Falta el nombre\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/ejercicios/" }
+        }
+      ]
+    },
+    {
+      "name": "Rutinas de ejercicio - CRUD y seguridad",
+      "item": [
+        {
+          "name": "POST crear rutina (AUT-API-02)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-02 responde 201', () => pm.response.to.have.status(201));", "pm.test('AUT-API-03 devuelve la descripción del ejercicio', () => pm.expect(pm.response.json().ejercicio_nombre).to.be.a('string'));"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"usuario\": {{usuarioId}},\n  \"ejercicio\": {{exerciseId}},\n  \"meta_cantidad\": 20\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/rutinas-ejercicio/" }
+        },
+        {
+          "name": "GET propagar id desde el listado (AUT-API-02)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-03 responde 200', () => pm.response.to.have.status(200));", "const body = pm.response.json();", "const rows = Array.isArray(body) ? body : body.results;", "const routine = rows.find((row) => row.ejercicio_nombre === pm.environment.get('exerciseName') + ' editado');", "pm.test('la rutina creada aparece en la colección', () => pm.expect(routine).to.be.an('object'));", "if (routine && routine.id) pm.environment.set('routineId', String(routine.id));"] } }],
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/rutinas-ejercicio/?usuario_id={{usuarioId}}" }
+        },
+        {
+          "name": "PATCH actualizar meta (AUT-API-02)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-02 responde 200', () => pm.response.to.have.status(200));", "pm.test('meta_cantidad es numérica', () => pm.expect(pm.response.json().meta_cantidad).to.be.a('number'));"] } }],
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"meta_cantidad\": 35\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/rutinas-ejercicio/{{routineId}}/" }
+        },
+        {
+          "name": "DELETE eliminar rutina temporal (AUT-API-02)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-02 responde 204', () => pm.response.to.have.status(204));"] } }],
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/rutinas-ejercicio/{{routineId}}/" }
+        },
+        {
+          "name": "POST meta no positiva (AUT-API-04)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-04 rechaza meta no positiva con 400', () => pm.response.to.have.status(400));", "pm.test('el error es estructurado', () => pm.expect(pm.response.json()).to.be.an('object'));","pm.test('la respuesta informa el campo inválido', () => { const body = pm.response.json(); pm.expect(Object.keys(body).length).to.be.above(0); });"] } }],
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"usuario\": {{usuarioId}},\n  \"ejercicio\": {{exerciseId}},\n  \"meta_cantidad\": 0\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/rutinas-ejercicio/" }
+        },
+        {
+          "name": "GET sin sesión (AUT-API-05)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-05 exige sesión y responde 401', () => pm.response.to.have.status(401));"] } }],
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/rutinas-ejercicio/" }
+        }
+      ]
+    },
+    {
+      "name": "Limpieza de recurso temporal",
+      "item": [
+        {
+          "name": "DELETE eliminar ejercicio temporal (AUT-API-02)",
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('AUT-API-02 responde 204', () => pm.response.to.have.status(204));"] } }],
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/ejercicios/{{exerciseId}}/" }
+        }
+      ]
+    }
+  ]
+}

@@ -3,6 +3,8 @@
 .env.local
 .env.*
 
+## IDE files
+
 # Entorno de Python
 venv/
 
@@ -13,3 +15,14 @@ __pycache__/
 
 # Django Migrations Caches
 */migrations/__pycache__/
+.vercel
+.git/
+node_modules/
+venv/
+__pycache__/
+dist/
+build/
+.angular/
+
+
+*.sqlite3

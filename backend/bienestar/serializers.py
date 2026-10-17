@@ -43,8 +43,18 @@ class PerfilSaludSerializer(serializers.ModelSerializer):
         return value
 
     def validate_altura(self, value):
-        if value is not None and value <= Decimal(0):
-            raise serializers.ValidationError("La altura debe ser un valor positivo.")
+        if value is None:
+            return value
+
+        if value <= Decimal(0):
+            raise serializers.ValidationError(
+                "La altura debe ser un valor positivo."
+            )
+
+    # Si llega en centímetros (ej. 180), convertir a metros (1.80)
+        if value > Decimal('3'):
+            value = value / Decimal('100')
+
         return value
 
 # =========================================================
@@ -52,7 +62,7 @@ class PerfilSaludSerializer(serializers.ModelSerializer):
 # =========================================================
 
 class RegistroUsuarioSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source='mail')
+    email = serializers.EmailField(source='email')
     perfil_salud = PerfilSaludSerializer(required=False)
 
     class Meta:
@@ -74,27 +84,59 @@ class RegistroUsuarioSerializer(serializers.ModelSerializer):
         usuario.perfil_salud = perfil_salud
         return usuario
 
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=150)
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    token = serializers.CharField(min_length=20, max_length=255, trim_whitespace=True)
+    password = serializers.CharField(
+        min_length=8,
+        max_length=128,
+        write_only=True,
+        trim_whitespace=False,
+    )
+    confirmar_password = serializers.CharField(
+        min_length=8,
+        max_length=128,
+        write_only=True,
+        trim_whitespace=False,
+    )
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['confirmar_password']:
+            raise serializers.ValidationError(
+                {'confirmar_password': 'Las contraseñas no coinciden.'}
+            )
+        return attrs
+
 # =========================================================
 # SERIALIZADORES DE USUARIO
 # =========================================================
 
 class UsuarioSerializer(serializers.ModelSerializer):
     foto_perfil_url = serializers.SerializerMethodField()
-    perfil_salud = PerfilSaludSerializer(read_only=True)
+
+    perfil_salud = PerfilSaludSerializer(
+        source='perfilsalud',
+        read_only=True
+    )
 
     class Meta:
         model = Usuario
         fields = [
-            'id', 'nombre', 'mail', 'rol', 'fecha_registro', 'telefono',
+            'id', 'nombre', 'email', 'rol', 'fecha_registro', 'telefono',
             'foto_perfil', 'foto_perfil_url', 'perfil_salud'
         ]
         read_only_fields = ['id', 'fecha_registro', 'rol']
 
     def get_foto_perfil_url(self, obj):
-        if obj.foto_perfil:
+        if obj.foto_perfil_id:
             request = self.context.get('request')
+            url = f'/api/usuarios/{obj.id}/foto-perfil/'
             if request:
-                return request.build_absolute_uri(obj.foto_perfil.url)
+                return request.build_absolute_uri(url)
             return obj.foto_perfil.url
         return None
 
@@ -103,11 +145,11 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ['nombre', 'mail', 'foto_perfil', 'telefono']
+        fields = ['nombre', 'email', 'telefono']
 
-    def validate_mail(self, value):
+    def validate_email(self, value):
         usuario = self.instance
-        if Usuario.objects.exclude(pk=usuario.pk).filter(mail=value).exists():
+        if Usuario.objects.exclude(pk=usuario.pk).filter(email=value).exists():
             raise serializers.ValidationError("Este correo electrónico ya está en uso.")
         return value
 
@@ -115,6 +157,33 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
         if not value or len(value.strip()) < 2:
             raise serializers.ValidationError("El nombre debe tener al menos 2 caracteres.")
         return value.strip()
+
+class UsuarioAdminSerializer(serializers.ModelSerializer):
+
+    perfil_salud = PerfilSaludSerializer(source='perfilsalud', required=False)
+
+    class Meta:
+        model = Usuario
+        fields = ['nombre', 'email', 'telefono', 'rol', 'perfil_salud']
+
+    def validate_email(self, value):
+        usuario = self.instance
+        if Usuario.objects.exclude(pk=usuario.pk).filter(email=value).exists():
+            raise serializers.ValidationError("Este correo electrónico ya está en uso.")
+        return value
+
+    def update(self, instance, validated_data):
+        perfil_data = validated_data.pop('perfilsalud', None)
+        instance = super().update(instance, validated_data)
+
+        if perfil_data is not None:
+            perfil, _ = PerfilSalud.objects.get_or_create(usuario=instance)
+            for campo, valor in perfil_data.items():
+                setattr(perfil, campo, valor)
+            perfil.actualizar_recomendacion()
+            perfil.save()
+
+        return instance
 
 # =========================================================
 # SERIALIZADORES DE EJERCICIOS Y RUTINA
@@ -152,7 +221,7 @@ class ProgresoDiarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProgresoDiario
-        fields = ["id", "fecha", "habito", "usuario", "completado"]
+        fields = ["id", "fecha", "habito", "usuario", "completado", "valor"]
         read_only_fields = ["usuario", "fecha"]
 
 class ProgresoChecklistSerializer(serializers.ModelSerializer):
@@ -161,8 +230,19 @@ class ProgresoChecklistSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class NotificacionSerializer(serializers.ModelSerializer):
-    estado = serializers.CharField(source='get_estado_display', read_only=True)
+    estado_display = serializers.CharField(
+        source='get_estado_display',
+        read_only=True
+    )
 
     class Meta:
         model = Notificacion
-        fields = ['id', 'usuario', 'mensaje', 'estado', 'enviado', 'leido']
+        fields = [
+            'id',
+            'usuario',
+            'mensaje',
+            'estado',
+            'estado_display',
+            'enviado',
+            'leido',
+        ]

@@ -21,11 +21,19 @@
 :root {
   /* Paleta de Colores */
   --primario: #7fffd4;
+  --primario-texto: #176b57;
+
   --secundario: #dff5e1;
+
   --ternario: #6ec1e4;
+  --ternario-texto: #17617f;
+
   --cuaternario: #ff8a65;
+  --cuaternario-texto: #9b351c;
+
   --bg-fondo: #f5f7f8;
   --bg-y-fuentes: #333b3e;
+
   --fav-cristian: #c7bcf2;
 
   /* Tipografías */

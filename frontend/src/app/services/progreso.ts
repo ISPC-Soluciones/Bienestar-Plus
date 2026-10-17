@@ -1,9 +1,7 @@
-// ==========================================================
-// src/app/services/progreso.service.ts (CORREGIDO)
-// ==========================================================
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Habito {
   id: number;
@@ -16,13 +14,14 @@ export interface ProgresoDiario {
   habito: Habito;
   completado: boolean;
   fecha: string;
+  valor: string | null;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProgresoService {
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = `${environment.backendUrl}/api`;
 
   constructor(private http: HttpClient) {}
 
@@ -32,34 +31,33 @@ export class ProgresoService {
     );
   }
 
-  marcarCompletado(id: number, completado: boolean): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/progreso/${id}/`, { completado });
+  marcarCompletado(
+    id: number,
+    completado: boolean
+  ): Observable<ProgresoDiario> {
+    return this.http.patch<ProgresoDiario>(
+      `${this.baseUrl}/progreso/${id}/`,
+      { completado }
+    );
   }
 
-  actualizarProgreso(progresoId: number, completado: boolean): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/progreso/`, {
-      progreso_id: progresoId,
-      completado: completado,
-    });
-  }
- 
-  obtenerChecklist(fecha?: string): Observable<ProgresoDiario[]> {
-    let params = new HttpParams();
-    if (fecha) {
-      params = params.set('fecha', fecha);
-    }
-    return this.http.get<ProgresoDiario[]>(`${this.baseUrl}/checklist/`, { 
-      params,
-    });
+  actualizarValor(id: number, valor: number): Observable<ProgresoDiario> {
+    return this.http.patch<ProgresoDiario>(
+      `${this.baseUrl}/progreso/${id}/`,
+      { valor }
+    );
   }
 
-  toggleCompletado(
+  actualizarProgreso(
     progresoId: number,
     completado: boolean
   ): Observable<ProgresoDiario> {
     return this.http.patch<ProgresoDiario>(
-      `${this.baseUrl}/progreso/${progresoId}/toggle/`, 
-      { completado }
+      `${this.baseUrl}/progreso/`,
+      {
+        progreso_id: progresoId,
+        completado,
+      }
     );
   }
 }

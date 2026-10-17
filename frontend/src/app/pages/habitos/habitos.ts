@@ -6,7 +6,7 @@ import { EjercicioService } from '../../services/ejercicio';
 import { RutinaEjercicioService } from '../../services/rutina-ejercicio';
 import { Ejercicio, RutinaEjercicio } from '../../models/ejercicio';
 import { EstadisticasService } from '../../services/estadisticas.service';
-
+import { ProgresoService,ProgresoDiario,} from '../../services/progreso';
 @Component({
   selector: 'app-habitos',
   standalone: true,
@@ -19,32 +19,40 @@ export class Habitos implements OnInit {
   activeTab: string = 'ejercicio';
   ejerciciosDisponibles: Ejercicio[] = [];
   rutinaDelUsuario: RutinaEjercicio[] = [];
+  progresoSueno: ProgresoDiario | null = null;
+  horasSueno: number | null = null;
+  cargandoSueno = false;
+  errorSueno = '';  
 
   rutinaIdEnEdicion: number | null = null;
 
   cantidadEnEdicion: number | undefined;
 
-  usuarioNombre: string = 'Cosme';
-  usuarioIdAutenticado: number = 1;
+  usuarioNombre: string = '';
+  usuarioIdAutenticado: number = 0;
 
   constructor(
     private ejercicioService: EjercicioService,
     private rutinaService: RutinaEjercicioService,
-    private estadisticasService: EstadisticasService
+    private estadisticasService: EstadisticasService,
+    private progresoService: ProgresoService,
   ) {}
 
   ngOnInit(): void {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      const usuario = JSON.parse(usuarioGuardado);
+      this.usuarioNombre = usuario?.nombre ?? '';
+      this.usuarioIdAutenticado = usuario?.id ?? 0;
+    }
+
     this.cargarEjerciciosDisponibles();
     this.cargarRutinaDelUsuario();
+    this.cargarProgresoSueno();
   }
 
   setActiveTab(tabName: string): void {
     this.activeTab = tabName;
-  }
-
-  obtenerRutaImagen(nombre: string): string {
-    const nombreLimpio = nombre.toLowerCase().replace(/ /g, '');
-    return `assets/${nombreLimpio}.jpg`;
   }
 
   cargarEjerciciosDisponibles(): void {
@@ -111,6 +119,80 @@ export class Habitos implements OnInit {
       });
   }
 
+  cargarProgresoSueno(): void {
+    if (!this.usuarioIdAutenticado) {
+      this.errorSueno = 'No se pudo identificar al usuario.';
+      return;
+    }
+  
+    this.cargandoSueno = true;
+    this.errorSueno = '';
+  
+    this.progresoService
+      .getProgresoDiario(this.usuarioIdAutenticado)
+      .subscribe({
+        next: (progresos) => {
+          this.progresoSueno =
+            progresos.find(
+              (progreso) =>
+                progreso.habito.nombre.toLowerCase() === 'horas de sueño',
+            ) ?? null;
+            if (this.progresoSueno && this.progresoSueno.valor !== null) {
+              this.horasSueno = Number(this.progresoSueno.valor);
+            } else {
+              this.horasSueno = null;
+            } 
+  
+          if (!this.progresoSueno) {
+            this.errorSueno =
+              'No se encontró el hábito de sueño para el día de hoy.';
+          }
+  
+          this.cargandoSueno = false;
+        },
+        error: (err) => {
+          console.error('Error cargando progreso de sueño:', err);
+          this.errorSueno = 'No se pudo cargar el seguimiento de sueño.';
+          this.cargandoSueno = false;
+        },
+      });
+  }
+  
+  guardarHorasSueno(): void {
+    if (!this.progresoSueno || this.horasSueno === null) {
+      return;
+    }
+  
+    this.cargandoSueno = true;
+    this.errorSueno = '';
+  
+    this.progresoService
+      .actualizarValor(this.progresoSueno.id, this.horasSueno)
+      .subscribe({
+        next: (progresoActualizado) => {
+          this.progresoSueno = progresoActualizado;
+  
+          this.horasSueno =
+            progresoActualizado.valor !== null
+              ? Number(progresoActualizado.valor)
+              : null;
+  
+          this.cargandoSueno = false;
+  
+          this.estadisticasService.emitirRefresco();
+        },
+        error: (err) => {
+          console.error('Error guardando horas de sueño:', err);
+  
+          this.errorSueno =
+            err?.error?.error ??
+            'No se pudieron guardar las horas de sueño. Intentá nuevamente.';
+  
+          this.cargandoSueno = false;
+        },
+      });
+  }
+
   // =========================================================
   // LÓGICA DE GESTIÓN DE RUTINA (CRUD - Actualización/Eliminación/Check)
   // =========================================================
@@ -155,7 +237,7 @@ export class Habitos implements OnInit {
     this.rutinaService.eliminarRutina(id).subscribe({
       next: () => {
         this.rutinaDelUsuario = this.rutinaDelUsuario.filter(
-          (r) => r.id !== id
+          (r) => r.id !== id,
         );
       },
       error: (err) => console.error('Error al eliminar el ejercicio:', err),
@@ -176,5 +258,28 @@ export class Habitos implements OnInit {
         },
         error: (err) => console.error('Error al marcar como completado:', err),
       });
+  }
+
+  // MÉTODO PARA DESCARGAR EL PDF DE LA RUTINA COMPLETA DEL USUARIO
+  descargarPdf(): void {
+    if (!this.usuarioIdAutenticado) {
+      console.error('No hay un usuario autenticado para descargar la rutina.');
+      return;
+    }
+
+    this.rutinaService.descargarPdfRutina(this.usuarioIdAutenticado).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `rutina_completa_${this.usuarioIdAutenticado}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('Error al descargar el PDF:', err);
+        alert('No se pudo generar el PDF de la rutina.');
+      },
+    });
   }
 }

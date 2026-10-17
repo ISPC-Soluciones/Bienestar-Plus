@@ -6,7 +6,7 @@ export class AdminGuard {
   constructor(private router: Router) {}
 
   canActivate(): boolean {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem('usuario') || '{}');
     if (user?.rol === 'admin') return true;
 
     this.router.navigate(['/']);

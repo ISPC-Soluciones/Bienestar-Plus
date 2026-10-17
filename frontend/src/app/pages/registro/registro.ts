@@ -13,13 +13,19 @@ import { RegistroServicio } from '../../services/registroServicio';
 import { Router } from '@angular/router';
 import { ModalBienvenida } from './modal-bienvenida/modal-bienvenida';
 
-const contraseñaigual: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+const contraseñaigual: ValidatorFn = (
+  control: AbstractControl
+): ValidationErrors | null => {
   const password = control.get('password');
   const confirmar = control.get('confirmar');
-  return password && confirmar && password.value !== confirmar.value ? { mismatch: true } : null;
+  return password && confirmar && password.value !== confirmar.value
+    ? { mismatch: true }
+    : null;
 };
 
-const soloCaracteres: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+const soloCaracteres: ValidatorFn = (
+  control: AbstractControl
+): ValidationErrors | null => {
   const contieneNumeros = /\d/.test(control.value);
   return contieneNumeros ? { numerosNoPermitidos: true } : null;
 };
@@ -44,16 +50,19 @@ export class Registro {
   ) {
     this.registroForm = this.fb.group(
       {
-        nombre: ['', [Validators.required, Validators.minLength(3), soloCaracteres]],
+        nombre: [
+          '',
+          [Validators.required, Validators.minLength(3), soloCaracteres],
+        ],
         email: ['', [Validators.required, Validators.email]],
         telefono: ['', Validators.required],
-        edad: ['', Validators.required],
+        fecha_nacimiento: ['', Validators.required],
         genero: ['', Validators.required],
         password: ['', [Validators.required, Validators.minLength(8)]],
         confirmar: ['', Validators.required],
         perfil_salud: this.fb.group({
           peso: [null, [Validators.min(10), Validators.max(300)]],
-          altura: [null, [Validators.min(0.5), Validators.max(2.5)]],
+          altura: [null, [Validators.min(50), Validators.max(250)]],
         }),
       },
       { validators: contraseñaigual }
@@ -62,10 +71,12 @@ export class Registro {
 
   cerrarModal(): void {
     this.mostrarModalRecomendacion = false;
+  
+  
     if (this.ultimoUsuarioId) {
       this.router.navigate(['/perfil', this.ultimoUsuarioId]);
     } else {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/home']);
     }
   }
 
@@ -76,21 +87,35 @@ export class Registro {
     }
 
     const datosdelform = this.registroForm.value;
-    const { perfil_salud, confirmar, ...usuarioData } = datosdelform;
+
+    const {
+      perfil_salud,
+      confirmar,
+      genero,
+      fecha_nacimiento,
+      ...usuarioData
+    } = datosdelform;
 
     const payload: any = {
       ...usuarioData,
-      habitos: [],
-      progreso: 'Aún no tienes progreso. ¡Comienza a usar la app para verlo aquí!',
-      foto: 'assets/default-user.jpg',
-      grafico: 'assets/default-graph.jpg',
+
       perfil_salud: {
+        habitos: [],
+        progreso:
+          'Aún no tienes progreso. ¡Comienza a usar la app para verlo aquí!',
+        foto: 'assets/default-user.jpg',
+        grafico: 'assets/default-graph.jpg',
         peso: perfil_salud.peso ? Number(perfil_salud.peso) : null,
-        altura: perfil_salud.altura ? Number(perfil_salud.altura) : null,
+        altura: perfil_salud.altura ? Number(perfil_salud.altura) / 100 : null,
+        genero: genero,
+        fecha_nacimiento: fecha_nacimiento,
       },
     };
 
-    if (payload.perfil_salud.peso === null && payload.perfil_salud.altura === null) {
+    if (
+      payload.perfil_salud.peso === null &&
+      payload.perfil_salud.altura === null
+    ) {
       delete payload.perfil_salud;
     }
 
@@ -106,12 +131,11 @@ export class Registro {
 
         this.ultimoUsuarioId = usuarioId;
 
-
         if (mostrarModal) {
           this.recomendacionUsuario = recomendacion || 'GENERAL';
           this.mostrarModalRecomendacion = true;
         } else {
-          this.router.navigate(['/perfil', usuarioId]);
+          this.router.navigate(['/home']);
         }
       },
       (error: any) => {

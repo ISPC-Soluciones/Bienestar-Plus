@@ -12,7 +12,7 @@ export interface Notificacion {
 
   estado: NotificacionEstado; 
 
-  enviado: string; 
+  enviado: string | null;
 
   leido: string | null; 
 }

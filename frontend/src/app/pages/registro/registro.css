@@ -40,7 +40,7 @@
   font-family: var(--fuente-titulo);
   font-style: italic;
   font-weight: 700;
-  color: var(--cuaternario);
+  color: #9f3e28;
   text-align: center;
 }
 .registro-h2 {
@@ -50,6 +50,10 @@
   font-style: italic;
   color: var(--bg-y-fuentes);
   text-align: center;
+}
+
+.registro-contenedor-main .btn__volver__inicio {
+  color: #0055c8;
 }
 .container__logo {
   display: flex;
