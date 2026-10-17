@@ -1,75 +1,178 @@
-<testsuites id="" name="" tests="10" failures="1" skipped="0" errors="0" time="6.483224">
-<testsuite name="accessibility\accessibility.spec.ts" timestamp="2026-10-15T23:58:39.514Z" hostname="" tests="3" failures="0" skipped="0" time="3.012" errors="0">
-<testcase name="ACC-01: automated accessibility checks › login has no critical or serious axe violations" classname="accessibility\accessibility.spec.ts" time="0.923">
-</testcase>
-<testcase name="ACC-01: automated accessibility checks › registration has no critical or serious axe violations" classname="accessibility\accessibility.spec.ts" time="0.829">
-</testcase>
-<testcase name="ACC-01: automated accessibility checks › exercise routine screen has no critical or serious axe violations" classname="accessibility\accessibility.spec.ts" time="1.26">
-</testcase>
-</testsuite>
-<testsuite name="flows\critical-flows.spec.ts" timestamp="2026-10-15T23:58:39.514Z" hostname="" tests="7" failures="1" skipped="0" time="5.408" errors="0">
-<testcase name="AUT-E2E critical business flows › AUT-E2E-02 TC-AUTH-01: valid credentials open the user profile" classname="flows\critical-flows.spec.ts" time="0.815">
-</testcase>
-<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects both fields empty" classname="flows\critical-flows.spec.ts" time="0.321">
-</testcase>
-<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects malformed email" classname="flows\critical-flows.spec.ts" time="0.327">
-</testcase>
-<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects unknown account" classname="flows\critical-flows.spec.ts" time="0.447">
-</testcase>
-<testcase name="AUT-E2E critical business flows › AUT-E2E-03 TC-AUTH-02: rejects known account with wrong password" classname="flows\critical-flows.spec.ts" time="1.154">
-</testcase>
-<testcase name="AUT-E2E critical business flows › AUT-E2E-04 TC-HAB-01..05: add, edit, complete and remove a routine exercise" classname="flows\critical-flows.spec.ts" time="1.344">
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="11.02504">
+<testsuite name="accessibility\accessibility.spec.ts" timestamp="2026-10-17T02:07:26.177Z" hostname="" tests="1" failures="1" skipped="0" time="7.305" errors="0">
+<testcase name="ACC-01: automated accessibility checks › home has no critical or serious axe violations" classname="accessibility\accessibility.spec.ts" time="7.305">
 <system-out>
 <![CDATA[
-[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\test-failed-1.png]]
+[[ATTACHMENT|accessibility-accessibilit-44cba-l-or-serious-axe-violations\test-failed-1.png]]
 
-[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\video.webm]]
+[[ATTACHMENT|accessibility-accessibilit-44cba-l-or-serious-axe-violations\video.webm]]
 
-[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\error-context.md]]
+[[ATTACHMENT|accessibility-accessibilit-44cba-l-or-serious-axe-violations\video-1.webm]]
 
-[[ATTACHMENT|flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip]]
+[[ATTACHMENT|accessibility-accessibilit-44cba-l-or-serious-axe-violations\error-context.md]]
+
+[[ATTACHMENT|accessibility-accessibilit-44cba-l-or-serious-axe-violations\trace.zip]]
 ]]>
 </system-out>
-<failure message="BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine" type="expect.toBe">
-<![CDATA[  flows\critical-flows.spec.ts:70:7 › AUT-E2E critical business flows › AUT-E2E-04 TC-HAB-01..05: add, edit, complete and remove a routine exercise
+<failure message="[" type="expect.toEqual">
+<![CDATA[  accessibility\accessibility.spec.ts:78:7 › ACC-01: automated accessibility checks › home has no critical or serious axe violations 
 
-    Error: BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine
+    Error: [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "tags": [
+          "cat.color",
+          "wcag2aa",
+          "wcag143",
+          "TTv5",
+          "TT13.c",
+          "EN-301-549",
+          "EN-9.1.4.3",
+          "ACT",
+          "RGAAv4",
+          "RGAA-3.2.1"
+        ],
+        "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+        "nodes": [
+          {
+            "any": [
+              {
+                "id": "color-contrast",
+                "data": {
+                  "fgColor": "#ff8a65",
+                  "bgColor": "#e9fef5",
+                  "contrastRatio": 2.19,
+                  "fontSize": "24.0pt (32px)",
+                  "fontWeight": "normal",
+                  "messageKey": null,
+                  "expectedContrastRatio": "3:1"
+                },
+                "relatedNodes": [
+                  {
+                    "html": "<section _ngcontent-ng-c179922754=\"\" class=\"features\">",
+                    "target": [
+                      ".features"
+                    ]
+                  }
+                ],
+                "impact": "serious",
+                "message": "Element has insufficient color contrast of 2.19 (foreground color: #ff8a65, background color: #e9fef5, font size: 24.0pt (32px), font weight: normal). Expected contrast ratio of 3:1"
+              }
+            ],
+            "all": [],
+            "none": [],
+            "impact": "serious",
+            "html": "<span _ngcontent-ng-c179922754=\"\">BienestarPlus</span>",
+            "target": [
+              "h3 > span"
+            ],
+            "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.19 (foreground color: #ff8a65, background color: #e9fef5, font size: 24.0pt (32px), font weight: normal). Expected contrast ratio of 3:1"
+          }
+        ]
+      }
+    ]
 
-    expect(received).toBe(expected) // Object.is equality
+    expect(received).toEqual(expected) // deep equality
 
-    Expected: true
-    Received: false
+    - Expected  -  1
+    + Received  + 58
 
-      84 |       await habits.exerciseIsMarkedAdded(exerciseId),
-      85 |       'BUG-HAB-05 candidate: the exercise card should reflect that it is in the routine',
-    > 86 |     ).toBe(true);
-         |       ^
-      87 |     await habits.changeRoutineTarget(exerciseName, '35');
-      88 |     await habits.expectRoutineTarget(exerciseName, '35');
-      89 |     await habits.markRoutineCompleted(exerciseName);
-        at C:\Users\Santiago\Proyectos\Bienestar-Plus\tests\e2e\flows\critical-flows.spec.ts:86:7
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    +     "help": "Elements must meet minimum color contrast ratio thresholds",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+    +     "id": "color-contrast",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#e9fef5",
+    +               "contrastRatio": 2.19,
+    +               "expectedContrastRatio": "3:1",
+    +               "fgColor": "#ff8a65",
+    +               "fontSize": "24.0pt (32px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 2.19 (foreground color: #ff8a65, background color: #e9fef5, font size: 24.0pt (32px), font weight: normal). Expected contrast ratio of 3:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<section _ngcontent-ng-c179922754=\"\" class=\"features\">",
+    +                 "target": Array [
+    +                   ".features",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 2.19 (foreground color: #ff8a65, background color: #e9fef5, font size: 24.0pt (32px), font weight: normal). Expected contrast ratio of 3:1",
+    +         "html": "<span _ngcontent-ng-c179922754=\"\">BienestarPlus</span>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           "h3 > span",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.color",
+    +       "wcag2aa",
+    +       "wcag143",
+    +       "TTv5",
+    +       "TT13.c",
+    +       "EN-301-549",
+    +       "EN-9.1.4.3",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-3.2.1",
+    +     ],
+    +   },
+    + ]
+
+      15 |       violation.impact === "critical" || violation.impact === "serious",
+      16 |   );
+    > 17 |   expect(seriousViolations, JSON.stringify(seriousViolations, null, 2)).toEqual(
+         |                                                                         ^
+      18 |     [],
+      19 |   );
+      20 | }
+        at assertNoSeriousViolations (C:\Users\crist\Documents\Cristian\ISPC\1 TECNICATURA en DESARROLLADOR DE SOFTWARE\Segundo Año\5 Pract Pro\ABP\Bienestar-Plus\e2e\accessibility\accessibility.spec.ts:17:73)
+        at C:\Users\crist\Documents\Cristian\ISPC\1 TECNICATURA en DESARROLLADOR DE SOFTWARE\Segundo Año\5 Pract Pro\ABP\Bienestar-Plus\e2e\accessibility\accessibility.spec.ts:81:5
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\test-failed-1.png
+    test-results\accessibility-accessibilit-44cba-l-or-serious-axe-violations\test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
-    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\video.webm
+    test-results\accessibility-accessibilit-44cba-l-or-serious-axe-violations\video.webm
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\error-context.md
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-accessibilit-44cba-l-or-serious-axe-violations\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
-    test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip
+    Error Context: test-results\accessibility-accessibilit-44cba-l-or-serious-axe-violations\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\accessibility-accessibilit-44cba-l-or-serious-axe-violations\trace.zip
     Usage:
 
-        npx playwright show-trace test-results\flows-critical-flows-AUT-E-c1f32-d-remove-a-routine-exercise\trace.zip
+        npx playwright show-trace test-results\accessibility-accessibilit-44cba-l-or-serious-axe-violations\trace.zip
 
     ────────────────────────────────────────────────────────────────────────────────────────────────
 ]]>
 </failure>
-</testcase>
-<testcase name="AUT-E2E critical business flows › AUT-E2E-05: the routine PDF download produces a named PDF file" classname="flows\critical-flows.spec.ts" time="1">
 </testcase>
 </testsuite>
 </testsuites>
