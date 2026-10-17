@@ -7,7 +7,8 @@ from .models import (
     Ejercicio,
     RutinaEjercicio,
     ProgresoChecklist,
-    Notificacion
+    Notificacion,
+    Recurso,
 )
 from decimal import Decimal
 from django.contrib.auth.hashers import make_password
@@ -246,3 +247,35 @@ class NotificacionSerializer(serializers.ModelSerializer):
             'enviado',
             'leido',
         ]
+
+
+# =========================================================
+# SERIALIZADOR DE RECURSOS
+# =========================================================
+
+class RecursoSerializer(serializers.ModelSerializer):
+    enlace = serializers.URLField(required=False, allow_blank=True, default='')
+    usuario = serializers.PrimaryKeyRelatedField(
+        queryset=Usuario.objects.all(),
+        required=False,
+        allow_null=True
+    )
+
+    class Meta:
+        model = Recurso
+        fields = ['id', 'usuario', 'descripcion', 'tipo', 'enlace']
+
+    def create(self, validated_data):
+        if 'usuario' not in validated_data or validated_data.get('usuario') is None:
+            request = self.context.get('request')
+            if request and hasattr(request, 'user') and getattr(request.user, 'is_authenticated', False) and hasattr(request.user, 'id'):
+                try:
+                    validated_data['usuario'] = Usuario.objects.get(pk=request.user.id)
+                except Usuario.DoesNotExist:
+                    pass
+            if 'usuario' not in validated_data or validated_data.get('usuario') is None:
+                usuario_default = Usuario.objects.first()
+                if usuario_default:
+                    validated_data['usuario'] = usuario_default
+        return super().create(validated_data)
+

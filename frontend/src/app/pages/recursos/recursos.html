@@ -1,0 +1,121 @@
+<section class="recursos-container">
+  <!-- Cabecera de la sección -->
+  <header class="recursos-header">
+    <div class="header-badge">
+      <span class="badge-icon">🌿</span>
+      <span>Salud Mental y Emocional</span>
+    </div>
+    <h1 class="recursos-title">Recursos de Apoyo y Bienestar Psicológico</h1>
+    <p class="recursos-subtitle">
+      Explora guías prácticas, lecturas recomendadas, herramientas de respiración y líneas de asistencia profesional para acompañar tu bienestar día a día.
+    </p>
+  </header>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="recursos-controles">
+    <div class="buscador-wrapper">
+      <span class="buscador-icon">🔍</span>
+      <input
+        type="text"
+        id="buscador-recursos"
+        class="buscador-input"
+        placeholder="Buscar por tema, palabra clave o tipo..."
+        [(ngModel)]="terminoBusqueda"
+        (input)="aplicarFiltros()"
+      />
+      @if (terminoBusqueda) {
+        <button
+          type="button"
+          class="btn-limpiar"
+          (click)="terminoBusqueda = ''; aplicarFiltros()"
+          aria-label="Limpiar búsqueda"
+        >
+          ✕
+        </button>
+      }
+    </div>
+
+    <div class="filtros-chips" role="tablist">
+      @for (tipo of tiposDisponibles; track tipo) {
+        <button
+          type="button"
+          class="chip-filtro"
+          [class.chip-activo]="filtroTipo.toLowerCase() === tipo.toLowerCase()"
+          (click)="cambiarFiltro(tipo)"
+        >
+          {{ tipo }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Estado de carga -->
+  @if (cargando) {
+    <div class="recursos-loading" aria-live="polite">
+      <div class="spinner"></div>
+      <p>Cargando recursos de bienestar...</p>
+    </div>
+  } @else {
+    <!-- Estado vacío si no hay recursos -->
+    @if (recursosFiltrados.length === 0) {
+      <div class="recursos-vacio" id="estado-vacio">
+        <div class="vacio-icono">🌱</div>
+        <h2>No se encontraron recursos</h2>
+        <p>
+          @if (terminoBusqueda || filtroTipo.toLowerCase() !== 'todos') {
+            No hay recursos que coincidan con tu búsqueda actual. Intenta probar con otros términos o restablece los filtros.
+          } @else {
+            Actualmente no hay recursos disponibles en esta sección. Vuelve a consultar pronto.
+          }
+        </p>
+        @if (terminoBusqueda || filtroTipo.toLowerCase() !== 'todos') {
+          <button
+            type="button"
+            class="btn-custom btn-custom--primario btn-restablecer"
+            (click)="filtroTipo = 'Todos'; terminoBusqueda = ''; aplicarFiltros()"
+          >
+            Ver todos los recursos
+          </button>
+        }
+      </div>
+    } @else {
+      <!-- Grilla de recursos disponibles -->
+      <div class="recursos-grid" id="lista-recursos">
+        @for (recurso of recursosFiltrados; track recurso.id || $index) {
+          <article class="recurso-card">
+            <div class="card-top">
+              <span class="tipo-badge">
+                <span class="tipo-icono">{{ obtenerIconoTipo(recurso.tipo) }}</span>
+                <span class="tipo-texto">{{ recurso.tipo }}</span>
+              </span>
+            </div>
+
+            <div class="card-body">
+              <p class="recurso-descripcion">{{ recurso.descripcion }}</p>
+            </div>
+
+            <div class="card-footer">
+              @if (tieneEnlace(recurso.enlace)) {
+                <a
+                  [href]="recurso.enlace"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn-recurso-enlace"
+                  id="enlace-recurso-{{ recurso.id || $index }}"
+                >
+                  <span>Acceder al recurso</span>
+                  <span class="icono-externo" aria-hidden="true">↗</span>
+                </a>
+              } @else {
+                <div class="sin-enlace-info">
+                  <span class="icono-info">ℹ️</span>
+                  <span>Práctica de consulta directa</span>
+                </div>
+              }
+            </div>
+          </article>
+        }
+      </div>
+    }
+  }
+</section>

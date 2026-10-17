@@ -19,6 +19,11 @@ export const routes: Routes = [
   { path: 'habitos', component: Habitos }, 
   { path: 'registro', component: Registro },
   { path: 'nosotros', component: NosotrosComponent },
+  {
+    path: 'recursos',
+    loadComponent: () =>
+      import('./pages/recursos/recursos').then((m) => m.RecursosComponent),
+  },
   { path: 'login', component: Login },
   {
     path: 'recuperar-contrasena',
