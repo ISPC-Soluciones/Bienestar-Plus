@@ -10,7 +10,7 @@
 }
 
 .features-title span {
-  color: var(--cuaternario);
+  color: var(--cuaternario-texto);
 }
 
 .features .feature-list {

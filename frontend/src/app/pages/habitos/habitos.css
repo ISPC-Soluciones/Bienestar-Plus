@@ -25,7 +25,7 @@
   font-family: var(--fuente-titulo);
   font-size: 4rem;
   font-weight: 700;
-  color: #255e48;
+  color: var(--primario-texto);
   text-align: center;
   letter-spacing: 1px;
   line-height: 1.2;
@@ -34,7 +34,7 @@
 .container__titulo__habitos span {
   font-weight: 700;
   font-size: 4rem;
-  color: #2d6e85;
+  color: var(--ternario-texto);
 }
 
 .container__parrafo__habitos {
@@ -160,6 +160,7 @@
   animation: fadeIn 0.3s ease-in-out;
 }
 
+.tab-content h2,
 .tab-content h3 {
   font-family: var(--fuente-titulo);
   font-size: 2.5rem;

@@ -76,7 +76,7 @@ footer {
 
 .footer-navigation-left a:hover,
 .footer-navigation-center a:hover {
-  color: var(--cuaternario);
+  color: var(--cuaternario-texto);
 }
 
 .footer-navigation-center {
@@ -114,7 +114,7 @@ footer {
 }
 
 .footer-social .social-icons a:hover {
-  color: var(--cuaternario);
+  color: var(--cuaternario-texto);
 }
 
 .footer-copyright {

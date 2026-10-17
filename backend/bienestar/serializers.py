@@ -221,7 +221,7 @@ class ProgresoDiarioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProgresoDiario
-        fields = ["id", "fecha", "habito", "usuario", "completado"]
+        fields = ["id", "fecha", "habito", "usuario", "completado", "valor"]
         read_only_fields = ["usuario", "fecha"]
 
 class ProgresoChecklistSerializer(serializers.ModelSerializer):

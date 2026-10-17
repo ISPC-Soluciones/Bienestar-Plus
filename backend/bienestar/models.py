@@ -237,6 +237,12 @@ class ProgresoDiario(models.Model):
     habito = models.ForeignKey(Habito, on_delete=models.CASCADE, related_name="progresos")
     fecha = models.DateField(default=timezone.localdate)
     completado = models.BooleanField(default=False)
+    valor = models.DecimalField(
+        max_digits=5,
+        decimal_places=1,
+        null=True,
+        blank=True
+    )
 
     objects = ProgresoDiarioManager()
 
