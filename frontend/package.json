@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "test:nutrition": "ng test --watch=false --browsers=ChromeHeadless --ts-config=tsconfig.nutrition.spec.json --include=src/app/services/plan-nutricional.spec.ts --include=src/app/pages/plan-nutricional/plan-nutricional.spec.ts"
+    "test:nutrition": "ng test --watch=false --browsers=ChromeHeadless --ts-config=tsconfig.nutrition.spec.json --include=src/app/services/plan-nutricional.spec.ts --include=src/app/pages/plan-nutricional/plan-nutricional.spec.ts",
+    "test:recursos": "ng test --watch=false --browsers=ChromeHeadless --ts-config=tsconfig.recursos.spec.json --include=src/app/pages/recursos/recursos.spec.ts"
   },
   "prettier": {
     "overrides": [
