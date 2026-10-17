@@ -12,6 +12,7 @@ from .views import (
     NotificacionesViewSet,
     ProgresoDiarioView,
     NoticiasView,
+    RecursoViewSet,
 )
 from .password_reset_views import PasswordResetConfirmView, PasswordResetRequestView
 from .nutrition_views import PlanNutricionalView
@@ -21,6 +22,7 @@ router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 router.register(r'ejercicios', EjercicioViewSet, basename='ejercicio')
 router.register(r'rutinas-ejercicio', RutinaEjercicioViewSet, basename='rutina-ejercicio')
 router.register(r'notificaciones', NotificacionesViewSet, basename='notificacion') 
+router.register(r'recursos', RecursoViewSet, basename='recurso') 
 
 urlpatterns = [
     path('plan-nutricional/', PlanNutricionalView.as_view(), name='plan-nutricional'),
