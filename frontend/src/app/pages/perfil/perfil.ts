@@ -7,6 +7,8 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import {
   ActivatedRoute,
   RouterModule,
@@ -37,6 +39,7 @@ import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
     ImageCropperComponent,
     ModalBienvenida,
     PlanNutricionalComponent,
+    NgChartsModule,
   ],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css'],
@@ -51,6 +54,25 @@ export class PerfilComponent implements OnInit, OnDestroy {
   modalAbierto = false;
   mostrarModalRecomendacion = false;
   recomendacionUsuario: string | null = null;
+
+  // Propiedades para la US12
+  resumenRendimiento: any = null;
+
+  public doughnutChartOptions: ChartOptions<'doughnut'> = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom' },
+    },
+  };
+  public doughnutChartLabels: string[] = ['Fuerza', 'Cardio', 'Flexibilidad'];
+  public doughnutChartDatasets: ChartConfiguration<'doughnut'>['data']['datasets'] =
+    [
+      {
+        data: [0, 0, 0],
+        backgroundColor: ['#6ec1e4', '#7fffd4', '#ffb499'], // Paleta del proyecto
+      },
+    ];
+  public doughnutChartType = 'doughnut' as const;
 
   perfilForm: FormGroup;
 
@@ -122,6 +144,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
             localStorage.setItem('usuario', JSON.stringify(usuario));
             this.cargarProgreso(Number(usuario.id));
 
+            this.cargarResumenRendimiento(Number(usuario.id));
+
             const completarPerfil =
               this.route.snapshot.queryParamMap.get('completarPerfil');
 
@@ -176,6 +200,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
         this.loading = false;
 
         this.cargarProgreso(id);
+
+        this.cargarResumenRendimiento(id);
       },
 
       error: (err) => {
@@ -230,10 +256,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
   cerrarModalRecomendacion(): void {
     this.mostrarModalRecomendacion = false;
 
-    this.router.navigate(
-      ['/perfil', this.usuario?.id],
-      { replaceUrl: true }
-    );
+    this.router.navigate(['/perfil', this.usuario?.id], { replaceUrl: true });
   }
 
   onFileSelected(event: Event): void {
@@ -336,9 +359,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
       formValues.altura !== undefined &&
       formValues.altura !== ''
     ) {
-// El formulario recibe centímetros.
-// El backend guarda metros.
-perfilSaludData.altura = Number(formValues.altura) / 100;
+      // El formulario recibe centímetros.
+      // El backend guarda metros.
+      perfilSaludData.altura = Number(formValues.altura) / 100;
     }
 
     if (formValues.genero !== null && formValues.genero !== undefined) {
@@ -383,10 +406,7 @@ perfilSaludData.altura = Number(formValues.altura) / 100;
           if (usuarioActualizado) {
             this.usuario = usuarioActualizado;
 
-            localStorage.setItem(
-              'usuario',
-              JSON.stringify(this.usuario)
-            );
+            localStorage.setItem('usuario', JSON.stringify(this.usuario));
             this.cerrarModal();
 
             const completarPerfil =
@@ -430,6 +450,31 @@ perfilSaludData.altura = Number(formValues.altura) / 100;
     }
 
     return Number(altura) * 100;
+  }
+
+  cargarResumenRendimiento(userId: number): void {
+    this.perfilService.getResumenRendimiento(userId).subscribe({
+      next: (res) => {
+        if (res?.success && res?.data) {
+          this.resumenRendimiento = res.data;
+          const porTipo = res.data.por_tipo;
+
+          this.doughnutChartDatasets = [
+            {
+              data: [
+                porTipo.fuerza || 0,
+                porTipo.cardio || 0,
+                porTipo.flexibilidad || 0,
+              ],
+              backgroundColor: ['#6ec1e4', '#7fffd4', '#ffb499'],
+            },
+          ];
+        }
+      },
+      error: (err) => {
+        console.error('❌ Error al cargar resumen de rendimiento:', err);
+      },
+    });
   }
 
   cargarProgreso(usuarioId: number): void {
