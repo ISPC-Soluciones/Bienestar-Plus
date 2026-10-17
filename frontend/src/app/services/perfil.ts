@@ -7,10 +7,9 @@ import { Usuario, Habito, ID, PerfilSalud } from '../models/perfil.model';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PerfilService {
-
   private base = `${environment.backendUrl}/api`;
 
   constructor(private http: HttpClient) {}
@@ -18,15 +17,13 @@ export class PerfilService {
   // Obtener usuario
   getUsuario(id: ID): Observable<Usuario | undefined> {
     return this.http
-      .get<{ success: boolean; data: Usuario }>(
-        `${this.base}/usuarios/${id}/`
-      )
+      .get<{ success: boolean; data: Usuario }>(`${this.base}/usuarios/${id}/`)
       .pipe(
-        map(res => res.data ?? undefined),
-        catchError(err => {
+        map((res) => res.data ?? undefined),
+        catchError((err) => {
           console.error('Error obteniendo usuario:', err);
           return of(undefined);
-        })
+        }),
       );
   }
 
@@ -37,78 +34,62 @@ export class PerfilService {
     }
 
     const qs = ids
-      .map(id => `id=${encodeURIComponent(String(id))}`)
+      .map((id) => `id=${encodeURIComponent(String(id))}`)
       .join('&');
 
-    return this.http
-      .get<Habito[]>(`${this.base}/habitos?${qs}`)
-      .pipe(
-        catchError(err => {
-          console.error('Error obteniendo hábitos:', err);
-          return of([]);
-        })
-      );
+    return this.http.get<Habito[]>(`${this.base}/habitos?${qs}`).pipe(
+      catchError((err) => {
+        console.error('Error obteniendo hábitos:', err);
+        return of([]);
+      }),
+    );
   }
 
   // Actualizar usuario
-  updateUsuario(
-    id: number,
-    data: any
-  ): Observable<Usuario | undefined> {
+  updateUsuario(id: number, data: any): Observable<Usuario | undefined> {
     return this.http
-      .patch<{ success: boolean; data: Usuario }>(
-        `${this.base}/usuarios/${id}/`,
-        data
-      )
+      .patch<{
+        success: boolean;
+        data: Usuario;
+      }>(`${this.base}/usuarios/${id}/`, data)
       .pipe(
-        map(res => res.data ?? undefined),
-        catchError(err => {
+        map((res) => res.data ?? undefined),
+        catchError((err) => {
           console.error('Error actualizando usuario:', err);
           return of(undefined);
-        })
+        }),
       );
   }
 
   // Obtener perfil de salud
-  getPerfilSalud(
-    id: number
-  ): Observable<PerfilSalud | undefined> {
-    return this.http
-      .get<PerfilSalud>(
-        `${this.base}/perfil-salud/${id}/`
-      )
-      .pipe(
-        catchError(err => {
-          console.error('Error obteniendo perfil de salud:', err);
-          return of(undefined);
-        })
-      );
+  getPerfilSalud(id: number): Observable<PerfilSalud | undefined> {
+    return this.http.get<PerfilSalud>(`${this.base}/perfil-salud/${id}/`).pipe(
+      catchError((err) => {
+        console.error('Error obteniendo perfil de salud:', err);
+        return of(undefined);
+      }),
+    );
   }
 
   // Actualizar perfil de salud
   updatePerfilSalud(
     id: number,
-    data: Partial<PerfilSalud>
+    data: Partial<PerfilSalud>,
   ): Observable<PerfilSalud | undefined> {
     return this.http
-      .put<PerfilSalud>(
-        `${this.base}/perfil-salud/${id}/`,
-        data
-      )
+      .put<PerfilSalud>(`${this.base}/perfil-salud/${id}/`, data)
       .pipe(
-        catchError(err => {
+        catchError((err) => {
           console.error('Error actualizando perfil de salud:', err);
           return of(undefined);
-        })
+        }),
       );
   }
 
   // Obtener usuario con hábitos y perfil de salud
-  getUsuarioConHabitos(
-    id: ID
-  ): Observable<Usuario | undefined> {
+  getUsuarioConHabitos(id: ID): Observable<Usuario | undefined> {
     return this.getUsuario(id).pipe(
-      switchMap(user => {
+      switchMap((user) => {
         if (!user) {
           return of(undefined);
         }
@@ -122,36 +103,51 @@ export class PerfilService {
 
         return forkJoin({
           perfil_salud: this.getPerfilSalud(Number(id)),
-          habitos: habitos$
+          habitos: habitos$,
         }).pipe(
-          map(res => ({
+          map((res) => ({
             ...user,
             perfil_salud: res.perfil_salud,
-            habitos: res.habitos
-          }))
+            habitos: res.habitos,
+          })),
         );
-      })
+      }),
     );
+  }
+
+  // Obtener resumen de rendimiento
+  getResumenRendimiento(userId: number): Observable<any> {
+    return this.http
+      .get<any>(`${this.base}/usuarios/${userId}/resumen-rendimiento/`)
+      .pipe(
+        catchError((err) => {
+          console.error('Error al obtener resumen de rendimiento:', err);
+          return of(undefined);
+        }),
+      );
   }
 
   // Subir/reemplazar la foto de perfil (se guarda en MongoDB vía GridFS)
   subirFotoPerfil(
     id: number,
-    foto: Blob
-  ): Observable<{ success: boolean; message: string; foto_perfil_url: string } | undefined> {
+    foto: Blob,
+  ): Observable<
+    { success: boolean; message: string; foto_perfil_url: string } | undefined
+  > {
     const formData = new FormData();
     formData.append('foto_perfil', foto, 'foto_perfil.jpg');
 
     return this.http
-      .post<{ success: boolean; message: string; foto_perfil_url: string }>(
-        `${this.base}/usuarios/${id}/foto-perfil/`,
-        formData
-      )
+      .post<{
+        success: boolean;
+        message: string;
+        foto_perfil_url: string;
+      }>(`${this.base}/usuarios/${id}/foto-perfil/`, formData)
       .pipe(
-        catchError(err => {
+        catchError((err) => {
           console.error('Error subiendo la foto de perfil:', err);
           return of(undefined);
-        })
+        }),
       );
   }
 }

@@ -18,7 +18,8 @@
         <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
         <p>
           <strong>Altura:</strong>
-          {{ alturaEnCm() !== null ? (alturaEnCm() | number : "1.0-0") : "-" }} cm
+          {{ alturaEnCm() !== null ? (alturaEnCm() | number: "1.0-0") : "-" }}
+          cm
         </p>
         <p>
           <strong>Género:</strong>
@@ -31,7 +32,7 @@
         @if (usuario.perfil_salud?.imc) {
           <p>
             <strong>IMC:</strong>
-            {{ usuario.perfil_salud?.imc | number : "1.1-2" }}
+            {{ usuario.perfil_salud?.imc | number: "1.1-2" }}
           </p>
         }
       </div>
@@ -39,13 +40,45 @@
 
     <!-- Sección de progreso (se usaría para el gráfico, aquí se mantiene la imagen) -->
     <section class="perfil__progreso">
-      <h2>Tu progreso mensual y semanal</h2>
-      <div class="progreso__imagen">
-        <img
-          src="assets/grafico_usuario_metricas.jpg"
-          alt="Gráfico de progreso"
-        />
-      </div>
+      <h2>Tu resumen de rendimiento</h2>
+
+      @if (resumenRendimiento && !resumenRendimiento.sin_actividad) {
+        <div
+          class="progreso-container-grafico"
+          style="max-width: 280px; margin: 0 auto"
+        >
+          <canvas
+            baseChart
+            [datasets]="doughnutChartDatasets"
+            [labels]="doughnutChartLabels"
+            [options]="doughnutChartOptions"
+            [type]="doughnutChartType"
+          >
+          </canvas>
+        </div>
+
+        <div
+          style="
+            margin-top: 1.2rem;
+            padding: 0.8rem;
+            background-color: var(--bg-fondo);
+            border-radius: 8px;
+          "
+        >
+          <p style="font-size: 0.95rem; color: var(--bg-y-fuentes); margin: 0">
+            💡 <strong>Recomendación:</strong>
+            {{ resumenRendimiento.mensaje_recomendacion }}
+          </p>
+        </div>
+      } @else {
+        <div class="estado-vacio" style="padding: 1.5rem; text-align: center">
+          <p>Todavía no registraste actividad completada.</p>
+          <p style="font-size: 0.85rem; opacity: 0.7">
+            ¡Comenzá a registrar tus ejercicios diarios para visualizar tu
+            evolución aquí!
+          </p>
+        </div>
+      }
     </section>
 
     <section class="perfil__rutina">
@@ -121,7 +154,10 @@
             id="nombre"
             type="text"
             formControlName="nombre"
-            [class.invalid]="perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched"
+            [class.invalid]="
+              perfilForm.get('nombre')?.invalid &&
+              perfilForm.get('nombre')?.touched
+            "
           />
         </div>
 
@@ -131,7 +167,10 @@
             id="email"
             type="email"
             formControlName="email"
-            [class.invalid]="perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched"
+            [class.invalid]="
+              perfilForm.get('email')?.invalid &&
+              perfilForm.get('email')?.touched
+            "
           />
         </div>
 
@@ -146,7 +185,13 @@
           />
           @if (usuario?.foto_perfil_url && !imagenParaRecortar) {
             <small class="hint">
-              Actual: <a [href]="usuario?.foto_perfil_url" target="_blank" class="text-blue-500 hover:underline">Ver imagen</a>
+              Actual:
+              <a
+                [href]="usuario?.foto_perfil_url"
+                target="_blank"
+                class="text-blue-500 hover:underline"
+                >Ver imagen</a
+              >
             </small>
           }
 
@@ -166,7 +211,11 @@
               @if (previewRecorte) {
                 <div class="recorte__preview">
                   <p>Vista previa:</p>
-                  <img [src]="previewRecorte" alt="Vista previa de la foto recortada" class="recorte__preview-img" />
+                  <img
+                    [src]="previewRecorte"
+                    alt="Vista previa de la foto recortada"
+                    class="recorte__preview-img"
+                  />
                 </div>
               }
 
@@ -183,7 +232,11 @@
                 >
                   {{ subiendoFoto ? "Guardando..." : "Guardar foto" }}
                 </button>
-                <button type="button" (click)="cancelarRecorte()" class="button__secondary">
+                <button
+                  type="button"
+                  (click)="cancelarRecorte()"
+                  class="button__secondary"
+                >
                   Cancelar
                 </button>
               </div>
@@ -191,7 +244,7 @@
           }
         </div>
 
-        <hr class="my-4"/>
+        <hr class="my-4" />
         <h3>Datos de salud</h3>
 
         <!-- Campos de PerfilSalud -->
@@ -251,10 +304,20 @@
         </div>
 
         <div class="modal__acciones">
-          <button type="submit" [disabled]="perfilForm.invalid || loading" class="button__primary">
+          <button
+            type="submit"
+            [disabled]="perfilForm.invalid || loading"
+            class="button__primary"
+          >
             {{ loading ? "Guardando..." : "Guardar" }}
           </button>
-          <button type="button" (click)="cerrarModal()" class="button__secondary">Cancelar</button>
+          <button
+            type="button"
+            (click)="cerrarModal()"
+            class="button__secondary"
+          >
+            Cancelar
+          </button>
         </div>
         @if (error) {
           <p class="error-message">{{ error }}</p>
