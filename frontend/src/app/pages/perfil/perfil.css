@@ -295,6 +295,37 @@
   }
 }
 
+/* === EXPORTAR DATOS (US32) === */
+.exportar-datos {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.exportar-datos button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.exportar-datos__ayuda {
+  font-size: 0.85rem;
+  color: var(--bg-y-fuentes);
+  opacity: 0.75;
+  margin: 0;
+}
+
+.exportar-datos__error {
+  color: #8e2a1f;
+  background: #fdecea;
+  border-left: 4px solid #c0392b;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 .perfil__rutina {
   background: var(--bg-fondo);
   padding: 1.5rem;

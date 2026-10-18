@@ -79,6 +79,25 @@
           </p>
         </div>
       }
+
+      <!-- Exportar datos del usuario en CSV (US32) -->
+      <div class="exportar-datos">
+        <button
+          type="button"
+          class="btn-custom btn-custom--primario"
+          (click)="exportarDatos()"
+          [disabled]="exportandoDatos"
+        >
+          {{ exportandoDatos ? "Generando archivo..." : "Exportar mis datos (CSV)" }}
+        </button>
+        <p class="exportar-datos__ayuda">
+          Incluye tu plan nutricional, tus hábitos diarios y tus estadísticas de
+          ejercicio. Se abre con Excel o LibreOffice.
+        </p>
+        @if (errorExportacion) {
+          <p class="exportar-datos__error" role="alert">{{ errorExportacion }}</p>
+        }
+      </div>
     </section>
 
     <section class="perfil__rutina">
