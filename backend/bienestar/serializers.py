@@ -205,7 +205,12 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = RutinaEjercicio
         fields = '__all__'
-        read_only_fields = ['fecha_registro', 'ejercicio_nombre'] 
+        read_only_fields = ['fecha_registro', 'ejercicio_nombre']
+
+    def validate_meta_cantidad(self, value):
+        if value <= 0:
+            raise serializers.ValidationError('La meta debe ser un número mayor que cero.')
+        return value 
       
 
 # =========================================================
