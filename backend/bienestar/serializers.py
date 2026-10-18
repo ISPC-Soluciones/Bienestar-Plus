@@ -221,9 +221,9 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['fecha_registro', 'ejercicio_nombre']
 
-        def get_es_de_hoy(self, obj):
+    def get_es_de_hoy(self, obj):
         # La fecha "de hoy" la define el servidor, no el navegador del usuario.
-            return obj.fecha_registro == timezone.localdate()
+        return obj.fecha_registro == timezone.localdate()
     
     def validate_meta_cantidad(self, value):
         if value <= 0:
