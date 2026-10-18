@@ -12,6 +12,7 @@ from .models import (
 )
 from decimal import Decimal
 from django.contrib.auth.hashers import make_password
+from django.urls import reverse
 from django.utils import timezone
 
 # =========================================================
@@ -192,9 +193,19 @@ class UsuarioAdminSerializer(serializers.ModelSerializer):
 # =========================================================
 
 class EjercicioSerializer(serializers.ModelSerializer):
+    imagen_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Ejercicio
-        fields = '__all__' 
+        fields = ['id', 'nombre', 'descripcion', 'tipo', 'imagen_url']
+
+    def get_imagen_url(self, obj):
+        if not obj.imagen_id:
+            return None
+        # ?v= cambia cuando se reemplaza la imagen, así el navegador no muestra la vieja.
+        url = f"{reverse('ejercicio-imagen', args=[obj.pk])}?v={obj.imagen_id}"
+        request = self.context.get('request')
+        return request.build_absolute_uri(url) if request else url
 
 
 class RutinaEjercicioSerializer(serializers.ModelSerializer):

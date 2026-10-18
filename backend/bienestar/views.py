@@ -1,9 +1,10 @@
 from io import BytesIO
+import logging
 
 from datetime import timedelta
 from functools import partial
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
@@ -29,6 +30,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .mongo import obtener_gridfs
+
+logger = logging.getLogger(__name__)
 
 from .models import (
     Usuario,
@@ -760,6 +763,23 @@ class EstadisticasView(APIView):
 
         return Response(metrics, status=status.HTTP_200_OK)
 
+IMAGEN_TIPOS_PERMITIDOS = {'image/jpeg', 'image/png', 'image/webp'}
+IMAGEN_TAMANIO_MAXIMO = 2 * 1024 * 1024  # 2 MB
+
+
+def es_admin_en_sesion(request):
+    usuario_id = request.session.get('usuario_id')
+    return bool(usuario_id) and Usuario.objects.filter(pk=usuario_id, rol=Roles.ADMIN).exists()
+
+
+def borrar_de_gridfs(archivo_id):
+    if not archivo_id:
+        return
+    try:
+        obtener_gridfs().delete(ObjectId(archivo_id))
+    except Exception:  # Un archivo huérfano en Mongo no debe romper la operación principal.
+        logger.warning('No se pudo borrar el archivo %s de GridFS', archivo_id, exc_info=True)
+
 class EjercicioViewSet(viewsets.ModelViewSet):
     """
     ViewSet para el CRUD de Ejercicios base.
@@ -768,6 +788,68 @@ class EjercicioViewSet(viewsets.ModelViewSet):
 
     queryset = Ejercicio.objects.all()
     serializer_class = EjercicioSerializer
+
+    
+    @action(detail=True, methods=['get', 'post', 'delete'], url_path='imagen')
+    def imagen(self, request, pk=None):
+        """
+        GET    /api/ejercicios/<id>/imagen/ -> devuelve la imagen (público).
+        POST   /api/ejercicios/<id>/imagen/ -> sube o reemplaza la imagen (solo admin, campo 'imagen').
+        DELETE /api/ejercicios/<id>/imagen/ -> quita la imagen (solo admin).
+        """
+        ejercicio = self.get_object()
+
+        if request.method == 'GET':
+            return self._servir_imagen(ejercicio)
+
+        if not es_admin_en_sesion(request):
+            raise PermissionDenied('Solo un administrador puede modificar la imagen del ejercicio.')
+
+        if request.method == 'DELETE':
+            borrar_de_gridfs(ejercicio.imagen_id)
+            ejercicio.imagen_id = None
+            ejercicio.save(update_fields=['imagen_id'])
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        archivo = request.FILES.get('imagen')
+        if archivo is None:
+            raise ValidationError({'imagen': ['No se recibió ningún archivo.']})
+        if archivo.content_type not in IMAGEN_TIPOS_PERMITIDOS:
+            raise ValidationError({'imagen': ['La imagen debe ser JPG, PNG o WEBP.']})
+        if archivo.size > IMAGEN_TAMANIO_MAXIMO:
+            raise ValidationError({'imagen': ['La imagen no puede superar los 2 MB.']})
+
+        # Primero se guarda la nueva y recién después se borra la anterior.
+        anterior_id = ejercicio.imagen_id
+        nuevo_id = obtener_gridfs().put(
+            archivo.read(),
+            filename=archivo.name,
+            content_type=archivo.content_type,
+            ejercicio_id=ejercicio.pk,
+        )
+        ejercicio.imagen_id = str(nuevo_id)
+        ejercicio.save(update_fields=['imagen_id'])
+        borrar_de_gridfs(anterior_id)
+
+        return Response(self.get_serializer(ejercicio).data, status=status.HTTP_200_OK)
+
+    def _servir_imagen(self, ejercicio):
+        if not ejercicio.imagen_id:
+            raise Http404('Este ejercicio no tiene imagen.')
+        try:
+            archivo = obtener_gridfs().get(ObjectId(ejercicio.imagen_id))
+        except Exception:
+            raise Http404('La imagen del ejercicio no se encontró.')
+
+        respuesta = HttpResponse(archivo.read(), content_type=archivo.content_type)
+        # La URL cambia (?v=) al reemplazar la imagen, así que se puede cachear.
+        respuesta['Cache-Control'] = 'public, max-age=86400'
+        return respuesta
+
+    def perform_destroy(self, instance):
+        imagen_id = instance.imagen_id
+        instance.delete()
+        borrar_de_gridfs(imagen_id)
 
     def perform_create(self, serializer):
         ejercicio = serializer.save()
