@@ -57,6 +57,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
   // Propiedades para la US12
   resumenRendimiento: any = null;
+  exportandoDatos = false;
+  errorExportacion = '';
 
   public doughnutChartOptions: ChartOptions<'doughnut'> = {
     responsive: true,
@@ -534,6 +536,34 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
       error: (err) => console.error('Error al actualizar el ejercicio', err),
     });
+  }
+
+  exportarDatos(): void {
+    this.exportandoDatos = true;
+    this.errorExportacion = '';
+
+    this.perfilService
+      .exportarDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (archivo) => {
+          const fecha = new Date().toLocaleDateString('en-CA'); // AAAA-MM-DD
+          const url = URL.createObjectURL(archivo);
+          const enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.download = `bienestar_mis_datos_${fecha}.csv`;
+          enlace.click();
+          setTimeout(() => URL.revokeObjectURL(url)); // se libera después de iniciar la descarga
+          this.exportandoDatos = false;
+        },
+        error: (err) => {
+          this.errorExportacion =
+            err.status === 401
+              ? 'Tu sesión expiró. Volvé a iniciar sesión para exportar tus datos.'
+              : 'No se pudo generar el archivo. Intentá de nuevo en unos minutos.';
+          this.exportandoDatos = false;
+        },
+      });
   }
 
   ngOnDestroy(): void {

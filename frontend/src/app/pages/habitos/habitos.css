@@ -273,11 +273,13 @@
 
 
 .card__habito__imagen img {
+  display: block;
   width: 100%;
-  height: 150px;
-  /* Altura fija para uniformidad */
+  height: auto;
+  aspect-ratio: 4 / 3; /* misma proporción en todas las tarjetas, en cualquier pantalla */
   border-radius: 8px;
   object-fit: cover;
+  background-color: #eef6f4;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -633,4 +635,13 @@
     flex-wrap: wrap;
     gap: 10px;
   }
+}
+
+.mensaje-rutina {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid #c0392b;
+  background: #fdecea;
+  color: #8e2a1f;
+  border-radius: 4px;
 }

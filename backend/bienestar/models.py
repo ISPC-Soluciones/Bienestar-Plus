@@ -169,6 +169,7 @@ class Ejercicio(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
     descripcion = models.TextField(blank=True, null=True)
     tipo = models.CharField(max_length=20, choices=Tipos.choices, default=Tipos.FUERZA)
+    imagen_id = models.CharField(max_length=24, blank=True, null=True)
 
     def __str__(self):
         return self.nombre

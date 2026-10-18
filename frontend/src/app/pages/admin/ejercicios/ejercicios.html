@@ -7,6 +7,7 @@
   <table class="tabla-admin" *ngIf="ejercicios.length > 0; else sinEjercicios">
     <thead>
       <tr>
+        <th>Imagen</th>
         <th>Nombre</th>
         <th>Descripción</th>
         <th>Tipo</th>
@@ -16,6 +17,18 @@
     <tbody>
       @for (ejercicio of ejercicios; track ejercicio.id) {
       <tr>
+        <td>
+          @if (ejercicio.imagen_url) {
+          <img
+            class="miniatura-ejercicio"
+            [src]="ejercicio.imagen_url"
+            [alt]="'Imagen de ' + ejercicio.nombre"
+            loading="lazy"
+          />
+          } @else {
+          <span class="sin-imagen">Sin imagen</span>
+          }
+        </td>
         <td>{{ ejercicio.nombre }}</td>
         <td>{{ ejercicio.descripcion }}</td>
         <td>{{ ejercicio.tipo }}</td>
@@ -80,8 +93,32 @@
         </select>
       </div>
 
+      <div class="form-group">
+        <label for="imagen-ejercicio">Imagen (JPG, PNG o WEBP, hasta 2 MB)</label>
+        <input
+          #inputImagen
+          id="imagen-ejercicio"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          (change)="seleccionarImagen($event)"
+        />
+        @if (vistaPrevia || enEdicion?.imagen_url) {
+        <div class="vista-previa">
+          <img
+            [src]="vistaPrevia || enEdicion?.imagen_url"
+            [alt]="'Vista previa de ' + (nuevoEjercicio.nombre || 'la imagen')"
+          />
+          @if (!vistaPrevia && enEdicion?.imagen_url) {
+          <button type="button" class="btn-custom btn-custom--rojo" (click)="quitarImagen()">
+            Quitar imagen
+          </button>
+          }
+        </div>
+        }
+      </div>
+
       <div class="acciones-form">
-        <button type="submit" class="btn-custom btn-custom--primario">
+        <button type="submit" class="btn-custom btn-custom--primario" [disabled]="guardando">
           {{ enEdicion ? "Actualizar" : "Guardar" }}
         </button>
         @if (enEdicion) {
