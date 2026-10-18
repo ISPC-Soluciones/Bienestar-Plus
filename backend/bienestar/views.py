@@ -312,7 +312,7 @@ class LoginUsuarioView(APIView):
         request.session.cycle_key()
         request.session["usuario_id"] = usuario.id
 
-        serializer = UsuarioSerializer(usuario)
+        serializer = UsuarioSerializer(usuario, context={'request': request})
         return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
 
 
