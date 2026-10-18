@@ -10,6 +10,11 @@ services:
       POSTGRES_PASSWORD: bienestar_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bienestar_user -d bienestar"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   mongo:
     image: mongo:7
@@ -17,21 +22,47 @@ services:
     restart: unless-stopped
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build:
       context: ./backend
     container_name: bienestar_backend
     restart: unless-stopped
+    # Antes el contenedor arrancaba daphne directo, sin aplicar migraciones.
+    # Con una base Postgres vacia (contenedor nuevo) eso deja la app sin tablas.
+    command: sh -c "python manage.py migrate --noinput && daphne -b 0.0.0.0 -p 8000 bienestar_plus_api.asgi:application"
     environment:
       DATABASE_URL: postgresql://bienestar_user:bienestar_password@db:5432/bienestar
       DJANGO_DEBUG: "true"
       MONGO_URI: mongodb://mongo:27017/bienestar_archivos
+      SECRET_KEY: "dev-secret-key-cambiame"
+      FRONTEND_URL: "http://localhost:4200"
+      # Login con Google: dejar vacio si no lo van a usar en local.
+      # El boton de "Iniciar con Google" solo fallara si se hace click,
+      # el resto de la app funciona igual.
+      GOOGLE_CLIENT_ID: ""
+      GOOGLE_CLIENT_SECRET: ""
+      GOOGLE_REDIRECT_URI: "http://localhost:8000/api/auth/google/callback/"
+      # Con DJANGO_DEBUG=true el backend ya usa EMAIL_PROVIDER=console por defecto
+      # (los emails de bienvenida / recuperacion de password se imprimen en los logs
+      # del contenedor backend en vez de enviarse de verdad). Si quieren mandarlos
+      # de verdad completen BREVO_API_KEY.
+      EMAIL_PROVIDER: "console"
+      BREVO_API_KEY: ""
+      DEFAULT_FROM_EMAIL: "no-reply@bienestar-plus.app"
+      DEFAULT_FROM_NAME: "Bienestar Plus"
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - mongo
+      db:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
 
   frontend:
     build:

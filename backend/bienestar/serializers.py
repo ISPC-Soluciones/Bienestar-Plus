@@ -198,7 +198,7 @@ class EjercicioSerializer(serializers.ModelSerializer):
 
 class RutinaEjercicioSerializer(serializers.ModelSerializer):
     ejercicio_nombre = serializers.CharField(source='ejercicio.nombre', read_only=True)
-    ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all(), write_only=True)
+    ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all())
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)
     fecha_registro = serializers.DateField(required=False, read_only=True)
 
