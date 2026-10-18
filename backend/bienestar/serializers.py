@@ -201,6 +201,7 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
     MENSAJE_DUPLICADO = 'Este ejercicio ya está en tu rutina de hoy.'
     ejercicio_nombre = serializers.CharField(source='ejercicio.nombre', read_only=True)
     ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all())
+    es_de_hoy = serializers.SerializerMethodField()
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)
     fecha_registro = serializers.DateField(required=False, read_only=True)
 
@@ -209,6 +210,10 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['fecha_registro', 'ejercicio_nombre']
 
+        def get_es_de_hoy(self, obj):
+        # La fecha "de hoy" la define el servidor, no el navegador del usuario.
+            return obj.fecha_registro == timezone.localdate()
+    
     def validate_meta_cantidad(self, value):
         if value <= 0:
             raise serializers.ValidationError('La meta debe ser un número mayor que cero.')
