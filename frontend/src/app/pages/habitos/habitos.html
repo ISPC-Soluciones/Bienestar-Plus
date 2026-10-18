@@ -63,6 +63,9 @@
                     <p class="card__presentacion__descripcion">
                       Ejercicios agregados a tu rutina:
                     </p>
+                    @if (mensajeRutina) {
+                    <p class="mensaje-rutina" role="alert">{{ mensajeRutina }}</p>
+                    }
                     <ul>
                       @for (rutina of rutinaDelUsuario; track rutina.id) {
                       <li class="rutina__item">
@@ -81,6 +84,7 @@
                               placeholder="20"
                               class="input-edicion-cantidad"
                               min="1"
+                              step="1"
                             />
                             <p class="habito__texto">repeticiones/km</p>
                           </div>
@@ -171,8 +175,8 @@
                 </h3>
 
                 <div class="contenido__ejercicios grid-3-cols">
-                  @for ( ejercicio of ejerciciosDisponibles; track ejercicio.id
-                  ) { @if (ejercicio.id) { @if (estaEnRutina(ejercicio)) {
+                  @for (ejercicio of ejerciciosDisponibles; track ejercicio.id) {
+                  @if (ejercicio.id) {
                   <article class="card__habito">
                     <h4 class="card__habito__titulo">
                       {{ ejercicio.nombre }}
@@ -182,30 +186,22 @@
                       {{ ejercicio.tipo | titlecase }})
                     </p>
                     <div class="card__habito__acciones">
-                      <button class="btn-custom btn-custom--gris" disabled>
-                        Agregado <i class="fa-solid fa-check"></i>
+                      @if (estaEnRutina(ejercicio)) {
+                      <button type="button" class="btn-custom btn-custom--gris" disabled>
+                        Agregado <i class="fa-solid fa-check" aria-hidden="true"></i>
                       </button>
-                    </div>
-                  </article>
-                  } @else {
-                  <article class="card__habito">
-                    <h4 class="card__habito__titulo">
-                      {{ ejercicio.nombre }}
-                    </h4>
-                    <p class="card__habito__descripcion">
-                      {{ ejercicio.descripcion }} (Tipo:
-                      {{ ejercicio.tipo | titlecase }})
-                    </p>
-                    <div class="card__habito__acciones">
+                      } @else {
                       <button
+                        type="button"
                         class="btn-custom btn-custom--primario"
                         (click)="agregarEjercicioARutina(ejercicio)"
                       >
-                        Agregar <i class="fa-solid fa-plus"></i>
+                        Agregar <i class="fa-solid fa-plus" aria-hidden="true"></i>
                       </button>
+                      }
                     </div>
                   </article>
-                  } } } @empty {
+                  } } @empty {
                   <p class="lista-vacia">
                     No hay ejercicios disponibles para mostrar.
                   </p>

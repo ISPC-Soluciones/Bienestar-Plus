@@ -13,4 +13,5 @@ export interface RutinaEjercicio {
   meta_cantidad: number;
   completado: boolean;
   fecha_registro: string;
+  es_de_hoy?: boolean;
 }

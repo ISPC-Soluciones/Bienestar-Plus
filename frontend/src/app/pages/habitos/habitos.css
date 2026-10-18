@@ -634,3 +634,12 @@
     gap: 10px;
   }
 }
+
+.mensaje-rutina {
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border-left: 4px solid #c0392b;
+  background: #fdecea;
+  color: #8e2a1f;
+  border-radius: 4px;
+}
