@@ -140,7 +140,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             url = f'/api/usuarios/{obj.id}/foto-perfil/'
             if request:
                 return request.build_absolute_uri(url)
-            return obj.foto_perfil.url
+            return url
         return None
 
 class UsuarioUpdateSerializer(serializers.ModelSerializer):
