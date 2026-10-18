@@ -551,7 +551,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
           const url = URL.createObjectURL(archivo);
           const enlace = document.createElement('a');
           enlace.href = url;
-          enlace.download = `bienestar_mis_datos_${fecha}.csv`;
+          enlace.download = `bienestar_mis_datos_${fecha}.xlsx`;
           enlace.click();
           setTimeout(() => URL.revokeObjectURL(url)); // se libera después de iniciar la descarga
           this.exportandoDatos = false;
