@@ -3,6 +3,7 @@ from io import BytesIO
 from datetime import timedelta
 from functools import partial
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
@@ -830,21 +831,16 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        usuario = serializer.validated_data.get('usuario')
-        ejercicio = serializer.validated_data.get('ejercicio')
-        fecha_registro = serializer.validated_data.get('fecha_registro', timezone.localdate())
-
-        existente = RutinaEjercicio.objects.filter(
-            usuario=usuario,
-            ejercicio=ejercicio,
-            fecha_registro=fecha_registro
-        ).first()
-
-        if existente:
-            existente.meta_cantidad += serializer.validated_data.get('meta_cantidad', 1)
-            existente.save()
-        else:
-            serializer.save()
+        # La validación del serializer cubre el caso normal; la restricción
+        # unique_together cubre dos pedidos simultáneos del mismo ejercicio.
+        try:
+            with transaction.atomic():
+                serializer.save()
+        except IntegrityError:
+            raise ValidationError(
+                {'ejercicio': [RutinaEjercicioSerializer.MENSAJE_DUPLICADO]}
+            )
+            
     @action(detail=False, methods=['get'], url_path='descargar-pdf')
     def descargar_pdf(self, request):
         """

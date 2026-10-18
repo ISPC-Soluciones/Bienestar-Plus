@@ -12,6 +12,7 @@ from .models import (
 )
 from decimal import Decimal
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
 
 # =========================================================
 # SERIALIZADORES DE PERFIL
@@ -197,6 +198,7 @@ class EjercicioSerializer(serializers.ModelSerializer):
 
 
 class RutinaEjercicioSerializer(serializers.ModelSerializer):
+    MENSAJE_DUPLICADO = 'Este ejercicio ya está en tu rutina de hoy.'
     ejercicio_nombre = serializers.CharField(source='ejercicio.nombre', read_only=True)
     ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all())
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)
@@ -210,7 +212,18 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
     def validate_meta_cantidad(self, value):
         if value <= 0:
             raise serializers.ValidationError('La meta debe ser un número mayor que cero.')
-        return value 
+        return value
+    
+    def validate(self, attrs):
+        if self.instance is None:
+            ya_existe = RutinaEjercicio.objects.filter(
+                usuario=attrs['usuario'],
+                ejercicio=attrs['ejercicio'],
+                fecha_registro=timezone.localdate(),
+            ).exists()
+            if ya_existe:
+                raise serializers.ValidationError({'ejercicio': self.MENSAJE_DUPLICADO})
+        return attrs
       
 
 # =========================================================
