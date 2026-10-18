@@ -3,6 +3,7 @@ export interface Ejercicio {
   nombre: string;
   descripcion?: string;
   tipo: string;
+  imagen_url?: string | null;
 }
 
 export interface RutinaEjercicio {
@@ -13,4 +14,5 @@ export interface RutinaEjercicio {
   meta_cantidad: number;
   completado: boolean;
   fecha_registro: string;
+  es_de_hoy?: boolean;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+  import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -19,6 +20,9 @@ export class Habitos implements OnInit {
   activeTab: string = 'ejercicio';
   ejerciciosDisponibles: Ejercicio[] = [];
   rutinaDelUsuario: RutinaEjercicio[] = [];
+  ejerciciosAgregadosHoy = new Set<number>();
+  mensajeRutina = '';
+  readonly imagenPorDefecto = 'assets/ejercicio-sin-imagen.svg';
   progresoSueno: ProgresoDiario | null = null;
   horasSueno: number | null = null;
   cargandoSueno = false;
@@ -76,45 +80,65 @@ export class Habitos implements OnInit {
       .obtenerRutinaDelUsuario(this.usuarioIdAutenticado)
       .subscribe({
         next: (rutina) => {
-          console.log('🧩 Datos recibidos de la API rutina:', rutina);
-
-          if (Array.isArray(rutina)) {
-            this.rutinaDelUsuario = rutina;
-          } else if (rutina && 'results' in rutina) {
-            this.rutinaDelUsuario = rutina.results;
-          } else {
-            console.warn('⚠️ Respuesta inesperada del backend:', rutina);
-            this.rutinaDelUsuario = [];
-          }
-        },
-        error: (err) => {
-          console.error('Error cargando rutina del usuario:', err);
-          this.rutinaDelUsuario = [];
-        },
+            this.establecerRutina(Array.isArray(rutina) ? rutina : rutina?.results ?? []);
+          },
+        error: (err: HttpErrorResponse) => {
+            this.establecerRutina([]);
+            this.mensajeRutina = this.mensajeDeError(err, 'No se pudo cargar tu rutina.');
+          },
       });
   }
 
-  estaEnRutina(ejercicio: Ejercicio): boolean {
-    if (!ejercicio.id) return false;
-    if (!Array.isArray(this.rutinaDelUsuario)) return false;
-    return this.rutinaDelUsuario.some((r) => r.ejercicio === ejercicio.id);
-  }
+      estaEnRutina(ejercicio: Ejercicio): boolean {
+      return ejercicio.id !== undefined && this.ejerciciosAgregadosHoy.has(ejercicio.id);
+    }
+
+    /** Actualiza la rutina y recalcula una sola vez qué ejercicios ya están agregados hoy. */
+    usarImagenPorDefecto(evento: Event): void {
+       const img = evento.target as HTMLImageElement;
+       if (!img.src.endsWith(this.imagenPorDefecto)) {
+         img.src = this.imagenPorDefecto;
+       }
+     }
+     
+    private establecerRutina(rutinas: RutinaEjercicio[]): void {
+      this.rutinaDelUsuario = rutinas;
+      // es_de_hoy lo calcula el backend: evita diferencias de zona horaria con el navegador.
+      this.ejerciciosAgregadosHoy = new Set(
+        rutinas.filter((r) => r.es_de_hoy).map((r) => r.ejercicio),
+      );
+    }
+
+    /** Devuelve el primer mensaje de error que envía la API (DRF) o un texto por defecto. */
+    private mensajeDeError(err: HttpErrorResponse, porDefecto: string): string {
+      const cuerpo = err.error;
+      if (cuerpo && typeof cuerpo === 'object') {
+        const primero = Object.values(cuerpo)[0];
+        const texto = Array.isArray(primero) ? primero[0] : primero;
+        if (typeof texto === 'string') return texto;
+      }
+      return porDefecto;
+    }
 
   agregarEjercicioARutina(ejercicio: Ejercicio): void {
     if (!ejercicio.id || this.estaEnRutina(ejercicio)) return;
 
     const metaPorDefecto = 20;
+    this.mensajeRutina = '';
 
     this.rutinaService
       .agregarARutina(this.usuarioIdAutenticado, ejercicio.id, metaPorDefecto)
       .subscribe({
-        next: () => {
-          this.cargarRutinaDelUsuario();
-
-          this.estadisticasService.emitirRefresco();
-        },
-        error: (err) => {
-          console.error('Error agregando ejercicio a la rutina:', err);
+        next: (rutinaCreada) => {
+            // La respuesta ya trae el id del ejercicio: se actualiza sin volver a pedir la rutina.
+            this.establecerRutina([rutinaCreada, ...this.rutinaDelUsuario]);
+            this.estadisticasService.emitirRefresco();
+          },
+        error: (err: HttpErrorResponse) => {
+            this.mensajeRutina = this.mensajeDeError(err, 'No se pudo agregar el ejercicio.');
+            if (err.status === 400) {
+              this.cargarRutinaDelUsuario(); // sincroniza el botón si ya estaba agregado
+            }
         },
       });
   }
@@ -214,11 +238,12 @@ export class Habitos implements OnInit {
       this.cantidadEnEdicion === undefined ||
       this.cantidadEnEdicion <= 0
     ) {
-      console.error('La cantidad debe ser un número positivo.');
+      this.mensajeRutina = 'La meta debe ser un número mayor que cero.';
       return;
     }
 
     const nuevaCantidad = this.cantidadEnEdicion;
+    this.mensajeRutina = '';
 
     this.rutinaService
       .actualizarRutina(rutina.id, { meta_cantidad: nuevaCantidad })
@@ -227,7 +252,9 @@ export class Habitos implements OnInit {
           rutina.meta_cantidad = rutinaActualizada.meta_cantidad;
           this.cancelarEdicion();
         },
-        error: (err) => console.error('Error al actualizar la meta:', err),
+        error: (err: HttpErrorResponse) => {
+          this.mensajeRutina = this.mensajeDeError(err, 'No se pudo actualizar la meta.');
+        },
       });
   }
 
@@ -236,11 +263,11 @@ export class Habitos implements OnInit {
 
     this.rutinaService.eliminarRutina(id).subscribe({
       next: () => {
-        this.rutinaDelUsuario = this.rutinaDelUsuario.filter(
-          (r) => r.id !== id,
-        );
+        this.establecerRutina(this.rutinaDelUsuario.filter((r) => r.id !== id));
       },
-      error: (err) => console.error('Error al eliminar el ejercicio:', err),
+      error: (err: HttpErrorResponse) => {
+        this.mensajeRutina = this.mensajeDeError(err, 'No se pudo eliminar el ejercicio.');
+      },
     });
   }
 
@@ -256,7 +283,9 @@ export class Habitos implements OnInit {
           rutina.completado = rutinaActualizada.completado;
           this.cancelarEdicion();
         },
-        error: (err) => console.error('Error al marcar como completado:', err),
+        error: (err: HttpErrorResponse) => {
+          this.mensajeRutina = this.mensajeDeError(err, 'No se pudo marcar como completado.');
+        },
       });
   }
 

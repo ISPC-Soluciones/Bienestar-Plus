@@ -1,0 +1,11 @@
+   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Ejercicio sin imagen">
+     <rect width="400" height="300" fill="#eef6f4"/>
+     <g fill="#6ec1e4">
+       <rect x="95" y="130" width="210" height="40" rx="8"/>
+       <rect x="70" y="105" width="40" height="90" rx="8"/>
+       <rect x="290" y="105" width="40" height="90" rx="8"/>
+       <rect x="45" y="120" width="30" height="60" rx="6"/>
+       <rect x="325" y="120" width="30" height="60" rx="6"/>
+     </g>
+     <text x="200" y="245" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#333b3e">Sin imagen</text>
+   </svg>

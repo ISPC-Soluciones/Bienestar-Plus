@@ -12,6 +12,8 @@ from .models import (
 )
 from decimal import Decimal
 from django.contrib.auth.hashers import make_password
+from django.urls import reverse
+from django.utils import timezone
 
 # =========================================================
 # SERIALIZADORES DE PERFIL
@@ -191,21 +193,57 @@ class UsuarioAdminSerializer(serializers.ModelSerializer):
 # =========================================================
 
 class EjercicioSerializer(serializers.ModelSerializer):
+    imagen_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Ejercicio
-        fields = '__all__' 
+        fields = ['id', 'nombre', 'descripcion', 'tipo', 'imagen_url']
+
+    def get_imagen_url(self, obj):
+        if not obj.imagen_id:
+            return None
+        # ?v= cambia cuando se reemplaza la imagen, así el navegador no muestra la vieja.
+        url = f"{reverse('ejercicio-imagen', args=[obj.pk])}?v={obj.imagen_id}"
+        request = self.context.get('request')
+        return request.build_absolute_uri(url) if request else url
 
 
 class RutinaEjercicioSerializer(serializers.ModelSerializer):
+    MENSAJE_DUPLICADO = 'Este ejercicio ya está en tu rutina de hoy.'
     ejercicio_nombre = serializers.CharField(source='ejercicio.nombre', read_only=True)
-    ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all(), write_only=True)
+    ejercicio = serializers.PrimaryKeyRelatedField(queryset=Ejercicio.objects.all())
+    es_de_hoy = serializers.SerializerMethodField()
     usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all(), write_only=True)
     fecha_registro = serializers.DateField(required=False, read_only=True)
 
     class Meta:
         model = RutinaEjercicio
         fields = '__all__'
-        read_only_fields = ['fecha_registro', 'ejercicio_nombre'] 
+        read_only_fields = ['fecha_registro', 'ejercicio_nombre']
+
+        def get_es_de_hoy(self, obj):
+        # La fecha "de hoy" la define el servidor, no el navegador del usuario.
+            return obj.fecha_registro == timezone.localdate()
+    
+    def validate_meta_cantidad(self, value):
+        if value <= 0:
+            raise serializers.ValidationError('La meta debe ser un número mayor que cero.')
+        return value
+    
+    def validate(self, attrs):
+        if self.instance is None:
+            ya_existe = RutinaEjercicio.objects.filter(
+                usuario=attrs['usuario'],
+                ejercicio=attrs['ejercicio'],
+                fecha_registro=timezone.localdate(),
+            ).exists()
+            if ya_existe:
+                raise serializers.ValidationError({'ejercicio': self.MENSAJE_DUPLICADO})
+        elif self.instance.completado:
+            raise serializers.ValidationError(
+                {'detail': 'Un ejercicio completado no puede modificarse.'}
+            )
+        return attrs
       
 
 # =========================================================

@@ -31,13 +31,13 @@ export class RutinaEjercicioService {
     usuarioId: number,
     ejercicioId: number,
     metaCantidad: number,
-  ): Observable<any> {
+  ): Observable<RutinaEjercicio> {
     const data = {
       usuario: usuarioId,
       ejercicio: ejercicioId,
       meta_cantidad: metaCantidad,
     };
-    return this.http.post<any>(this.apiUrl, data);
+    return this.http.post<RutinaEjercicio>(this.apiUrl, data);
   }
 
   /**
