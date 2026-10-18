@@ -22,6 +22,7 @@ export class Habitos implements OnInit {
   rutinaDelUsuario: RutinaEjercicio[] = [];
   ejerciciosAgregadosHoy = new Set<number>();
   mensajeRutina = '';
+  readonly imagenPorDefecto = 'assets/ejercicio-sin-imagen.svg';
   progresoSueno: ProgresoDiario | null = null;
   horasSueno: number | null = null;
   cargandoSueno = false;
@@ -93,6 +94,13 @@ export class Habitos implements OnInit {
     }
 
     /** Actualiza la rutina y recalcula una sola vez qué ejercicios ya están agregados hoy. */
+    usarImagenPorDefecto(evento: Event): void {
+       const img = evento.target as HTMLImageElement;
+       if (!img.src.endsWith(this.imagenPorDefecto)) {
+         img.src = this.imagenPorDefecto;
+       }
+     }
+     
     private establecerRutina(rutinas: RutinaEjercicio[]): void {
       this.rutinaDelUsuario = rutinas;
       // es_de_hoy lo calcula el backend: evita diferencias de zona horaria con el navegador.

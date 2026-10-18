@@ -178,6 +178,16 @@
                   @for (ejercicio of ejerciciosDisponibles; track ejercicio.id) {
                   @if (ejercicio.id) {
                   <article class="card__habito">
+                    <div class="card__habito__imagen">
+                      <img
+                        [src]="ejercicio.imagen_url || imagenPorDefecto"
+                        [alt]="'Cómo realizar ' + ejercicio.nombre"
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        (error)="usarImagenPorDefecto($event)"
+                      />
+                    </div>
                     <h4 class="card__habito__titulo">
                       {{ ejercicio.nombre }}
                     </h4>
