@@ -116,6 +116,15 @@ export class PerfilService {
   }
 
   // Obtener resumen de rendimiento
+
+  exportarDatos(): Observable<Blob> {
+       return this.http.get(`${this.base}/exportar-datos/`, {
+         responseType: 'blob',
+         withCredentials: true,
+       });
+     }
+
+
   getResumenRendimiento(userId: number): Observable<any> {
     return this.http
       .get<any>(`${this.base}/usuarios/${userId}/resumen-rendimiento/`)
