@@ -223,6 +223,10 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
             ).exists()
             if ya_existe:
                 raise serializers.ValidationError({'ejercicio': self.MENSAJE_DUPLICADO})
+        elif self.instance.completado:
+            raise serializers.ValidationError(
+                {'detail': 'Un ejercicio completado no puede modificarse.'}
+            )
         return attrs
       
 
