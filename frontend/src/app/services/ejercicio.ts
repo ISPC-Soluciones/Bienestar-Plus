@@ -32,4 +32,20 @@ export class EjercicioService {
   eliminarEjercicio(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}/`);
   }
+
+  
+  /** Sube o reemplaza la imagen (solo admin: necesita la cookie de sesión). */
+  subirImagen(id: number, imagen: File): Observable<Ejercicio> {
+    const datos = new FormData();
+    datos.append('imagen', imagen);
+    return this.http.post<Ejercicio>(`${this.apiUrl}${id}/imagen/`, datos, {
+      withCredentials: true,
+    });
+  }
+
+  eliminarImagen(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}${id}/imagen/`, {
+      withCredentials: true,
+    });
+  }
 }

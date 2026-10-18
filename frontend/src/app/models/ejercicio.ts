@@ -3,6 +3,7 @@ export interface Ejercicio {
   nombre: string;
   descripcion?: string;
   tipo: string;
+  imagen_url?: string | null;
 }
 
 export interface RutinaEjercicio {

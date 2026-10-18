@@ -89,3 +89,33 @@
 .formulario-admin select::-ms-expand {
   display: none;
 }
+
+/* =====================
+   IMAGEN DE EJERCICIOS (US16)
+   ===================== */
+.miniatura-ejercicio {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.sin-imagen {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.vista-previa {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.vista-previa img {
+  width: 160px;
+  max-width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+}
