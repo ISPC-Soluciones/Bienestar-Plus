@@ -86,7 +86,6 @@ Este proyecto fue creado por un grupo de 6 estudiantes con pasión por la tecnol
 - Eric Heredia
 - Franco Miranda
 - Nahir Ñañez
-- Matias Rios
 - Cristian Vellio
 
 > 🎓 Todos cursamos la Tecnicatura en Desarrollo de Software en el Instituto Superior Politécnico de Córdoba.
