@@ -11,7 +11,7 @@
   💚 App de Bienestar Integral
 </h2>
 
-Bienestar+ es una aplicación web orientada al bienestar físico, mental y emocional. Permite a los usuarios gestionar hábitos saludables, acceder a recursos de salud mental y recibir recomendaciones personalizadas para mejorar su calidad de vida.
+Bienestar Plus es una aplicación web orientada al bienestar físico, mental y emocional. Permite a los usuarios gestionar hábitos saludables, acceder a recursos de salud mental y recibir recomendaciones personalizadas para mejorar su calidad de vida.
 
 Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, esta app es parte de un proyecto académico colaborativo.
 <br>
