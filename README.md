@@ -22,7 +22,7 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
   <br>
   <br>
     <div>
-       <img src="https://github.com/user-attachments/assets/f035c60b-4ac3-4d31-bfcf-cd2312194ae0" alt="Bienestar Plus" width="650" height="450">
+       <img src="https://github.com/user-attachments/assets/f035c60b-4ac3-4d31-bfcf-cd2312194ae0" alt="Bienestar Plus" width="800" height="450">
     </div>
 </div>
 
