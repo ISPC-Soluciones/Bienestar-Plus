@@ -2,9 +2,10 @@
   Bienestar-Plus
 </h1>
 <div align="center">
-<img src="https://github.com/user-attachments/assets/80ab726e-f37b-4cae-924b-ed6462634ff8" alt="mujer-trotando" width="800" height="400">
+<img src="https://github.com/user-attachments/assets/d3193043-ea46-4c96-a0e2-e2cf672f3a63" alt="Bienestar_Plus_Redes" width="700" height="350">
 </div>
 <br>
+
 
 <h2 align=center> 
   💚 App de Bienestar Integral
@@ -21,7 +22,7 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
   <br>
   <br>
     <div>
-       <img src="https://github.com/user-attachments/assets/b9a98530-1b25-4f95-b58e-bdcc0d683dad" alt="Bienestar Plus" width="700" height="500">
+       <img src="https://github.com/user-attachments/assets/f035c60b-4ac3-4d31-bfcf-cd2312194ae0" alt="Bienestar Plus" width="650" height="450">
     </div>
 </div>
 
