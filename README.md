@@ -2,7 +2,7 @@
   Bienestar-Plus
 </h1>
 <div align="center">
-<img src="https://github.com/user-attachments/assets/d3193043-ea46-4c96-a0e2-e2cf672f3a63" alt="Bienestar_Plus_Redes" width="800" height="350">
+<img src="https://github.com/user-attachments/assets/d3193043-ea46-4c96-a0e2-e2cf672f3a63" alt="Bienestar_Plus_Redes" width="750" height="350">
 </div>
 <br>
 
