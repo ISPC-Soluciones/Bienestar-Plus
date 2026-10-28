@@ -1,55 +1,73 @@
-<div class="modal-fondo" [class.visible]="abierto">
-  <div class="modal-contenido">
+@if (abierto) {
+  <!-- Capa invisible de fondo para detectar clics afuera y cerrar (sin oscurecer ni bloquear la pantalla) -->
+  <div class="fixed inset-0 z-[1000]" (click)="cerrarClick()"></div>
 
-    <div class="modal-header">
-      <h2 class="modal-titulo">Tus notificaciones</h2>
-
+  <!-- Contenedor del panel flotante de notificaciones -->
+  <div
+    class="absolute top-[70px] right-6 max-sm:fixed max-sm:top-[70px] max-sm:left-4 max-sm:right-4 max-sm:w-auto max-sm:max-w-none z-[1001] w-[380px] bg-white rounded-[14px] shadow-[0_10px_35px_rgba(0,0,0,0.18)] overflow-hidden font-[var(--fuente-base)] text-[var(--bg-y-fuentes)]"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div
+      class="flex items-center justify-between py-[18px] px-5 border-b border-[#eeeeee]"
+    >
+      <h2
+        class="m-0 font-[var(--fuente-titulo)] text-[var(--bg-y-fuentes)] text-[1.25rem] font-bold"
+      >
+        Tus notificaciones
+      </h2>
       <button
-        class="modal-cerrar"
+        class="w-[34px] h-[34px] flex items-center justify-center border-none rounded-full bg-transparent text-[#777] text-[1.7rem] leading-none cursor-pointer hover:bg-[#f1f1f1] hover:text-[#333] transition-colors duration-200"
         (click)="cerrarClick()"
-        aria-label="Cerrar notificaciones">
-        x
+        aria-label="Cerrar notificaciones"
+      >
+        &times;
       </button>
     </div>
 
+    <!-- Lista o Estado Vacío -->
     @if (notificaciones.length > 0) {
-
-      <ul class="notificaciones-lista">
-
+      <ul class="list-none p-2 m-0 max-h-[330px] overflow-y-auto">
         @for (noti of notificaciones; track noti.id) {
-
           <li
-            class="notificacion"
-            [class.no-leida]="noti.estado !== 'leido'"
-            [class.leida]="noti.estado === 'leido'"
-            (click)="toggleLeida(noti)">
-
-            <div class="notificacion-indicador">
-              <span></span>
+            class="flex items-start gap-3 p-[13px_12px] rounded-[10px] cursor-pointer transition-all duration-200 hover:bg-[#f5f5f5]"
+            [class.bg-[#f3f8f5]]="noti.estado !== 'leido'"
+            [class.hover:bg-[#eaf3ed]]="noti.estado !== 'leido'"
+            (click)="toggleLeida(noti)"
+          >
+            <!-- Indicador -->
+            <div
+              class="w-[10px] h-[10px] mt-[5px] flex items-center justify-center flex-shrink-0"
+            >
+              <span
+                class="w-2 h-2 rounded-full"
+                [class.bg-[var(--primario)]]="noti.estado !== 'leido'"
+                [class.bg-[#cfcfcf]]="noti.estado === 'leido'"
+              ></span>
             </div>
 
-            <div class="mensaje-container">
-              <p class="mensaje-texto">
+            <!-- Contenido del mensaje -->
+            <div class="flex flex-col flex-1 min-w-0">
+              <p
+                class="m-0 text-[0.92rem] leading-[1.4]"
+                [class.font-medium]="noti.estado !== 'leido'"
+                [class.text-[#333]]="noti.estado !== 'leido'"
+                [class.font-normal]="noti.estado === 'leido'"
+                [class.text-[#777]]="noti.estado === 'leido'"
+              >
                 {{ noti.mensaje }}
               </p>
-
-              <small class="mensaje-fecha">
-                {{ noti.enviado | date:'short' }}
+              <small class="mt-[5px] text-[0.72rem] text-[#999]">
+                {{ noti.enviado | date: "short" }}
               </small>
             </div>
-
           </li>
-
         }
-
       </ul>
-
     } @else {
-
-      <div class="modal-vacio">
-        <p>No tenés notificaciones por el momento.</p>
+      <div class="text-center p-[35px_20px] text-[#888]">
+        <p class="m-0 text-[0.9rem]">No tenés notificaciones por el momento.</p>
       </div>
-
     }
   </div>
-</div>
+}
