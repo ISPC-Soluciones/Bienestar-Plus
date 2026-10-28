@@ -1,0 +1,12 @@
+[run]
+source = bienestar
+omit =
+    bienestar/tests/*
+    bienestar/migrations/*
+    bienestar/test_*.py
+
+[report]
+fail_under = 70
+skip_covered = true
+show_missing = true
+

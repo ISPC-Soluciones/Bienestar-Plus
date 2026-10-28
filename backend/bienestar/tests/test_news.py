@@ -11,7 +11,7 @@ from bienestar.views import NoticiasView
 from django.utils import timezone
 from datetime import timedelta
 
-from .models import Usuario, Habito, ProgresoDiario
+from bienestar.models import Usuario, Habito, ProgresoDiario
 
 NEWS_SAMPLE = {
     "articles": [
