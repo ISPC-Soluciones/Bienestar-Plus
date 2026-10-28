@@ -2,15 +2,16 @@
   Bienestar-Plus
 </h1>
 <div align="center">
-<img src="https://github.com/user-attachments/assets/80ab726e-f37b-4cae-924b-ed6462634ff8" alt="mujer-trotando" width="800" height="400">
+<img src="https://github.com/user-attachments/assets/d3193043-ea46-4c96-a0e2-e2cf672f3a63" alt="Bienestar_Plus_Redes" width="750" height="350">
 </div>
 <br>
+
 
 <h2 align=center> 
   💚 App de Bienestar Integral
 </h2>
 
-Bienestar+ es una aplicación web orientada al bienestar físico, mental y emocional. Permite a los usuarios gestionar hábitos saludables, acceder a recursos de salud mental y recibir recomendaciones personalizadas para mejorar su calidad de vida.
+Bienestar Plus es una aplicación web orientada al bienestar físico, mental y emocional. Permite a los usuarios gestionar hábitos saludables, acceder a recursos de salud mental y recibir recomendaciones personalizadas para mejorar su calidad de vida.
 
 Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, esta app es parte de un proyecto académico colaborativo.
 <br>
@@ -21,7 +22,7 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
   <br>
   <br>
     <div>
-       <img src="https://github.com/user-attachments/assets/b9a98530-1b25-4f95-b58e-bdcc0d683dad" alt="Bienestar Plus" width="700" height="500">
+       <img src="https://github.com/user-attachments/assets/f035c60b-4ac3-4d31-bfcf-cd2312194ae0" alt="Bienestar Plus" width="800" height="450">
     </div>
 </div>
 
@@ -46,13 +47,14 @@ Desarrollada por estudiantes de la **Tecnicatura en Desarrollo de Software**, es
 </h2>
 <br>
 
-- **Frontend**: <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="html5" width="20" height="20"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="css3" width="20" height="20"/> </a> <a href="https://react-bootstrap.netlify.app/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-original-wordmark.svg" alt="bootstrap" width="20" height="20"/> </a> <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="typescript" width="20" height="20"/> </a> <a href="https://angular.dev/" target="_blank" rel="noreferrer"> <img src="https://api.iconify.design/devicon:angular.svg" alt="angular" width="20" height="20"/> </a>
+- **Frontend**: <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="html5" width="20" height="20"/> </a> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="css3" width="20" height="20"/> </a> <a href="https://react-bootstrap.netlify.app/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-original-wordmark.svg" alt="bootstrap" width="20" height="20"/> </a> <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="typescript" width="20" height="20"/> </a> <a href="https://angular.dev/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="angular" width="20" height="20"/> </a>
 - **Backend**:  <a href="https://www.python.org" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="python" width="20" height="20"/> </a> <a href="https://www.djangoproject.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/django/django-plain.svg" alt="django" width="20" height="20"/> </a>
-- **Testing**: <a href="https://developer.chrome.com/docs/lighthouse/" target="_blank" rel="noreferrer"> <img src="https://api.iconify.design/logos:lighthouse.svg" alt="lighthouse" width="20" height="20"/> </a>
-- **Base de datos**: <a href="https://www.postgresql.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" width="20" height="20"/> </a> <a href="https://www.heroku.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/heroku/heroku-plain.svg" alt="Heroku" width="20" height="20"/> </a> <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original-wordmark.svg" alt="MongoDB" width="20" height="20"/> </a>
+- **Testing**: <a href="https://developer.chrome.com/docs/lighthouse/" target="_blank" rel="noreferrer"> <img src="https://api.iconify.design/logos/lighthouse.svg" alt="lighthouse" width="20" height="20"/> </a> <a href="https://playwright.dev/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/playwright/playwright-original.svg" alt="playwright" width="20" height="20"/> </a> <a href="https://docs.pytest.org/en/stable/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytest/pytest-original.svg" alt="pytest" width="20" height="20"/> </a> 
+- **Base de datos**: <a href="https://www.postgresql.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" width="20" height="20"/> </a> <a href="https://supabase.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" alt="Supabase" width="20" height="20"/> </a> <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original-wordmark.svg" alt="MongoDB" width="20" height="20"/> </a>
 - **Control de versiones**:  <a href="https://git-scm.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="git" width="20" height="20"/> </a> <a href="https://github.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="github" width="20" height="20"/> </a>
-- **Diseño**: <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="git" width="20" height="20"/> </a>
-
+- **Seguridad**: <a href="https://oauth.net/2/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oauth/oauth-original.svg" alt="OAuth" width="20" height="20"/> </a>
+- **DevOps**: <a href="https://vercel.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg" alt="Vercel" width="20" height="20"/> </a> <a href="https://www.docker.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="docker" width="20" height="20"/> </a>
+- **Diseño**: <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="figma" width="20" height="20"/> </a>
 ---
 
 <h2 align=center> 
@@ -85,7 +87,6 @@ Este proyecto fue creado por un grupo de 6 estudiantes con pasión por la tecnol
 - Eric Heredia
 - Franco Miranda
 - Nahir Ñañez
-- Matias Rios
 - Cristian Vellio
 
 > 🎓 Todos cursamos la Tecnicatura en Desarrollo de Software en el Instituto Superior Politécnico de Córdoba.
