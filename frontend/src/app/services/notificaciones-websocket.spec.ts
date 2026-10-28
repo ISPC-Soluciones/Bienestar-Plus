@@ -1,13 +1,16 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 
-import { NotificacionesWebsocket } from './notificaciones-websocket';
+import { NotificacionesWebSocketService } from './notificaciones-websocket';
 
-describe('NotificacionesWebsocket', () => {
-  let service: NotificacionesWebsocket;
+describe('NotificacionesWebSocketService', () => {
+  let service: NotificacionesWebSocketService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(NotificacionesWebsocket);
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])] });
+    service = TestBed.inject(NotificacionesWebSocketService);
   });
 
   it('should be created', () => {
