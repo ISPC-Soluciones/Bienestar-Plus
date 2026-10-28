@@ -1,158 +1,287 @@
 @if (usuario) {
   <div class="perfil__container">
-    <aside class="perfil__sidebar">
-      <div class="usuario__info">
-        <!-- Muestra la foto de perfil o un default -->
+    <aside
+      class="perfil-sidebar bg-[var(--bg-fondo)] p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[rgba(110,193,228,0.25)] text-center flex flex-col items-center"
+    >
+      <!-- Info Principal del Usuario -->
+      <div class="usuario-info w-full flex flex-col items-center">
+        <!-- Foto de Perfil circular -->
         <img
           [src]="usuario.foto_perfil_url || 'assets/user-default.png'"
           alt="Foto de perfil"
-          class="usuario__foto"
+          class="usuario-foto w-[120px] h-[120px] rounded-full object-cover mb-4 border-2 border-[var(--ternario)] shadow-md"
         />
-        <h2>Hola, {{ usuario.nombre }}. ¡Bienvenido!</h2>
-        <p>{{ usuario.email }}</p>
-        <button (click)="abrirModal()">Editar perfil</button>
+
+        <h2
+          class="font-[var(--fuente-titulo)] text-xl font-bold text-[var(--bg-y-fuentes)] mb-1"
+        >
+          Hola, {{ usuario.nombre }}. ¡Bienvenido!
+        </h2>
+
+        <p
+          class="text-sm font-[var(--fuente-base)] text-[var(--bg-y-fuentes)] opacity-75 mb-4"
+        >
+          {{ usuario.email }}
+        </p>
+
+        <!-- Botón Editar Perfil usando la clase universal corporativa -->
+        <button
+          (click)="abrirModal()"
+          class="btn-custom btn-custom--primario w-full shadow-sm"
+        >
+          Editar perfil
+        </button>
       </div>
 
-      <div class="usuario__detalles">
-        <h3>Datos de salud</h3>
-        <p><strong>Peso:</strong> {{ usuario.perfil_salud?.peso || "-" }} kg</p>
-        <p>
-          <strong>Altura:</strong>
-          {{ alturaEnCm() !== null ? (alturaEnCm() | number: "1.0-0") : "-" }}
-          cm
-        </p>
-        <p>
-          <strong>Género:</strong>
-          {{ usuario.perfil_salud?.genero || "Sin especificar" }}
-        </p>
-        <p>
-          <strong>Fecha de Nacimiento:</strong>
-          {{ usuario.perfil_salud?.fecha_nacimiento | date }}
-        </p>
-        @if (usuario.perfil_salud?.imc) {
-          <p>
-            <strong>IMC:</strong>
-            {{ usuario.perfil_salud?.imc | number: "1.1-2" }}
+      <!-- Bloque de Detalles / Datos de Salud -->
+      <div
+        class="usuario-detalles w-full text-left bg-white p-4 rounded-xl border border-gray-100 shadow-xs mt-5"
+      >
+        <h3
+          class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--bg-y-fuentes)] mb-3 pb-2 border-b border-gray-100 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-heart-pulse text-[var(--ternario)]"></i> Datos
+          de salud
+        </h3>
+
+        <div
+          class="space-y-2 text-sm font-[var(--fuente-base)] text-[var(--bg-y-fuentes)]"
+        >
+          <p class="flex justify-between items-center m-0">
+            <span class="font-semibold">Peso:</span>
+            <span>{{ usuario.perfil_salud?.peso || "-" }} kg</span>
           </p>
-        }
+
+          <p class="flex justify-between items-center m-0">
+            <span class="font-semibold">Altura:</span>
+            <span
+              >{{
+                alturaEnCm() !== null ? (alturaEnCm() | number: "1.0-0") : "-"
+              }}
+              cm</span
+            >
+          </p>
+
+          <p class="flex justify-between items-center m-0">
+            <span class="font-semibold">Género:</span>
+            <span>{{ usuario.perfil_salud?.genero || "Sin especificar" }}</span>
+          </p>
+
+          <p class="flex justify-between items-center m-0">
+            <span class="font-semibold">Nacimiento:</span>
+            <span>{{ usuario.perfil_salud?.fecha_nacimiento || "-" }}</span>
+          </p>
+
+          @if (usuario.perfil_salud?.imc) {
+            <p
+              class="flex justify-between items-center pt-2 border-t border-gray-100 font-bold text-[var(--ternario-texto)] m-0"
+            >
+              <span>IMC:</span>
+              <span
+                class="bg-[var(--secundario)] px-2 py-0.5 rounded-md text-xs"
+                >{{ usuario.perfil_salud?.imc | number: "1.1-2" }}</span
+              >
+            </p>
+          }
+        </div>
       </div>
     </aside>
 
-    <!-- Sección de progreso (se usaría para el gráfico, aquí se mantiene la imagen) -->
-    <section class="perfil__progreso">
-      <h2>Tu resumen de rendimiento</h2>
-
-      @if (resumenRendimiento && !resumenRendimiento.sin_actividad) {
-        <div
-          class="progreso-container-grafico"
-          style="max-width: 280px; margin: 0 auto"
+    <!-- Sección de progreso (Gráfico de rendimiento) -->
+    <section
+      class="perfil-progreso bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[rgba(110,193,228,0.25)] p-6 text-center max-w-[500px] mx-auto w-full flex flex-col justify-between font-[var(--fuente-base)]"
+    >
+      <div>
+        <h2
+          class="font-[var(--fuente-titulo)] text-xl font-bold text-[var(--bg-y-fuentes)] mb-4"
         >
-          <canvas
-            baseChart
-            [datasets]="doughnutChartDatasets"
-            [labels]="doughnutChartLabels"
-            [options]="doughnutChartOptions"
-            [type]="doughnutChartType"
+          Tu resumen de rendimiento
+        </h2>
+
+        @if (resumenRendimiento && !resumenRendimiento.sin_actividad) {
+          <div class="progreso-container-grafico max-w-[280px] mx-auto">
+            <canvas
+              baseChart
+              [datasets]="doughnutChartDatasets"
+              [labels]="doughnutChartLabels"
+              [options]="doughnutChartOptions"
+              [type]="doughnutChartType"
+            >
+            </canvas>
+          </div>
+
+          <!-- Cuadro de recomendación con espaciado de separación mejorado -->
+          <div
+            class="mt-5 p-3.5 bg-[var(--bg-fondo)] rounded-xl text-left border border-gray-100 shadow-2xs"
           >
-          </canvas>
-        </div>
+            <p
+              class="text-sm font-[var(--fuente-base)] text-[var(--bg-y-fuentes)] m-0 leading-relaxed"
+            >
+              💡
+              <strong class="text-[var(--ternario-texto)]"
+                >Recomendación:</strong
+              >
+              {{ resumenRendimiento.mensaje_recomendacion }}
+            </p>
+          </div>
+        } @else {
+          <div class="estado-vacio p-6 text-center">
+            <p class="text-sm font-medium text-[var(--bg-y-fuentes)]">
+              Todavía no registraste actividad completada.
+            </p>
+            <p class="text-xs opacity-70 mt-1">
+              ¡Comenzá a registrar tus ejercicios diarios para visualizar tu
+              evolución aquí!
+            </p>
+          </div>
+        }
+      </div>
 
-        <div
-          style="
-            margin-top: 1.2rem;
-            padding: 0.8rem;
-            background-color: var(--bg-fondo);
-            border-radius: 8px;
-          "
-        >
-          <p style="font-size: 0.95rem; color: var(--bg-y-fuentes); margin: 0">
-            💡 <strong>Recomendación:</strong>
-            {{ resumenRendimiento.mensaje_recomendacion }}
-          </p>
-        </div>
-      } @else {
-        <div class="estado-vacio" style="padding: 1.5rem; text-align: center">
-          <p>Todavía no registraste actividad completada.</p>
-          <p style="font-size: 0.85rem; opacity: 0.7">
-            ¡Comenzá a registrar tus ejercicios diarios para visualizar tu
-            evolución aquí!
-          </p>
-        </div>
-      }
-
-      <!-- Exportar datos del usuario en CSV (US32) -->
-      <div class="exportar-datos">
+      <!-- Exportar datos del usuario en CSV (US32) con su respetivo margen de separación -->
+      <div
+        class="exportar-datos mt-8 pt-5 border-t border-gray-100 flex flex-col items-center gap-2"
+      >
         <button
           type="button"
-          class="btn-custom btn-custom--primario"
+          class="btn-custom btn-custom--primario w-full shadow-sm"
           (click)="exportarDatos()"
           [disabled]="exportandoDatos"
         >
           {{ exportandoDatos ? "Generando archivo..." : "Exportar mis datos" }}
         </button>
-        <p class="exportar-datos__ayuda">
+        <p
+          class="exportar-datos__ayuda text-xs text-[var(--bg-y-fuentes)] opacity-75 m-0"
+        >
           Incluye tu plan nutricional, tus hábitos diarios y tus estadísticas de
           ejercicio. Se abre con Excel o LibreOffice.
         </p>
         @if (errorExportacion) {
-          <p class="exportar-datos__error" role="alert">{{ errorExportacion }}</p>
+          <p
+            class="exportar-datos__error text-red-600 bg-red-50 border-l-4 border-red-500 p-2 rounded text-xs w-full mt-1"
+            role="alert"
+          >
+            {{ errorExportacion }}
+          </p>
         }
       </div>
     </section>
 
-    <section class="perfil__rutina">
-      <h2>Mi rutina de hoy</h2>
+    <section
+      class="perfil__rutina bg-[var(--bg-fondo)] p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[rgba(110,193,228,0.25)] font-[var(--fuente-base)]"
+    >
+      <h2
+        class="font-[var(--fuente-titulo)] text-xl font-bold text-[var(--bg-y-fuentes)] mb-5 text-center"
+      >
+        Mi rutina de hoy
+      </h2>
 
-      <h3>Ejercicio</h3>
-      @if (totalHabitos > 0) {
-        <div class="progreso__detalle">
-          <p>
-            <strong>{{ habitosCompletados }}</strong> de
-            <strong>{{ totalHabitos }}</strong> ejercicios completados hoy.
-          </p>
-          <div class="barra__progreso">
+      <!-- Bloque de Ejercicio -->
+      <div class="mb-6 pb-5 border-b border-gray-200/60">
+        <h3
+          class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-3 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-dumbbell"></i> Ejercicio
+        </h3>
+
+        @if (totalHabitos > 0) {
+          <div
+            class="progreso__detalle bg-white p-3.5 rounded-xl shadow-xs mb-3"
+          >
+            <p class="text-sm font-medium text-[var(--bg-y-fuentes)] mb-2">
+              <strong>{{ habitosCompletados }}</strong> de
+              <strong>{{ totalHabitos }}</strong> ejercicios completados hoy.
+            </p>
             <div
-              class="barra__relleno"
-              [style.width.%]="porcentajeCompletado"
-            ></div>
+              class="barra__progreso h-2.5 w-full bg-[var(--secundario)] rounded-full overflow-hidden"
+            >
+              <div
+                class="barra__relleno h-full bg-[var(--primario)] rounded-full transition-all duration-300 ease-in-out"
+                [style.width.%]="porcentajeCompletado"
+              ></div>
+            </div>
           </div>
+        }
+
+        @if (rutina?.length) {
+          <ul class="rutina__lista space-y-2">
+            @for (h of rutina; track h.id) {
+              <li>
+                <label
+                  class="rutina__item flex items-center bg-white p-3 rounded-xl shadow-xs cursor-pointer hover:bg-[var(--secundario)] transition-colors"
+                >
+                  <input
+                    type="checkbox"
+                    class="w-4 h-4 text-[var(--ternario)] rounded border-gray-300 focus:ring-[var(--ternario)] mr-3 cursor-pointer"
+                    [checked]="h.completado"
+                    (change)="onCheckboxChange($event, h.id)"
+                  />
+                  <span
+                    class="text-sm font-medium text-[var(--bg-y-fuentes)]"
+                    [class.completado]="h.completado"
+                    [class.line-through]="h.completado"
+                    [class.text-gray-400]="h.completado"
+                  >
+                    {{ h.ejercicio_nombre }} (Cant. {{ h.meta_cantidad }})
+                  </span>
+                </label>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="bg-white p-4 rounded-xl text-center shadow-xs">
+            <p class="text-sm text-gray-600 mb-1">
+              Todavía no armaste tu rutina de ejercicios.
+            </p>
+            <a
+              routerLink="/habitos"
+              class="text-[var(--ternario)] font-bold text-sm hover:underline"
+              >Andá a la sección "Hábitos" &rarr;</a
+            >
+          </div>
+        }
+      </div>
+
+      <!-- Bloque de Hidratación -->
+      <div class="mb-6 pb-5 border-b border-gray-200/60">
+        <h3
+          class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-2.5 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-droplet"></i> Hidratación
+        </h3>
+        <div class="bg-white p-3.5 rounded-xl shadow-xs">
+          <p class="text-sm text-gray-600 m-0">
+            Todavía no configuraste tus hábitos de Hidratación.
+          </p>
         </div>
-      }
+      </div>
 
-      @if (rutina?.length) {
-        <ul class="rutina__lista">
-          @for (h of rutina; track h.id) {
-            <li>
-              <label class="rutina__item">
-                <input
-                  type="checkbox"
-                  [checked]="h.completado"
-                  (change)="onCheckboxChange($event, h.id)"
-                />
-                <span [class.completado]="h.completado">
-                  {{ h.ejercicio_nombre }} (Cant. {{ h.meta_cantidad }})
-                </span>
-              </label>
-            </li>
-          }
-        </ul>
-      } @else {
-        <p>
-          Todavía no armaste tu rutina de ejercicios. Andá a la sección
-          "Hábitos" para agregar ejercicios.
-        </p>
-      }
+      <!-- Bloque de Alimentación -->
+      <div class="mb-6 pb-5 border-b border-gray-200/60">
+        <h3
+          class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-2.5 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-utensils"></i> Alimentación
+        </h3>
+        @if ((usuarioSesion$ | async) === +usuario.id) {
+          <div class="bg-white p-3.5 rounded-xl shadow-xs">
+            <app-plan-nutricional [resumen]="true" />
+          </div>
+        }
+      </div>
 
-      <h3>Hidratación</h3>
-      <p>Todavía no configuraste tus hábitos de Hidratación.</p>
-
-      <h3>Alimentación</h3>
-      @if ((usuarioSesion$ | async) === +usuario.id) {
-        <app-plan-nutricional [resumen]="true" />
-      }
-
-      <h3>Sueño</h3>
-      <p>Todavía no configuraste tus hábitos de Sueño.</p>
+      <!-- Bloque de Sueño -->
+      <div>
+        <h3
+          class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-2.5 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-moon"></i> Sueño
+        </h3>
+        <div class="bg-white p-3.5 rounded-xl shadow-xs">
+          <p class="text-sm text-gray-600 m-0">
+            Todavía no configuraste tus hábitos de Sueño.
+          </p>
+        </div>
+      </div>
     </section>
   </div>
 } @else {
