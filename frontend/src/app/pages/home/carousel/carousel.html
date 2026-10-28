@@ -1,115 +1,92 @@
-<section class="hero-section">
-  <div
-    id="carouselExampleCaptions"
-    class="carousel slide w-100 h-100"
-    data-bs-ride="carousel"
-  >
-    <div class="carousel-indicators">
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="0"
-        class="active"
-        aria-current="true"
-        aria-label="Slide 1"
-      ></button>
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="1"
-        aria-label="Slide 2"
-      ></button>
-      <button
-        type="button"
-        data-bs-target="#carouselExampleCaptions"
-        data-bs-slide-to="2"
-        aria-label="Slide 3"
-      ></button>
+<section
+  class="relative w-full h-[65vh] md:h-[75vh] max-h-[75vh] overflow-hidden flex items-center justify-center text-center bg-[var(--bg-fondo)] group"
+  (mouseenter)="detenerAutoplay()"
+  (mouseleave)="iniciarAutoplay()"
+>
+  <div class="relative w-full h-full">
+    <!-- Contenedor de Slides -->
+    <div class="relative w-full h-full overflow-hidden">
+      @for (slide of slides; track slide.imagen; let i = $index) {
+        <div
+          class="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out"
+          [class.opacity-100]="currentIndex === i"
+          [class.opacity-0]="currentIndex !== i"
+          [class.pointer-events-none]="currentIndex !== i"
+        >
+          <!-- Imagen adaptada para mobile y desktop -->
+          <img
+            [src]="slide.imagen"
+            class="block w-full h-[65vh] md:h-[75vh] object-cover brightness-[0.55]"
+            [alt]="slide.alt"
+          />
+
+          <!-- Contenido unificado -->
+          <div
+            class="absolute inset-0 flex flex-col justify-center items-center text-white px-6 md:px-12 z-10"
+          >
+            <div class="w-full max-w-[800px] mx-auto">
+              <h2
+                class="font-[var(--fuente-titulo)] text-2xl sm:text-3xl md:text-[2.5rem] font-bold mb-3 md:mb-4 leading-tight drop-shadow-md"
+                [innerHTML]="slide.titulo"
+              ></h2>
+              <p
+                class="font-[var(--fuente-base)] text-base md:text-[1.2rem] mb-6 drop-shadow"
+              >
+                {{ slide.descripcion }}
+              </p>
+
+              <!-- Botón reutilizando las clases universales del styles.css -->
+              <a
+                routerLink="/registro"
+                class="btn-custom btn-custom--primario inline-block shadow-lg"
+              >
+                {{ slide.botonTexto }}
+              </a>
+            </div>
+          </div>
+        </div>
+      }
     </div>
 
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img
-          src="./assets/mujer_bebiendo_agua.jpg"
-          class="d-block w-100 img-carousel"
-          alt="Mujer Saludable bebiendo agua"
-          onerror="this.onerror=null;this.src='https://placehold.co/1200x600/007bff/ffffff?text=Imagen+no+disponible';"
+    <!-- Botones de Control (Anterior / Siguiente) -->
+    <button
+      (click)="slideAnterior()"
+      class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white p-2.5 md:p-3 rounded-full transition-colors hidden sm:flex items-center justify-center cursor-pointer border-none"
+      aria-label="Anterior"
+    >
+      <svg
+        class="w-5 h-5 md:w-6 md:h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
         />
-        <div class="carousel-caption d-none d-md-block">
-          <h2>
-            El camino hacia una vida más <span>saludable</span> comienza aquí
-          </h2>
-          <p>¿Querés mejorar tus hábitos?</p>
-          <a routerLink="/registro" class="btn-custom btn-custom--primario">
-            Regístrate
-          </a>
-        </div>
-      </div>
-
-      <div class="carousel-item">
-        <img
-          src="./assets/hombre_corriendo.jpg"
-          class="d-block w-100 img-carousel"
-          alt="Hombre haciendo ejercicio"
-          onerror="this.onerror=null;this.src='https://placehold.co/1200x600/28a745/ffffff?text=Imagen+no+disponible';"
-        />
-        <div class="carousel-caption d-none d-md-block">
-          <h2>Transforma tu rutina, <span>transforma tu vida</span></h2>
-          <p>Empieza hoy a construir hábitos duraderos.</p>
-          <a routerLink="/registro" class="btn-custom btn-custom--primario"
-            >Comenzar</a
-          >
-        </div>
-      </div>
-
-      <div class="carousel-item">
-        <img
-          src="./assets/comida_saludable_home.jpg"
-          class="d-block w-100 img-carousel"
-          alt="Comida saludable"
-          onerror="this.onerror=null;this.src='https://placehold.co/1200x600/ffc107/333333?text=Imagen+no+disponible';"
-        />
-        <div class="carousel-caption d-none d-md-block">
-          <h2>Nutre tu cuerpo, <span>nutre tu mente</span></h2>
-          <p>Descubre el poder de una alimentación consciente.</p>
-          <a routerLink="/registro" class="btn-custom btn-custom--primario"
-            >Explorar</a
-          >
-        </div>
-      </div>
-    </div>
+      </svg>
+    </button>
 
     <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#carouselExampleCaptions"
-      data-bs-slide="prev"
+      (click)="siguienteSlide()"
+      class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/60 text-white p-2.5 md:p-3 rounded-full transition-colors hidden sm:flex items-center justify-center cursor-pointer border-none"
+      aria-label="Siguiente"
     >
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
+      <svg
+        class="w-5 h-5 md:w-6 md:h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
     </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#carouselExampleCaptions"
-      data-bs-slide="next"
-    >
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-</section>
-
-<!-- ---------------------MOBILE--------------------- -->
-
-<section class="hero-mobile-content d-md-none text-center py-4">
-  <div class="container">
-    <h2 class="display-5 mb-3">
-      El camino hacia una vida más <span>saludable</span> comienza aquí
-    </h2>
-    <p class="lead mb-4">¿Querés mejorar tus hábitos?</p>
-    <a routerLink="/registro" class="btn-custom btn-custom--primario">
-      Regístrate
-    </a>
   </div>
 </section>

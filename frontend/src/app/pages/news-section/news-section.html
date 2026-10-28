@@ -1,66 +1,155 @@
-<section class="news" aria-labelledby="news-title">
-  <div class="container py-5">
-    <header class="news__header text-center">
-      <span class="news__eyebrow">Bienestar al día</span>
-      <h2 id="news-title">Información para cuidar tus hábitos</h2>
-      <p>Contenido reciente de fuentes oficiales sobre salud y bienestar.</p>
+<section
+  class="news bg-gradient-to-b from-[#e9fef5] to-[#f8fffc] py-16 px-4 sm:px-8"
+  aria-labelledby="news-title"
+>
+  <div class="max-w-7xl mx-auto">
+    <!-- Encabezado de la Sección -->
+    <header class="text-center max-w-[720px] mx-auto mb-10">
+      <span
+        class="inline-block text-[#176b54] text-[0.85rem] font-bold tracking-[0.08em] uppercase mb-2"
+      >
+        Bienestar al día
+      </span>
+      <h2
+        id="news-title"
+        class="font-[var(--fuente-titulo)] text-[clamp(1.75rem,4vw,2.4rem)] text-[var(--bg-y-fuentes)] font-bold mb-3"
+      >
+        Información para cuidar tus hábitos
+      </h2>
+      <p class="font-[var(--fuente-base)] text-[#526066] text-base">
+        Contenido reciente de fuentes oficiales sobre salud y bienestar.
+      </p>
     </header>
 
+    <!-- Estados (Carga, Error, Avisos) -->
     <div aria-live="polite">
-      <div *ngIf="isLoading" class="news__status" role="status">
-        <div class="spinner-border" aria-hidden="true"></div>
-        <span>Cargando noticias...</span>
-      </div>
-
-      <div *ngIf="!isLoading && errorMessage" class="news__status news__status--error" role="alert">
-        <p>{{ errorMessage }}</p>
-        <button type="button" class="btn-custom btn-custom--primario" (click)="loadNews()">
-          Volver a intentar
-        </button>
-      </div>
-
-      <p *ngIf="!isLoading && !errorMessage && isFallback" class="news__notice">
-        Te mostramos recomendaciones oficiales seleccionadas mientras se actualizan las noticias.
-      </p>
-
-      <p *ngIf="!isLoading && !errorMessage && articles.length === 0" class="news__status">
-        No hay noticias disponibles por el momento.
-      </p>
-    </div>
-
-    <div *ngIf="!isLoading && !errorMessage && articles.length > 0" class="row g-4">
-      <article *ngFor="let article of articles | slice:0:3" class="col-12 col-md-6 col-lg-4">
-        <div class="card news-card h-100">
-          <img
-            [src]="imageFor(article)"
-            (error)="useFallbackImage($event, article.category)"
-            class="card-img-top news-card__image"
-            alt=""
-            loading="lazy"
+      <!-- Estado de Carga -->
+      @if (isLoading) {
+        <div
+          class="min-h-[150px] flex flex-col justify-center items-center gap-4 text-center py-8"
+          role="status"
+        >
+          <div
+            class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[var(--primario)] border-r-transparent align-[-0.125em]"
+            aria-hidden="true"
+          ></div>
+          <span
+            class="font-[var(--fuente-base)] text-[var(--bg-y-fuentes)] font-medium"
+            >Cargando noticias...</span
           >
-
-          <div class="card-body d-flex flex-column">
-            <div class="news-card__meta">
-              <span class="news-card__category">{{ categoryLabel(article.category) }}</span>
-              <span>{{ article.source }}</span>
-            </div>
-            <h3 class="card-title news-card__title">{{ article.title }}</h3>
-            <p class="card-text flex-grow-1">{{ article.summary }}</p>
-            <p *ngIf="article.publishedAt" class="news-card__date">
-              Publicada el {{ article.publishedAt | date:'dd/MM/yyyy' }}
-            </p>
-            <a
-              [href]="article.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn-custom btn-custom--primario news-card__link"
-              [attr.aria-label]="'Leer noticia: ' + article.title + ' (se abre en una pestaña nueva)'"
-            >
-              Leer noticia
-            </a>
-          </div>
         </div>
-      </article>
+      }
+
+      <!-- Estado de Error (Botón reutilizando btn-custom btn-custom--primario) -->
+      @if (!isLoading && errorMessage) {
+        <div
+          class="min-h-[150px] flex flex-col justify-center items-center gap-4 text-center py-8 text-[#8b1f1f]"
+          role="alert"
+        >
+          <p class="font-[var(--fuente-base)] font-medium">
+            {{ errorMessage }}
+          </p>
+          <button
+            type="button"
+            class="btn-custom btn-custom--primario"
+            (click)="loadNews()"
+          >
+            Volver a intentar
+          </button>
+        </div>
+      }
+
+      <!-- Aviso de Fallback -->
+      @if (!isLoading && !errorMessage && isFallback) {
+        <div
+          class="max-w-[780px] mx-auto mb-6 py-3 px-4 border-l-4 border-[#299679] rounded bg-white text-[#425157] shadow-sm font-[var(--fuente-base)] text-sm sm:text-base"
+        >
+          Te mostramos recomendaciones oficiales seleccionadas mientras se
+          actualizan las noticias.
+        </div>
+      }
+
+      <!-- Estado Vacío -->
+      @if (!isLoading && !errorMessage && articles.length === 0) {
+        <div
+          class="min-h-[150px] flex flex-col justify-center items-center gap-4 text-center py-8 text-[var(--bg-y-fuentes)]"
+        >
+          <p class="font-[var(--fuente-base)]">
+            No hay noticias disponibles por el momento.
+          </p>
+        </div>
+      }
     </div>
+
+    <!-- Grid de Artículos -->
+    @if (!isLoading && !errorMessage && articles.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (article of articles | slice: 0 : 3; track article.url) {
+          <article class="flex">
+            <div
+              class="bg-white rounded-2xl overflow-hidden border border-[rgba(23,107,84,0.16)] shadow-[0_8px_24px_rgba(31,74,61,0.08)] hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(31,74,61,0.14)] transition-all duration-300 flex flex-col w-full h-full"
+            >
+              <!-- Imagen del artículo -->
+              <img
+                [src]="imageFor(article)"
+                (error)="useFallbackImage($event, article.category)"
+                class="w-full h-[210px] object-cover"
+                alt=""
+                loading="lazy"
+              />
+
+              <!-- Cuerpo de la tarjeta -->
+              <div
+                class="p-6 flex flex-col flex-grow font-[var(--fuente-base)]"
+              >
+                <div
+                  class="flex justify-between items-center gap-3 mb-3 text-[#5c696d] text-[0.82rem] font-semibold"
+                >
+                  <span
+                    class="py-1 px-2.5 rounded-full bg-[#dff5e1] text-[#185b47]"
+                  >
+                    {{ categoryLabel(article.category) }}
+                  </span>
+                  <span>{{ article.source }}</span>
+                </div>
+
+                <h3
+                  class="font-[var(--fuente-titulo)] text-lg sm:text-[1.25rem] leading-[1.35] text-[var(--bg-y-fuentes)] font-bold mb-3"
+                >
+                  {{ article.title }}
+                </h3>
+
+                <p
+                  class="text-[#526066] text-sm sm:text-base mb-4 flex-grow leading-relaxed"
+                >
+                  {{ article.summary }}
+                </p>
+
+                @if (article.publishedAt) {
+                  <p class="text-[#657277] text-[0.8rem] mb-4">
+                    Publicada el {{ article.publishedAt | date: "dd/MM/yyyy" }}
+                  </p>
+                }
+
+                <!-- Enlace de Noticia (Reutilizando btn-custom btn-custom--primario) -->
+                <a
+                  [href]="article.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn-custom btn-custom--primario w-full text-center mt-auto"
+                  [attr.aria-label]="
+                    'Leer noticia: ' +
+                    article.title +
+                    ' (se abre en una pestaña nueva)'
+                  "
+                >
+                  Leer noticia
+                </a>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
   </div>
 </section>

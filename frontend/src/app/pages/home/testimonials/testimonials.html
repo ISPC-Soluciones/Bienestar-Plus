@@ -1,23 +1,79 @@
-<section class="testimonios">
-  <h3 class="testimonios__titulo">Testimonios</h3>
+<section class="bg-[var(--secundario)] py-12 px-4 sm:px-8 text-center">
+  <!-- Título principal -->
+  <h3
+    class="font-[var(--fuente-titulo)] text-2xl sm:text-3xl md:text-[2rem] text-[var(--bg-y-fuentes)] font-bold mb-8 md:mb-12"
+  >
+    Testimonios
+  </h3>
 
-  <div class="testimonios__grid">
-    <article class="testimonio fade-up">
-      <img src="https://i.pravatar.cc/100?img=1" alt="Foto de Carla" class="testimonio__img" />
-      <p class="testimonio__texto">“Gracias a BienestarPlus, comencé a caminar todos los días y me siento con más energía.”</p>
-      <h4 class="testimonio__nombre">Carlos M. — Córdoba</h4>
+  <!-- Grid de tarjetas de testimonios -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-[1000px] mx-auto"
+  >
+    <!-- Testimonio 1 -->
+    <article
+      class="testimonio bg-white rounded-xl p-6 shadow-[0_4px_10px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_6px_15px_rgba(0,0,0,0.1)] flex flex-col items-center opacity-0 translate-y-8"
+    >
+      <img
+        src="https://i.pravatar.cc/100?img=1"
+        alt="Foto de Carlos"
+        class="w-20 h-20 rounded-full object-cover mb-4 border-3 border-[var(--primario)]"
+      />
+      <p
+        class="font-[var(--fuente-base)] italic text-[var(--bg-y-fuentes)] mb-4 text-sm sm:text-base leading-relaxed flex-1"
+      >
+        "Gracias a Bienestar Plus, comencé a caminar todos los días y me siento
+        con más energía."
+      </p>
+      <h4
+        class="font-[var(--fuente-base)] font-semibold text-[var(--ternario)] text-sm sm:text-base mt-auto"
+      >
+        Carlos M. - Córdoba
+      </h4>
     </article>
 
-    <article class="testimonio fade-up">
-      <img src="https://i.pravatar.cc/100?img=5" alt="Foto de Lucía" class="testimonio__img" />
-      <p class="testimonio__texto">“Nunca pensé que una app me motivaría a mantener hábitos saludables. La uso todos los días.”</p>
-      <h4 class="testimonio__nombre">Lucía A. — Buenos Aires</h4>
+    <!-- Testimonio 2 -->
+    <article
+      class="testimonio bg-white rounded-xl p-6 shadow-[0_4px_10px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_6px_15px_rgba(0,0,0,0.1)] flex flex-col items-center opacity-0 translate-y-8"
+    >
+      <img
+        src="https://i.pravatar.cc/100?img=5"
+        alt="Foto de Lucía"
+        class="w-20 h-20 rounded-full object-cover mb-4 border-3 border-[var(--primario)]"
+      />
+      <p
+        class="font-[var(--fuente-base)] italic text-[var(--bg-y-fuentes)] mb-4 text-sm sm:text-base leading-relaxed flex-1"
+      >
+        "Nunca pensé que una app me motivaría a mantener hábitos saludables. La
+        uso todos los días."
+      </p>
+      <h4
+        class="font-[var(--fuente-base)] font-semibold text-[var(--ternario)] text-sm sm:text-base mt-auto"
+      >
+        Lucía A. - Buenos Aires
+      </h4>
     </article>
 
-    <article class="testimonio fade-up">
-      <img src="https://i.pravatar.cc/100?img=12" alt="Foto de Tomás" class="testimonio__img" />
-      <p class="testimonio__texto">“BienestarPlus me enseñó a registrar mis progresos y celebrar pequeños logros. ¡Recomendada!”</p>
-      <h4 class="testimonio__nombre">Tomás E. — Rosario</h4>
+    <!-- Testimonio 3 -->
+    <article
+      class="testimonio bg-white rounded-xl p-6 shadow-[0_4px_10px_rgba(0,0,0,0.08)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_6px_15px_rgba(0,0,0,0.1)] flex flex-col items-center opacity-0 translate-y-8 sm:col-span-2 lg:col-span-1"
+    >
+      <img
+        src="https://i.pravatar.cc/100?img=12"
+        alt="Foto de Tomás"
+        class="w-20 h-20 rounded-full object-cover mb-4 border-3 border-[var(--primario)]"
+      />
+      <p
+        class="font-[var(--fuente-base)] italic text-[var(--bg-y-fuentes)] mb-4 text-sm sm:text-base leading-relaxed flex-1"
+      >
+        "BienestarPlus me enseñó a registrar mis progresos y celebrar pequeños
+        logros. ¡Recomendada!"
+      </p>
+      <h4
+        class="font-[var(--fuente-base)] font-semibold text-[var(--ternario)] text-sm sm:text-base mt-auto"
+      >
+        Tomás E. - Rosario
+      </h4>
     </article>
   </div>
 </section>

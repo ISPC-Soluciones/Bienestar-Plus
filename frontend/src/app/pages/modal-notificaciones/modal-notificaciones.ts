@@ -8,7 +8,7 @@ import { NotificacionesService } from '../../services/notificaciones';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './modal-notificaciones.html',
-  styleUrls: ['./modal-notificaciones.css']
+  styleUrls: [], // Ya no requiere hoja de estilos CSS externa
 })
 export class ModalNotificacionesComponent {
   @Input() abierto = false;
@@ -23,21 +23,15 @@ export class ModalNotificacionesComponent {
   }
 
   toggleLeida(noti: Notificacion) {
-    const nuevoEstado =
-      noti.estado === 'leido' ? 'pendiente' : 'leido';
-  
-    this.notiService
-      .actualizarEstado(noti.id, nuevoEstado)
-      .subscribe({
-        next: (updated) => {
-          noti.estado = updated.estado;
-          this.notificacionesCambiaron.emit();
-        },
-        error: (err) =>
-          console.error(
-            'Error al actualizar notificación',
-            err
-          ),
-      });
+    const nuevoEstado = noti.estado === 'leido' ? 'pendiente' : 'leido';
+    this.notiService.actualizarEstado(noti.id, nuevoEstado).subscribe({
+      next: (updated) => {
+        noti.estado = updated.estado;
+        this.notificacionesCambiaron.emit();
+      },
+      error: (err) => {
+        console.error('Error al actualizar notificación', err);
+      },
+    });
   }
 }

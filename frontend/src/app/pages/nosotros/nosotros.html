@@ -1,63 +1,149 @@
+<main
+  class="bg-[var(--bg-fondo)] font-[var(--fuente-base)] text-[var(--bg-y-fuentes)] min-h-screen py-12 px-4 sm:px-8"
+>
+  <!-- Sección ISPC Soluciones -->
+  <section
+    class="max-w-[1200px] mx-auto bg-[var(--secundario)] rounded-[1.5rem] p-6 sm:p-8 lg:p-16 shadow-[0_6px_20px_rgba(0,0,0,0.15)] my-8"
+  >
+    <div
+      class="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12 text-center lg:text-left"
+    >
+      <!-- Logo ISPC -->
+      <img
+        src="assets/logoTeam.png"
+        alt="ISPC Soluciones Logo"
+        class="w-[100px] sm:w-[120px] lg:w-[180px] h-auto object-contain transition-transform duration-500 hover:scale-105"
+      />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <!-- Texto ISPC -->
+      <div class="flex-1 space-y-4">
+        <h2
+          class="font-[var(--fuente-titulo)] text-2xl sm:text-4xl lg:text-5xl font-bold text-[var(--ternario)]"
+        >
+          ISPC Soluciones
+        </h2>
 
-
-<main>
-
-  <section class="qs-section ispc-soluciones">
-    <div class="ispc-container">
-
-      <img src="./assets/logoTeam.png" alt="ISPC Soluciones Logo" class="ispc-logo" />
-      <div class="ispc-text">
-        <h2>ISPC Soluciones</h2>
-        <p>
+        <p
+          class="text-sm sm:text-base lg:text-lg text-[var(--bg-y-fuentes)] leading-relaxed lg:text-justify"
+        >
           ISPC Soluciones es una compañía de desarrollo de software conformada
           por programadores del Instituto Superior Politécnico de Córdoba,
           comprometidos con generar impacto social positivo a través de la
           tecnología.
         </p>
-        <p>
+
+        <p
+          class="text-sm sm:text-base lg:text-lg text-[var(--bg-y-fuentes)] leading-relaxed lg:text-justify"
+        >
           Creemos en el poder del código como herramienta de transformación,
           promoviendo soluciones innovadoras que fomenten la sostenibilidad
           ambiental, el desarrollo humano y la evolución tecnológica.
         </p>
-        <p>
-          Nos enfocamos en crear sistemas escalables, eficientes y alineados
-          con los desafíos del presente y del futuro.
+
+        <p
+          class="text-sm sm:text-base lg:text-lg text-[var(--bg-y-fuentes)] leading-relaxed lg:text-justify"
+        >
+          Nos enfocamos en crear sistemas escalables, eficientes y alineados con
+          los desafíos del presente y del futuro.
         </p>
-        <p>
+
+        <p
+          class="text-sm sm:text-base lg:text-lg text-[var(--bg-y-fuentes)] pt-2"
+        >
           Más sobre nuestros proyectos
-          <a href="https://github.com/ISPC-Soluciones/Bienestar-Plus" target="_blank">aquí</a>
+          <a
+            href="https://github.com/ISPC-Soluciones/Bienestar-Plus"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-[var(--cuaternario)] font-bold hover:text-[var(--cuaternario-texto)] underline transition-colors"
+          >
+            aquí
+          </a>
         </p>
       </div>
     </div>
   </section>
 
+  <!-- Sección Nuestro Equipo -->
+  <section class="max-w-[1200px] mx-auto py-8">
+    <h2
+      class="font-[var(--fuente-titulo)] text-3xl sm:text-4xl text-[var(--cuaternario)] font-bold text-center mb-10"
+    >
+      Nuestro Equipo
+    </h2>
 
-  <section class="qs-section">
-    <h2 class="qs-title">Nuestro Equipo</h2>
+    <div class="flex flex-col gap-8">
+      @for (miembro of equipo; track miembro.nombre; let i = $index) {
+        <div
+          class="bg-[var(--secundario)] rounded-[1rem] p-6 sm:p-8 shadow-[0_4px_6px_rgba(0,0,0,0.1)] flex flex-col md:flex-row items-center gap-6 sm:gap-8 transition-transform duration-200 hover:scale-[1.02]"
+          [ngClass]="{ 'md:flex-row-reverse': i % 2 !== 0 }"
+        >
+          <!-- Foto del Miembro -->
+          <div class="flex-shrink-0">
+            <img
+              [src]="miembro.imagen"
+              [alt]="miembro.nombre"
+              class="w-[150px] h-[150px] rounded-[1rem] object-cover shadow-[0_2px_4px_rgba(0,0,0,0.1)]"
+            />
+          </div>
 
+          <!-- Información del Miembro -->
+          <div class="flex-1 text-center md:text-left space-y-3">
+            <h3
+              class="font-[var(--fuente-titulo)] text-xl sm:text-2xl font-bold text-[var(--ternario)]"
+            >
+              {{ miembro.nombre }}
+            </h3>
 
-    <div *ngFor="let miembro of equipo; let i = index" class="qs-profile" [ngClass]="{ 'alt': i % 2 !== 0 }">
-      <div class="qs-photo">
+            <p
+              class="text-sm sm:text-base text-[var(--bg-y-fuentes)] leading-relaxed"
+            >
+              {{ miembro.descripcion }}
+            </p>
 
-        <img [src]="miembro.imagen" [alt]="miembro.nombre" />
-      </div>
-      <div class="qs-info">
-        <h3>{{ miembro.nombre }}</h3>
-        <p>{{ miembro.descripcion }}</p>
-        <div class="qs-links">
-          <a [href]="miembro.github" target="_blank" aria-label="GitHub">
-            <i class="fab fa-github"></i>
-          </a>
-          <a [href]="miembro.linkedin" target="_blank" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i>
-          </a>
-          <a [href]="miembro.portafolio" target="_blank" aria-label="Portafolio">
-            <i class="fa-solid fa-suitcase"></i>
-          </a>
+            <!-- Links Sociales / Portafolio -->
+            <div
+              class="flex items-center justify-center md:justify-start gap-4 pt-2"
+            >
+              @if (miembro.github) {
+                <a
+                  [href]="miembro.github"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  class="text-[var(--cuaternario)] text-2xl hover:text-[var(--cuaternario-texto)] hover:scale-125 transition-all duration-200"
+                >
+                  <i class="fab fa-github"></i>
+                </a>
+              }
+
+              @if (miembro.linkedin) {
+                <a
+                  [href]="miembro.linkedin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  class="text-[var(--cuaternario)] text-2xl hover:text-[var(--cuaternario-texto)] hover:scale-125 transition-all duration-200"
+                >
+                  <i class="fab fa-linkedin"></i>
+                </a>
+              }
+
+              @if (miembro.portafolio) {
+                <a
+                  [href]="miembro.portafolio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Portafolio"
+                  class="text-[var(--cuaternario)] text-2xl hover:text-[var(--cuaternario-texto)] hover:scale-125 transition-all duration-200"
+                >
+                  <i class="fa-solid fa-suitcase"></i>
+                </a>
+              }
+            </div>
+          </div>
         </div>
-      </div>
+      }
     </div>
   </section>
 </main>

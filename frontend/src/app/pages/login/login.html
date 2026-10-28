@@ -1,30 +1,49 @@
-<div class="login-body">
-  <main class="login-container">
-    <section class="login-page" data-testid="login-page">
-      <header class="login-header">
-        <h1 class="login-h1">BienestarPlus</h1>
-
+<div class="login-body min-h-screen font-[var(--fuente-base)]">
+  <main
+    class="login-container min-h-screen flex justify-center items-center p-4 sm:p-8 bg-[url('/assets/healthy-llifestyle-elements-frame-background-free-vector.jpg')] bg-cover bg-center bg-no-repeat"
+  >
+    <!-- Tarjeta Principal de Login -->
+    <section
+      class="login-page w-full max-w-[450px] flex flex-col items-center p-6 sm:px-12 sm:pt-8 sm:pb-9 bg-[var(--bg-fondo)] border-2 border-[var(--ternario)] rounded-[14px] shadow-[0_8px_20px_rgba(0,0,0,0.1)]"
+      data-testid="login-page"
+    >
+      <!-- Encabezado -->
+      <header class="login-header w-full text-center">
+        <h1
+          class="login-h1 font-[var(--fuente-titulo)] text-2xl sm:text-[2rem] italic font-bold text-[#9f3e28] mb-4"
+        >
+          BienestarPlus
+        </h1>
         <img
-          src="/Bienestar_Plus_favicon.ico"
+          src="assets/Bienestar_Plus_favicon.ico"
           alt="Logo BienestarPlus"
-          class="login-logo"
+          class="login-logo w-[62px] h-[62px] sm:w-[74px] sm:h-[74px] object-contain mx-auto mb-6 sm:mb-[1.7rem]"
         />
-
-        <h2 class="login-h2">Iniciar Sesión</h2>
+        <h2
+          class="login-h2 font-[var(--fuente-titulo)] text-xl sm:text-[1.9rem] italic font-medium text-[var(--bg-y-fuentes)] mb-6 sm:mb-[1.8rem]"
+        >
+          Iniciar Sesión
+        </h2>
       </header>
 
-      <div class="login-card">
+      <!-- Formulario -->
+      <div class="login-card w-full">
         <form
           [formGroup]="loginForm"
           (ngSubmit)="onSubmit()"
-          class="login-form-container"
+          class="login-form-container w-full flex flex-col"
           data-testid="login-form"
         >
-          <div class="form-group">
-            <label for="email" class="login-label"> Correo electrónico: </label>
-
+          <!-- Campo Email -->
+          <div class="form-group w-full flex flex-col mb-4 sm:mb-[1.45rem]">
+            <label
+              for="email"
+              class="login-label font-[var(--fuente-base)] text-base font-normal text-[var(--bg-y-fuentes)] mb-1.5"
+            >
+              Correo electrónico:
+            </label>
             <input
-              class="formulario--input"
+              class="formulario--input !h-[56px] sm:!h-[62px]"
               id="email"
               data-testid="login-email"
               type="email"
@@ -32,18 +51,27 @@
               placeholder="Correo electrónico"
               autocomplete="username"
             />
-
-            @if ( loginForm.get('email')?.touched &&
-            loginForm.get('email')?.invalid ) {
-            <div class="field-error">El correo electrónico es obligatorio</div>
+            @if (
+              loginForm.get("email")?.touched && loginForm.get("email")?.invalid
+            ) {
+              <div
+                class="field-error mt-1.5 text-[#b3261e] text-xs font-[var(--fuente-base)]"
+              >
+                El correo electrónico es obligatorio
+              </div>
             }
           </div>
 
-          <div class="form-group">
-            <label for="password" class="login-label"> Contraseña: </label>
-
+          <!-- Campo Contraseña -->
+          <div class="form-group w-full flex flex-col mb-4 sm:mb-[1.45rem]">
+            <label
+              for="password"
+              class="login-label font-[var(--fuente-base)] text-base font-normal text-[var(--bg-y-fuentes)] mb-1.5"
+            >
+              Contraseña:
+            </label>
             <input
-              class="formulario--input"
+              class="formulario--input !h-[56px] sm:!h-[62px]"
               id="password"
               data-testid="login-password"
               type="password"
@@ -51,15 +79,21 @@
               placeholder="Contraseña"
               autocomplete="current-password"
             />
-
-            @if ( loginForm.get('password')?.touched &&
-            loginForm.get('password')?.invalid ) {
-            <div class="field-error">La contraseña es obligatoria</div>
+            @if (
+              loginForm.get("password")?.touched &&
+              loginForm.get("password")?.invalid
+            ) {
+              <div
+                class="field-error mt-1.5 text-[#b3261e] text-xs font-[var(--fuente-base)]"
+              >
+                La contraseña es obligatoria
+              </div>
             }
           </div>
 
+          <!-- Botón de Login (Usando clase universal) -->
           <button
-            class="formulario--btn"
+            class="btn-custom btn-custom--primario w-full !h-[56px] sm:!h-[61px] !mt-4 font-bold"
             type="submit"
             data-testid="login-submit"
             [disabled]="loginForm.invalid"
@@ -68,17 +102,25 @@
           </button>
         </form>
 
-        <div class="login-divider">
+        <!-- Separador -->
+        <div
+          class="login-divider w-full flex items-center gap-3 my-5 text-[#777] text-[0.85rem] before:flex-1 before:h-[1px] before:bg-[#d6d6d6] after:flex-1 after:h-[1px] after:bg-[#d6d6d6]"
+        >
           <span>o</span>
         </div>
 
+        <!-- Botón Continuar con Google -->
         <button
           type="button"
           data-testid="login-google"
-          class="google-login-button"
+          class="google-login-button w-full h-[52px] sm:h-[54px] flex justify-center items-center gap-3 px-4 bg-white text-[var(--bg-y-fuentes)] border border-[#dadce0] rounded-[7px] font-[var(--fuente-base)] text-[0.95rem] font-semibold cursor-pointer hover:bg-[#f8f9fa] hover:border-[#b8b8b8] hover:shadow-[0_2px_5px_rgba(0,0,0,0.08)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-[rgba(66,133,244,0.2)] focus-visible:outline-offset-2 transition-all duration-200 border-none"
           (click)="loginConGoogle()"
         >
-          <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <svg
+            class="google-icon w-5 h-5 shrink-0"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
             <path
               fill="#4285F4"
               d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41z"
@@ -93,39 +135,57 @@
             />
             <path
               fill="#EA4335"
-              d="M12 6.01c1.47 0 2.79.51 3.83 1.5l2.87-2.87A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.95 5.52l3.34 2.62C7.18 7.77 9.39 6.01 12 6.01z"
+              d="M12 6.01c1.47 0 2.79.51 3.83 1.51l2.87-2.87A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.95 5.52l3.34 2.62C7.18 7.77 9.39 6.01 12 6.01z"
             />
           </svg>
-
           <span>Continuar con Google</span>
         </button>
 
+        <!-- Error OAuth -->
         @if (errorMessage) {
-        <div class="oauth-error" role="alert" data-testid="login-error">
-          <span class="oauth-error-icon">!</span>
-
-          <span>
-            {{ errorMessage }}
-          </span>
-        </div>
+          <div
+            class="oauth-error w-full flex items-center gap-2.5 mt-4 p-3 bg-[#fff1f1] text-[#b3261e] border border-[#efaaaa] rounded-[7px] text-[0.82rem] leading-tight"
+            role="alert"
+            data-testid="login-error"
+          >
+            <span
+              class="oauth-error-icon w-5 h-5 shrink-0 flex justify-center items-center bg-[#d64545] text-white rounded-full text-[0.75rem] font-bold"
+              >!</span
+            >
+            <span>{{ errorMessage }}</span>
+          </div>
         }
       </div>
 
-      <div class="login-footer">
-        <a routerLink="/recuperar-contrasena" class="forgot-password-link">
+      <!-- Pie de Tarjeta / Enlaces -->
+      <footer
+        class="login-footer w-full mt-5 text-center font-[var(--fuente-base)]"
+      >
+        <a
+          routerLink="/recuperar-contrasena"
+          class="forgot-password-link inline-block mb-4 text-[#2d6e85] font-semibold text-sm sm:text-base no-underline hover:text-[#9f3e28] hover:underline transition-colors"
+        >
           ¿Olvidaste tu contraseña?
         </a>
-
-        <p>
+        <p
+          class="m-0 mb-4 text-sm sm:text-[0.95rem] font-semibold text-[#2d6e85]"
+        >
           ¿No tenés una cuenta?
-          <a routerLink="/registro" class="register-link"> Registrate </a>
+          <a
+            routerLink="/registro"
+            class="register-link text-[#2d6e85] font-bold no-underline hover:text-[#9f3e28] hover:underline transition-colors"
+          >
+            Registrate
+          </a>
         </p>
-
-        <a routerLink="/" class="btn__volver__inicio">
+        <a
+          routerLink="/"
+          class="btn-volver-inicio inline-flex items-center gap-2 text-[#0055c8] text-sm sm:text-[0.95rem] no-underline hover:underline transition-all"
+        >
           Volver al Inicio
           <i class="fa-solid fa-rotate-left"></i>
         </a>
-      </div>
+      </footer>
     </section>
   </main>
 </div>
