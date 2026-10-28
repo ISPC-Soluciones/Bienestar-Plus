@@ -1,89 +1,55 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { LoginService, LoginData, Usuario } from './login';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+
+import { environment } from '../../environments/environment';
+import { LoginData, LoginService } from './login';
 
 describe('LoginService', () => {
   let service: LoginService;
   let httpMock: HttpTestingController;
-
-  const mockUsuarios: Usuario[] = [
-    { id: 1, email: 'test@test.com', nombre: 'Test User', password: '123' }
-  ];
+  const url = `${environment.backendUrl}/api/login/`;
+  const datos: LoginData = { email: 'test@test.com', password: 'Clave-2026' };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        LoginService
-      ]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
-    
     service = TestBed.inject(LoginService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
+  afterEach(() => httpMock.verify());
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should login successfully with valid credentials', () => {
-    const loginData: LoginData = {
-      email: 'test@test.com',
-      password: '123'
-    };
-
-    service.login(loginData).subscribe(usuario => {
-      expect(usuario).not.toBeNull();
+  it('should return the user when the credentials are valid', () => {
+    service.login(datos).subscribe((usuario) => {
+      expect(usuario?.id).toBe(1);
       expect(usuario?.email).toBe('test@test.com');
-      expect(usuario?.nombre).toBe('Test User');
+      expect(usuario?.rol).toBe('estandar');
     });
 
-    const req = httpMock.expectOne('http://localhost:3000/usuarios?email=test@test.com');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockUsuarios);
+    const req = httpMock.expectOne(url);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.withCredentials).toBeTrue();
+    req.flush({ success: true, data: { id: 1, nombre: 'Test', email: 'test@test.com', rol: 'estandar' } });
   });
 
-  it('should return null for invalid credentials', () => {
-    const loginData: LoginData = {
-      email: 'test@test.com',
-      password: 'wrong'
-    };
+  it('should return null when the backend answers 401', () => {
+    service.login(datos).subscribe((usuario) => expect(usuario).toBeNull());
 
-    service.login(loginData).subscribe(usuario => {
-      expect(usuario).toBeNull();
-    });
-
-    const req = httpMock.expectOne('http://localhost:3000/usuarios?email=test@test.com');
-    req.flush(mockUsuarios);
+    httpMock.expectOne(url).flush({ error: 'Usuario o contraseña incorrectos' }, { status: 401, statusText: 'Unauthorized' });
   });
 
-  it('should return null for non-existent user', () => {
-    const loginData: LoginData = {
-      email: 'noexiste@test.com',
-      password: '123'
-    };
-
-    service.login(loginData).subscribe(usuario => {
-      expect(usuario).toBeNull();
+  it('should propagate server errors (500) instead of hiding them', () => {
+    service.login(datos).subscribe({
+      next: () => fail('no debería emitir un usuario'),
+      error: (err) => expect(err.status).toBe(500),
     });
 
-    const req = httpMock.expectOne('http://localhost:3000/usuarios?email=noexiste@test.com');
-    req.flush([]);
-  });
-
-  it('should get all users', () => {
-    service.getUsuarios().subscribe(usuarios => {
-      expect(usuarios.length).toBe(1);
-      expect(usuarios[0].email).toBe('test@test.com');
-    });
-
-    const req = httpMock.expectOne('http://localhost:3000/usuarios');
-    req.flush(mockUsuarios);
+    httpMock.expectOne(url).flush('error', { status: 500, statusText: 'Server Error' });
   });
 });
