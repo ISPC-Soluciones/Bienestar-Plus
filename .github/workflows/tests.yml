@@ -75,7 +75,7 @@ jobs:
         run: npm ci
 
       - name: Ejecutar tests con cobertura
-        run: npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
+        run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
 
       - name: Publicar cobertura frontend
         if: always()
