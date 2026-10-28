@@ -15,7 +15,7 @@ export class NosotrosComponent {
     {
       nombre: 'Cristian Vellio',
       descripcion:
-        'Soy una persona automotivada y empática que prospera en entornos colaborativos. Disfruto aprendiendo de los demás, compartiendo conocimientos y enfrentando desafíos de frente. Mi trayectoria refleja mi profundo entusiasmo por el campo de la TI y mi orgullo por convertirme en un Desarrollador de Software dedicado.',
+        'Soy Desarrollador de Software enfocado en la calidad de código, arquitectura modular y buenas prácticas de ingeniería. Cuento con formación formal integral y experiencia práctica en desarrollo web full-stack utilizando Angular, React, Python (Django REST Framework) y Node.js, complementado con bases sólidas en testing (Unitario y E2E con Playwright), metodologías ágiles (Scrum/Kanban) y contenedores (Docker). Mi pasión por la tecnología comenzó temprano: a los 12 años completé mi primer curso de computación antes de tener mi propia PC. Ese impulso autodidacta se enriqueció luego con estudios en Artes y Literatura, otorgándome un enfoque de resolución de problemas que combina rigor técnico con visión creativa e interdisciplinaria.',
       imagen: '/assets/perfil1.png',
       github: 'https://github.com/CristianVellio',
       linkedin: 'https://www.linkedin.com/in/cristianvellio/?locale=es_ES',
