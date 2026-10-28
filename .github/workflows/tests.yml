@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   backend:
-    name: Backend
+    name: Backend (Django)
     runs-on: ubuntu-latest
 
     defaults:
@@ -53,7 +53,7 @@ jobs:
           retention-days: 14
 
   frontend:
-    name: Frontend
+    name: Frontend (Angular)
     runs-on: ubuntu-latest
 
     defaults:
