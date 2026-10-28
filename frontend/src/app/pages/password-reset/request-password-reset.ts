@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-
 import { PasswordResetService } from '../../services/password-reset';
 
 @Component({
@@ -10,7 +9,7 @@ import { PasswordResetService } from '../../services/password-reset';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './request-password-reset.html',
-  styleUrl: './password-reset.css',
+  styleUrls: [], // Ya no requiere password-reset.css externo
 })
 export class RequestPasswordReset {
   private readonly formBuilder = inject(FormBuilder);
