@@ -187,3 +187,9 @@
   width: 100%;
   padding: 1rem;
 }
+
+.nav-links li a:hover,
+.nav-links li button:hover {
+  background-color: transparent !important;
+  color: var(--cuaternario-texto) !important;
+}

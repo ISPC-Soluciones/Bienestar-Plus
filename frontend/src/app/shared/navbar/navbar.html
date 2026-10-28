@@ -1,50 +1,143 @@
 <header>
-  <nav class="navbar">
-    <a routerLink="/" class="logo">
-      <img src="assets/isotipo-colo.png" alt="Logo BienestarPlus" />
-      <span>BienestarPlus</span>
+  <nav
+    class="bg-gradient-to-r from-[#333b33] via-[#6ec1e4] to-[#7fffd4] py-[0.9375rem] px-12 xl:px-[7rem] flex justify-between items-center relative z-10 transition-all duration-500"
+  >
+    <!-- Logo y Marca (Idéntico al Footer) -->
+    <a routerLink="/" class="flex items-center no-underline text-inherit group">
+      <img
+        src="assets/isotipo-colo.png"
+        alt="Logo BienestarPlus"
+        class="max-h-[2.5rem] mr-[0.9375rem]"
+      />
+      <span
+        class="text-[1.2em] font-bold font-[var(--fuente-titulo)] text-[var(--bg-fondo)]"
+        >BienestarPlus</span
+      >
     </a>
 
-    <input type="checkbox" id="menu-toggle" />
-    <label for="menu-toggle" class="hamburger">&#9776;</label>
+    <!-- Checkbox oculto para menú hamburguesa -->
+    <input type="checkbox" id="menu-toggle" class="hidden peer" />
 
-    <ul class="nav-links">
-      <li><a routerLink="/" class="nav-registrarse">Inicio</a></li>
-      <li><a routerLink="/recursos" class="nav-registrarse">Recursos</a></li>
+    <!-- Botón Hamburguesa -->
+    <label
+      for="menu-toggle"
+      class="xl:hidden text-[1.8rem] cursor-pointer flex items-center justify-center w-[2rem] h-[2rem] text-[var(--bg-y-fuentes)] select-none"
+      >&#9776;</label
+    >
+
+    <!-- Enlaces de navegación (Misma tipografía, peso, color y hover limpio sin fondo que el Footer) -->
+    <ul
+      class="nav-links hidden xl:flex flex-col xl:flex-row list-none m-0 p-0 absolute xl:relative top-[3.75rem] xl:top-auto left-0 w-full xl:w-auto bg-gradient-to-r xl:bg-none from-[#333b33] via-[#6ec1e4] to-[#7fffd4] text-center xl:text-left shadow-lg xl:shadow-none z-20 peer-checked:flex"
+    >
+      <li>
+        <a
+          routerLink="/"
+          class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+          >Inicio</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/recursos"
+          class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+          >Recursos</a
+        >
+      </li>
 
       @if (!(userId$ | async)) {
-      <li><a routerLink="/nosotros" class="nav-registrarse">Nosotros</a></li>
-      <li><a routerLink="/registro" class="nav-registrarse">Registrarse</a></li>
-      <li><a routerLink="/login" class="nav-registrarse">Iniciar Sesión</a></li>
+        <li>
+          <a
+            routerLink="/nosotros"
+            class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Nosotros</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/registro"
+            class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Registrarse</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/login"
+            class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Iniciar Sesión</a
+          >
+        </li>
       }
 
       @if (userId$ | async; as userId) {
-      @if (esAdmin()) {
-      <li><a routerLink="/admin/dashboard" class="nav-registrarse">Panel de Control</a></li>
-      } @else {
-      <li><a routerLink="/nosotros" class="nav-registrarse">Nosotros</a></li>
-      <li><a [routerLink]="['/perfil', userId]" class="nav-registrarse">Perfil</a></li>
-      <li><a routerLink="/habitos" class="nav-registrarse">Hábitos</a></li>
-      }
+        @if (esAdmin()) {
+          <li>
+            <a
+              routerLink="/admin/dashboard"
+              class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+              >Panel de Control</a
+            >
+          </li>
+        } @else {
+          <li>
+            <a
+              routerLink="/nosotros"
+              class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+              >Nosotros</a
+            >
+          </li>
+          <li>
+            <a
+              [routerLink]="['/perfil', userId]"
+              class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+              >Perfil</a
+            >
+          </li>
+          <li>
+            <a
+              routerLink="/habitos"
+              class="block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+              >Hábitos</a
+            >
+          </li>
+        }
 
-      <li>
-        <button class="nav-registrarse nav-notifications-btn" (click)="abrirModalNotificaciones(userId)">
-          🔔 Notificaciones
-          @if (notificacionesSinLeer > 0) {
-          <span class="notification-badge">{{ notificacionesSinLeer }}</span>
-          }
-        </button>
-      </li>
-      <li>
-        <button class="nav-registrarse" (click)="cerrarSesion()">Cerrar sesión</button>
-      </li>
+        <li>
+          <button
+            class="w-full xl:w-auto text-center block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+            (click)="abrirModalNotificaciones(userId)"
+          >
+            <span class="relative inline-flex items-center justify-center">
+              Notificaciones
+              @if (notificacionesSinLeer > 0) {
+                <span
+                  class="ml-2 inline-flex items-center justify-center bg-[#ff4d4d] text-white rounded-full px-[6px] py-[2px] text-[0.7rem] font-bold min-w-[18px] leading-[1]"
+                >
+                  {{ notificacionesSinLeer }}
+                </span>
+              }
+            </span>
+          </button>
+        </li>
+
+        <li>
+          <button
+            class="w-full xl:w-auto text-center block font-[var(--fuente-base)] font-bold text-[var(--bg-y-fuentes)] no-underline py-[0.9375rem] xl:py-[0.625rem] px-[1.25rem] xl:px-[0.9375rem] uppercase text-[0.9rem] cursor-pointer bg-transparent border-none leading-[1.5] hover:text-[var(--cuaternario-texto)] transition-colors"
+            (click)="cerrarSesion()"
+          >
+            Cerrar sesión
+          </button>
+        </li>
       }
     </ul>
   </nav>
 </header>
 
 @if (modalNotificacionesAbierto) {
-<app-modal-notificaciones [abierto]="modalNotificacionesAbierto" [notificaciones]="notificaciones"
-  (cerrar)="cerrarModalNotificaciones()" (notificacionesCambiaron)="onNotificacionesCambiaron()">
-</app-modal-notificaciones>
+  <app-modal-notificaciones
+    [abierto]="modalNotificacionesAbierto"
+    [notificaciones]="notificaciones"
+    (cerrar)="cerrarModalNotificaciones()"
+    (notificacionesCambiaron)="onNotificacionesCambiaron()"
+  >
+  </app-modal-notificaciones>
 }
