@@ -1,37 +1,66 @@
-<div class="modal-overlay">
-  <div class="modal-content">
-    <button class="modal-close-btn" (click)="cerrarModal()">x</button>
+<div
+  class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 p-4 font-[var(--fuente-base)]"
+>
+  <div
+    class="relative w-[90%] max-w-[500px] bg-white p-8 rounded-[10px] shadow-[0_5px_15px_rgba(0,0,0,0.3)] text-center"
+  >
+    <!-- Botón de Cerrar (X) -->
+    <button
+      class="absolute top-2.5 right-4 bg-transparent border-none text-2xl text-[#aaa] hover:text-black cursor-pointer transition-colors"
+      (click)="cerrarModal()"
+      aria-label="Cerrar modal"
+    >
+      &times;
+    </button>
 
-    <div class="modal-header">
-      <h2 class="modal-title">¡Bienvenido a BienestarPlus!</h2>
+    <!-- Header del Modal -->
+    <div class="border-b-2 border-[var(--ternario)] pb-4 mb-5 text-center">
+      <h2
+        class="font-[var(--fuente-titulo)] text-[1.8rem] text-[var(--bg-y-fuentes)] font-bold m-0"
+      >
+        ¡Bienvenido a BienestarPlus!
+      </h2>
     </div>
 
-    <div class="modal-body">
-      <p class="modal-message">
+    <!-- Cuerpo del Modal -->
+    <div class="text-left font-[var(--fuente-base)]">
+      <p class="text-base leading-[1.5] text-[#333] mb-4">
         Gracias por registrarte. Hemos analizado tus datos de salud y, para
         ayudarte a empezar, te ofrecemos la siguiente recomendación de enfoque
         inicial:
       </p>
 
       @if (recomendacion) {
-      <div class="modal-recommendation">
-        <p><strong>Enfoque Recomendado:</strong></p>
-        <p class="recommendation-text">{{ recomendacion }}</p>
-      </div>
+        <div
+          class="bg-[#f0f8ff] border border-[#b3e0ff] p-4 rounded-[5px] my-5"
+        >
+          <p class="font-semibold text-[#004085] m-0">Enfoque Recomendado:</p>
+          <p class="font-bold text-[#004085] italic mt-1 mb-0">
+            {{ recomendacion }}
+          </p>
+        </div>
       } @else {
-      <p class="recommendation-text">
-        No se pudo obtener una recomendación de enfoque específica en este
-        momento.
-      </p>
+        <div
+          class="bg-[#f0f8ff] border border-[#b3e0ff] p-4 rounded-[5px] my-5"
+        >
+          <p class="font-bold text-[#004085] italic mt-1 mb-0">
+            No se pudo obtener una recomendación de enfoque específica en este
+            momento.
+          </p>
+        </div>
       }
 
-      <p class="modal-footer-text">
+      <p class="text-base leading-[1.5] text-[#333] mb-4">
         Haz clic en "Continuar" para acceder a la aplicación e iniciar sesión.
       </p>
     </div>
 
-    <div class="modal-actions">
-      <button class="modal-btn-confirm" (click)="cerrarModal()">
+    <!-- Acciones / Botón de Confirmación -->
+    <div class="mt-6 text-center">
+      <button
+        class="btn-custom btn-custom--primario w-full sm:w-auto px-8"
+        (click)="cerrarModal()"
+      >
         Continuar
       </button>
     </div>
