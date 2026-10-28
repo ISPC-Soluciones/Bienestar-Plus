@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* UNIVERSALES */
 
 :where(*, *::before, *::after) {
@@ -96,7 +100,9 @@
   border-radius: 6px;
   font-size: 1rem;
   font-family: var(--fuente-base);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .formulario--input:focus {
