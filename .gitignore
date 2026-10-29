@@ -15,5 +15,6 @@
 
 # Local test-run internals and duplicate logs
 /tests/reports/backend/.coverage
+/backend/.coverage
 /tests/reports/e2e/playwright.log
 /tests/reports/e2e/playwright-rerun.log

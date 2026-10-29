@@ -1,13 +1,16 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 
-import { Progreso } from './progreso';
+import { ProgresoService } from './progreso';
 
-describe('Progreso', () => {
-  let service: Progreso;
+describe('ProgresoService', () => {
+  let service: ProgresoService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Progreso);
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])] });
+    service = TestBed.inject(ProgresoService);
   });
 
   it('should be created', () => {

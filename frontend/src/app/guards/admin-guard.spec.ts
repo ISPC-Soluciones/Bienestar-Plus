@@ -1,17 +1,18 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateChildFn } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
-import { adminGuardGuard } from './admin-guard';
+import { AdminGuard } from './admin-guard';
 
-describe('adminGuardGuard', () => {
-  const executeGuard: CanActivateChildFn = (...guardParameters) =>
-    TestBed.runInInjectionContext(() => adminGuardGuard(...guardParameters));
-
+describe('AdminGuard', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
+    });
   });
 
   it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+    expect(TestBed.inject(AdminGuard)).toBeTruthy();
   });
 });

@@ -1,13 +1,16 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 
-import { Ejercicio } from './ejercicio';
+import { EjercicioService } from './ejercicio';
 
-describe('Ejercicio', () => {
-  let service: Ejercicio;
+describe('EjercicioService', () => {
+  let service: EjercicioService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(Ejercicio);
+    TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])] });
+    service = TestBed.inject(EjercicioService);
   });
 
   it('should be created', () => {
