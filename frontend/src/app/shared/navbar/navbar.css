@@ -36,7 +36,9 @@
   display: flex;
 }
 
-.nav-links li a, .nav-links li button { /* Aplicar estilos base a los botones también */
+.nav-links li a,
+.nav-links li button {
+  /* Aplicar estilos base a los botones también */
   display: block;
   font-family: var(--fuente-base);
   color: var(--bg-y-fuentes);
@@ -51,7 +53,8 @@
   line-height: 1.5; /* Asegura la alineación vertical */
 }
 
-.nav-links li a:hover, .nav-links li button:hover {
+.nav-links li a:hover,
+.nav-links li button:hover {
   background-color: var(--secundario);
 }
 
@@ -66,8 +69,8 @@
   top: 0;
   right: 0;
   /* Ajuste visual para que quede sobre el icono */
-  transform: translate(50%, -50%); 
-  
+  transform: translate(50%, -50%);
+
   background-color: #ff4d4d; /* Rojo llamativo */
   color: white;
   border-radius: 50%;
@@ -113,7 +116,8 @@
     text-align: center;
   }
 
-  .nav-links li a, .nav-links li button {
+  .nav-links li a,
+  .nav-links li button {
     padding: 0.9375rem 1.25rem;
   }
 
@@ -125,4 +129,9 @@
   #menu-toggle:checked ~ .nav-links {
     display: flex;
   }
+}
+
+CSS #menu-toggle:checked ~ .nav-links {
+  display: flex !important;
+  flex-direction: column !important;
 }

@@ -148,7 +148,7 @@ class UsuarioUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ['nombre', 'email', 'telefono']
+        fields = ['nombre', 'email', 'telefono', 'foto_perfil']
 
     def validate_email(self, value):
         usuario = self.instance
@@ -239,10 +239,6 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
             ).exists()
             if ya_existe:
                 raise serializers.ValidationError({'ejercicio': self.MENSAJE_DUPLICADO})
-        elif self.instance.completado:
-            raise serializers.ValidationError(
-                {'detail': 'Un ejercicio completado no puede modificarse.'}
-            )
         return attrs
       
 

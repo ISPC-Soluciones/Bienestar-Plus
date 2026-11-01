@@ -2,10 +2,9 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-features',
+  standalone: true,
   imports: [],
   templateUrl: './features.html',
-  styleUrl: './features.css'
+  styleUrls: [], // Ya no requiere el archivo CSS externo
 })
-export class Features {
-
-}
+export class Features {}

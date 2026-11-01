@@ -1,58 +1,135 @@
-<footer>
-  <div class="footer-container">
-    <div class="footer-logo">
-      <a routerLink="/" class="logo-footer">
-        <img src="assets/isotipo-colo.png" alt="Logo BienestarPlus" />
-        <span>BienestarPlus</span>
+<footer
+  class="bg-gradient-to-r from-[#333b33] via-[#6ec1e4] to-[#7fffd4] font-[var(--fuente-base)] text-base font-bold text-[var(--bg-fondo)] py-10 px-5"
+>
+  <!-- Contenedor principal -->
+  <div
+    class="max-w-[75rem] mx-auto flex flex-col md:flex-row justify-around items-center text-center md:text-left gap-6"
+  >
+    <!-- Logo y Marca -->
+    <div class="footer-logo mb-4 md:mb-0 flex justify-center items-center">
+      <a
+        routerLink="/"
+        class="flex items-center no-underline text-inherit group"
+      >
+        <img
+          src="assets/isotipo-colo.png"
+          alt="Logo BienestarPlus"
+          class="max-h-10 mr-3.5"
+        />
+        <span
+          class="text-[1.2em] font-bold font-[var(--fuente-titulo)] text-[var(--bg-fondo)]"
+          >BienestarPlus</span
+        >
       </a>
     </div>
-    <div class="footer-navigation-left">
-      <ul>
-        <li><a routerLink="/" (click)="scrollToTop($event)">Inicio</a></li>
-        <li><a routerLink="/nosotros" (click)="scrollToTop($event)">Nosotros</a></li>
-        <li><a href="#">Centro de Ayuda</a></li>
+
+    <!-- Navegación Izquierda -->
+    <div
+      class="flex flex-col justify-center items-center md:items-start mt-4 md:mt-0"
+    >
+      <ul class="list-none p-0 m-0 space-y-2.5">
+        <li>
+          <a
+            routerLink="/"
+            (click)="scrollToTop($event)"
+            class="text-[var(--bg-y-fuentes)] no-underline cursor-pointer hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Inicio</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/nosotros"
+            (click)="scrollToTop($event)"
+            class="text-[var(--bg-y-fuentes)] no-underline cursor-pointer hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Nosotros</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="text-[var(--bg-y-fuentes)] no-underline cursor-pointer hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Centro de Ayuda</a
+          >
+        </li>
       </ul>
     </div>
-    <div class="footer-navigation-center">
-      <ul>
-        <li><a href="#">Preguntas Frecuentes</a></li>
-        <li><a href="#">Términos de Uso</a></li>
-        <li><a href="#">Privacidad</a></li>
+
+    <!-- Navegación Centro -->
+    <div
+      class="flex flex-col justify-center items-center md:items-start mt-4 md:mt-0"
+    >
+      <ul class="list-none p-0 m-0 space-y-2.5">
+        <li>
+          <a
+            href="#"
+            class="text-[var(--bg-y-fuentes)] no-underline cursor-pointer hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Preguntas Frecuentes</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="text-[var(--bg-y-fuentes)] no-underline cursor-pointer hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Términos de Uso</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="text-[var(--bg-y-fuentes)] no-underline cursor-pointer hover:text-[var(--cuaternario-texto)] transition-colors"
+            >Privacidad</a
+          >
+        </li>
       </ul>
     </div>
-    <div class="footer-social">
-      <h3>Seguinos en:</h3>
-      <div class="social-icons">
+
+    <!-- Redes Sociales -->
+    <div
+      class="flex flex-col justify-center items-center md:items-start mt-4 md:mt-0"
+    >
+      <h3
+        class="text-[var(--bg-y-fuentes)] font-[var(--fuente-base)] font-bold mb-2.5 text-[1.1rem]"
+      >
+        Seguinos en:
+      </h3>
+      <div
+        class="flex justify-center md:justify-start items-center space-x-2.5"
+      >
         <a
           href="https://www.tiktok.com/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="TikTok de BienestarPlus"
+          class="inline-flex items-center text-[1.3rem] opacity-80 hover:opacity-100 transition-opacity text-[var(--bg-y-fuentes)] hover:text-[var(--cuaternario-texto)] mx-1 md:mx-0 md:mr-2.5"
         >
           <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
         </a>
-      
         <a
           href="https://www.instagram.com/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Instagram de BienestarPlus"
+          class="inline-flex items-center text-[1.3rem] opacity-80 hover:opacity-100 transition-opacity text-[var(--bg-y-fuentes)] hover:text-[var(--cuaternario-texto)] mx-1 md:mx-0 md:mr-2.5"
         >
           <i class="fab fa-instagram" aria-hidden="true"></i>
         </a>
-      
         <a
           href="https://x.com/"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="X de BienestarPlus"
+          class="inline-flex items-center text-[1.3rem] opacity-80 hover:opacity-100 transition-opacity text-[var(--bg-y-fuentes)] hover:text-[var(--cuaternario-texto)] mx-1 md:mx-0 md:mr-2.5"
         >
           <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
         </a>
       </div>
     </div>
   </div>
-  <div class="footer-copyright">
-    <p>&copy; 2026 SolucionesISPC - Todos los derechos reservados.</p>
+
+  <!-- Copyright -->
+  <div
+    class="max-w-[75rem] mx-auto mt-[1.875rem] pt-2.5 pb-2.5 text-center text-[0.9em] text-[var(--bg-y-fuentes)] font-bold px-5 border-t border-white/10"
+  >
+    <p>&copy; 2026 SolucionesISPC. Todos los derechos reservados.</p>
   </div>
 </footer>
