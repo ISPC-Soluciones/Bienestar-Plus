@@ -10,11 +10,11 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { RegistroServicio } from '../../services/registroServicio';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ModalBienvenida } from './modal-bienvenida/modal-bienvenida';
 
 const contraseñaigual: ValidatorFn = (
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null => {
   const password = control.get('password');
   const confirmar = control.get('confirmar');
@@ -24,7 +24,7 @@ const contraseñaigual: ValidatorFn = (
 };
 
 const soloCaracteres: ValidatorFn = (
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null => {
   const contieneNumeros = /\d/.test(control.value);
   return contieneNumeros ? { numerosNoPermitidos: true } : null;
@@ -33,11 +33,11 @@ const soloCaracteres: ValidatorFn = (
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ModalBienvenida],
+  imports: [CommonModule, ReactiveFormsModule, ModalBienvenida, RouterLink],
   templateUrl: './registro.html',
-  styleUrl: './registro.css',
+  styleUrls: [], // Ya no requiere registro.css externo
 })
-export class Registro {
+export class Registro implements OnInit {
   registroForm: FormGroup;
   recomendacionUsuario: string | null = null;
   mostrarModalRecomendacion: boolean = false;
@@ -46,7 +46,7 @@ export class Registro {
   constructor(
     private fb: FormBuilder,
     private registroService: RegistroServicio,
-    private router: Router
+    private router: Router,
   ) {
     this.registroForm = this.fb.group(
       {
@@ -65,14 +65,14 @@ export class Registro {
           altura: [null, [Validators.min(50), Validators.max(250)]],
         }),
       },
-      { validators: contraseñaigual }
+      { validators: contraseñaigual },
     );
   }
 
+  ngOnInit(): void {}
+
   cerrarModal(): void {
     this.mostrarModalRecomendacion = false;
-  
-  
     if (this.ultimoUsuarioId) {
       this.router.navigate(['/perfil', this.ultimoUsuarioId]);
     } else {
@@ -85,9 +85,7 @@ export class Registro {
       this.registroForm.markAllAsTouched();
       return;
     }
-
     const datosdelform = this.registroForm.value;
-
     const {
       perfil_salud,
       confirmar,
@@ -98,7 +96,6 @@ export class Registro {
 
     const payload: any = {
       ...usuarioData,
-
       perfil_salud: {
         habitos: [],
         progreso:
@@ -119,16 +116,14 @@ export class Registro {
       delete payload.perfil_salud;
     }
 
-    this.registroService.registrarUsuario(payload).subscribe(
-      (respuesta) => {
+    this.registroService.registrarUsuario(payload).subscribe({
+      next: (respuesta: any) => {
         console.log('Usuario registrado:', respuesta);
         this.registroForm.reset();
-
         const perfilSalud = respuesta?.data?.perfil_salud;
         const usuarioId = respuesta?.data?.id;
         const mostrarModal = perfilSalud?.mostrar_modal_imc === true;
         const recomendacion = perfilSalud?.recomendacion_enfoque;
-
         this.ultimoUsuarioId = usuarioId;
 
         if (mostrarModal) {
@@ -138,10 +133,10 @@ export class Registro {
           this.router.navigate(['/home']);
         }
       },
-      (error: any) => {
+      error: (error: any) => {
         console.error('Error al registrar usuario:', error);
         alert('Ocurrió un error. Por favor, inténtelo de nuevo.');
-      }
-    );
+      },
+    });
   }
 }

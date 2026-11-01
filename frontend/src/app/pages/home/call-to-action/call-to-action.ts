@@ -3,10 +3,9 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-call-to-action',
+  standalone: true,
   imports: [RouterLink],
   templateUrl: './call-to-action.html',
-  styleUrl: './call-to-action.css'
+  styleUrls: [], // Ya no requiere el archivo CSS externo
 })
-export class CallToAction {
-
-}
+export class CallToAction {}

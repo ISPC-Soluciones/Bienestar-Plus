@@ -2,6 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from importlib import import_module
+
+try:
+    spectacular_views = import_module('drf_spectacular.views')
+except ModuleNotFoundError:
+    spectacular_views = None
 from bienestar.views import (
     RegistroUsuarioView,
     LoginUsuarioView,
@@ -37,5 +43,13 @@ urlpatterns = [
     name='auth-logout'
     ),
 ]
+
+if spectacular_views:
+    urlpatterns += [
+        path('api/schema/', spectacular_views.SpectacularAPIView.as_view(), name='schema'),
+        path('api/docs/', spectacular_views.SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+        path('api/redoc/', spectacular_views.SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
