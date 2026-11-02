@@ -281,6 +281,9 @@ class RegistroUsuarioView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        request.session.cycle_key()
+        request.session["usuario_id"] = usuario.id
+
         serializer = UsuarioSerializer(
             usuario,
             context={'request': request}
@@ -788,6 +791,7 @@ class EjercicioViewSet(viewsets.ModelViewSet):
 
     queryset = Ejercicio.objects.all()
     serializer_class = EjercicioSerializer
+    pagination_class = None
 
     
     @action(detail=True, methods=['get', 'post', 'delete'], url_path='imagen')
