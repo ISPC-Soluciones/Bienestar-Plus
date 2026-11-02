@@ -1,1 +1,95 @@
-<p>admin-perfil works!</p>
+<section class="admin-perfil">
+  <h1>Mi Perfil</h1>
+
+  @if (cargando) {
+  <p class="estado">Cargando perfil...</p>
+  } @else if (error && !usuario) {
+  <p class="mensaje-error">{{ error }}</p>
+  } @else if (usuario) {
+
+  <div class="perfil-card">
+    <div class="perfil-header">
+      <div class="avatar">
+        <i class="fa-solid fa-user-shield"></i>
+      </div>
+
+      <div>
+        <h2>{{ usuario.nombre }}</h2>
+        <span class="rol">Administrador</span>
+      </div>
+    </div>
+
+    @if (!editando) {
+
+    <div class="perfil-datos">
+      <div class="dato">
+        <span class="dato-label">Nombre</span>
+        <span class="dato-valor">{{ usuario.nombre }}</span>
+      </div>
+
+      <div class="dato">
+        <span class="dato-label">Email</span>
+        <span class="dato-valor">{{ usuario.email }}</span>
+      </div>
+
+      <div class="dato">
+        <span class="dato-label">Rol</span>
+        <span class="dato-valor">Administrador</span>
+      </div>
+    </div>
+
+    <button type="button" class="btn-principal" (click)="activarEdicion()">
+      <i class="fa-solid fa-pen"></i>
+      Editar perfil
+    </button>
+
+    } @else {
+
+    <form class="perfil-form" (ngSubmit)="guardarCambios()">
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+
+        <input
+          id="nombre"
+          name="nombre"
+          type="text"
+          [(ngModel)]="nombre"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          name="email"
+          type="email"
+          [(ngModel)]="email"
+          required
+        />
+      </div>
+
+      <div class="acciones">
+        <button
+          type="button"
+          class="btn-secundario"
+          (click)="cancelarEdicion()"
+          [disabled]="guardando"
+        >
+          Cancelar
+        </button>
+
+        <button type="submit" class="btn-principal" [disabled]="guardando">
+          {{ guardando ? "Guardando..." : "Guardar cambios" }}
+        </button>
+      </div>
+    </form>
+    } @if (mensaje) {
+    <p class="mensaje-exito">{{ mensaje }}</p>
+    } @if (error && usuario) {
+    <p class="mensaje-error">{{ error }}</p>
+    }
+  </div>
+  }
+</section>
