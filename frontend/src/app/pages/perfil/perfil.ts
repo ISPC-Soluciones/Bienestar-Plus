@@ -26,6 +26,7 @@ import { Notificacion } from '../../models/notificacion';
 import { NotificacionesService } from '../../services/notificaciones';
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
 import { ModalBienvenida } from '../registro/modal-bienvenida/modal-bienvenida';
+import { ProgresoService, ProgresoDiario } from '../../services/progreso';
 
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 
@@ -80,6 +81,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
   rutina: any[] = [];
 
+  progresoSueno: ProgresoDiario | null = null;
+  errorSueno = false;
+
   fotoPerfilFile: File | null = null;
 
   // Recorte de la foto de perfil
@@ -98,6 +102,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     private notificacionesService: NotificacionesService,
     private fb: FormBuilder,
     private router: Router,
+    private progresoService: ProgresoService,
   ) {
     this.perfilForm = this.fb.group({
       peso: ['', [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
@@ -145,6 +150,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
             this.usuario = usuario;
             localStorage.setItem('usuario', JSON.stringify(usuario));
             this.cargarProgreso(Number(usuario.id));
+            this.cargarSueno(Number(usuario.id));
 
             this.cargarResumenRendimiento(Number(usuario.id));
 
@@ -202,6 +208,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
         this.loading = false;
 
         this.cargarProgreso(id);
+        this.cargarSueno(id);
 
         this.cargarResumenRendimiento(id);
       },
@@ -494,6 +501,33 @@ export class PerfilComponent implements OnInit, OnDestroy {
       error: (err) =>
         console.error('Error al obtener la rutina de ejercicios', err),
     });
+  }
+
+  cargarSueno(usuarioId: number): void {
+    this.errorSueno = false;
+
+    this.progresoService
+      .getProgresoDiario(usuarioId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (progresos) => {
+          this.progresoSueno =
+            progresos.find(
+              (progreso) =>
+                progreso.habito.nombre.toLowerCase() === 'horas de sueño',
+            ) ?? null;
+        },
+        error: (err) => {
+          console.error('Error al obtener el progreso de sueño', err);
+          this.progresoSueno = null;
+          this.errorSueno = true;
+        },
+      });
+  }
+
+  get horasSuenoHoy(): number | null {
+    const valor = this.progresoSueno?.valor;
+    return valor !== null && valor !== undefined ? Number(valor) : null;
   }
 
   get totalHabitos(): number {
