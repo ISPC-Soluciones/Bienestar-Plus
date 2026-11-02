@@ -1,4 +1,4 @@
-<section class="plan" aria-label="Plan nutricional" [attr.aria-busy]="cargando || guardando">
+<section class="plan" aria-label="Plan nutricional" [attr.aria-busy]="cargando || guardando || eliminando">
   <h3>Mi plan nutricional</h3>
   @if (cargando) {
     <p role="status">Cargando tu plan...</p>
@@ -27,8 +27,24 @@
       } @else { <p>Todavía no creaste un plan nutricional.</p> }
       @if (resumen) {
         <a routerLink="/habitos" [queryParams]="{tab: 'alimentacion'}">{{ plan ? 'Gestionar mi plan' : 'Crear mi plan' }}</a>
+      } @else if (plan) {
+        <div class="acciones-plan">
+          <button type="button" class="principal" (click)="iniciarEdicion()" [disabled]="eliminando || confirmandoEliminacion">Editar plan</button>
+          <button type="button" class="destructivo" (click)="solicitarEliminacion()" [disabled]="eliminando || confirmandoEliminacion">Eliminar plan</button>
+        </div>
+        @if (confirmandoEliminacion) {
+          <div class="confirmacion-eliminacion" role="group" aria-label="Confirmar eliminación del plan">
+            <p>Se eliminarán el plan y todas sus comidas. Esta acción no se puede deshacer.</p>
+            <div class="acciones-confirmacion">
+              <button type="button" class="destructivo" (click)="eliminarPlan()" [disabled]="eliminando">
+                {{ eliminando ? 'Eliminando...' : 'Sí, eliminar plan' }}
+              </button>
+              <button type="button" (click)="cancelarEliminacion()" [disabled]="eliminando">Conservar mi plan</button>
+            </div>
+          </div>
+        }
       } @else {
-        <button type="button" class="principal" (click)="iniciarEdicion()">{{ plan ? 'Editar plan' : 'Crear plan' }}</button>
+        <button type="button" class="principal" (click)="iniciarEdicion()">Crear plan</button>
       }
     }
     @if (editando && !requiereSesion && !resumen) {
