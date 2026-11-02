@@ -1,23 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-  import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { EjercicioService } from '../../services/ejercicio';
 import { RutinaEjercicioService } from '../../services/rutina-ejercicio';
 import { Ejercicio, RutinaEjercicio } from '../../models/ejercicio';
 import { EstadisticasService } from '../../services/estadisticas.service';
 import { ProgresoService,ProgresoDiario,} from '../../services/progreso';
+import { PlanNutricionalComponent } from '../plan-nutricional/plan-nutricional';
+
+type HabitosTab = 'ejercicio' | 'hidratacion' | 'alimentacion' | 'sueno';
+const HABITOS_TABS: readonly HabitosTab[] = [
+  'ejercicio',
+  'hidratacion',
+  'alimentacion',
+  'sueno',
+];
+
+function esHabitosTab(tab: string | null): tab is HabitosTab {
+  return tab !== null && HABITOS_TABS.includes(tab as HabitosTab);
+}
+
 @Component({
   selector: 'app-habitos',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, FormsModule, PlanNutricionalComponent],
   templateUrl: './habitos.html',
   styleUrls: ['./habitos.css'],
   providers: [EjercicioService, RutinaEjercicioService],
 })
 export class Habitos implements OnInit {
-  activeTab: string = 'ejercicio';
+  activeTab: HabitosTab = 'ejercicio';
   ejerciciosDisponibles: Ejercicio[] = [];
   rutinaDelUsuario: RutinaEjercicio[] = [];
   ejerciciosAgregadosHoy = new Set<number>();
@@ -40,9 +54,13 @@ export class Habitos implements OnInit {
     private rutinaService: RutinaEjercicioService,
     private estadisticasService: EstadisticasService,
     private progresoService: ProgresoService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const tabSolicitada = this.route.snapshot.queryParamMap.get('tab');
+    if (esHabitosTab(tabSolicitada)) this.activeTab = tabSolicitada;
+
     const usuarioGuardado = localStorage.getItem('usuario');
     if (usuarioGuardado) {
       const usuario = JSON.parse(usuarioGuardado);
@@ -55,7 +73,7 @@ export class Habitos implements OnInit {
     this.cargarProgresoSueno();
   }
 
-  setActiveTab(tabName: string): void {
+  setActiveTab(tabName: HabitosTab): void {
     this.activeTab = tabName;
   }
 
