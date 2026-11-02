@@ -788,6 +788,7 @@ class EjercicioViewSet(viewsets.ModelViewSet):
 
     queryset = Ejercicio.objects.all()
     serializer_class = EjercicioSerializer
+    pagination_class = None
 
     
     @action(detail=True, methods=['get', 'post', 'delete'], url_path='imagen')

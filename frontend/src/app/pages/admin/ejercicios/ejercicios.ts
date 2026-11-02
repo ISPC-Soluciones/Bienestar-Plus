@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -42,8 +48,8 @@ export class Ejercicios implements OnInit, OnDestroy {
   cargarEjercicios(): void {
     this.cargando = true;
     this.ejercicioService.obtenerEjercicios().subscribe({
-      next: (data) => {
-        this.ejercicios = data.results;
+      next: (data: any) => {
+        this.ejercicios = Array.isArray(data) ? data : data.results || [];
         this.cargando = false;
       },
       error: (err) => {
@@ -83,7 +89,10 @@ export class Ejercicios implements OnInit, OnDestroy {
     }
 
     const guardado$: Observable<Ejercicio> = this.enEdicion
-      ? this.ejercicioService.actualizarEjercicio(this.enEdicion.id!, this.nuevoEjercicio)
+      ? this.ejercicioService.actualizarEjercicio(
+          this.enEdicion.id!,
+          this.nuevoEjercicio,
+        )
       : this.ejercicioService.crearEjercicio(this.nuevoEjercicio);
     const imagen = this.imagenSeleccionada;
 
@@ -92,7 +101,9 @@ export class Ejercicios implements OnInit, OnDestroy {
       .pipe(
         // Si se eligió una imagen, se sube después de guardar (hace falta el id del ejercicio).
         switchMap((ejercicio) =>
-          imagen ? this.ejercicioService.subirImagen(ejercicio.id!, imagen) : of(ejercicio),
+          imagen
+            ? this.ejercicioService.subirImagen(ejercicio.id!, imagen)
+            : of(ejercicio),
         ),
       )
       .subscribe({
@@ -103,7 +114,10 @@ export class Ejercicios implements OnInit, OnDestroy {
         },
         error: (err: HttpErrorResponse) => {
           this.guardando = false;
-          this.mensajeError = this.mensajeDeError(err, 'No se pudo guardar el ejercicio.');
+          this.mensajeError = this.mensajeDeError(
+            err,
+            'No se pudo guardar el ejercicio.',
+          );
           this.cargarEjercicios(); // el ejercicio pudo guardarse aunque falle la imagen
         },
       });
@@ -119,7 +133,10 @@ export class Ejercicios implements OnInit, OnDestroy {
         this.cargarEjercicios();
       },
       error: (err: HttpErrorResponse) => {
-        this.mensajeError = this.mensajeDeError(err, 'No se pudo quitar la imagen.');
+        this.mensajeError = this.mensajeDeError(
+          err,
+          'No se pudo quitar la imagen.',
+        );
       },
     });
   }
