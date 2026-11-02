@@ -402,7 +402,7 @@ class ProgresoDiarioView(APIView):
             progreso.valor = valor
 
         # Objetivo diario de sueño.
-            progreso.completado = 7 <= valor <= 9
+            progreso.completado = valor >= 7
 
     # -----------------------------------------------------
     # Hábitos booleanos tradicionales
