@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { PasswordResetService } from '../../services/password-reset';
 import { RequestPasswordReset } from './request-password-reset';
@@ -40,5 +40,19 @@ describe('RequestPasswordReset', () => {
       'usuario@example.com',
     );
     expect(component.successMessage).toBe('Revisá tu correo.');
+  });
+
+  it('displays the API message when the email is not registered', () => {
+    const message =
+      'El correo ingresado no cuenta con usuario registrado, porfavor ingresa un correo válido';
+    passwordResetService.requestReset.and.returnValue(
+      throwError(() => ({ error: { message } })),
+    );
+    component.form.setValue({ email: 'nadie@example.com' });
+
+    component.onSubmit();
+
+    expect(component.errorMessage).toBe(message);
+    expect(component.successMessage).toBe('');
   });
 });

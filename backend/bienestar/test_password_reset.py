@@ -48,7 +48,7 @@ class PasswordResetEndpointTests(TestCase):
         self.assertEqual(send_email.call_args.args[0], self.usuario.pk)
 
     @patch('bienestar.password_reset_views.send_password_reset_email_safely')
-    def test_request_does_not_reveal_unknown_email(self, send_email):
+    def test_request_reports_unknown_email_without_sending_email(self, send_email):
         request = self.factory.post(
             '/api/password-reset/request/',
             {'email': 'nadie@example.com'},
@@ -56,7 +56,11 @@ class PasswordResetEndpointTests(TestCase):
         )
         response = PasswordResetRequestView.as_view()(request)
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.data['message'],
+            PasswordResetRequestView.unknown_email_message,
+        )
         self.assertEqual(TokenRecuperacionPassword.objects.count(), 0)
         send_email.assert_not_called()
 
