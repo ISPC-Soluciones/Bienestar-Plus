@@ -327,3 +327,43 @@ class ProgresoChecklist(models.Model):
         if self.progresos.exists():
             self.completado = all(p.completado for p in self.progresos.all())
             self.save()
+
+
+
+class RegistroHidratacion(models.Model):
+    """Cada vez que el usuario agrega un vaso o una botella de agua."""
+
+    class Tipo(models.TextChoices):
+        VASO = 'vaso', _('Vaso')
+        BOTELLA_500 = 'botella_500', _('Botella 500 ml')
+        BOTELLA_1L = 'botella_1l', _('Botella 1 L')
+
+    # Cantidad fija de cada opción: el usuario elige el tipo, no escribe los ml.
+    CANTIDADES_ML = {
+        Tipo.VASO: 250,
+        Tipo.BOTELLA_500: 500,
+        Tipo.BOTELLA_1L: 1000,
+    }
+    META_DIARIA_ML = 2000
+
+    usuario = models.ForeignKey(
+        Usuario, on_delete=models.CASCADE, related_name='registros_hidratacion'
+    )
+    tipo = models.CharField(max_length=20, choices=Tipo.choices)
+    cantidad_ml = models.PositiveIntegerField()
+    fecha = models.DateField(default=timezone.localdate)
+    creado = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # La cantidad siempre sale del tipo elegido.
+        self.cantidad_ml = self.CANTIDADES_ML[self.tipo]
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.usuario.nombre} - {self.get_tipo_display()} ({self.fecha})"
+
+    class Meta:
+        verbose_name = "Registro de hidratación"
+        verbose_name_plural = "Registros de hidratación"
+        ordering = ['-creado']
+        indexes = [models.Index(fields=['usuario', 'fecha'])]

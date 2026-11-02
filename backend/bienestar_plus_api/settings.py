@@ -168,6 +168,8 @@ REST_FRAMEWORK = {
 
 # Trailing slash
 APPEND_SLASH = True
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
+USE_TZ = True
 
 # Transactional email
 EMAIL_PROVIDER = os.getenv('EMAIL_PROVIDER', 'console' if DEBUG else 'brevo').lower()

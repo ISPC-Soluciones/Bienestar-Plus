@@ -181,11 +181,48 @@
         class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-2.5 flex items-center gap-2">
         <i class="fa-solid fa-droplet"></i> Hidratación
       </h3>
+      @if ((usuarioSesion$ | async) === +usuario.id) {
       <div class="bg-white p-3.5 rounded-xl shadow-xs">
-        <p class="text-sm text-gray-600 m-0">
-          Todavía no configuraste tus hábitos de Hidratación.
+        @let resumenAgua = resumenHidratacion();
+        @if (resumenAgua && resumenAgua.total_ml > 0) {
+        <p class="text-sm text-[var(--bg-y-fuentes)] mb-2">
+          Hoy tomaste <strong>{{ litros(resumenAgua.total_ml) }}</strong> de
+          {{ litros(resumenAgua.meta_ml) }}
         </p>
+        <div class="barra__progreso h-2.5 w-full bg-[var(--secundario)] rounded-full overflow-hidden" role="progressbar"
+          aria-label="Progreso de hidratación del día" aria-valuemin="0" [attr.aria-valuemax]="resumenAgua.meta_ml"
+          [attr.aria-valuenow]="resumenAgua.total_ml">
+          <div class="barra__relleno h-full bg-[var(--primario)] rounded-full transition-all duration-300 ease-in-out"
+            [style.width.%]="porcentajeHidratacion()"></div>
+        </div>
+        @if (resumenAgua.total_ml > resumenAgua.meta_ml) {
+        <p class="text-sm font-semibold text-green-800 mt-2 mb-0">
+          ✔ ¡Superaste tu objetivo de hidratación!
+        </p>
+        } @else if (resumenAgua.completado) {
+        <p class="text-sm font-semibold text-green-800 mt-2 mb-0">
+          ✔ Objetivo de hidratación cumplido
+        </p>
+        } @else {
+        <p class="text-sm text-gray-600 mt-2 mb-1">
+          Te faltan {{ litros(resumenAgua.meta_ml - resumenAgua.total_ml) }} para llegar a tu objetivo.
+        </p>
+        <a routerLink="/habitos" [queryParams]="{ tab: 'hidratacion' }"
+          class="text-[#1b6f8f] font-bold text-sm hover:underline">Registrar en "Hábitos" &rarr;</a>
+        }
+        } @else if (errorHidratacion()) {
+        <p class="text-sm text-gray-600 m-0">
+          No pudimos cargar tu registro de hidratación.
+        </p>
+        } @else {
+        <p class="text-sm text-gray-600 mb-1">
+          Todavía no registraste agua hoy.
+        </p>
+        <a routerLink="/habitos" [queryParams]="{ tab: 'hidratacion' }"
+          class="text-[#1b6f8f] font-bold text-sm hover:underline">Registrar en "Hábitos" &rarr;</a>
+        }
       </div>
+      }
     </div>
 
     <!-- Bloque de Alimentación -->
@@ -367,8 +404,5 @@
 }
 
 @if (mostrarModalRecomendacion) {
-  <app-modal-bienvenida
-    [recomendacion]="recomendacionUsuario"
-    (cerrar)="cerrarModalRecomendacion()"
-  />
+<app-modal-bienvenida [recomendacion]="recomendacionUsuario" (cerrar)="cerrarModalRecomendacion()" />
 }
