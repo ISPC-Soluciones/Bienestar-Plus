@@ -8,8 +8,8 @@ import { Recurso } from '../../models/recurso.model';
   selector: 'app-recursos',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './recursos.html',
-  styleUrl: './recursos.css'
+  host: { class: 'block min-w-0 w-screen max-w-full' },
+  templateUrl: './recursos.html'
 })
 export class RecursosComponent implements OnInit {
   recursos: Recurso[] = [];

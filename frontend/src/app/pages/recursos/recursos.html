@@ -1,24 +1,35 @@
-<section class="recursos-container">
-  <!-- Cabecera de la sección -->
-  <header class="recursos-header">
-    <div class="header-badge">
-      <span class="badge-icon">🌿</span>
+<section
+  class="mx-auto min-h-[60vh] w-full min-w-0 max-w-6xl px-4 py-10 font-[var(--fuente-base)] text-[var(--bg-y-fuentes)] sm:px-6 lg:py-14"
+>
+  <header class="mb-10 text-center md:mb-12">
+    <div
+      class="mb-4 inline-flex items-center gap-2 rounded-full bg-[var(--secundario)] px-4 py-2 text-sm font-semibold text-[var(--primario-texto)] shadow-sm"
+    >
+      <span aria-hidden="true">🌿</span>
       <span>Salud Mental y Emocional</span>
     </div>
-    <h1 class="recursos-title">Recursos de Apoyo y Bienestar Psicológico</h1>
-    <p class="recursos-subtitle">
+    <h1
+      class="mx-auto w-full min-w-0 max-w-4xl break-words font-[var(--fuente-titulo)] text-3xl font-extrabold leading-tight text-[var(--bg-y-fuentes)] sm:text-4xl lg:text-5xl"
+    >
+      Recursos de Apoyo y Bienestar Psicológico
+    </h1>
+    <p class="mx-auto mt-4 w-full min-w-0 max-w-3xl break-words text-base leading-7 text-slate-600 sm:text-lg">
       Explora guías prácticas, lecturas recomendadas, herramientas de respiración y líneas de asistencia profesional para acompañar tu bienestar día a día.
     </p>
   </header>
 
-  <!-- Barra de búsqueda y filtros -->
-  <div class="recursos-controles">
-    <div class="buscador-wrapper">
-      <span class="buscador-icon">🔍</span>
+  <div class="mb-10 flex flex-col items-center gap-5">
+    <div class="relative w-full min-w-0 max-w-2xl">
+      <label class="sr-only" for="buscador-recursos">Buscar recursos</label>
+      <span
+        class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-lg text-slate-500"
+        aria-hidden="true"
+        >🔍</span
+      >
       <input
         type="text"
         id="buscador-recursos"
-        class="buscador-input"
+        class="w-full min-w-0 rounded-xl border border-slate-300 bg-white py-3.5 pl-12 pr-14 text-base text-[var(--bg-y-fuentes)] shadow-sm placeholder:text-slate-400 focus:border-[var(--ternario)] focus:outline-none focus:ring-2 focus:ring-[var(--ternario)]"
         placeholder="Buscar por tema, palabra clave o tipo..."
         [(ngModel)]="terminoBusqueda"
         (input)="aplicarFiltros()"
@@ -26,7 +37,7 @@
       @if (terminoBusqueda) {
         <button
           type="button"
-          class="btn-limpiar"
+          class="btn-custom btn-custom--primario absolute right-2 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center !p-0 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ternario)]"
           (click)="terminoBusqueda = ''; aplicarFiltros()"
           aria-label="Limpiar búsqueda"
         >
@@ -35,33 +46,49 @@
       }
     </div>
 
-    <div class="filtros-chips" role="tablist">
+    <div class="flex flex-wrap justify-center gap-3" role="group" aria-label="Filtrar recursos por tipo">
       @for (tipo of tiposDisponibles; track tipo) {
         <button
           type="button"
-          class="chip-filtro"
-          [class.chip-activo]="filtroTipo.toLowerCase() === tipo.toLowerCase()"
+          class="btn-custom inline-flex max-w-full items-center justify-center gap-2 bg-[var(--bg-fondo)] text-center text-sm text-[var(--bg-y-fuentes)] outline outline-1 outline-[var(--ternario)] hover:bg-[var(--secundario)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ternario)] ring-[var(--primario-texto)]"
+          [class.btn-custom--primario]="filtroTipo.toLowerCase() === tipo.toLowerCase()"
+          [class.outline-none]="filtroTipo.toLowerCase() === tipo.toLowerCase()"
+          [class.ring-2]="filtroTipo.toLowerCase() === tipo.toLowerCase()"
+          [class.ring-offset-2]="filtroTipo.toLowerCase() === tipo.toLowerCase()"
+          [attr.aria-pressed]="filtroTipo.toLowerCase() === tipo.toLowerCase()"
           (click)="cambiarFiltro(tipo)"
         >
-          {{ tipo }}
+          @if (filtroTipo.toLowerCase() === tipo.toLowerCase()) {
+            <span aria-hidden="true">✓</span>
+          }
+          <span>{{ tipo }}</span>
         </button>
       }
     </div>
   </div>
 
-  <!-- Estado de carga -->
   @if (cargando) {
-    <div class="recursos-loading" aria-live="polite">
-      <div class="spinner"></div>
+    <div
+      class="flex flex-col items-center gap-4 rounded-2xl bg-white px-6 py-12 text-center text-slate-600 shadow-sm"
+      aria-live="polite"
+    >
+      <div
+        class="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-[var(--ternario)]"
+        aria-hidden="true"
+      ></div>
       <p>Cargando recursos de bienestar...</p>
     </div>
   } @else {
-    <!-- Estado vacío si no hay recursos -->
     @if (recursosFiltrados.length === 0) {
-      <div class="recursos-vacio" id="estado-vacio">
-        <div class="vacio-icono">🌱</div>
-        <h2>No se encontraron recursos</h2>
-        <p>
+      <div
+        class="mx-auto w-full min-w-0 max-w-2xl rounded-2xl border border-slate-200 bg-white px-6 py-10 text-center shadow-sm sm:px-10 sm:py-14"
+        id="estado-vacio"
+      >
+        <div class="mb-4 text-5xl" aria-hidden="true">🌱</div>
+        <h2 class="font-[var(--fuente-titulo)] text-2xl font-bold text-[var(--bg-y-fuentes)]">
+          No se encontraron recursos
+        </h2>
+        <p class="mx-auto mt-3 max-w-xl leading-7 text-slate-600">
           @if (terminoBusqueda || filtroTipo.toLowerCase() !== 'todos') {
             No hay recursos que coincidan con tu búsqueda actual. Intenta probar con otros términos o restablece los filtros.
           } @else {
@@ -71,7 +98,7 @@
         @if (terminoBusqueda || filtroTipo.toLowerCase() !== 'todos') {
           <button
             type="button"
-            class="btn-custom btn-custom--primario btn-restablecer"
+            class="btn-custom btn-custom--primario mt-6 inline-flex min-h-11 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ternario)]"
             (click)="filtroTipo = 'Todos'; terminoBusqueda = ''; aplicarFiltros()"
           >
             Ver todos los recursos
@@ -79,36 +106,41 @@
         }
       </div>
     } @else {
-      <!-- Grilla de recursos disponibles -->
-      <div class="recursos-grid" id="lista-recursos">
+      <div class="grid w-full min-w-0 grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3" id="lista-recursos">
         @for (recurso of recursosFiltrados; track recurso.id || $index) {
-          <article class="recurso-card">
-            <div class="card-top">
-              <span class="tipo-badge">
-                <span class="tipo-icono">{{ obtenerIconoTipo(recurso.tipo) }}</span>
-                <span class="tipo-texto">{{ recurso.tipo }}</span>
+          <article
+            class="recurso-card flex min-h-56 min-w-0 flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-[var(--ternario)] hover:shadow-lg"
+          >
+            <div class="mb-5 flex items-center justify-between">
+              <span
+                class="inline-flex items-center gap-2 rounded-full bg-[var(--secundario)] px-3 py-1.5 text-sm font-semibold text-[var(--primario-texto)]"
+              >
+                <span aria-hidden="true">{{ obtenerIconoTipo(recurso.tipo) }}</span>
+                <span>{{ recurso.tipo }}</span>
               </span>
             </div>
 
-            <div class="card-body">
-              <p class="recurso-descripcion">{{ recurso.descripcion }}</p>
+            <div class="flex-1">
+              <p class="break-words leading-7 text-slate-700">{{ recurso.descripcion }}</p>
             </div>
 
-            <div class="card-footer">
+            <div class="mt-6 border-t border-slate-100 pt-5">
               @if (tieneEnlace(recurso.enlace)) {
                 <a
                   [href]="recurso.enlace"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="btn-recurso-enlace"
+                  class="btn-custom btn-custom--primario btn-recurso-enlace flex min-h-12 w-full items-center justify-center gap-2 text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ternario)]"
                   id="enlace-recurso-{{ recurso.id || $index }}"
                 >
                   <span>Acceder al recurso</span>
-                  <span class="icono-externo" aria-hidden="true">↗</span>
+                  <span aria-hidden="true">↗</span>
                 </a>
               } @else {
-                <div class="sin-enlace-info">
-                  <span class="icono-info">ℹ️</span>
+                <div
+                  class="flex items-center gap-2 rounded-lg bg-[var(--bg-fondo)] px-4 py-3 text-sm font-medium text-slate-600"
+                >
+                  <span aria-hidden="true">ℹ️</span>
                   <span>Práctica de consulta directa</span>
                 </div>
               }
