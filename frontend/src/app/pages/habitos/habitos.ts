@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +9,8 @@ import { Ejercicio, RutinaEjercicio } from '../../models/ejercicio';
 import { EstadisticasService } from '../../services/estadisticas.service';
 import { ProgresoService,ProgresoDiario,} from '../../services/progreso';
 import { PlanNutricionalComponent } from '../plan-nutricional/plan-nutricional';
+import { HidratacionService } from '../../services/hidratacion';
+import { ResumenHidratacion,TipoHidratacion } from '../../models/hidratacion';
 
 type HabitosTab = 'ejercicio' | 'hidratacion' | 'alimentacion' | 'sueno';
 const HABITOS_TABS: readonly HabitosTab[] = [
@@ -40,7 +42,28 @@ export class Habitos implements OnInit {
   progresoSueno: ProgresoDiario | null = null;
   horasSueno: number | null = null;
   cargandoSueno = false;
-  errorSueno = '';  
+  errorSueno = '';
+  
+  
+  private readonly hidratacionService = inject(HidratacionService);
+  readonly opcionesHidratacion: {
+    tipo: TipoHidratacion;
+    nombre: string;
+    cantidad: string;
+  }[] = [
+    { tipo: 'vaso', nombre: 'Vaso', cantidad: '250 ml' },
+    { tipo: 'botella_500', nombre: 'Botella', cantidad: '500 ml' },
+    { tipo: 'botella_1l', nombre: 'Botella', cantidad: '1 L' },
+  ];
+  readonly resumenHidratacion = signal<ResumenHidratacion | null>(null);
+  readonly guardandoHidratacion = signal(false);
+  readonly errorHidratacion = signal('');
+  /** Porcentaje de la meta, tope 100 % para la barra. */
+  readonly porcentajeHidratacion = computed(() => {
+    const resumen = this.resumenHidratacion();
+    if (!resumen || resumen.meta_ml === 0) return 0;
+    return Math.min(100, (resumen.total_ml / resumen.meta_ml) * 100);
+  });
 
   rutinaIdEnEdicion: number | null = null;
 
@@ -71,6 +94,7 @@ export class Habitos implements OnInit {
     this.cargarEjerciciosDisponibles();
     this.cargarRutinaDelUsuario();
     this.cargarProgresoSueno();
+    this.cargarHidratacion();
   }
 
   setActiveTab(tabName: HabitosTab): void {
@@ -329,4 +353,57 @@ export class Habitos implements OnInit {
       },
     });
   }
+
+
+  cargarHidratacion(): void {
+    this.errorHidratacion.set('');
+    this.hidratacionService.consultar().subscribe({
+      next: (resumen) => this.resumenHidratacion.set(resumen),
+      error: (err: HttpErrorResponse) =>
+        this.errorHidratacion.set(this.mensajeErrorHidratacion(err)),
+    });
+  }
+
+  agregarAgua(tipo: TipoHidratacion): void {
+    this.guardandoHidratacion.set(true);
+    this.errorHidratacion.set('');
+    this.hidratacionService.agregar(tipo).subscribe({
+      next: (resumen) => {
+        this.resumenHidratacion.set(resumen);
+        this.guardandoHidratacion.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.errorHidratacion.set(this.mensajeErrorHidratacion(err));
+        this.guardandoHidratacion.set(false);
+      },
+    });
+  }
+
+  eliminarRegistroAgua(id: number): void {
+    this.guardandoHidratacion.set(true);
+    this.errorHidratacion.set('');
+    this.hidratacionService.eliminar(id).subscribe({
+      next: (resumen) => {
+        this.resumenHidratacion.set(resumen);
+        this.guardandoHidratacion.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.errorHidratacion.set(this.mensajeErrorHidratacion(err));
+        this.guardandoHidratacion.set(false);
+      },
+    });
+  }
+
+  /** 1250 -> "1,25 L" */
+  litros(ml: number): string {
+    return `${(ml / 1000).toLocaleString('es-AR', { maximumFractionDigits: 2 })} L`;
+  }
+
+  private mensajeErrorHidratacion(err: HttpErrorResponse): string {
+    if (err.status === 401 || err.status === 403) {
+      return 'Tu sesión expiró. Volvé a iniciar sesión para registrar tu hidratación.';
+    }
+    return 'No se pudo actualizar tu hidratación. Intentá nuevamente.';
+  }
+
 }

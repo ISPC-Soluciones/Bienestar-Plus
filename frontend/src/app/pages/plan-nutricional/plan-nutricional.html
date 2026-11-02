@@ -25,8 +25,8 @@
           }
         </ul>
       } @else { <p>Todavía no creaste un plan nutricional.</p> }
-      @if (resumen) {
-        <a routerLink="/habitos" [queryParams]="{tab: 'alimentacion'}">{{ plan ? 'Gestionar mi plan' : 'Crear mi plan' }}</a>
+      @if (resumen) { 
+        <a routerLink="/habitos" [queryParams]="{tab: 'alimentacion'}" class="btn-custom btn-custom--primario block w-full text-center shadow-sm mt-3 !font-semibold !text-base !text-[var(--bg-y-fuentes)] !no-underline">{{ plan ? 'Gestionar mi plan' : 'Crear mi plan' }}</a>
       } @else if (plan) {
         <div class="acciones-plan">
           <button type="button" class="principal" (click)="iniciarEdicion()" [disabled]="eliminando || confirmandoEliminacion">Editar plan</button>

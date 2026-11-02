@@ -73,6 +73,7 @@ export class RutinaEjercicioService {
     return this.http.get(`${this.apiUrl}descargar-pdf/`, {
       params: params,
       responseType: 'blob',
+      withCredentials: true,
     });
   }
 }

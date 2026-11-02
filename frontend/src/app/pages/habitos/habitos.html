@@ -19,41 +19,24 @@
           <div class="container__tabs__rutinas">
             <div class="tabs">
               <div class="tab-buttons">
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'ejercicio'"
-                  (click)="setActiveTab('ejercicio')"
-                >
+                <button class="tab-button" [class.active]="activeTab === 'ejercicio'"
+                  (click)="setActiveTab('ejercicio')">
                   <i class="fa-solid fa-person-running"></i> Ejercicio
                 </button>
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'hidratacion'"
-                  (click)="setActiveTab('hidratacion')"
-                >
+                <button class="tab-button" [class.active]="activeTab === 'hidratacion'"
+                  (click)="setActiveTab('hidratacion')">
                   <i class="fa-solid fa-glass-water"></i> Hidratación
                 </button>
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'alimentacion'"
-                  (click)="setActiveTab('alimentacion')"
-                >
+                <button class="tab-button" [class.active]="activeTab === 'alimentacion'"
+                  (click)="setActiveTab('alimentacion')">
                   <i class="fa-solid fa-utensils"></i> Alimentación
                 </button>
-                <button
-                  class="tab-button"
-                  [class.active]="activeTab === 'sueno'"
-                  (click)="setActiveTab('sueno')"
-                >
+                <button class="tab-button" [class.active]="activeTab === 'sueno'" (click)="setActiveTab('sueno')">
                   <i class="fa-solid fa-bed"></i> Sueño
                 </button>
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'ejercicio'"
-                id="ejercicio"
-              >
+              <div class="tab-content" [class.active]="activeTab === 'ejercicio'" id="ejercicio">
                 <article class="card__presentacion__habito">
                   <h2 class="card__presentacion__titulo">
                     <i class="fa-solid fa-dumbbell"></i> Mi Rutina de Ejercicios
@@ -69,38 +52,21 @@
                     <ul>
                       @for (rutina of rutinaDelUsuario; track rutina.id) {
                       <li class="rutina__item">
-                        <div
-                          class="habito__display"
-                          [class.completado]="rutina.completado"
-                        >
+                        <div class="habito__display" [class.completado]="rutina.completado">
                           @if (rutina.id === rutinaIdEnEdicion) {
                           <div class="edicion__container">
                             <p class="habito__texto">
                               {{ rutina.ejercicio_nombre }} - Cant.
                             </p>
-                            <input
-                              type="number"
-                              [(ngModel)]="cantidadEnEdicion"
-                              placeholder="20"
-                              class="input-edicion-cantidad"
-                              min="1"
-                              step="1"
-                            />
+                            <input type="number" [(ngModel)]="cantidadEnEdicion" placeholder="20"
+                              class="input-edicion-cantidad" min="1" step="1" />
                             <p class="habito__texto">repeticiones/km</p>
                           </div>
                           <div class="crud__acciones">
-                            <button
-                              class="btn__icono aceptar"
-                              (click)="guardarEdicion(rutina)"
-                              title="Guardar Cambios"
-                            >
+                            <button class="btn__icono aceptar" (click)="guardarEdicion(rutina)" title="Guardar Cambios">
                               <i class="fa-solid fa-save"></i>
                             </button>
-                            <button
-                              class="btn__icono cancelar"
-                              (click)="cancelarEdicion()"
-                              title="Cancelar"
-                            >
+                            <button class="btn__icono cancelar" (click)="cancelarEdicion()" title="Cancelar">
                               <i class="fa-solid fa-times"></i>
                             </button>
                           </div>
@@ -111,35 +77,23 @@
                           </p>
 
                           <div class="crud__acciones">
-                            <button
-                              class="btn__icono eliminar"
-                              (click)="eliminarRutina(rutina.id)"
-                              title="Eliminar Ejercicio"
-                            >
+                            <button class="btn__icono eliminar" (click)="eliminarRutina(rutina.id)"
+                              title="Eliminar Ejercicio">
                               <i class="fa-solid fa-trash"></i>
                             </button>
 
                             @if (!rutina.completado) {
-                            <button
-                              class="btn__icono editar"
-                              (click)="entrarEnModoEdicion(rutina)"
-                              title="Editar Cantidad"
-                            >
+                            <button class="btn__icono editar" (click)="entrarEnModoEdicion(rutina)"
+                              title="Editar Cantidad">
                               <i class="fa-solid fa-pencil"></i>
                             </button>
 
-                            <button
-                              class="btn__icono completado-inactivo"
-                              (click)="marcarCompletado(rutina)"
-                              title="Marcar como completado"
-                            >
+                            <button class="btn__icono completado-inactivo" (click)="marcarCompletado(rutina)"
+                              title="Marcar como completado">
                               <i class="fa-solid fa-check-circle"></i>
                             </button>
                             } @else {
-                            <i
-                              class="fa-solid fa-check-circle completado-activo"
-                              title="Completado"
-                            ></i>
+                            <i class="fa-solid fa-check-circle completado-activo" title="Completado"></i>
                             }
                           </div>
                           }
@@ -152,14 +106,8 @@
                       }
                     </ul>
                     @if (rutinaDelUsuario.length > 0) {
-                    <div
-                      class="acciones-rutina-pdf"
-                      style="margin-top: 1.5rem; text-align: right"
-                    >
-                      <button
-                        class="btn-custom btn-custom--primario"
-                        (click)="descargarPdf()"
-                      >
+                    <div class="acciones-rutina-pdf" style="margin-top: 1.5rem; text-align: right">
+                      <button class="btn-custom btn-custom--primario" (click)="descargarPdf()">
                         Descargar Rutina (PDF)
                         <i class="fa-solid fa-file-pdf"></i>
                       </button>
@@ -179,14 +127,8 @@
                   @if (ejercicio.id) {
                   <article class="card__habito">
                     <div class="card__habito__imagen">
-                      <img
-                        [src]="ejercicio.imagen_url || imagenPorDefecto"
-                        [alt]="'Cómo realizar ' + ejercicio.nombre"
-                        loading="lazy"
-                        width="400"
-                        height="300"
-                        (error)="usarImagenPorDefecto($event)"
-                      />
+                      <img [src]="ejercicio.imagen_url || imagenPorDefecto" [alt]="'Cómo realizar ' + ejercicio.nombre"
+                        loading="lazy" width="400" height="300" (error)="usarImagenPorDefecto($event)" />
                     </div>
                     <h4 class="card__habito__titulo">
                       {{ ejercicio.nombre }}
@@ -201,11 +143,8 @@
                         Agregado <i class="fa-solid fa-check" aria-hidden="true"></i>
                       </button>
                       } @else {
-                      <button
-                        type="button"
-                        class="btn-custom btn-custom--primario"
-                        (click)="agregarEjercicioARutina(ejercicio)"
-                      >
+                      <button type="button" class="btn-custom btn-custom--primario"
+                        (click)="agregarEjercicioARutina(ejercicio)">
                         Agregar <i class="fa-solid fa-plus" aria-hidden="true"></i>
                       </button>
                       }
@@ -219,42 +158,141 @@
                 </div>
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'hidratacion'"
-                id="hidratacion"
-              >
-                <article class="card__presentacion__habito construccion">
-                  <h3 class="card__presentacion__titulo-small">
-                    <i class="fa-solid fa-screwdriver-wrench"></i> Próximamente
-                    disponible...
-                  </h3>
-                  <p
-                    class="card__presentacion__descripcion"
-                    style="margin-top: 2rem"
-                  >
-                    Estamos trabajando en la sección de Hidratación para
-                    ofrecerte las mejores herramientas de seguimiento. ¡Vuelve
-                    pronto!
+              <div class="tab-content" [class.active]="activeTab === 'hidratacion'" id="hidratacion">
+                <article class="card__presentacion__habito">
+                  <h2 class="card__presentacion__titulo">
+                    <i class="fa-solid fa-glass-water"></i> Seguimiento de
+                    hidratación
+                  </h2>
+                  <p class="card__presentacion__descripcion">
+                    Registrá el agua que tomás durante el día. Objetivo diario:
+                    2 litros.
                   </p>
+
+                  @let resumenAgua = resumenHidratacion();
+                  @if (resumenAgua) {
+                  <div class="listado__crud">
+                    <p class="habito__texto">
+                      {{ litros(resumenAgua.total_ml) }} de
+                      {{ litros(resumenAgua.meta_ml) }}
+                    </p>
+                    <div class="barra__progreso h-2.5 w-full bg-[var(--secundario)] rounded-full overflow-hidden"
+                      role="progressbar" aria-label="Progreso de hidratación del día" aria-valuemin="0"
+                      [attr.aria-valuemax]="resumenAgua.meta_ml" [attr.aria-valuenow]="resumenAgua.total_ml"
+                      [attr.aria-valuetext]="
+                        litros(resumenAgua.total_ml) +
+                        ' de ' +
+                        litros(resumenAgua.meta_ml)
+                      ">
+                      <div
+                        class="barra__relleno h-full bg-[var(--primario)] rounded-full transition-all duration-300 ease-in-out"
+                        [style.width.%]="porcentajeHidratacion()"></div>
+                    </div>
+
+                    @if (resumenAgua.total_ml > resumenAgua.meta_ml) {
+                    <p class="card__presentacion__descripcion">
+                      <i class="fa-solid fa-check-circle completado-activo"></i>
+                      ¡Superaste tu objetivo de hidratación!
+                    </p>
+                    } @else if (resumenAgua.completado) {
+                    <p class="card__presentacion__descripcion">
+                      <i class="fa-solid fa-check-circle completado-activo"></i>
+                      Objetivo de hidratación cumplido.
+                    </p>
+                    } @else {
+                    <p class="card__presentacion__descripcion">
+                      Te faltan
+                      {{ litros(resumenAgua.meta_ml - resumenAgua.total_ml) }}
+                      para llegar a tu objetivo.
+                    </p>
+                    }
+                  </div>
+                  }
+
+                  @if (errorHidratacion()) {
+                  <p class="mensaje-rutina" role="alert">
+                    {{ errorHidratacion() }}
+                  </p>
+                  }
+                </article>
+
+                <hr />
+
+                <h3 class="card__presentacion__titulo-small">
+                  ¿Cuánta agua tomaste?
+                </h3>
+
+                <div class="contenido__ejercicios grid-3-cols">
+                  @for (opcion of opcionesHidratacion; track opcion.tipo) {
+                  <article class="card__habito">
+                    <h4 class="card__habito__titulo">
+                      <i class="fa-solid" [class.fa-glass-water]="opcion.tipo === 'vaso'"
+                        [class.fa-bottle-water]="opcion.tipo !== 'vaso'" aria-hidden="true"></i>
+                      {{ opcion.nombre }}
+                    </h4>
+                    <p class="card__habito__descripcion">
+                      {{ opcion.cantidad }}
+                    </p>
+                    <div class="card__habito__acciones">
+                      <button type="button" class="btn-custom btn-custom--primario" (click)="agregarAgua(opcion.tipo)"
+                        [disabled]="guardandoHidratacion()" [attr.aria-label]="
+                          'Agregar ' + opcion.nombre + ' de ' + opcion.cantidad
+                        ">
+                        Agregar <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </article>
+                  }
+                </div>
+
+                <hr />
+
+                <article class="card__presentacion__habito">
+                  <div class="listado__crud">
+                    <p class="card__presentacion__descripcion">
+                      Registros de hoy:
+                    </p>
+                    <ul>
+                      @for (registro of resumenAgua?.registros ?? []; track
+                      registro.id) {
+                      <li class="rutina__item">
+                        <div class="habito__display">
+                          <p class="habito__texto">
+                            <i class="fa-solid" [class.fa-glass-water]="registro.tipo === 'vaso'"
+                              [class.fa-bottle-water]="registro.tipo !== 'vaso'" aria-hidden="true"></i>
+                            {{ registro.tipo === 'vaso' ? 'Vaso' : 'Botella' }}
+                            · {{ registro.cantidad_ml }} ml · {{ registro.hora }}
+                          </p>
+                          <div class="crud__acciones">
+                            <button class="btn__icono eliminar" (click)="eliminarRegistroAgua(registro.id)"
+                              [disabled]="guardandoHidratacion()" title="Eliminar registro" [attr.aria-label]="
+                                'Eliminar ' +
+                                registro.tipo_display +
+                                ' de las ' +
+                                registro.hora
+                              ">
+                              <i class="fa-solid fa-trash"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </li>
+                      } @empty {
+                      <li class="lista-vacia">
+                        Todavía no registraste agua hoy.
+                      </li>
+                      }
+                    </ul>
+                  </div>
                 </article>
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'alimentacion'"
-                id="alimentacion"
-              >
+              <div class="tab-content" [class.active]="activeTab === 'alimentacion'" id="alimentacion">
                 @if (activeTab === 'alimentacion') {
-                  <app-plan-nutricional />
+                <app-plan-nutricional />
                 }
               </div>
 
-              <div
-                class="tab-content"
-                [class.active]="activeTab === 'sueno'"
-                id="sueno"
-              >
+              <div class="tab-content" [class.active]="activeTab === 'sueno'" id="sueno">
                 <article class="card__presentacion__habito">
                   <h3 class="card__presentacion__titulo">
                     <i class="fa-solid fa-bed"></i>
@@ -275,21 +313,11 @@
                       Horas dormidas:
                     </label>
 
-                    <input
-                      id="horas-sueno"
-                      type="number"
-                      min="0"
-                      max="24"
-                      step="0.5"
-                      [(ngModel)]="horasSueno"
-                      class="input-edicion-cantidad"
-                    />
+                    <input id="horas-sueno" type="number" min="0" max="24" step="0.5" [(ngModel)]="horasSueno"
+                      class="input-edicion-cantidad" />
 
-                    <button
-                      class="btn-custom btn-custom--primario"
-                      (click)="guardarHorasSueno()"
-                      [disabled]="horasSueno === null || cargandoSueno"
-                    >
+                    <button class="btn-custom btn-custom--primario" (click)="guardarHorasSueno()"
+                      [disabled]="horasSueno === null || cargandoSueno">
                       Guardar
                     </button>
                   </div>

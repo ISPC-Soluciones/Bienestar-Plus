@@ -68,7 +68,7 @@
 
   <!-- Sección de progreso (Gráfico de rendimiento) -->
   <section
-    class="perfil-progreso bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[rgba(110,193,228,0.25)] p-6 text-center max-w-[500px] mx-auto w-full flex flex-col justify-between font-[var(--fuente-base)]">
+      class="perfil-progreso bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[rgba(110,193,228,0.25)] p-6 text-center max-w-[500px] mx-auto w-full flex flex-col font-[var(--fuente-base)]">
     <div>
       <h2 class="font-[var(--fuente-titulo)] text-xl font-bold text-[var(--bg-y-fuentes)] mb-4">
         Tu resumen de rendimiento
@@ -124,120 +124,196 @@
   <section
     class="perfil__rutina bg-[var(--bg-fondo)] p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[rgba(110,193,228,0.25)] font-[var(--fuente-base)]">
     <h2 class="font-[var(--fuente-titulo)] text-xl font-bold text-[var(--bg-y-fuentes)] mb-5 text-center">
-      Mi rutina de hoy
+      Mis Hábitos de hoy
     </h2>
 
-    <!-- Bloque de Ejercicio -->
-    <div class="mb-6 pb-5 border-b border-gray-200/60">
-      <h3
-        class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-3 flex items-center gap-2">
-        <i class="fa-solid fa-dumbbell"></i> Ejercicio
-      </h3>
+    <!-- Bloque de Ejercicio (desplegable) -->
+    <details class="group mb-4 pb-4 border-b border-gray-200/60">
+      <summary
+        class="list-none [&::-webkit-details-marker]:hidden cursor-pointer rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ternario)]">
+        <span class="flex items-center justify-between mb-2.5">
+          <span
+            class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] flex items-center gap-2">
+            <i class="fa-solid fa-dumbbell" aria-hidden="true"></i> Ejercicio
+          </span>
+          <i class="fa-solid fa-chevron-down text-[var(--bg-y-fuentes)] transition-transform duration-300 group-open:rotate-180"
+            aria-hidden="true"></i>
+        </span>
+        <span class="block bg-white p-3.5 rounded-xl shadow-xs">
+          @if (totalHabitos > 0) {
+          <span class="block text-sm font-medium text-[var(--bg-y-fuentes)] mb-2">
+            <strong>{{ habitosCompletados }}</strong> de
+            <strong>{{ totalHabitos }}</strong> ejercicios completados hoy.
+          </span>
+          <span class="barra__progreso block h-2.5 w-full bg-[var(--secundario)] rounded-full overflow-hidden">
+            <span
+              class="barra__relleno block h-full bg-[var(--primario)] rounded-full transition-all duration-300 ease-in-out"
+              [style.width.%]="porcentajeCompletado"></span>
+          </span>
+          } @else {
+          <span class="block text-sm text-gray-600">
+            Todavía no armaste tu rutina de ejercicios.
+          </span>
+          }
+        </span>
+      </summary>
 
-      @if (totalHabitos > 0) {
-      <div class="progreso__detalle bg-white p-3.5 rounded-xl shadow-xs mb-3">
-        <p class="text-sm font-medium text-[var(--bg-y-fuentes)] mb-2">
-          <strong>{{ habitosCompletados }}</strong> de
-          <strong>{{ totalHabitos }}</strong> ejercicios completados hoy.
-        </p>
-        <div class="barra__progreso h-2.5 w-full bg-[var(--secundario)] rounded-full overflow-hidden">
-          <div class="barra__relleno h-full bg-[var(--primario)] rounded-full transition-all duration-300 ease-in-out"
-            [style.width.%]="porcentajeCompletado"></div>
-        </div>
-      </div>
-      }
-
-      @if (rutina?.length) {
-      <ul class="rutina__lista space-y-2">
-        @for (h of rutina; track h.id) {
-        <li>
-          <label
-            class="rutina__item flex items-center bg-white p-3 rounded-xl shadow-xs cursor-pointer hover:bg-[var(--secundario)] transition-colors">
-            <input type="checkbox"
-              class="w-4 h-4 text-[var(--ternario)] rounded border-gray-300 focus:ring-[var(--ternario)] mr-3 cursor-pointer"
-              [checked]="h.completado" (change)="onCheckboxChange($event, h.id)" />
-            <span class="text-sm font-medium text-[var(--bg-y-fuentes)]" [class.completado]="h.completado"
-              [class.line-through]="h.completado" [class.text-gray-400]="h.completado">
-              {{ h.ejercicio_nombre }} (Cant. {{ h.meta_cantidad }})
-            </span>
-          </label>
-        </li>
+      <div class="mt-3">
+        @if (rutina.length) {
+        <ul class="rutina__lista space-y-2">
+          @for (h of rutina; track h.id) {
+          <li>
+            <label
+              class="rutina__item flex items-center bg-white p-3 rounded-xl shadow-xs cursor-pointer hover:bg-[var(--secundario)] transition-colors">
+              <input type="checkbox"
+                class="w-4 h-4 text-[var(--ternario)] rounded border-gray-300 focus:ring-[var(--ternario)] mr-3 cursor-pointer"
+                [checked]="h.completado" (change)="onCheckboxChange($event, h.id)" />
+              <span class="text-sm font-medium text-[var(--bg-y-fuentes)]" [class.completado]="h.completado"
+                [class.line-through]="h.completado" [class.text-gray-400]="h.completado">
+                {{ h.ejercicio_nombre }} (Cant. {{ h.meta_cantidad }})
+              </span>
+            </label>
+          </li>
+          }
+        </ul>
         }
-      </ul>
-      } @else {
-      <div class="bg-white p-4 rounded-xl text-center shadow-xs">
-        <p class="text-sm text-gray-600 mb-1">
-          Todavía no armaste tu rutina de ejercicios.
+        <a routerLink="/habitos" [queryParams]="{ tab: 'ejercicio' }"
+          class="btn-custom btn-custom--primario block w-full text-center shadow-sm mt-3">
+          Ir a Ejercicio
+        </a>
+      </div>
+    </details>
+
+    <!-- Bloque de Hidratación (desplegable) -->
+    @let esMiPerfil = (usuarioSesion$ | async) === +usuario.id;
+    @let resumenAgua = resumenHidratacion();
+    <details class="group mb-4 pb-4 border-b border-gray-200/60">
+      <summary
+        class="list-none [&::-webkit-details-marker]:hidden cursor-pointer rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ternario)]">
+        <span class="flex items-center justify-between mb-2.5">
+          <span
+            class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] flex items-center gap-2">
+            <i class="fa-solid fa-droplet" aria-hidden="true"></i> Hidratación
+          </span>
+          <i class="fa-solid fa-chevron-down text-[var(--bg-y-fuentes)] transition-transform duration-300 group-open:rotate-180"
+            aria-hidden="true"></i>
+        </span>
+        @if (esMiPerfil) {
+        <span class="block bg-white p-3.5 rounded-xl shadow-xs">
+          @if (resumenAgua && resumenAgua.total_ml > 0) {
+          <span class="block text-sm text-[var(--bg-y-fuentes)] mb-2">
+            Hoy tomaste <strong>{{ litros(resumenAgua.total_ml) }}</strong> de
+            {{ litros(resumenAgua.meta_ml) }}
+          </span>
+          <span class="barra__progreso block h-2.5 w-full bg-[var(--secundario)] rounded-full overflow-hidden">
+            <span
+              class="barra__relleno block h-full bg-[var(--primario)] rounded-full transition-all duration-300 ease-in-out"
+              [style.width.%]="porcentajeHidratacion()"></span>
+          </span>
+          } @else if (errorHidratacion()) {
+          <span class="block text-sm text-gray-600">
+            No pudimos cargar tu registro de hidratación.
+          </span>
+          } @else {
+          <span class="block text-sm text-gray-600">
+            Todavía no registraste agua hoy.
+          </span>
+          }
+        </span>
+        }
+      </summary>
+
+      @if (esMiPerfil) {
+      <div class="mt-3">
+        @if (resumenAgua && resumenAgua.total_ml > 0) {
+        @if (resumenAgua.total_ml > resumenAgua.meta_ml) {
+        <p class="text-sm font-semibold text-green-800 m-0">
+          ✔ ¡Superaste tu objetivo de hidratación!
         </p>
-        <a routerLink="/habitos" class="text-[var(--ternario)] font-bold text-sm hover:underline">Andá a la sección
-          "Hábitos" &rarr;</a>
+        } @else if (resumenAgua.completado) {
+        <p class="text-sm font-semibold text-green-800 m-0">
+          ✔ Objetivo de hidratación cumplido
+        </p>
+        } @else {
+        <p class="text-sm text-gray-600 m-0">
+          Te faltan {{ litros(resumenAgua.meta_ml - resumenAgua.total_ml) }} para llegar a tu objetivo.
+        </p>
+        }
+        }
+        <a routerLink="/habitos" [queryParams]="{ tab: 'hidratacion' }"
+          class="btn-custom btn-custom--primario block w-full text-center shadow-sm mt-3">
+          Registrar agua
+        </a>
       </div>
       }
-    </div>
+    </details>
 
-    <!-- Bloque de Hidratación -->
-    <div class="mb-6 pb-5 border-b border-gray-200/60">
-      <h3
-        class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-2.5 flex items-center gap-2">
-        <i class="fa-solid fa-droplet"></i> Hidratación
-      </h3>
-      <div class="bg-white p-3.5 rounded-xl shadow-xs">
-        <p class="text-sm text-gray-600 m-0">
-          Todavía no configuraste tus hábitos de Hidratación.
-        </p>
-      </div>
-    </div>
+    <!-- Bloque de Alimentación (desplegable) -->
+    <details class="group mb-4 pb-4 border-b border-gray-200/60">
+      <summary
+        class="list-none [&::-webkit-details-marker]:hidden cursor-pointer rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ternario)]">
+        <span class="flex items-center justify-between">
+          <span
+            class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] flex items-center gap-2">
+            <i class="fa-solid fa-utensils" aria-hidden="true"></i> Alimentación
+          </span>
+          <i class="fa-solid fa-chevron-down text-[var(--bg-y-fuentes)] transition-transform duration-300 group-open:rotate-180"
+            aria-hidden="true"></i>
+        </span>
+      </summary>
 
-    <!-- Bloque de Alimentación -->
-    <div class="mb-6 pb-5 border-b border-gray-200/60">
-      <h3
-        class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-2.5 flex items-center gap-2">
-        <i class="fa-solid fa-utensils"></i> Alimentación
-      </h3>
-      @if ((usuarioSesion$ | async) === +usuario.id) {
-      <div class="bg-white p-3.5 rounded-xl shadow-xs">
+      @if (esMiPerfil) {
+      <div class="mt-3 bg-white p-3.5 rounded-xl shadow-xs">
         <app-plan-nutricional [resumen]="true" />
       </div>
       }
-    </div>
+    </details>
 
-    <!-- Bloque de Sueño -->
-    <div>
-      <h3
-        class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] mb-2.5 flex items-center gap-2">
-        <i class="fa-solid fa-moon"></i> Sueño
-      </h3>
-      <div class="bg-white p-3.5 rounded-xl shadow-xs">
+    <!-- Bloque de Sueño (desplegable) -->
+    <details class="group">
+      <summary
+        class="list-none [&::-webkit-details-marker]:hidden cursor-pointer rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ternario)]">
+        <span class="flex items-center justify-between mb-2.5">
+          <span
+            class="font-[var(--fuente-titulo)] font-bold text-base text-[var(--cuaternario)] flex items-center gap-2">
+            <i class="fa-solid fa-moon" aria-hidden="true"></i> Sueño
+          </span>
+          <i class="fa-solid fa-chevron-down text-[var(--bg-y-fuentes)] transition-transform duration-300 group-open:rotate-180"
+            aria-hidden="true"></i>
+        </span>
+        <span class="block bg-white p-3.5 rounded-xl shadow-xs text-sm">
+          @if (horasSuenoHoy !== null) {
+          <span class="text-[var(--bg-y-fuentes)]">Hoy dormiste <strong>{{ horasSuenoHoy }} h</strong></span>
+          } @else if (errorSueno) {
+          <span class="text-gray-600">No pudimos cargar tu registro de sueño.</span>
+          } @else {
+          <span class="text-gray-600">Todavía no registraste tus horas de sueño hoy.</span>
+          }
+        </span>
+      </summary>
+
+      <div class="mt-3">
         @if (horasSuenoHoy !== null) {
-        <p class="text-sm text-[var(--bg-y-fuentes)] m-0">
-          Hoy dormiste <strong>{{ horasSuenoHoy }} h</strong>
-        </p>
         @if (horasSuenoHoy > 9) {
-        <p class="text-sm font-semibold text-green-800 mt-1 mb-0">
+        <p class="text-sm font-semibold text-green-800 m-0">
           ✔ ¡Superaste tu objetivo de sueño!
         </p>
         } @else if (progresoSueno?.completado) {
-        <p class="text-sm font-semibold text-green-800 mt-1 mb-0">
+        <p class="text-sm font-semibold text-green-800 m-0">
           ✔ Objetivo de sueño cumplido
         </p>
         } @else {
-        <p class="text-sm text-amber-800 mt-1 mb-0">
+        <p class="text-sm text-amber-800 m-0">
           Dormiste menos de lo recomendado (mínimo 7 h).
         </p>
         }
-        } @else if (errorSueno) {
-        <p class="text-sm text-gray-600 m-0">
-          No pudimos cargar tu registro de sueño.
-        </p>
-        } @else {
-        <p class="text-sm text-gray-600 mb-1">
-          Todavía no registraste tus horas de sueño hoy.
-        </p>
-        <a routerLink="/habitos" class="text-[#1b6f8f] font-bold text-sm hover:underline">Registrarlas en "Hábitos"
-          &rarr;</a>
         }
+        <a routerLink="/habitos" [queryParams]="{ tab: 'sueno' }"
+          class="btn-custom btn-custom--primario block w-full text-center shadow-sm mt-3">
+          Registrar sueño
+        </a>
       </div>
-    </div>
+    </details>
   </section>
 </div>
 } @else {
@@ -367,8 +443,5 @@
 }
 
 @if (mostrarModalRecomendacion) {
-  <app-modal-bienvenida
-    [recomendacion]="recomendacionUsuario"
-    (cerrar)="cerrarModalRecomendacion()"
-  />
+<app-modal-bienvenida [recomendacion]="recomendacionUsuario" (cerrar)="cerrarModalRecomendacion()" />
 }
