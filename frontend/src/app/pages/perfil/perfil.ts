@@ -566,6 +566,10 @@ export class PerfilComponent implements OnInit, OnDestroy {
         }
 
         console.log('✅ Ejercicio actualizado');
+
+        if (this.usuario && this.usuario.id) {
+          this.cargarResumenRendimiento(Number(this.usuario.id));
+        }
       },
 
       error: (err) => console.error('Error al actualizar el ejercicio', err),
