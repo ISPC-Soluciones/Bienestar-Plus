@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 
 import { AuthService } from '../../services/auth';
 import { RegistroServicio } from '../../services/registroServicio';
+import { LoginService } from '../../services/login';
 import { Registro } from './registro';
 
 describe('Registro', () => {
@@ -11,6 +12,7 @@ describe('Registro', () => {
   let fixture: ComponentFixture<Registro>;
   let registroService: jasmine.SpyObj<RegistroServicio>;
   let authService: jasmine.SpyObj<AuthService>;
+  let loginService: jasmine.SpyObj<LoginService>;
   let router: Router;
 
   beforeEach(async () => {
@@ -19,6 +21,9 @@ describe('Registro', () => {
       'registrarUsuario',
     ]);
     authService = jasmine.createSpyObj('AuthService', ['login']);
+    loginService = jasmine.createSpyObj('LoginService', ['obtenerSesion', 'login']);
+    loginService.obtenerSesion.and.returnValue(of(null));
+    loginService.login.and.returnValue(of(null));
 
     await TestBed.configureTestingModule({
       imports: [Registro],
@@ -26,6 +31,7 @@ describe('Registro', () => {
         provideRouter([]),
         { provide: RegistroServicio, useValue: registroService },
         { provide: AuthService, useValue: authService },
+        { provide: LoginService, useValue: loginService },
       ],
     })
       .compileComponents();
@@ -54,6 +60,14 @@ describe('Registro', () => {
     registroService.registrarUsuario.and.returnValue(
       of({ success: true, data: usuario }),
     );
+    loginService.login.and.returnValue(
+      of({
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+      }),
+    );
     component.registroForm.setValue({
       nombre: 'Nuevo Usuario',
       email: 'nuevo@example.com',
@@ -68,6 +82,10 @@ describe('Registro', () => {
     component.EnviarFormulario();
 
     expect(authService.login).toHaveBeenCalledOnceWith(usuario.id);
+    expect(loginService.login).toHaveBeenCalledOnceWith({
+      email: usuario.email,
+      password: 'Password123',
+    });
     expect(JSON.parse(localStorage.getItem('usuario')!)).toEqual({
       id: usuario.id,
       nombre: usuario.nombre,
@@ -81,19 +99,25 @@ describe('Registro', () => {
   });
 
   it('keeps the new session active while the recommendation modal is open', () => {
+    const usuario = {
+      id: 42,
+      nombre: 'Nuevo Usuario',
+      email: 'nuevo@example.com',
+      rol: 'estandar',
+      perfil_salud: {
+        mostrar_modal_imc: true,
+        recomendacion_enfoque: 'GENERAL',
+      },
+    };
     registroService.registrarUsuario.and.returnValue(
+      of({ success: true, data: usuario }),
+    );
+    loginService.obtenerSesion.and.returnValue(
       of({
-        success: true,
-        data: {
-          id: 42,
-          nombre: 'Nuevo Usuario',
-          email: 'nuevo@example.com',
-          rol: 'estandar',
-          perfil_salud: {
-            mostrar_modal_imc: true,
-            recomendacion_enfoque: 'GENERAL',
-          },
-        },
+        id: usuario.id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
       }),
     );
     component.registroForm.setValue({
@@ -109,6 +133,7 @@ describe('Registro', () => {
 
     component.EnviarFormulario();
 
+    expect(loginService.login).not.toHaveBeenCalled();
     expect(authService.login).toHaveBeenCalledOnceWith(42);
     expect(component.mostrarModalRecomendacion).toBeTrue();
     expect(router.navigate).not.toHaveBeenCalled();
