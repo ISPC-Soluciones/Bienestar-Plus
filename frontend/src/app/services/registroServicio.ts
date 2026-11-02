@@ -15,6 +15,9 @@ export class RegistroServicio {
 
   registrarUsuario(usuario: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.apiUrl, usuario, { headers });
+    return this.http.post(this.apiUrl, usuario, {
+      headers,
+      withCredentials: true,
+    });
   }
 }

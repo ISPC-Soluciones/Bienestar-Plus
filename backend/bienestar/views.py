@@ -281,6 +281,9 @@ class RegistroUsuarioView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        request.session.cycle_key()
+        request.session["usuario_id"] = usuario.id
+
         serializer = UsuarioSerializer(
             usuario,
             context={'request': request}

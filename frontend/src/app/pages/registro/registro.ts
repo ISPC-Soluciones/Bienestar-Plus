@@ -12,6 +12,7 @@ import {
 import { RegistroServicio } from '../../services/registroServicio';
 import { Router, RouterLink } from '@angular/router';
 import { ModalBienvenida } from './modal-bienvenida/modal-bienvenida';
+import { AuthService } from '../../services/auth';
 
 const contraseñaigual: ValidatorFn = (
   control: AbstractControl,
@@ -47,6 +48,7 @@ export class Registro implements OnInit {
     private fb: FormBuilder,
     private registroService: RegistroServicio,
     private router: Router,
+    private authService: AuthService,
   ) {
     this.registroForm = this.fb.group(
       {
@@ -76,7 +78,7 @@ export class Registro implements OnInit {
     if (this.ultimoUsuarioId) {
       this.router.navigate(['/perfil', this.ultimoUsuarioId]);
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/login']);
     }
   }
 
@@ -118,10 +120,28 @@ export class Registro implements OnInit {
 
     this.registroService.registrarUsuario(payload).subscribe({
       next: (respuesta: any) => {
-        console.log('Usuario registrado:', respuesta);
+        const usuario = respuesta?.data;
+        const usuarioId = usuario?.id;
+
+        if (!respuesta?.success || typeof usuarioId !== 'number') {
+          alert(
+            'El registro se completó, pero no pudimos iniciar sesión. Inicia sesión con tus datos.',
+          );
+          this.router.navigate(['/login']);
+          return;
+        }
+
+        const usuarioSesion = {
+          id: usuarioId,
+          nombre: usuario.nombre,
+          email: usuario.email,
+          rol: usuario.rol,
+        };
+        localStorage.setItem('usuario', JSON.stringify(usuarioSesion));
+        this.authService.login(usuarioId);
+
         this.registroForm.reset();
-        const perfilSalud = respuesta?.data?.perfil_salud;
-        const usuarioId = respuesta?.data?.id;
+        const perfilSalud = usuario?.perfil_salud;
         const mostrarModal = perfilSalud?.mostrar_modal_imc === true;
         const recomendacion = perfilSalud?.recomendacion_enfoque;
         this.ultimoUsuarioId = usuarioId;
@@ -130,7 +150,7 @@ export class Registro implements OnInit {
           this.recomendacionUsuario = recomendacion || 'GENERAL';
           this.mostrarModalRecomendacion = true;
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/perfil', usuarioId]);
         }
       },
       error: (error: any) => {
