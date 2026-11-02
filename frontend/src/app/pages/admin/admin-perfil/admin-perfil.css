@@ -1,0 +1,189 @@
+.admin-perfil {
+    padding: 3rem;
+    max-width: 950px;
+    margin: 0 auto;
+  }
+  
+  .admin-perfil h1 {
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #263238;
+  }
+  
+  .perfil-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0eeee;
+  }
+  
+  .perfil-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #62bde2, #70f0c6);
+    color: #263238;
+    font-size: 2rem;
+  }
+  
+  .perfil-header h2 {
+    margin: 0 0 0.3rem;
+    font-size: 1.7rem;
+    color: #263238;
+  }
+  
+  .rol {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    background: #e4faf3;
+    color: #168568;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  
+  .perfil-datos {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .dato {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 10px;
+    background: #f7f9fa;
+  }
+  
+  .dato-label {
+    font-weight: 600;
+    color: #607d8b;
+  }
+  
+  .dato-valor {
+    color: #263238;
+  }
+  
+  .perfil-form {
+    display: grid;
+    gap: 1.25rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    color: #455a64;
+  }
+  
+  .form-group input {
+    padding: 0.8rem 1rem;
+    border: 1px solid #cfd8dc;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+  }
+  
+  .form-group input:focus {
+    border-color: #62bde2;
+    box-shadow: 0 0 0 3px rgba(98, 189, 226, 0.15);
+  }
+  
+  .acciones {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+  
+  .btn-principal,
+  .btn-secundario {
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  
+  .btn-principal {
+    background: linear-gradient(135deg, #62bde2, #70f0c6);
+    color: #263238;
+  }
+  
+  .btn-secundario {
+    background: #eceff1;
+    color: #455a64;
+  }
+  
+  .btn-principal:hover,
+  .btn-secundario:hover {
+    transform: translateY(-1px);
+  }
+  
+  .btn-principal:disabled,
+  .btn-secundario:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .mensaje-exito {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    background: #e8f8f2;
+    color: #14765c;
+  }
+  
+  .mensaje-error {
+    margin-top: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    background: #fdecec;
+    color: #b3261e;
+  }
+  
+  .estado {
+    text-align: center;
+    color: #607d8b;
+  }
+  
+  @media (max-width: 700px) {
+    .admin-perfil {
+      padding: 1.5rem;
+    }
+  
+    .dato {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+  
+    .acciones {
+      flex-direction: column;
+    }
+  
+    .btn-principal,
+    .btn-secundario {
+      width: 100%;
+    }
+  }
