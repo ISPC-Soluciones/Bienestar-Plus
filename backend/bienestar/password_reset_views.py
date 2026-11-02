@@ -27,6 +27,9 @@ class PasswordResetRequestView(APIView):
     response_message = (
         'Si el correo está registrado, recibirás un enlace para recuperar tu contraseña.'
     )
+    unknown_email_message = (
+        'El correo ingresado no cuenta con usuario registrado, porfavor ingresa un correo válido'
+    )
 
     def post(self, request):
         serializer = PasswordResetRequestSerializer(data=request.data)
@@ -34,19 +37,24 @@ class PasswordResetRequestView(APIView):
         email = serializer.validated_data['email'].strip().lower()
         usuario = Usuario.objects.filter(email__iexact=email).first()
 
-        if usuario:
-            email_hash = hashlib.sha256(email.encode('utf-8')).hexdigest()
-            cooldown_key = f'password-reset-email:{email_hash}'
-            if cache.add(cooldown_key, True, timeout=120):
-                with transaction.atomic():
-                    raw_token = create_password_reset_token(usuario)
-                    transaction.on_commit(
-                        partial(
-                            send_password_reset_email_safely,
-                            usuario.pk,
-                            raw_token,
-                        )
+        if not usuario:
+            return Response(
+                {'message': self.unknown_email_message},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        email_hash = hashlib.sha256(email.encode('utf-8')).hexdigest()
+        cooldown_key = f'password-reset-email:{email_hash}'
+        if cache.add(cooldown_key, True, timeout=120):
+            with transaction.atomic():
+                raw_token = create_password_reset_token(usuario)
+                transaction.on_commit(
+                    partial(
+                        send_password_reset_email_safely,
+                        usuario.pk,
+                        raw_token,
                     )
+                )
 
         return Response({'message': self.response_message}, status=status.HTTP_200_OK)
 

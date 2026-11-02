@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -40,9 +41,12 @@ export class RequestPasswordReset {
           this.successMessage = message;
           this.isLoading = false;
         },
-        error: () => {
+        error: (error: HttpErrorResponse) => {
+          const apiMessage = error.error?.message;
           this.errorMessage =
-            'No pudimos procesar la solicitud. Intentá nuevamente más tarde.';
+            typeof apiMessage === 'string'
+              ? apiMessage
+              : 'No pudimos procesar la solicitud. Intentá nuevamente más tarde.';
           this.isLoading = false;
         },
       });
