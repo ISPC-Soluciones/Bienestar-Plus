@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component,computed,inject,OnInit,OnDestroy,signal } from '@angular/core';
 import { AuthService } from '../../services/auth';
 import { PlanNutricionalComponent } from '../plan-nutricional/plan-nutricional';
 import {
@@ -27,6 +27,8 @@ import { NotificacionesService } from '../../services/notificaciones';
 import { Usuario, PerfilSalud } from '../../models/perfil.model';
 import { ModalBienvenida } from '../registro/modal-bienvenida/modal-bienvenida';
 import { ProgresoService, ProgresoDiario } from '../../services/progreso';
+import { HidratacionService } from '../../services/hidratacion';
+import { ResumenHidratacion } from '../../models/hidratacion';
 
 import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 
@@ -83,6 +85,17 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
   progresoSueno: ProgresoDiario | null = null;
   errorSueno = false;
+
+  
+  private readonly hidratacionService = inject(HidratacionService);
+  readonly resumenHidratacion = signal<ResumenHidratacion | null>(null);
+  readonly errorHidratacion = signal(false);
+  /** Porcentaje de la meta, tope 100 % para la barra. */
+  readonly porcentajeHidratacion = computed(() => {
+    const resumen = this.resumenHidratacion();
+    if (!resumen || resumen.meta_ml === 0) return 0;
+    return Math.min(100, (resumen.total_ml / resumen.meta_ml) * 100);
+  });
 
   fotoPerfilFile: File | null = null;
 
@@ -151,6 +164,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
             localStorage.setItem('usuario', JSON.stringify(usuario));
             this.cargarProgreso(Number(usuario.id));
             this.cargarSueno(Number(usuario.id));
+            this.cargarHidratacion();
 
             this.cargarResumenRendimiento(Number(usuario.id));
 
@@ -209,6 +223,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
         this.cargarProgreso(id);
         this.cargarSueno(id);
+        this.cargarHidratacion();
 
         this.cargarResumenRendimiento(id);
       },
@@ -528,6 +543,28 @@ export class PerfilComponent implements OnInit, OnDestroy {
   get horasSuenoHoy(): number | null {
     const valor = this.progresoSueno?.valor;
     return valor !== null && valor !== undefined ? Number(valor) : null;
+  }
+
+
+  cargarHidratacion(): void {
+    this.errorHidratacion.set(false);
+
+    this.hidratacionService
+      .consultar()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (resumen) => this.resumenHidratacion.set(resumen),
+        error: (err) => {
+          console.error('Error al obtener la hidratación', err);
+          this.resumenHidratacion.set(null);
+          this.errorHidratacion.set(true);
+        },
+      });
+  }
+
+  /** 1250 -> "1,25 L" */
+  litros(ml: number): string {
+    return `${(ml / 1000).toLocaleString('es-AR', { maximumFractionDigits: 2 })} L`;
   }
 
   get totalHabitos(): number {
