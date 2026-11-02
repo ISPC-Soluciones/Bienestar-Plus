@@ -26,6 +26,15 @@ export class PlanNutricionalService {
     return this.guardar('PATCH', datos);
   }
 
+  eliminar(): Observable<void> {
+    return this.consultarConToken().pipe(
+      switchMap(({ csrf_token }) => this.http.delete<void>(this.url, {
+        withCredentials: true,
+        headers: { 'X-CSRFToken': csrf_token },
+      })),
+    );
+  }
+
   private consultarConToken(): Observable<ConsultaPlan> {
     return this.http.get<ConsultaPlan>(this.url, { withCredentials: true });
   }

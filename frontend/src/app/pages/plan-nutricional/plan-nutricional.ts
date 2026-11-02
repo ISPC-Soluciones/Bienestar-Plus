@@ -37,7 +37,9 @@ export class PlanNutricionalComponent implements OnInit {
   plan: PlanNutricional | null = null;
   cargando = true;
   guardando = false;
+  eliminando = false;
   editando = false;
+  confirmandoEliminacion = false;
   error = '';
   exito = '';
   requiereSesion = false;
@@ -47,12 +49,13 @@ export class PlanNutricionalComponent implements OnInit {
   ngOnInit(): void { this.cargar(); }
 
   cargar(): void {
-    if (this.guardando) return;
+    if (this.guardando || this.eliminando) return;
     this.cargando = true;
     this.error = '';
     this.exito = '';
     this.requiereSesion = false;
     this.editando = false;
+    this.confirmandoEliminacion = false;
     this.plan = null;
     this.servicio.consultar().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (plan) => { this.plan = plan; this.cargando = false; },
@@ -66,6 +69,7 @@ export class PlanNutricionalComponent implements OnInit {
   iniciarEdicion(): void {
     this.error = '';
     this.exito = '';
+    this.confirmandoEliminacion = false;
     this.form.reset({ nombre: this.plan?.nombre ?? '', objetivo: this.plan?.objetivo ?? '', notas: this.plan?.notas ?? '' });
     this.comidas.clear();
     const comidas = this.plan?.comidas ?? [{ tipo: 'desayuno' as TipoComida, descripcion: '', horario: null }];
@@ -83,6 +87,37 @@ export class PlanNutricionalComponent implements OnInit {
 
   cancelar(): void {
     if (!this.guardando) { this.editando = false; this.error = ''; }
+  }
+
+  solicitarEliminacion(): void {
+    if (!this.plan || this.eliminando) return;
+    this.error = '';
+    this.exito = '';
+    this.confirmandoEliminacion = true;
+  }
+
+  cancelarEliminacion(): void {
+    if (!this.eliminando) this.confirmandoEliminacion = false;
+  }
+
+  eliminarPlan(): void {
+    if (!this.plan || !this.confirmandoEliminacion || this.eliminando) return;
+    this.error = '';
+    this.exito = '';
+    this.eliminando = true;
+    this.servicio.eliminar().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.plan = null;
+        this.editando = false;
+        this.confirmandoEliminacion = false;
+        this.eliminando = false;
+        this.exito = 'El plan se eliminó. Ya podés crear uno nuevo.';
+      },
+      error: (error: HttpErrorResponse) => {
+        this.eliminando = false;
+        this.mostrarError(error, 'No pudimos eliminar el plan. Intentá nuevamente.');
+      },
+    });
   }
 
   guardar(): void {

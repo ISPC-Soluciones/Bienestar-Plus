@@ -59,3 +59,11 @@ class PlanNutricionalView(APIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return Response({'plan': serializer.data})
+
+    def delete(self, request):
+        with transaction.atomic():
+            plan = PlanNutricional.objects.select_for_update().filter(usuario=request.user).first()
+            if plan is None:
+                return Response({'detail': 'Todavía no creaste un plan.'}, status=404)
+            plan.delete()
+        return Response(status=204)
