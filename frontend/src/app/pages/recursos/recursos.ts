@@ -17,7 +17,7 @@ export class RecursosComponent implements OnInit {
   cargando = true;
   filtroTipo = 'Todos';
   terminoBusqueda = '';
-  tiposDisponibles: string[] = ['Todos', 'Bienestar Psicológico', 'Material de Apoyo'];
+  tiposDisponibles: string[] = ['Todos'];
 
   constructor(private recursosService: RecursosService) {}
 

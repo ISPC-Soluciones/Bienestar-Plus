@@ -261,7 +261,13 @@ class ProgresoDiario(models.Model):
 # =========================================================
 
 class Recurso(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='recursos')
+    usuario = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='recursos',
+        blank=True,
+        null=True,
+    )
     descripcion = models.TextField()
     tipo = models.CharField(max_length=50)
     enlace = models.URLField(max_length=255)

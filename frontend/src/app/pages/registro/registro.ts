@@ -12,6 +12,9 @@ import {
 import { RegistroServicio } from '../../services/registroServicio';
 import { Router, RouterLink } from '@angular/router';
 import { ModalBienvenida } from './modal-bienvenida/modal-bienvenida';
+import { AuthService } from '../../services/auth';
+import { LoginService } from '../../services/login';
+import { of, switchMap } from 'rxjs';
 
 const contraseñaigual: ValidatorFn = (
   control: AbstractControl,
@@ -47,6 +50,8 @@ export class Registro implements OnInit {
     private fb: FormBuilder,
     private registroService: RegistroServicio,
     private router: Router,
+    private authService: AuthService,
+    private loginService: LoginService,
   ) {
     this.registroForm = this.fb.group(
       {
@@ -76,7 +81,7 @@ export class Registro implements OnInit {
     if (this.ultimoUsuarioId) {
       this.router.navigate(['/perfil', this.ultimoUsuarioId]);
     } else {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/login']);
     }
   }
 
@@ -118,25 +123,78 @@ export class Registro implements OnInit {
 
     this.registroService.registrarUsuario(payload).subscribe({
       next: (respuesta: any) => {
-        console.log('Usuario registrado:', respuesta);
-        this.registroForm.reset();
-        const perfilSalud = respuesta?.data?.perfil_salud;
-        const usuarioId = respuesta?.data?.id;
-        const mostrarModal = perfilSalud?.mostrar_modal_imc === true;
-        const recomendacion = perfilSalud?.recomendacion_enfoque;
-        this.ultimoUsuarioId = usuarioId;
+        const usuario = respuesta?.data;
+        const usuarioId = usuario?.id;
 
-        if (mostrarModal) {
-          this.recomendacionUsuario = recomendacion || 'GENERAL';
-          this.mostrarModalRecomendacion = true;
-        } else {
-          this.router.navigate(['/home']);
+        if (!respuesta?.success || typeof usuarioId !== 'number') {
+          alert(
+            'El registro se completó, pero no pudimos iniciar sesión. Inicia sesión con tus datos.',
+          );
+          this.router.navigate(['/login']);
+          return;
         }
+
+        this.loginService.obtenerSesion().pipe(
+          switchMap((sesion) => {
+            if (sesion?.id === usuarioId) {
+              return of(sesion);
+            }
+
+            return this.loginService.login({
+              email: usuario.email || payload.email,
+              password: datosdelform.password,
+            });
+          }),
+        ).subscribe({
+          next: (sesion) => {
+            if (!sesion || sesion.id !== usuarioId) {
+              this.mostrarErrorInicioSesion();
+              return;
+            }
+
+            this.completarRegistro(usuario, usuarioId);
+          },
+          error: (error: unknown) => {
+            console.error('No se pudo confirmar la sesión tras el registro:', error);
+            this.mostrarErrorInicioSesion();
+          },
+        });
       },
       error: (error: any) => {
         console.error('Error al registrar usuario:', error);
         alert('Ocurrió un error. Por favor, inténtelo de nuevo.');
       },
     });
+  }
+
+  private completarRegistro(usuario: any, usuarioId: number): void {
+    const usuarioSesion = {
+      id: usuarioId,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      rol: usuario.rol,
+    };
+    localStorage.setItem('usuario', JSON.stringify(usuarioSesion));
+    this.authService.login(usuarioId);
+
+    this.registroForm.reset();
+    const perfilSalud = usuario?.perfil_salud;
+    const mostrarModal = perfilSalud?.mostrar_modal_imc === true;
+    const recomendacion = perfilSalud?.recomendacion_enfoque;
+    this.ultimoUsuarioId = usuarioId;
+
+    if (mostrarModal) {
+      this.recomendacionUsuario = recomendacion || 'GENERAL';
+      this.mostrarModalRecomendacion = true;
+    } else {
+      this.router.navigate(['/perfil', usuarioId]);
+    }
+  }
+
+  private mostrarErrorInicioSesion(): void {
+    alert(
+      'El registro se completó, pero no pudimos iniciar sesión. Inicia sesión con tus datos.',
+    );
+    this.router.navigate(['/login']);
   }
 }
