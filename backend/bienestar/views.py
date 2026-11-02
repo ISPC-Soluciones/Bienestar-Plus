@@ -927,18 +927,27 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
     def descargar_pdf(self, request):
         """
         Genera el PDF con toda la rutina del usuario aplicando la paleta de colores de la app.
-        Endpoint: /api/rutinas-ejercicio/descargar-pdf/?usuario_id=54&fecha=2026-09-21
+        Endpoint: /api/rutinas-ejercicio/descargar-pdf/?usuario_id=54 (con fecha opcional)
         """
+        # 1. Validación de seguridad requerida por los tests de regresión
+        if not request.session.get('usuario_id'):
+            return Response({'error': 'No autorizado'}, status=status.HTTP_401_UNAUTHORIZED)
+
         usuario_id = request.query_params.get('usuario_id')
-        fecha = request.query_params.get('fecha', timezone.localdate())
+        fecha = request.query_params.get('fecha')
 
         if not usuario_id:
             return Response({'error': 'Se requiere el parámetro usuario_id'}, status=400)
 
-        queryset = RutinaEjercicio.objects.filter(usuario_id=usuario_id, fecha_registro=fecha)
+        # 2. Por defecto traemos TODOS los ejercicios del usuario (histórico completo)
+        queryset = RutinaEjercicio.objects.filter(usuario_id=usuario_id)
+
+        # 3. Si se proporciona una fecha válida, filtramos opcionalmente por ella
+        if fecha and fecha not in ['null', 'undefined', '']:
+            queryset = queryset.filter(fecha_registro=fecha)
 
         if not queryset.exists():
-            return Response({'error': 'No hay ejercicios registrados para esta fecha.'}, status=404)
+            return Response({'error': 'No hay ejercicios registrados para este usuario.'}, status=404)
 
         usuario = queryset.first().usuario
 
@@ -953,12 +962,12 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         elements = []
         styles = getSampleStyleSheet()
 
-        # Aplicando tu paleta de colores (--bg-y-fuentes y --ternario)
+        # Aplicando paleta de colores (--bg-y-fuentes y --ternario)
         title_style = ParagraphStyle(
             'Title',
             parent=styles['Heading1'],
             fontSize=18,
-            textColor=colors.HexColor('#333b3e'), # --bg-y-fuentes
+            textColor=colors.HexColor('#333b3e'),
             alignment=1
         )
         subtitle_style = ParagraphStyle(
@@ -973,7 +982,7 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
             'Sec',
             parent=styles['Heading2'],
             fontSize=12,
-            textColor=colors.HexColor('#6ec1e4'), # --ternario
+            textColor=colors.HexColor('#6ec1e4'),
             spaceBefore=10,
             spaceAfter=6
         )
@@ -981,11 +990,14 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
             'Body',
             parent=styles['Normal'],
             fontSize=10,
-            textColor=colors.HexColor('#333b3e') # --bg-y-fuentes
+            textColor=colors.HexColor('#333b3e')
         )
 
         elements.append(Paragraph("Bienestar Plus - Mi Rutina de Ejercicios", title_style))
-        elements.append(Paragraph(f"Fecha: {fecha}", subtitle_style))
+        
+        # Mostramos la fecha en el subtítulo si existe, o indicamos que es general
+        display_fecha = fecha if (fecha and fecha not in ['null', 'undefined', '']) else "General / Histórico"
+        elements.append(Paragraph(f"Fecha: {display_fecha}", subtitle_style))
 
         elements.append(Paragraph("Información del Usuario", section_heading))
         elements.append(Paragraph(f"<b>Nombre:</b> {usuario.nombre}", body_style))
@@ -1008,16 +1020,13 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
 
         t = Table(table_data, colWidths=[220, 150, 140])
         t.setStyle(TableStyle([
-            # Cabecera de la tabla con el color --ternario (#6ec1e4) y texto oscuro (--bg-y-fuentes)
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#6ec1e4')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor('#333b3e')),
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
             ('FONTSIZE', (0, 0), (-1, 0), 10),
             ('BOTTOMPADDING', (0, 0), (-1, 0), 6),
-            # Fondo de las filas con --bg-fondo (#f5f7f8)
             ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor('#f5f7f8')),
-            # Líneas de la grilla con un toque de --primario (#7fffd4) o gris sutil
             ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#7fffd4')),
             ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
             ('FONTSIZE', (0, 1), (-1, -1), 9),
@@ -1031,10 +1040,9 @@ class RutinaEjercicioViewSet (viewsets.ModelViewSet):
         doc.build(elements)
 
         buffer.seek(0)
-        filename = f"rutina_{usuario_id}_{fecha}.pdf"
+        filename = f"rutina_{usuario_id}_{display_fecha}.pdf"
 
         return FileResponse(buffer, as_attachment=True, filename=filename, content_type='application/pdf')
-
 
 class RecursoViewSet(viewsets.ModelViewSet):
     """
