@@ -80,7 +80,7 @@ class ExerciseImageApiTests(TestCase):
         self.assertIsNotNone(self.ejercicio.imagen_id)
         self.assertIn(f"/api/ejercicios/{self.ejercicio.pk}/imagen/?v=", response.data["imagen_url"])
         listado = self.client.get(reverse("ejercicio-list"))
-        self.assertIsNotNone(listado.data["results"][0]["imagen_url"])
+        self.assertIsNotNone(listado.data[0]["imagen_url"])
 
     def test_cualquiera_puede_ver_la_imagen(self):
         self.login(self.admin, "clave-admin")
