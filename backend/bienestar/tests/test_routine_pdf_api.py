@@ -33,10 +33,16 @@ class RoutinePdfApiTests(APITestCase):
             ejercicio=self.ejercicio,
             meta_cantidad=30,
         )
+    
+    def authenticate(self, usuario=None):
+        session = self.client.session
+        session["usuario_id"] = (usuario or self.usuario).pk
+        session.save()
 
     def test_aut_be_03_pdf_export_returns_a_pdf_for_the_requested_user(self):
         # Arrange: create one routine entry for the QA user.
         self.add_routine()
+        self.authenticate()
 
         # Act: request the routine export for that user.
         response = self.client.get(self.url, {"usuario_id": self.usuario.pk})
@@ -53,9 +59,10 @@ class RoutinePdfApiTests(APITestCase):
 
     def test_aut_be_06_pdf_export_requires_the_user_id_parameter(self):
         # Arrange: do not provide the user filter required by the endpoint.
-
+        self.authenticate()
         # Act: request the download without query parameters.
         response = self.client.get(self.url)
+        
 
         # Assert: the API reports a structured client error.
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -63,6 +70,8 @@ class RoutinePdfApiTests(APITestCase):
 
     def test_aut_be_03_pdf_export_returns_404_when_the_user_has_no_routine(self):
         # Arrange: keep the QA user without a routine entry.
+        self.authenticate()
+        
 
         # Act: request the export for that user.
         response = self.client.get(self.url, {"usuario_id": self.usuario.pk})
@@ -73,6 +82,7 @@ class RoutinePdfApiTests(APITestCase):
     def test_aut_be_03_pdf_export_filters_entries_by_user(self):
         # Arrange: create a routine for another user only.
         self.add_routine(usuario=self.otro_usuario)
+        self.authenticate()
 
         # Act: request an export for the QA user.
         response = self.client.get(self.url, {"usuario_id": self.usuario.pk})
