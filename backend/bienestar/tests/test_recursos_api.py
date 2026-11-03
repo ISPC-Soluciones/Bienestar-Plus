@@ -15,6 +15,9 @@ class RecursosApiTests(APITestCase):
             rol=Roles.ESTANDAR,
         )
         self.list_url = reverse("recurso-list")
+        # El catálogo global lo instala la migración; estas pruebas preparan
+        # su propio conjunto para validar los casos vacío y por usuario.
+        Recurso.objects.filter(usuario__isnull=True).delete()
 
     def get_results(self, data):
         return data["results"] if isinstance(data, dict) and "results" in data else data
