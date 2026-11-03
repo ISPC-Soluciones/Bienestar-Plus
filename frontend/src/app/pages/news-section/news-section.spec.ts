@@ -64,7 +64,7 @@ describe('NewsSection', () => {
 
   it('should use a local fallback image when an article has no image', () => {
     expect(component.imageFor(response.articles[0])).toBe(
-      '/assets/healthy-llifestyle-elements-frame-background-free-vector.jpg'
+      'assets/healthy-llifestyle-elements-frame-background-free-vector.jpg'
     );
   });
 });
